@@ -3,9 +3,10 @@
  * the list view and the storage adapter all go through these.
  */
 import { DEFAULT_WEIGHT, edgeError, type AGraph, type Polarity } from '../analysis';
-import { emptyDoc, sanitizeRich, type RichDoc } from './rich';
+import { emptyDoc, isEmpty, sanitizeRich, type RichDoc } from './rich';
+import { checkLink, type Basis } from './evidence';
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 export const PACK_VERSION = '0.1';
 export const ICD11_RELEASE = 'ICD-11 MMS 2026-01';
 
@@ -52,8 +53,16 @@ export interface MapEdge {
   description: RichDoc;
   /** reference numbers (references.json n); edges from the association menu carry the link's refs */
   evidence: number[];
-  /** the links.yaml id this edge came from, if any */
+  /** the links.yaml id that backs this edge (basis evidence), if any */
   link: string | null;
+  /** UI-18: evidence · override · needs-review */
+  basis: Basis;
+  /** the last check result: match · no-link · opposite-polarity · withheld:<id> · uncoded-end */
+  check: string;
+  /** required for an override: why the person keeps the link (rich text) */
+  override_reason: RichDoc | null;
+  /** YYYY-MM-DD the override was confirmed */
+  override_at: string | null;
   style: { line?: LineType; route?: Route; color?: string | null; widthByWeight?: boolean };
   [extra: string]: unknown;
 }
@@ -144,8 +153,30 @@ export function newEdge(p: Partial<MapEdge> & { from: string; to: string; polari
     description: p.description ?? emptyDoc(),
     evidence: p.evidence ?? [],
     link: p.link ?? null,
+    basis: p.basis ?? (p.link ? 'evidence' : 'override'),
+    check: p.check ?? (p.link ? 'match' : 'no-link'),
+    override_reason: p.override_reason ?? null,
+    override_at: p.override_at ?? null,
     style: p.style ?? { line: 'solid', route: 'curved', widthByWeight: true },
   };
+}
+
+export const today = () => new Date().toLocaleDateString('en-CA');
+
+/**
+ * Re-run the evidence check on one edge against the current nodes. An evidence edge that no longer matches becomes
+ * needs-review (never silently relabelled); an override keeps its basis and reason, with the check refreshed.
+ */
+export function recheckEdge(m: Pick<SdohMap, 'nodes'>, e: MapEdge): MapEdge {
+  const a = m.nodes.find((n) => n.id === e.from);
+  const b = m.nodes.find((n) => n.id === e.to);
+  if (!a || !b) return e;
+  const r = checkLink(a, b, e.polarity);
+  if (e.basis === 'evidence') {
+    if (r.check === 'match' && r.link) return { ...e, check: 'match', link: r.link.id, evidence: [...r.link.refs] };
+    return { ...e, basis: 'needs-review', check: r.check };
+  }
+  return { ...e, check: r.check };
 }
 
 // ───────────────────────── operations (each returns a new map; validation errors throw ModelError)
@@ -157,6 +188,12 @@ export function addNode(m: SdohMap, n: MapNode): SdohMap {
   return touch({ ...m, nodes: [...m.nodes, n] });
 }
 export function updateNode(m: SdohMap, id: string, patch: Partial<MapNode>): SdohMap {
+  const next = updateNodeRaw(m, id, patch);
+  if (!('code' in patch) && !('code_status' in patch)) return next;
+  // UI-18: recoding re-checks the node's links
+  return { ...next, edges: next.edges.map((e) => (e.from === id || e.to === id ? recheckEdge(next, e) : e)) };
+}
+function updateNodeRaw(m: SdohMap, id: string, patch: Partial<MapNode>): SdohMap {
   return touch({
     ...m,
     nodes: m.nodes.map((n) => {
@@ -181,15 +218,30 @@ export function addEdge(m: SdohMap, e: MapEdge): SdohMap {
   if (err) throw new ModelError(err);
   if (!m.nodes.some((n) => n.id === e.from) || !m.nodes.some((n) => n.id === e.to)) throw new ModelError('Both ends of a link must be circumstances on this map.');
   if ([e.from, e.to].some((id) => m.nodes.find((n) => n.id === id)?.kind === 'note')) throw new ModelError('Canvas notes cannot be linked.');
-  return touch({ ...m, edges: [...m.edges, e] });
+  return touch({ ...m, edges: [...m.edges, settleBasis(m, e)] });
 }
 export function updateEdge(m: SdohMap, id: string, patch: Partial<MapEdge>): SdohMap {
   const cur = m.edges.find((e) => e.id === id);
   if (!cur) throw new ModelError('No such link.');
-  const next = { ...cur, ...patch };
+  let next = { ...cur, ...patch };
   const err = edgeError(next);
   if (err) throw new ModelError(err);
+  if (patch.basis === 'override' || patch.basis === 'evidence') next = settleBasis(m, next);
+  else if ('polarity' in patch || 'from' in patch || 'to' in patch) next = recheckEdge(m, next);
   return touch({ ...m, edges: m.edges.map((e) => (e.id === id ? next : e)) });
+}
+
+/**
+ * The only two ways an edge gets a basis: `evidence` when the check matches (the link's refs come with it), or a
+ * confirmed `override` with a non-empty reason. Anything else is refused (UI-18: an override is deliberate).
+ */
+export function settleBasis(m: Pick<SdohMap, 'nodes'>, e: MapEdge): MapEdge {
+  const a = m.nodes.find((n) => n.id === e.from)!;
+  const b = m.nodes.find((n) => n.id === e.to)!;
+  const r = checkLink(a, b, e.polarity);
+  if (r.check === 'match' && r.link && e.basis !== 'override') return { ...e, basis: 'evidence', check: 'match', link: r.link.id, evidence: [...r.link.refs], override_reason: null, override_at: null };
+  if (e.basis === 'override' && e.override_reason && !isEmpty(e.override_reason)) return { ...e, check: r.check, link: r.check === 'match' ? e.link : null, override_at: e.override_at ?? today() };
+  throw new ModelError(`This link is not backed by evidence (${r.message}) It needs a confirmed override with a reason.`);
 }
 export function deleteEdges(m: SdohMap, ids: string[]): SdohMap {
   const s = new Set(ids);
@@ -267,12 +319,23 @@ export function migrate(input: unknown): SdohMap {
       description: sanitizeRich(e.description),
       evidence: Array.isArray(e.evidence) ? (e.evidence as unknown[]).filter((x): x is number => Number.isInteger(x)) : [],
       link: typeof e.link === 'string' ? e.link : null,
+      basis: v >= 2 && ['evidence', 'override', 'needs-review'].includes(e.basis as string) ? (e.basis as MapEdge['basis']) : 'evidence',
+      check: typeof e.check === 'string' ? e.check : '',
+      override_reason: e.override_reason ? sanitizeRich(e.override_reason) : null,
+      override_at: typeof e.override_at === 'string' ? e.override_at : null,
       style: typeof e.style === 'object' && e.style ? (e.style as MapEdge['style']) : { line: 'solid', route: 'curved', widthByWeight: true },
     };
     if (!ids.has(edge.from) || !ids.has(edge.to)) throw new ImportError(`Link ${i + 1} points to a circumstance that is not in the file. Nothing was imported.`);
     const err = edgeError(edge);
     if (err) throw new ImportError(`Link ${i + 1}: ${err} Nothing was imported.`);
     return edge;
+  });
+  // UI-18 on load and import: every edge is re-checked against the current pack. A v1 edge (no basis) is treated as
+  // claiming evidence, so it either matches or becomes needs-review; an override without a reason also needs review.
+  const checked = edges.map((e) => {
+    const r = recheckEdge({ nodes }, e);
+    if (r.basis === 'override' && (!r.override_reason || isEmpty(r.override_reason))) return { ...r, basis: 'needs-review' as const };
+    return r;
   });
   const layout = (raw.layout ?? {}) as Partial<SdohMap['layout']>;
   return {
@@ -288,7 +351,7 @@ export function migrate(input: unknown): SdohMap {
     layout: { engine: layout.engine === 'elk-stress' ? 'elk-stress' : 'fcose', theme: layout.theme === 'print' ? 'print' : 'auto', thickness: layout.thickness !== false },
     notes: sanitizeRich(raw.notes),
     nodes,
-    edges,
+    edges: checked,
     loops: Array.isArray(raw.loops) ? (raw.loops as MapLoopName[]).filter((l) => typeof l?.id === 'string' && typeof l?.name === 'string') : [],
   };
 }

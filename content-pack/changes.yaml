@@ -30,3 +30,16 @@
   - safety
   source: K2
   by: cowork
+- date: '2026-10-23'
+  what: 'UI-17 (link existing circumstances: drag-to-connect, ''Link to existing'' in the association menu, ''Link to…'' button)
+    and UI-18 (evidence-checked links, deliberate overrides flagged ⚑ on the map, evidence-only toggle); app-methods edge
+    basis and A0; planner schema_version 2; walkthroughs w1 and w2 rewritten'
+  why: 'Daniel''s walkthrough: no visible way to link existing nodes, so no loops; no evidence constraint on hand-drawn links'
+  records:
+  - app-requirements
+  - app-methods
+  - planner
+  - scenarios/w1
+  - scenarios/w2
+  source: Daniel, 2026-10-23
+  by: cowork

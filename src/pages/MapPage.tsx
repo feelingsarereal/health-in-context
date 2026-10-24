@@ -6,12 +6,15 @@ import { C } from '@/lib/copy';
 import { useTheme } from '@/lib/theme';
 import { getStore, pref } from '@/lib/storage';
 import { useMapDoc } from '@/components/map/useMapDoc';
-import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, updateEdge, updateNode, ModelError, type MapEdge, type MapNode, type SdohMap } from '@/lib/model/map';
-import { emptyDoc } from '@/lib/model/rich';
-import { feedbackClusters, neighbourhood, edgeError, DEFAULT_WEIGHT, type Loop, type Polarity } from '@/lib/analysis';
+import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap } from '@/lib/model/map';
+import { emptyDoc, plainText } from '@/lib/model/rich';
+import { feedbackClusters, neighbourhood, findLoops, DEFAULT_WEIGHT, type Loop } from '@/lib/analysis';
+import { defaultLoopNames } from '@/lib/model/interchange';
+import { evidenceCanCloseALoop, checkLink } from '@/lib/model/evidence';
+import { LinkForm, BasisPanel } from '@/components/map/LinkForm';
 import { nodeName } from '@/lib/model/interchange';
 import { Dialog } from '@/components/ui/Dialog';
-import { NodeFields, EdgeFields, type NodeDraft, type EdgeDraft } from '@/components/map/Forms';
+import { NodeFields, EdgeFields, type NodeDraft } from '@/components/map/Forms';
 import { AssociationMenu, type FollowRequest } from '@/components/map/AssociationMenu';
 import { CodePopout } from '@/components/map/CodePopout';
 import { CitedText } from '@/components/evidence/CitedText';
@@ -86,7 +89,21 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const [pathHl, setPathHl] = useState<{ nodes: string[]; edges: string[] } | null>(null);
   const [hulls, setHulls] = useState(false);
   const [newNodeReq, setNewNodeReq] = useState<NewNodeReq | null>(null);
-  const [newEdgeFrom, setNewEdgeFrom] = useState<string | null | undefined>(undefined);
+  const [linkReq, setLinkReq] = useState<{ from: string | null; to: string | null } | null>(null);
+  const openLink = (from: string | null, to: string | null = null) => setLinkReq({ from, to });
+  const [evidenceOnly, setEvidenceOnly] = useState(false);
+  // A0: the evidence filter — every analysis runs on evidence-backed links only when the toggle is on
+  const basisOf = useMemo(() => new Map(map.edges.map((e) => [e.id, e.basis])), [map.edges]);
+  const graph = useMemo(() => (evidenceOnly ? { nodes: doc.graph.nodes, edges: doc.graph.edges.filter((e) => basisOf.get(e.id) === 'evidence') } : doc.graph), [evidenceOnly, doc.graph, basisOf]);
+  const loops = useMemo(() => (evidenceOnly ? findLoops(graph) : doc.loops), [evidenceOnly, graph, doc.loops]);
+  const loopNames = useMemo(() => {
+    if (!evidenceOnly) return doc.loopNames;
+    const d = defaultLoopNames(loops);
+    for (const [k, v] of doc.loopNames) if (d.has(k)) d.set(k, v);
+    return d;
+  }, [evidenceOnly, loops, doc.loopNames]);
+  const overrides = (l: Loop) => l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
+  const counts = { all: map.edges.length, evidence: map.edges.filter((e) => e.basis === 'evidence').length, review: map.edges.filter((e) => e.basis === 'needs-review').length };
   const [assocFor, setAssocFor] = useState<string | null>(null);
   const [keysOpen, setKeysOpen] = useState(false);
   const [engine, setEngine] = useState<'fcose' | 'elk-stress'>(map.layout.engine);
@@ -97,35 +114,47 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const byId = useMemo(() => new Map(map.nodes.map((n) => [n.id, n])), [map.nodes]);
 
   // analysis announcements (DESIGN-SYSTEM §2: live regions for analysis results)
-  const loopCount = `${doc.loops.loops.length}:${doc.loops.loops.filter((l) => l.kind === 'R').length}`;
+  const loopCount = `${loops.loops.length}:${loops.loops.filter((l) => l.kind === 'R').length}`;
   const first = useRef(true);
   useEffect(() => {
     if (first.current) {
       first.current = false;
       return;
     }
-    const R = doc.loops.loops.filter((l) => l.kind === 'R').length;
-    const B = doc.loops.loops.length - R;
-    announce(`${doc.loops.loops.length} ${doc.loops.loops.length === 1 ? 'loop' : 'loops'} found: ${R} ${S.loops.reinforcing.toLowerCase()}, ${B} ${S.loops.balancing.toLowerCase()}.`);
+    const R = loops.loops.filter((l) => l.kind === 'R').length;
+    const B = loops.loops.length - R;
+    announce(`${loops.loops.length} ${loops.loops.length === 1 ? 'loop' : 'loops'} found: ${R} ${S.loops.reinforcing.toLowerCase()}, ${B} ${S.loops.balancing.toLowerCase()}.`);
   }, [loopCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const describeEdge = useCallback(
-    (e: MapEdge) => `Link: ${nm(e.from)} to ${nm(e.to)}, polarity ${e.polarity === '+' ? 'plus' : 'minus'}, weight ${e.weight}${e.delay ? ', with delay' : ''}${e.evidence.length ? `, cites ${e.evidence.map((n) => `[${n}]`).join(' ')}` : ', user-drawn'}`,
+    (e: MapEdge) =>
+      `Link: ${nm(e.from)} to ${nm(e.to)}, polarity ${e.polarity === '+' ? 'plus' : 'minus'}, weight ${e.weight}${e.delay ? ', with delay' : ''}` +
+      (e.basis === 'evidence' ? `, evidence ${e.link}, cites ${e.evidence.map((n) => `[${n}]`).join(' ')}` : e.basis === 'override' ? `, override ⚑ (${e.check}): ${plainText(e.override_reason)}` : `, needs review ⚑ (${e.check})`),
     [nm],
+  );
+  const edgeTip = useCallback(
+    (e: MapEdge) => {
+      if (e.basis === 'evidence') return null;
+      if (e.basis === 'override') return `⚑ ${C.evidence.legend}. ${C.evidence.overrideReason} ${plainText(e.override_reason)}`;
+      const a = byId.get(e.from);
+      const b = byId.get(e.to);
+      return `⚑ ${C.evidence.legendReview}. ${a && b ? checkLink(a, b, e.polarity).message : ''}`;
+    },
+    [byId],
   );
 
   const highlight: Highlight | null = useMemo(() => {
     if (activeLoop) {
-      const l = doc.loops.loops.find((x) => x.key === activeLoop);
+      const l = loops.loops.find((x) => x.key === activeLoop);
       if (l) return { nodes: new Set(l.nodes), edges: new Set(l.edges) };
     }
     if (pathHl) return { nodes: new Set(pathHl.nodes), edges: new Set(pathHl.edges) };
     if (hood && byId.has(hood.id)) {
-      const h = neighbourhood(doc.graph, hood.id, hood.hops);
+      const h = neighbourhood(graph, hood.id, hood.hops);
       return { nodes: new Set([hood.id]), edges: new Set([...h.edgesOut, ...h.edgesIn]), out: new Set(h.out), in: new Set(h.in.filter((x) => !h.out.includes(x))) };
     }
     return null;
-  }, [activeLoop, pathHl, hood, doc.loops, doc.graph, byId]);
+  }, [activeLoop, pathHl, hood, loops, graph, byId]);
 
   const clearHighlights = () => {
     setActiveLoop(null);
@@ -140,7 +169,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
     setPathHl(null);
     setHood(null);
     setActiveLoop(l?.key ?? null);
-    if (l) announce(`Highlighting loop ${doc.loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${l.length} circumstances. Everything else is dimmed.`);
+    if (l) announce(`Highlighting loop ${loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${l.length} circumstances. Everything else is dimmed.`);
   };
 
   // ── actions
@@ -152,17 +181,14 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
     const i = map.nodes.length;
     return { x: (i % 4) * 240, y: Math.floor(i / 4) * 150 };
   };
-  const createNode = (draft: NodeDraft, req: NewNodeReq, linkPolarity: Polarity, ownDir: 'out' | 'in') => {
+  const createNode = (draft: NodeDraft, req: NewNodeReq) => {
     const anchor = req.follow ? byId.get(req.follow.anchor) : undefined;
-    const dir = req.follow?.link ? req.follow.direction : ownDir;
+    const dir = req.follow?.link ? req.follow.direction : 'out';
     const pos = req.pos ?? nextPos(anchor, dir);
     const n = newNode({ ...draft, ...pos });
     let edge: MapEdge | null = null;
-    if (anchor) {
-      const l = req.follow!.link;
-      const pol = l ? l.polarity : linkPolarity;
-      edge = newEdge({ from: dir === 'out' ? anchor.id : n.id, to: dir === 'out' ? n.id : anchor.id, polarity: pol, weight: (pol === '+' ? 1 : -1) * DEFAULT_WEIGHT, evidence: l ? [...l.refs] : [], link: l?.id ?? null });
-    }
+    const l = req.follow?.link ?? null;
+    if (anchor && l) edge = newEdge({ from: dir === 'out' ? anchor.id : n.id, to: dir === 'out' ? n.id : anchor.id, polarity: l.polarity, weight: (l.polarity === '+' ? 1 : -1) * DEFAULT_WEIGHT, evidence: [...l.refs], link: l.id, basis: 'evidence' });
     apply((m) => {
       let next = addNode(m, n);
       if (edge) next = addEdge(next, edge);
@@ -172,6 +198,16 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
     setNewNodeReq(null);
     setAssocFor(null);
     announce(`Added ${nodeName(n, titleOf)}${edge ? `, linked ${edge.polarity === '+' ? 'plus' : 'minus'} ${edge.from === n.id ? 'to' : 'from'} ${nm(anchor!.id)}` : ''}.`);
+    // "add a new circumstance and link it yourself": the link goes through the checked link form
+    if (anchor && !l) openLink(anchor.id, n.id);
+  };
+  /** UI-17 via the association menu: an evidence link between two circumstances already on the map. */
+  const linkExisting = (anchor: string, existing: string, l: PackLink, dir: 'out' | 'in') => {
+    const edge = newEdge({ from: dir === 'out' ? anchor : existing, to: dir === 'out' ? existing : anchor, polarity: l.polarity, weight: (l.polarity === '+' ? 1 : -1) * DEFAULT_WEIGHT, evidence: [...l.refs], link: l.id, basis: 'evidence' });
+    apply((m) => addEdge(m, edge));
+    setAssocFor(null);
+    setSelected({ nodes: [], edges: [edge.id] });
+    announce(`Linked ${nm(edge.from)} to ${nm(edge.to)} with evidence link ${l.id}.`);
   };
   const removeSelection = () => {
     if (!selected.nodes.length && !selected.edges.length) return;
@@ -236,7 +272,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         case 'e':
         case 'E':
           e.preventDefault();
-          setNewEdgeFrom(selected.nodes[0] ?? null);
+          openLink(selected.nodes[0] ?? null);
           break;
         case 'a':
         case 'A':
@@ -320,13 +356,16 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
 
   const selNode = selected.nodes.length === 1 && !selected.edges.length ? byId.get(selected.nodes[0]) : undefined;
   const selEdge = selected.edges.length === 1 && !selected.nodes.length ? map.edges.find((e) => e.id === selected.edges[0]) : undefined;
-  const clusters = useMemo(() => (hulls ? feedbackClusters(doc.graph) : null), [hulls, doc.graph]);
+  const clusters = useMemo(() => (hulls ? feedbackClusters(graph) : null), [hulls, graph]);
 
   const toolbar = (
     <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
       <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
+      <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
+        {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
+      </span>
       <button type="button" className="bx-btn-primary ax-tap" onClick={() => setNewNodeReq({})} data-testid="add-node" aria-keyshortcuts="N">{C.toolbar.addNode}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => setNewEdgeFrom(selected.nodes[0] ?? null)} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
+      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(selected.nodes[0] ?? null)} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc()} disabled={!selNode || selNode.kind === 'note'} data-testid="open-assoc" aria-keyshortcuts="A">{C.toolbar.assoc}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
       {view === 'canvas' && (
@@ -378,7 +417,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         <div>
           <div className="mb-2 flex flex-wrap gap-1.5">
             {selNode.kind !== 'note' && <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc(selNode.id)} data-testid="inspector-assoc">{C.assoc.open}</button>}
-            {selNode.kind !== 'note' && <button type="button" className="bx-btn ax-tap" onClick={() => setNewEdgeFrom(selNode.id)}>{C.toolbar.addEdge}</button>}
+            {selNode.kind !== 'note' && <button type="button" className="bx-btn ax-tap" onClick={() => openLink(selNode.id)} data-testid="inspector-link-to">{C.evidence.linkTo}</button>}
             <button type="button" className="bx-btn ax-tap" onClick={togglePin}>{selNode.pinned ? 'Unpin' : 'Pin'}</button>
             <button type="button" className="bx-btn ax-tap" onClick={removeSelection} data-testid="delete-node">{C.list.delete}</button>
           </div>
@@ -394,6 +433,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
       {selEdge && (
         <EdgeInspector
           edge={selEdge}
+          map={map}
           nm={nm}
           onChange={(p, key) => {
             try {
@@ -415,8 +455,11 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
     loops: (
       <LoopsPanel
         map={map}
-        result={doc.loops}
-        names={doc.loopNames}
+        result={loops}
+        names={loopNames}
+        overrides={overrides}
+        evidenceOnly={evidenceOnly}
+        emptyNote={evidenceOnly ? (evidenceCanCloseALoop() ? C.evidence.toggleOnNoneMaybe : C.evidence.toggleOnNone) : null}
         active={activeLoop}
         onPick={pickLoop}
         onRename={(l, name) => apply((m) => renameLoop(m, l.key, name, l.nodes))}
@@ -427,12 +470,12 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         }}
       />
     ),
-    links: <LinksPanel map={map} graph={doc.graph} onPick={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} />,
-    paths: <PathsPanel map={map} graph={doc.graph} announce={announce} onPick={(p) => { setActiveLoop(null); setHood(null); setPathHl(p ? { nodes: p.nodes, edges: p.edges } : null); }} />,
-    leverage: <LeveragePanel map={map} graph={doc.graph} loops={doc.loops} onPick={selectNode} />,
-    pulse: <PulsePanel map={map} graph={doc.graph} announce={announce} />,
-    tocode: <ToCodePanel map={map} onPick={selectNode} />,
-    clusters: <ClustersPanel map={map} graph={doc.graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} />,
+    links: <LinksPanel map={map} graph={graph} basisOf={basisOf} onPick={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} />,
+    paths: <PathsPanel map={map} graph={graph} announce={announce} onPick={(p) => { setActiveLoop(null); setHood(null); setPathHl(p ? { nodes: p.nodes, edges: p.edges } : null); }} />,
+    leverage: <LeveragePanel map={map} graph={graph} loops={loops} onPick={selectNode} />,
+    pulse: <PulsePanel map={map} graph={graph} announce={announce} />,
+    tocode: <ToCodePanel map={map} onPick={selectNode} onPickEdge={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} nm={nm} />,
+    clusters: <ClustersPanel map={map} graph={graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} />,
     legend: <LegendPanel />,
     map: <MapDetails map={map} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} />,
   };
@@ -440,11 +483,15 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
 
   const side = (
     <aside className="bx-card flex min-h-0 flex-col p-0" aria-label="Map panels">
+      <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
+        <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" />
+        {C.evidence.toggle}
+      </label>
       <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
         {PANELS.map((p) => (
           <button key={p} type="button" className={`bx-btn ax-tap px-2 ${panel === p ? 'bx-btn-on' : ''}`} aria-pressed={panel === p} onClick={() => setPanel(p)} data-testid={`panel-${p}`}>
             {C.panels[p]}
-            {p === 'loops' && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5" data-testid="loops-count">{doc.loops.loops.length}</span>}
+            {p === 'loops' && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5" data-testid="loops-count">{loops.loops.length}</span>}
             {p === 'tocode' && toCodeCount > 0 && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5">{toCodeCount}</span>}
           </button>
         ))}
@@ -473,11 +520,13 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
                 reducedMotion={reducedMotion}
                 selected={selected}
                 highlight={highlight}
-                loops={doc.loops.loops}
-                loopNames={doc.loopNames}
+                loops={loops.loops}
+                loopNames={loopNames}
                 activeLoop={activeLoop}
                 hulls={clusters}
                 describeEdge={describeEdge}
+                edgeTip={edgeTip}
+                onConnect={(from, to) => openLink(from, to || null)}
                 onSelect={(nodes, edges) => {
                   setSelected({ nodes, edges });
                   if (nodes.length + edges.length) setPanel('inspect');
@@ -486,7 +535,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
                 onContext={(id) => openAssoc(id)}
                 onMove={(pos, pin, origin) => apply((m) => setPositions(m, pos, pin), origin === 'drag' ? undefined : 'layout')}
                 onLoop={(key) => {
-                  const l = doc.loops.loops.find((x) => x.key === key) ?? null;
+                  const l = loops.loops.find((x) => x.key === key) ?? null;
                   setPanel('loops');
                   pickLoop(activeLoop === key ? null : l);
                 }}
@@ -497,28 +546,38 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         </div>
       ) : (
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
-          <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => setNewEdgeFrom(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
+          <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
           <div className="min-h-0 flex">{side}</div>
         </div>
       )}
 
       <NewNodeDialog req={newNodeReq} onClose={() => setNewNodeReq(null)} onCreate={createNode} anchorName={newNodeReq?.follow ? nm(newNodeReq.follow.anchor) : ''} />
-      <NewEdgeDialog
-        open={newEdgeFrom !== undefined}
-        from={newEdgeFrom ?? null}
-        map={map}
-        nm={nm}
-        onClose={() => setNewEdgeFrom(undefined)}
-        onCreate={(e) => {
-          apply((m) => addEdge(m, e));
-          setNewEdgeFrom(undefined);
-          setSelected({ nodes: [], edges: [e.id] });
-          announce(`Added ${describeEdge(e)}.`);
-        }}
-      />
+      <Dialog open={!!linkReq} onClose={() => setLinkReq(null)} title={C.evidence.linkTo} wide testId="edge-dialog">
+        {linkReq && (
+          <LinkForm
+            map={map}
+            nm={nm}
+            from={linkReq.from}
+            to={linkReq.to}
+            onCancel={() => setLinkReq(null)}
+            onCreate={(e) => {
+              apply((m) => addEdge(m, e));
+              setLinkReq(null);
+              setSelected({ nodes: [], edges: [e.id] });
+              setPanel('inspect');
+              announce(`Added ${describeEdge(e)}.`);
+            }}
+          />
+        )}
+      </Dialog>
       <Dialog open={!!assocFor} onClose={() => setAssocFor(null)} title={S.associations.title} wide testId="assoc-dialog">
         {assocFor && byId.get(assocFor) && (
-          <AssociationMenu node={byId.get(assocFor)!} onFollow={(r: FollowRequest) => setNewNodeReq({ follow: { anchor: assocFor, link: r.link, direction: r.direction } })} />
+          <AssociationMenu
+            node={byId.get(assocFor)!}
+            map={map}
+            nameOf={nm}
+            onFollow={(r: FollowRequest) => (r.existing && r.link ? linkExisting(assocFor, r.existing, r.link, r.direction) : setNewNodeReq({ follow: { anchor: assocFor, link: r.link, direction: r.direction } }))}
+          />
         )}
       </Dialog>
       <Dialog open={keysOpen} onClose={() => setKeysOpen(false)} title="Keyboard" testId="keys-dialog">
@@ -533,7 +592,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   );
 }
 
-function EdgeInspector({ edge, nm, onChange, onDelete, error }: { edge: MapEdge; nm: (id: string) => string; onChange: (p: Partial<MapEdge>, key?: string) => void; onDelete: () => void; error: string | null }) {
+function EdgeInspector({ edge, map, nm, onChange, onDelete, error }: { edge: MapEdge; map: SdohMap; nm: (id: string) => string; onChange: (p: Partial<MapEdge>, key?: string) => void; onDelete: () => void; error: string | null }) {
   const link = edge.link ? packLinks.find((l) => l.id === edge.link) : undefined;
   return (
     <div data-testid="edge-inspector">
@@ -544,6 +603,7 @@ function EdgeInspector({ edge, nm, onChange, onDelete, error }: { edge: MapEdge;
         <button type="button" className="bx-btn ax-tap" onClick={onDelete} data-testid="delete-edge">{C.list.delete}</button>
       </div>
       {error && <p role="alert" className="bx-todo mb-2">{error}</p>}
+      <BasisPanel key={`${edge.id}:${edge.basis}`} edge={edge} map={map} nm={nm} onPatch={(p) => onChange(p)} />
       <EdgeFields draft={edge} onChange={onChange} />
       <section className="mt-3" aria-label={C.edge.evidence}>
         <h3 className="font-semibold">{C.edge.evidence}</h3>
@@ -560,7 +620,7 @@ function EdgeInspector({ edge, nm, onChange, onDelete, error }: { edge: MapEdge;
   );
 }
 
-function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq | null; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq, pol: Polarity, dir: 'out' | 'in') => void; anchorName: string }) {
+function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq | null; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq) => void; anchorName: string }) {
   const link = req?.follow?.link ?? null;
   const title = req?.kind === 'note' ? C.node.addNote : req?.follow ? (link ? `${C.assoc.follow} (${link.id})` : C.assoc.yourOwn) : C.node.add;
   return (
@@ -571,10 +631,8 @@ function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq
 }
 
 /** Mounted fresh for each request, so a quick submit never reuses the previous draft. */
-function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq, pol: Polarity, dir: 'out' | 'in') => void; anchorName: string }) {
+function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq) => void; anchorName: string }) {
   const [draft, setDraft] = useState<NodeDraft>(() => ({ kind: req.kind === 'note' ? 'note' : 'circumstance', code_status: 'undetermined', code: null, type: null, ref: null, label: emptyDoc(), circumstance: emptyDoc(), severity: null, since: null, notes: emptyDoc(), style: {}, pinned: false }));
-  const [pol, setPol] = useState<Polarity>('+');
-  const [dir, setDir] = useState<'out' | 'in'>('out');
   const link = req.follow?.link ?? null;
   const endpoint = link ? (req.follow!.direction === 'out' ? link.to : link.from) : null;
   const only = endpoint ? codesIn(endpoint) : undefined;
@@ -582,7 +640,7 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onCreate(draft, req, pol, dir);
+            onCreate(draft, req);
           }}
         >
           {req.follow && (
@@ -593,35 +651,9 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
                   {link.refs.map((n) => `[${n}]`).join(' ')}.
                 </>
               ) : (
-                <>New circumstance linked to <span className="font-semibold">{anchorName}</span>. You choose the direction and polarity; the link carries no citation.</>
+                <>A new circumstance; after you add it, the link form opens from <span className="font-semibold">{anchorName}</span> so the link is checked against the evidence.</>
               )}
             </p>
-          )}
-          {req.follow && !link && (
-            <div className="mb-3 flex flex-wrap gap-3">
-              <fieldset>
-                <legend className="mb-1 text-sm font-semibold">Direction</legend>
-                <div className="flex gap-1.5">
-                  {(['out', 'in'] as const).map((d) => (
-                    <label key={d} className={`bx-btn ax-tap cursor-pointer has-[:focus-visible]:ring-2 ${dir === d ? 'bx-btn-on' : ''}`}>
-                      <input type="radio" className="sr-only" name="own-dir" checked={dir === d} onChange={() => setDir(d)} />
-                      {d === 'out' ? `${anchorName} → new` : `new → ${anchorName}`}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend className="mb-1 text-sm font-semibold">{C.edge.polarity}</legend>
-                <div className="flex gap-1.5">
-                  {(['+', '−'] as const).map((p) => (
-                    <label key={p} className={`bx-btn ax-tap cursor-pointer has-[:focus-visible]:ring-2 ${pol === p ? 'bx-btn-on' : ''}`}>
-                      <input type="radio" className="sr-only" name="own-pol" checked={pol === p} onChange={() => setPol(p)} data-testid={`own-polarity-${p === '+' ? 'plus' : 'minus'}`} />
-                      {p === '+' ? S.edges.polarity_plus : S.edges.polarity_minus}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-            </div>
           )}
           <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen only={only} suggested={link?.suggest} compact />
           <div className="mt-2 flex flex-wrap gap-2">
@@ -631,59 +663,5 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
             <button type="button" className="bx-btn ax-tap" onClick={onClose}>Cancel</button>
           </div>
         </form>
-  );
-}
-
-function NewEdgeDialog(props: { open: boolean; from: string | null; map: SdohMap; nm: (id: string) => string; onClose: () => void; onCreate: (e: MapEdge) => void }) {
-  return (
-    <Dialog open={props.open} onClose={props.onClose} title={C.edge.add} wide testId="edge-dialog">
-      {props.open && <NewEdgeForm {...props} />}
-    </Dialog>
-  );
-}
-
-/** Mounted fresh each time the dialog opens, so its defaults are set before the first keystroke. */
-function NewEdgeForm({ from, map, nm, onClose, onCreate }: { from: string | null; map: SdohMap; nm: (id: string) => string; onClose: () => void; onCreate: (e: MapEdge) => void }) {
-  const nodes = map.nodes.filter((n) => n.kind !== 'note');
-  const first = from && nodes.some((n) => n.id === from) ? from : nodes[0]?.id ?? '';
-  const [a, setA] = useState(first);
-  const [b, setB] = useState(() => nodes.find((n) => n.id !== first)?.id ?? '');
-  const [draft, setDraft] = useState<EdgeDraft>(() => ({ polarity: '+', weight: DEFAULT_WEIGHT, delay: false, confidence: 'medium', description: emptyDoc(), style: { line: 'solid', route: 'curved', widthByWeight: true } }));
-  const [err, setErr] = useState<string | null>(null);
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const edge = newEdge({ from: a, to: b, ...draft });
-        const msg = edgeError(edge);
-        if (msg) return setErr(msg);
-        try {
-          onCreate(edge);
-        } catch (x) {
-          setErr(x instanceof ModelError ? x.message : String(x));
-        }
-      }}
-    >
-      <div className="mb-3 grid gap-2 sm:grid-cols-2">
-        <label className="text-sm">
-          <span className="mb-1 block font-semibold">{C.edge.from}</span>
-          <select className="bx-input ax-tap" value={a} onChange={(e) => setA(e.target.value)} data-testid="edge-from">
-            {nodes.map((n) => <option key={n.id} value={n.id}>{nm(n.id)}</option>)}
-          </select>
-        </label>
-        <label className="text-sm">
-          <span className="mb-1 block font-semibold">{C.edge.to}</span>
-          <select className="bx-input ax-tap" value={b} onChange={(e) => setB(e.target.value)} data-testid="edge-to">
-            {nodes.map((n) => <option key={n.id} value={n.id}>{nm(n.id)}</option>)}
-          </select>
-        </label>
-      </div>
-      <EdgeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p }))} />
-      {err && <p role="alert" className="bx-todo my-2" data-testid="edge-error">{err}</p>}
-      <div className="mt-2 flex flex-wrap gap-2">
-        <button type="submit" className="bx-btn-primary ax-tap" data-testid="edge-submit">{C.edge.add}</button>
-        <button type="button" className="bx-btn ax-tap" onClick={onClose}>Cancel</button>
-      </div>
-    </form>
   );
 }

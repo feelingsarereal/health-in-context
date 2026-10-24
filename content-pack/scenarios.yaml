@@ -1,67 +1,85 @@
-# scenarios.yaml — persona walkthroughs = acceptance (ACTION-SPEC §8). Each becomes a Playwright spec, and Daniel walks
-# the same steps in the built app. Circumstances are invented teaching cases, not real people.
 - id: w1
   persona: p-navigator
-  title: "Map a client's housing–work loop and find it"
+  title: 'Map a client''s housing–work loop: one evidence link, two deliberate overrides'
   starts_with: empty
   steps:
-    - do: "Create a new map named 'Client R.' and set its subject to the label 'R.'"
-      expect: "The de-identification nudge shows beside the subject field"
-    - do: "Add a node, choose code QD71.1 Inadequate housing from the code picker, and describe 'Behind on rent; landlord filed for eviction'"
-      expect: "The node shows the QD71 block colour and its code; the code pop-out shows the ICD-11 title, the 'no definition in ICD-11' state with the WHO link, and the interim-source note"
-    - do: "Open the association menu on that node (right-click, or select it and press A)"
-      expect: "Grouped 'Leads to' and 'Comes from' entries appear, each with polarity, evidence grade and a citation; 'Leads to' includes problems associated with employment or unemployment (L03); no withheld link is offered"
-    - do: "Choose L03, pick QD80 Problem associated with unemployment, describe 'Missed shifts during the move; let go'"
-      expect: "A new node appears linked from the housing node with a + edge carrying L03's citation"
-    - do: "Add a node coded QD51 Low income, describe 'No paycheck since March', and draw an edge from the unemployment node to it, polarity +"
-      expect: "A third node appears linked with a + edge; the edge has no citation because the user drew it"
-    - do: "Draw an edge from the low-income node back to the housing node, polarity +, weight 0.75, description 'Can't make rent'"
-      expect: "The edge appears with a + glyph at the arrowhead and a thicker line than the 0.5 default"
-    - do: "Open the Loops panel"
-      expect: "Exactly one loop is listed: R1, reinforcing, 3 nodes; clicking it highlights those nodes and edges and dims the rest"
+  - do: Create a new map named 'Client R.' and set its subject to the label 'R.'
+    expect: The de-identification nudge shows beside the subject field
+  - do: Add a node, choose code QD71.1 Inadequate housing, and describe 'Behind on rent; landlord filed for eviction'
+    expect: The node shows the QD71 block colour and its code; the code pop-out shows the ICD-11 title, the 'no definition in ICD-11'
+      state with the WHO link, and the interim-source note
+  - do: Open the association menu on that node (right-click, or select it and press A)
+    expect: '''Leads to'' and ''Comes from'' entries appear with polarity, grade and citation; ''Leads to'' includes problems associated
+      with employment or unemployment (L03); no withheld link is offered'
+  - do: Choose L03, pick QD80 Problem associated with unemployment, describe 'Missed shifts during the move; let go'
+    expect: 'A new node appears with a + edge carrying L03''s citation; the edge has no ⚑ flag (basis: evidence)'
+  - do: Add a node coded QD51 Low income, describe 'No paycheck since March'. Drag from the unemployment node's connector handle onto
+      it
+    expect: 'The link form opens pre-filled From/To and says the link is not supported: ''Evidence link L01 is withheld'' with its reason;
+      it cannot be saved until an override is confirmed'
+  - do: Confirm the override with the reason 'Lost wages; worker's own account' and save with polarity +
+    expect: 'The edge shows a mid-edge ⚑ flag; its tooltip shows the reason; the map header counts ''2 links: 1 evidence · 1 override'''
+  - do: Select the low-income node, use its 'Link to…' button, choose the housing node, polarity +, weight 0.75, and confirm the override
+      with reason 'Can't make rent'
+    expect: A second ⚑ edge appears (L02 is withheld); its line is thicker than the 0.5 default
+  - do: Open the Loops panel
+    expect: 'Exactly one loop: R1, reinforcing, 3 links, ''2 overrides''; clicking it highlights the loop and dims the rest'
+  - do: Turn on 'Evidence-backed links only'
+    expect: The loop list is empty and says no loop is closed by evidence alone; turning the toggle off restores R1
   must_not:
-    - "any wording that diagnoses the client or recommends a clinical action"
-    - "any network request carrying text typed into the map"
+  - any wording that diagnoses the client or recommends a clinical action
+  - any network request carrying text typed into the map
 - id: w2
   persona: p-student
-  title: "Build a two-loop model, weight it, read the analyses and export"
+  title: Close a link through evidence, build a two-loop model with overrides, read the analyses and export
   starts_with: empty
   steps:
-    - do: "Add nodes coded QD80 (unemployment), QD51 (low income) and QE01 (stress), and one 'other' node of type outcome labelled 'Self-rated health'"
-      expect: "The 'other' node has a neutral fill and dashed outline; no association menu is offered on it"
-    - do: "Link QD80 → QD51 (+), QD51 → QE01 (+), QE01 → QD80 (+), and QE01 → Self-rated health (−)"
-      expect: "Loop R1 (3 nodes) is detected; the link inventory lists three + links and one − link"
-    - do: "Add an 'undetermined' node labelled 'Support from sister', link it → QE01 with polarity − weight −0.5, and QE01 → it with polarity − weight −0.25"
-      expect: "A second loop is detected and labelled R (two − links multiply to +); the undetermined node shows a '?' badge and is listed under 'To code'"
-    - do: "Open Paths and ask 'How does QD80 affect Self-rated health?'"
-      expect: "At least one path is listed with its net sign (−) and the product of its weights"
-    - do: "Open Leverage hints"
-      expect: "A ranked table appears, labelled 'heuristic — hints for discussion'"
-    - do: "Open the reference card behind any association citation"
-      expect: "The card shows the tier, the summary, and the verbatim abstract labelled as such"
-    - do: "Export the map as JSON, the edge list as CSV and the loop report as Markdown, then import the JSON into a new map"
-      expect: "Three files download; the re-imported map has the same nodes, edges, weights, polarities and loop list"
+  - do: Add a node coded QE90 (problems associated with upbringing) and a node coded QD80 (unemployment), unlinked. Open the association
+      menu on the QE90 node
+    expect: Under 'Leads to', L20 offers 'Link to' the existing QD80 node as well as 'Add new'
+  - do: Choose 'Link to' the existing QD80 node
+    expect: An evidence edge (no ⚑) with L20's citation joins the two existing nodes; no new node is created
+  - do: Add nodes coded QD51 (low income) and QE01 (stress), and one 'other' node of type outcome labelled 'Self-rated health'
+    expect: The 'other' node has a neutral fill and dashed outline; no association menu is offered on it
+  - do: Link QD80 → QD51 (+), QD51 → QE01 (+), QE01 → QD80 (+) and QE01 → Self-rated health (−), confirming an override with a reason
+      for each
+    expect: Each of the four links asks for an override and shows ⚑ (L01 and L05 are withheld, QE01 → QD80 has no evidence link, and
+      Self-rated health is not an SDOH code); loop R1 (3 links, 3 overrides) is detected; the link inventory lists four + links and
+      one − link
+  - do: Add an 'undetermined' node labelled 'Support from sister', link it → QE01 with polarity − weight −0.5 and QE01 → it with polarity
+      − weight −0.25, confirming the overrides
+    expect: A second loop is detected and labelled R (two − links multiply to +); the undetermined node shows a '?' badge and is listed
+      under 'To code'
+  - do: Open Paths and ask 'How does QD80 affect Self-rated health?'
+    expect: At least one path is listed with its net sign (−) and the product of its weights
+  - do: Open Leverage hints
+    expect: A ranked table appears, labelled 'heuristic — hints for discussion'
+  - do: Open the reference card behind any association citation
+    expect: The card shows the tier, the summary, and the verbatim abstract labelled as such
+  - do: Export the map as JSON, the edge list as CSV and the loop report as Markdown, then import the JSON into a new map
+    expect: Three files download; the re-imported map has the same nodes, edges, weights, polarities, bases, override reasons and loop list
   must_not:
-    - "any loop strength or leverage result shown without its heuristic label"
-    - "any network request after the app has loaded, other than a clicked external link"
+  - any loop strength or leverage result shown without its heuristic label
+  - any network request after the app has loaded, other than a clicked external link
 - id: w3
   persona: p-caregiver
-  title: "Sketch a relative's situation on a phone without knowing the codes"
+  title: Sketch a relative's situation on a phone without knowing the codes
   starts_with: empty
   viewport: 375x812
   steps:
-    - do: "Create a map, add a node and leave its code status as 'undetermined', describing 'Mom's hours were cut'"
-      expect: "The node is created without a code; the '?' badge shows; nothing forces a code"
-    - do: "Use the code picker's search for 'job' on that node and choose QD82 Problem associated with threat of job loss"
-      expect: "The node recodes and keeps its description"
-    - do: "Long-press the node (or tap its ⋯ button) to open the association menu, and under 'Comes from' choose the housing link (L03) and the code QD71.1 Inadequate housing"
-      expect: "The menu opens on touch, and a linked node is added upstream with L03's citation on the edge"
-    - do: "Switch to the list view and edit the second node's description"
-      expect: "The list view shows both nodes and the edge, and the edit is saved"
-    - do: "Open Help"
-      expect: "The help page lists 988, 211 and the National Domestic Violence Hotline, each with its source and the date it was checked"
-    - do: "Use 'Clear my data' and confirm, then reload"
-      expect: "No maps remain"
+  - do: Create a map, add a node and leave its code status as 'undetermined', describing 'Mom's hours were cut'
+    expect: The node is created without a code; the '?' badge shows; nothing forces a code
+  - do: Use the code picker's search for 'job' on that node and choose QD82 Problem associated with threat of job loss
+    expect: The node recodes and keeps its description
+  - do: Long-press the node (or tap its ⋯ button) to open the association menu, and under 'Comes from' choose the housing link (L03)
+      and the code QD71.1 Inadequate housing
+    expect: The menu opens on touch, and a linked node is added upstream with L03's citation on the edge
+  - do: Switch to the list view and edit the second node's description
+    expect: The list view shows both nodes and the edge, and the edit is saved
+  - do: Open Help
+    expect: The help page lists 988, 211 and the National Domestic Violence Hotline, each with its source and the date it was checked
+  - do: Use 'Clear my data' and confirm, then reload
+    expect: No maps remain
   must_not:
-    - "any wording that diagnoses or advises treatment"
-    - "any control that needs a mouse right-click with no touch alternative"
+  - any wording that diagnoses or advises treatment
+  - any control that needs a mouse right-click with no touch alternative

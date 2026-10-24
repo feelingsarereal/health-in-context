@@ -27,6 +27,7 @@ A directed **edge** A → B says "a change in A causes a change in B, all else e
 - `confidence`: low / medium / high (the user's own).
 - `description`: free text describing the mechanism.
 - `evidence`: optional list of bibliography ids. Edges created from the association menu carry the menu entry's citations automatically.
+- `basis`: `evidence` | `override` | `needs-review` (UI-18). An edge is `evidence` only when a shipped link in `links.yaml` matches its endpoints (code → parent → `QD71` subgroup → group) in direction **and** polarity; then `link` holds the link id and `evidence` its refs. Every other edge is an `override` with a required `override_reason`, an `override_at` date and the `check` result (`no-link` · `opposite-polarity` · `withheld:<id>` · `uncoded-end`).
 
 ## 3. Analyses ("interrogate the map")
 
@@ -41,6 +42,7 @@ All analyses run in the browser on the current graph. Results list items that ar
 | A5 | Feedback clusters | strongly connected components (Tarjan); Oliva (2004) partition | groups of nodes that sit inside shared feedback, shown as hulls |
 | A6 | Paths between two nodes | all simple paths, cap 200; path sign = product of signs; path weight = product of weights | "How does X affect Y?": a net-sign summary (all +, all −, or mixed) |
 | A7 | Leverage hints *(heuristic)* | per node: weighted in/out degree, betweenness, and loop-participation count (McGlashan et al. 2016) | a ranked table, labelled *hints for discussion*; never presented as "the cause" |
+| A0 | Evidence filter | drop edges whose `basis` ≠ `evidence`, then re-run A1–A8 | every analysis panel has an "Evidence-backed links only" toggle; each loop shows its override count |
 | A8 | What-if pulse *(P2, heuristic)* | FCM iteration x(t+1) = tanh(x(t) + Wᵀx(t)), clamped stimulus node, ≤ 30 steps or until converged (Kosko 1986) | a direction-of-change bar per node, labelled *qualitative exploration, not prediction* |
 
 **Validation rules.** Blocking: an edge whose weight sign disagrees with its polarity cannot be saved, and self-loops are refused. Warnings: an `undetermined` node shows a "?" badge and is listed under "To code"; two edges A→B with different polarity are flagged as an ambiguity, since Richardson (1986) recommends splitting the variable instead.

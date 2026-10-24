@@ -20,7 +20,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await addNode(page, { code: 'QD80', search: 'unemployment', circumstance: `C2 ${SENTINEL}` });
   await addNode(page, { status: 'other', type: 'policy', label: `O ${SENTINEL}` });
   await addEdge(page, `L ${SENTINEL}`, 'Problem associated with unemployment', { description: `D ${SENTINEL}` });
-  await addEdge(page, 'Problem associated with unemployment', `L ${SENTINEL}`, { polarity: '−', weight: -0.25 });
+  await addEdge(page, 'Problem associated with unemployment', `L ${SENTINEL}`, { polarity: '−', weight: -0.25, override: `R ${SENTINEL}` });
   // node notes, map notes, canvas note, loop rename
   const insp = page.getByTestId('inspector');
   await selectNodeByName(page, `L ${SENTINEL}`);

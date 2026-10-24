@@ -23,6 +23,8 @@ items:
   what: Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside
     Z55–Z65.
 - id: T-EVID-01
+  priority: high — with UI-18, no loop can close on evidence alone until L01 (job loss → income) or another withheld hinge
+    is supported; L01, L02 and L22 close the classic poverty–housing–work loops
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.

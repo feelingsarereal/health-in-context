@@ -18,7 +18,7 @@ export const nameOf = (map: SdohMap) => {
 };
 
 // ───────────────────────── UI-09 loops
-export function LoopsPanel({ map, result, names, active, onPick, onRename, onCircle }: { map: SdohMap; result: LoopResult; names: Map<string, string>; active: string | null; onPick: (l: Loop | null) => void; onRename: (l: Loop, name: string) => void; onCircle: (l: Loop) => void }) {
+export function LoopsPanel({ map, result, names, active, onPick, onRename, onCircle, overrides, evidenceOnly, emptyNote }: { map: SdohMap; result: LoopResult; names: Map<string, string>; active: string | null; onPick: (l: Loop | null) => void; onRename: (l: Loop, name: string) => void; onCircle: (l: Loop) => void; overrides: (l: Loop) => number; evidenceOnly: boolean; emptyNote: string | null }) {
   const [kind, setKind] = useState<'all' | 'R' | 'B'>('all');
   const [through, setThrough] = useState('');
   const [editing, setEditing] = useState<string | null>(null);
@@ -50,7 +50,8 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
         </label>
       </div>
       <p className="mt-2 text-xs"><Heuristic label={S.loops.strength_label} /></p>
-      {!result.loops.length && <p className="mt-2 text-sm bx-muted">{S.loops.none}</p>}
+      {evidenceOnly && <p className="mt-2 text-sm font-semibold" data-testid="evidence-only-on">{C.evidence.toggle}: on.</p>}
+      {!result.loops.length && <p className="mt-2 text-sm bx-muted" data-testid="loops-empty">{emptyNote ?? S.loops.none}</p>}
       {active && (
         <button type="button" className="bx-btn ax-tap mt-2" onClick={() => onPick(null)}>{C.loops.clear}</button>
       )}
@@ -60,7 +61,7 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" className="ax-tap flex-1 text-left" aria-pressed={active === l.key} onClick={() => onPick(active === l.key ? null : l)} data-testid="loop-pick">
                 <span className={`${l.kind === 'R' ? 'ax-edge-pos' : 'ax-edge-neg'} font-bold`}>{l.kind === 'R' ? '↻' : '↺'}{l.kind}</span>{' '}
-                <span className="font-semibold" data-testid="loop-name">{names.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing} · <span data-testid="loop-length">{l.length}</span> circumstances · strength {l.strength.toFixed(3)}
+                <span className="font-semibold" data-testid="loop-name">{names.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing} · <span data-testid="loop-length">{l.length}</span> links · <span data-testid="loop-overrides">{overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'} ⚑`}</span> · strength {l.strength.toFixed(3)}
                 <span className="mt-0.5 block text-xs bx-muted">{l.nodes.map(nm).join(' → ')} → ↺</span>
               </button>
             </div>
@@ -91,7 +92,7 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
 }
 
 // ───────────────────────── A1 link inventory
-export function LinksPanel({ map, graph, onPick }: { map: SdohMap; graph: AGraph; onPick: (edgeId: string) => void }) {
+export function LinksPanel({ map, graph, onPick, basisOf }: { map: SdohMap; graph: AGraph; onPick: (edgeId: string) => void; basisOf: Map<string, string> }) {
   const inv = inventory(graph);
   const amb = ambiguities(graph);
   const nm = nameOf(map);
@@ -104,7 +105,7 @@ export function LinksPanel({ map, graph, onPick }: { map: SdohMap; graph: AGraph
           <li key={e.id}>
             <button type="button" className="ax-tap w-full rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(e.id)}>
               {nm(e.from)} → {nm(e.to)} <span className="font-mono">{e.weight > 0 ? '+' : ''}{e.weight}</span>
-              {by.get(e.id)?.evidence.length ? <span className="bx-muted"> · {by.get(e.id)!.evidence.map((n) => `[${n}]`).join('')}</span> : null}
+              {basisOf.get(e.id) === 'evidence' ? <span className="bx-muted"> · {by.get(e.id)!.link} {by.get(e.id)!.evidence.map((n) => `[${n}]`).join('')}</span> : <span className="ax-edge-neg"> · ⚑ {basisOf.get(e.id) === 'needs-review' ? 'needs review' : 'override'}</span>}
             </button>
           </li>
         ))}
@@ -114,6 +115,7 @@ export function LinksPanel({ map, graph, onPick }: { map: SdohMap; graph: AGraph
   return (
     <div data-testid="links-panel">
       <p className="text-sm" data-testid="link-summary">{inv.positive.length} + links, {inv.negative.length} − links.</p>
+      <p className="text-sm" data-testid="link-basis-summary">{graph.edges.filter((e) => basisOf.get(e.id) === 'evidence').length} evidence · {graph.edges.filter((e) => basisOf.get(e.id) !== 'evidence').length} override ⚑</p>
       {amb.length > 0 && (
         <p className="mt-1 text-sm bx-todo">{C.edge.ambiguity} ({amb.map((a) => `${nm(a.from)} → ${nm(a.to)}`).join('; ')})</p>
       )}
@@ -271,11 +273,22 @@ export function PulsePanel({ map, graph, announce }: { map: SdohMap; graph: AGra
 }
 
 // ───────────────────────── To code, clusters, legend
-export function ToCodePanel({ map, onPick }: { map: SdohMap; onPick: (id: string) => void }) {
+export function ToCodePanel({ map, onPick, onPickEdge, nm: nmE }: { map: SdohMap; onPick: (id: string) => void; onPickEdge: (id: string) => void; nm: (id: string) => string }) {
   const nm = nameOf(map);
   const todo = map.nodes.filter((n) => n.kind !== 'note' && n.code_status === 'undetermined');
+  const review = map.edges.filter((e) => e.basis === 'needs-review');
   return (
     <div data-testid="tocode-panel">
+      {review.length > 0 && (
+        <section className="mb-4" aria-label={C.evidence.toReview}>
+          <h3 className="font-semibold">⚑ {C.evidence.toReview} ({review.length})</h3>
+          <ul className="mt-1 space-y-1" data-testid="review-list">
+            {review.map((e) => (
+              <li key={e.id}><button type="button" className="bx-btn ax-tap w-full" onClick={() => onPickEdge(e.id)}>⚑ {nmE(e.from)} → {nmE(e.to)}</button></li>
+            ))}
+          </ul>
+        </section>
+      )}
       {!todo.length ? <p className="text-sm bx-muted">{C.node.toCodeEmpty}</p> : (
         <ul className="space-y-1" data-testid="tocode-list">
           {todo.map((n) => (
@@ -318,6 +331,8 @@ export function LegendPanel() {
         <li><span className="font-bold ax-edge-pos">+</span> at the arrowhead: {S.edges.polarity_plus}</li>
         <li><span className="font-bold ax-edge-neg">−</span> at the arrowhead: {S.edges.polarity_minus}</li>
         <li>‖ on a line: {S.edges.delay}</li>
+        <li data-testid="legend-override"><span className="font-bold ax-edge-neg">⚑</span> mid-line: {C.evidence.legend}</li>
+        <li><span className="font-bold ax-edge-neg">⚑?</span> with an amber glow: {C.evidence.legendReview}</li>
         <li>Line thickness: |weight| (can be switched off)</li>
         <li>↻R / ↺B: {S.loops.reinforcing} / {S.loops.balancing} loop</li>
       </ul>

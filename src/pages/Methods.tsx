@@ -1,6 +1,7 @@
 import { bundle, buildErrors, provenance, staleness, S } from '@/lib/data/core';
 import { scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes } from '@/lib/data/scheme';
 import { references } from '@/lib/data/refs';
+import { evidenceCanCloseALoop } from '@/lib/model/evidence';
 import { AsOf, PageHead, Todo } from '@/components/ui/bits';
 
 const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
@@ -133,6 +134,12 @@ export default function Methods() {
       <Section id="methods" title="How the analyses work">
         <p>The map is read as a causal loop diagram. Loops are every elementary circuit (Johnson's algorithm), capped at 12 circumstances per loop and 500 loops; a loop with an even number of − links is reinforcing (R), an odd number balancing (B). Paths between two circumstances are capped at 200. Clusters are strongly connected components (Tarjan). Leverage hints combine weighted in/out degree, betweenness and loop count. The what-if pulse iterates x(t+1) = tanh(x(t) + Wᵀx(t)) with the pushed circumstance held fixed, for at most 30 steps. {S.loops.strength_label}.</p>
         <p>{tierBasis}</p>
+        <p>
+          Every link is checked against the evidence links when it is drawn, edited, re-coded or imported (UI-18): each end is read from its code upward (code, parent, the QD71
+          housing sub-block, block), and a shipped link must match both ends, the direction and the polarity. Anything else is an override, flagged ⚑ on the map and kept
+          only with a reason the person gives. "Evidence-backed links only" re-runs every analysis without the overrides.{' '}
+          {evidenceCanCloseALoop() ? '' : 'With the links in this pack, no loop can close on evidence alone.'}
+        </p>
       </Section>
 
       {scope && (

@@ -36,6 +36,7 @@ const CSV_COLS = [
   'from_id', 'from_label', 'from_code', 'from_code_status', 'from_type',
   'to_id', 'to_label', 'to_code', 'to_code_status', 'to_type',
   'polarity', 'weight', 'delay', 'confidence', 'description', 'evidence',
+  'basis', 'link', 'check', 'override_reason', 'override_at',
 ] as const;
 
 const q = (v: unknown) => {
@@ -54,6 +55,7 @@ export function exportCSV(m: SdohMap, titleOf: TitleOf): string {
         a.id, nodeName(a, titleOf), a.code, a.code_status, a.type,
         b.id, nodeName(b, titleOf), b.code, b.code_status, b.type,
         e.polarity, e.weight, e.delay ? 'yes' : 'no', e.confidence, plainText(e.description), e.evidence.join(' '),
+        e.basis, e.link, e.check, plainText(e.override_reason), e.override_at,
       ].map(q).join(','),
     );
   }
@@ -143,6 +145,10 @@ export function importCSV(text: string, name: string, isCode: (c: string) => boo
       confidence: (['low', 'medium', 'high'].includes(get(r, 'confidence')) ? get(r, 'confidence') : 'medium') as 'medium',
       description: docFromText(get(r, 'description')),
       evidence: get(r, 'evidence').split(/\s+/).filter(Boolean).map(Number).filter(Number.isInteger),
+      // UI-18: a confirmed override keeps its reason; everything else claims evidence and is re-checked on import
+      basis: get(r, 'basis') === 'override' && get(r, 'override_reason') ? 'override' : 'evidence',
+      override_reason: get(r, 'override_reason') ? docFromText(get(r, 'override_reason')) : null,
+      override_at: get(r, 'override_at') || null,
     });
   });
   const ns = [...nodes.values()];
@@ -193,14 +199,20 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
   if (r.truncated) out.push(`**${L.truncated}**`, '');
   if (!r.loops.length) out.push(L.none, '');
   else {
-    out.push(`Strength = ${L.strengthLabel}.`, '', '| Loop | Kind | Length | Strength (heuristic) | Members |', '|---|---|---|---|---|');
+    out.push(`Strength = ${L.strengthLabel}.`, '', '| Loop | Kind | Length | Overrides | Strength (heuristic) | Members |', '|---|---|---|---|---|---|');
+    const basisOf = new Map(m.edges.map((e) => [e.id, e.basis]));
     for (const l of strongestLoops(r)) {
-      out.push(`| ${named.get(l.key) ?? names.get(l.key)} | ${l.kind === 'R' ? L.reinforcing : L.balancing} | ${l.length} | ${l.strength.toFixed(4)} | ${l.nodes.map(desc).join(' → ')} → ↺ |`);
+      const ov = l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
+      out.push(`| ${named.get(l.key) ?? names.get(l.key)} | ${l.kind === 'R' ? L.reinforcing : L.balancing} | ${l.length} | ${ov} | ${l.strength.toFixed(4)} | ${l.nodes.map(desc).join(' → ')} → ↺ |`);
     }
     out.push('');
   }
-  out.push(`## Links (${m.edges.length})`, '', '| From | To | Polarity | Weight | Delay | Confidence | Evidence |', '|---|---|---|---|---|---|---|');
-  for (const e of m.edges) out.push(`| ${desc(e.from)} | ${desc(e.to)} | ${e.polarity} | ${e.weight} | ${e.delay ? '‖' : ''} | ${e.confidence} | ${e.evidence.map((n) => `[${n}]`).join(' ') || 'user-drawn'} |`);
+  const ev = m.edges.filter((e) => e.basis === 'evidence').length;
+  out.push(`## Links (${m.edges.length}: ${ev} evidence · ${m.edges.length - ev} override)`, '', '| From | To | Polarity | Weight | Delay | Confidence | Basis | Evidence or override reason |', '|---|---|---|---|---|---|---|---|');
+  for (const e of m.edges) {
+    const why = e.basis === 'evidence' ? `${e.link} ${e.evidence.map((n) => `[${n}]`).join(' ')}` : `⚑ ${e.check}${e.override_reason ? ` — ${plainText(e.override_reason).replace(/\|/g, '\\|')} (${e.override_at})` : ''}`;
+    out.push(`| ${desc(e.from)} | ${desc(e.to)} | ${e.polarity} | ${e.weight} | ${e.delay ? '‖' : ''} | ${e.confidence} | ${e.basis} | ${why} |`);
+  }
   return out.join('\n') + '\n';
 }
 

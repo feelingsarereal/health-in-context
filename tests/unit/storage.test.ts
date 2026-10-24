@@ -27,10 +27,11 @@ function w1Map() {
   const o = newNode({ code_status: 'other', type: 'outcome', label: docFromText('Self-rated health'), ref: 'user ref' });
   const q = newNode({ code_status: 'undetermined', label: docFromText('Support from sister') });
   for (const n of [h, u, i, o, q]) m = addNode(m, n);
+  const why = (t: string) => ({ basis: 'override' as const, override_reason: docFromText(t) });
   m = addEdge(m, newEdge({ from: h.id, to: u.id, polarity: '+', evidence: [23], link: 'L03' }));
-  m = addEdge(m, newEdge({ from: u.id, to: i.id, polarity: '+' }));
-  m = addEdge(m, newEdge({ from: i.id, to: h.id, polarity: '+', weight: 0.75, description: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: "Can't make rent", marks: [{ type: 'bold' }] }] }] } }));
-  m = addEdge(m, newEdge({ from: q.id, to: i.id, polarity: '−', weight: -0.5, delay: true, confidence: 'low' }));
+  m = addEdge(m, newEdge({ from: u.id, to: i.id, polarity: '+', ...why("Lost wages; worker's own account") }));
+  m = addEdge(m, newEdge({ from: i.id, to: h.id, polarity: '+', weight: 0.75, ...why("Can't make rent"), description: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: "Can't make rent", marks: [{ type: 'bold' }] }] }] } }));
+  m = addEdge(m, newEdge({ from: q.id, to: i.id, polarity: '−', weight: -0.5, delay: true, confidence: 'low', ...why('Sister helps with bills') }));
   return { m, h, u, i, o, q };
 }
 const titles: Record<string, string> = { 'QD71.1': 'Inadequate housing', QD80: 'Problem associated with unemployment', QD51: 'Low income' };
@@ -67,8 +68,8 @@ describe('storage adapters', () => {
 describe('model rules', () => {
   it('refuses a weight that disagrees with polarity, and a self-loop', () => {
     const { m, h, u } = w1Map();
-    expect(() => addEdge(m, newEdge({ from: h.id, to: u.id, polarity: '+', weight: -0.5 }))).toThrow(/sign must match/);
-    expect(() => addEdge(m, newEdge({ from: h.id, to: h.id, polarity: '+' }))).toThrow(/self-loops are refused/);
+    expect(() => addEdge(m, newEdge({ from: h.id, to: u.id, polarity: '+', weight: -0.5, link: 'L03' }))).toThrow(/sign must match/);
+    expect(() => addEdge(m, newEdge({ from: h.id, to: h.id, polarity: '+', link: 'L03' }))).toThrow(/self-loops are refused/);
   });
   it('recoding between states keeps edges and the description', () => {
     const { m, q } = w1Map();
@@ -113,13 +114,19 @@ describe('export / import round-trip', () => {
     expect(back).toEqual(m);
     expect(findLoops(toGraph(back))).toEqual(findLoops(toGraph(m)));
   });
+  it('JSON round-trips bases, checks and override reasons', () => {
+    const { m } = w1Map();
+    const back = importJSON(exportJSON(m));
+    expect(back.edges.map((e) => [e.basis, e.check, e.link, plainText(e.override_reason), e.override_at])).toEqual(m.edges.map((e) => [e.basis, e.check, e.link, plainText(e.override_reason), e.override_at]));
+    expect(m.edges.map((e) => e.basis)).toEqual(['evidence', 'override', 'override', 'override']);
+  });
   it('CSV carries code_status and type, and re-imports to the same graph', () => {
     const { m } = w1Map();
     const csv = exportCSV(m, titleOf);
     expect(csv.split('\n')[0]).toContain('from_code_status,from_type');
     expect(csv).toContain(',undetermined,');
     const back = importCSV(csv, 'from csv', (c) => c in titles || c === 'QD82');
-    expect(back.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence])).toEqual(m.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence]));
+    expect(back.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence, e.basis, e.check])).toEqual(m.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence, e.basis, e.check]));
     expect(findLoops(toGraph(back)).loops.map((l) => l.kind)).toEqual(['R']);
     expect(back.nodes.map((n) => n.code_status).sort()).toEqual(['sdoh', 'sdoh', 'sdoh', 'undetermined']);
   });
@@ -129,7 +136,8 @@ describe('export / import round-trip', () => {
   it('the loop report lists the loop with its heuristic label', () => {
     const { m } = w1Map();
     const md = loopReportMD(m, titleOf, { strengthLabel: 'Loop strength — structural heuristic, not loop dominance', reinforcing: 'Reinforcing', balancing: 'Balancing', truncated: 'Truncated', none: 'No loops', notice: 'notice' });
-    expect(md).toContain('| R1 | Reinforcing | 3 |');
+    expect(md).toContain('| R1 | Reinforcing | 3 | 2 |');
+    expect(md).toContain("⚑ withheld:L02 — Can't make rent");
     expect(md).toContain('structural heuristic');
   });
 });

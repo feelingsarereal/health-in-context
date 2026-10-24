@@ -324,6 +324,20 @@
  "changes": [
   {
    "date": "2026-10-23",
+   "what": "UI-17 (link existing circumstances: drag-to-connect, 'Link to existing' in the association menu, 'Link to…' button) and UI-18 (evidence-checked links, deliberate overrides flagged ⚑ on the map, evidence-only toggle); app-methods edge basis and A0; planner schema_version 2; walkthroughs w1 and w2 rewritten",
+   "why": "Daniel's walkthrough: no visible way to link existing nodes, so no loops; no evidence constraint on hand-drawn links",
+   "records": [
+    "app-requirements",
+    "app-methods",
+    "planner",
+    "scenarios/w1",
+    "scenarios/w2"
+   ],
+   "source": "Daniel, 2026-10-23",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-10-23",
    "what": "safety.yaml: allowed_phrases ['does not diagnose', 'not a diagnosis'] and allowed_contexts scope.boundary.out, references[].abstract (SAFETY 0.1.1)",
    "why": "Daniel's H1 ruling: exact phrases only, no negation exemption",
    "records": [
@@ -367,7 +381,7 @@
  ],
  "planner": {
   "holds": "map",
-  "schema_version": 1,
+  "schema_version": 2,
   "export": [
    "json",
    "csv-edges",
@@ -420,6 +434,11 @@
     "confidence",
     "description",
     "evidence",
+    "link",
+    "basis",
+    "check",
+    "override_reason",
+    "override_at",
     "style"
    ],
    "loop": [
@@ -450,6 +469,18 @@
     "low",
     "medium",
     "high"
+   ],
+   "basis": [
+    "evidence",
+    "override",
+    "needs-review"
+   ],
+   "check": [
+    "match",
+    "no-link",
+    "opposite-polarity",
+    "withheld",
+    "uncoded-end"
    ],
    "severity": [
     0,
@@ -557,12 +588,12 @@
   {
    "id": "w1",
    "persona": "p-navigator",
-   "title": "Map a client's housing–work loop and find it"
+   "title": "Map a client's housing–work loop: one evidence link, two deliberate overrides"
   },
   {
    "id": "w2",
    "persona": "p-student",
-   "title": "Build a two-loop model, weight it, read the analyses and export"
+   "title": "Close a link through evidence, build a two-loop model with overrides, read the analyses and export"
   },
   {
    "id": "w3",

@@ -36,6 +36,8 @@ test('H3: the nudge renders on every field in safety.yaml → deidentify.fields'
   await page.getByTestId('add-edge').click();
   const descId = await page.getByTestId('edge-dialog').getByRole('textbox', { name: 'Describe how one leads to the other', exact: true }).getAttribute('aria-describedby');
   await expect(page.locator(`[id="${descId}"]`)).toHaveText(NUDGE);
+  const whyId = await page.getByTestId('edge-dialog').getByRole('textbox', { name: 'Why keep this link?', exact: true }).getAttribute('aria-describedby');
+  await expect(page.locator(`[id="${whyId}"]`)).toHaveText(NUDGE);
   await page.keyboard.press('Escape');
   await panel(page, 'map');
   const sId = await page.getByTestId('map-subject').getAttribute('aria-describedby');
@@ -117,8 +119,8 @@ test('G4: every heuristic result carries its label where it renders', async ({ p
   await newMap(page, 'Heuristics');
   await addNode(page, { status: 'undetermined', label: 'A' });
   await addNode(page, { status: 'undetermined', label: 'B' });
-  await addEdge(page, 'A', 'B');
-  await addEdge(page, 'B', 'A');
+  await addEdge(page, 'A', 'B', { override: 'x' });
+  await addEdge(page, 'B', 'A', { override: 'y' });
   await panel(page, 'loops');
   await expect(page.getByTestId('loops-panel').locator('[data-heuristic]')).toContainText('Loop strength — structural heuristic, not loop dominance');
   await panel(page, 'leverage');

@@ -1,19 +1,21 @@
 # planner.yaml — what the person keeps on their own device (ACTION-SPEC §4). Written 2026-10-23.
 holds: map
-schema_version: 1
+schema_version: 2   # v2 (2026-10-23): edge basis/check/override fields (UI-18); import migrates v1 by re-checking every edge
 export: [json, csv-edges, png, svg, md-report]
 import: [json, csv-edges]
 file_extension: ".sdohmap.json"
 fields:
   map: [id, name, subject, created, updated, icd11_release, pack_version, layout, notes]
   node: [id, code_status, code, type, ref, label, circumstance, severity, since, notes, style, pinned, x, y, created, updated]
-  edge: [id, from, to, polarity, weight, delay, confidence, description, evidence, style]
+  edge: [id, from, to, polarity, weight, delay, confidence, description, evidence, link, basis, check, override_reason, override_at, style]
   loop: [id, name, members]
 enums:
   code_status: [sdoh, other, undetermined]
   other_type: [outcome, policy, event, resource, personal, other]
   polarity: ["+", "−"]
   confidence: [low, medium, high]
+  basis: [evidence, override, needs-review]
+  check: [match, no-link, opposite-polarity, withheld, uncoded-end]
   severity: [0, 1, 2, 3]
   line: [solid, dashed, dotted]
   route: [curved, straight]

@@ -50,7 +50,11 @@ interface Props {
   onContext(nodeId: string): void;
   onMove(pos: Record<string, { x: number; y: number }>, pin: boolean | undefined, origin: 'drag' | 'layout'): void;
   onLoop(key: string): void;
+  /** UI-17 drag-to-connect: dropped the connector handle of `from` onto `to` */
+  onConnect(from: string, to: string): void;
   describeEdge(e: MapEdge): string;
+  /** UI-18: tooltip text for an override or needs-review edge */
+  edgeTip(e: MapEdge): string | null;
 }
 
 const titleOf = (c: string) => codeMap.get(c)?.title;
@@ -101,13 +105,14 @@ function elements(map: SdohMap, dark: boolean): ElementDefinition[] {
         source: e.from,
         target: e.to,
         pol: e.polarity,
-        delay: e.delay ? '‖' : '',
+        // the mid-edge mark: ‖ for a delay (UI-13) and ⚑ for an override (UI-18), kept apart from line style and colour
+        mid: [e.delay ? '‖' : '', e.basis === 'override' ? '⚑' : e.basis === 'needs-review' ? '⚑?' : ''].filter(Boolean).join(' '),
         width: map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * w : 2.5,
         color: e.style.color ?? (e.polarity === '+' ? (dark ? '#8fb4ea' : '#2f5d9a') : dark ? '#f2a0ae' : '#a3243b'),
         line: e.style.line ?? 'solid',
         curve: e.style.route === 'straight' ? 'straight' : 'bezier',
       },
-      classes: e.polarity === '+' ? 'pos' : 'neg',
+      classes: [e.polarity === '+' ? 'pos' : 'neg', e.basis === 'needs-review' ? 'review' : e.basis === 'override' ? 'override' : 'evidence'].join(' '),
     });
   }
   return out;
@@ -160,17 +165,18 @@ function stylesheet(dark: boolean, print: boolean): any[] {
         'arrow-scale': 1.1,
         'target-label': 'data(pol)',
         'target-text-offset': 26,
-        'font-size': 17,
         'font-weight': 700,
         color: ink,
         'text-background-color': bg,
         'text-background-opacity': 1,
         'text-background-padding': '2px',
         'text-background-shape': 'round-rectangle',
-        label: 'data(delay)',
+        label: 'data(mid)',
+        'font-size': 16,
         'text-rotation': 'autorotate',
       },
     },
+    { selector: 'edge.review', style: { 'underlay-color': dark ? '#fbbf24' : '#b45309', 'underlay-opacity': 0.35, 'underlay-padding': 5 } },
     { selector: 'edge:selected', style: { 'overlay-color': dark ? '#8fb4ea' : '#2f5d9a', 'overlay-opacity': 0.25, 'overlay-padding': 6 } },
     { selector: '.dim', style: { opacity: 0.15 } },
     { selector: 'node.hl', style: { 'border-width': 4, 'border-color': dark ? '#efeae2' : '#1f1b16' } },
@@ -198,6 +204,9 @@ function hull(pts: [number, number][]): [number, number][] {
   return [...lower.slice(0, -1), ...upper.slice(0, -1)];
 }
 
+/** Rendered-coordinate edge methods Cytoscape has but its typings omit. */
+type RenderedEdge = { renderedSourceEndpoint(): { x: number; y: number }; renderedTargetEndpoint(): { x: number; y: number }; renderedMidpoint(): { x: number; y: number } };
+
 function fitCapped(cy: Core) {
   if (!cy.nodes().length) return;
   cy.fit(cy.nodes(), 50);
@@ -213,7 +222,17 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   const P = useRef(props);
   P.current = props;
   const syncing = useRef(false);
-  const [overlay, setOverlay] = useState<{ loops: { key: string; x: number; y: number; kind: string }[]; more: { x: number; y: number } | null; hulls: string[] }>({ loops: [], more: null, hulls: [] });
+  const [overlay, setOverlay] = useState<{
+    loops: { key: string; x: number; y: number; kind: string }[];
+    more: { x: number; y: number } | null;
+    handle: { x: number; y: number } | null;
+    tip: { x: number; y: number; text: string } | null;
+    hulls: string[];
+    pos: Record<string, { x: number; y: number; bb: string }>;
+    ends: Record<string, string>;
+  }>({ loops: [], more: null, handle: null, tip: null, hulls: [], pos: {}, ends: {} });
+  const hover = useRef<string | null>(null);
+  const [drag, setDrag] = useState<{ from: string; x0: number; y0: number; x: number; y: number } | null>(null);
 
   const recompute = useCallback(() => {
     const cy = cyRef.current;
@@ -225,14 +244,67 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       if (!ps.length) return [];
       return [{ key: l.key, kind: l.kind, x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
     });
+    // D2: the ⋯ button and the connector handle sit outside the node's box, at the candidate spots farthest from the
+    // node's own edge endpoints, other nodes and the canvas edge, so they never cover the label or an edge.
     let more = null;
+    let handle = null;
     if (p.selected.nodes.length === 1 && !p.selected.edges.length) {
       const n = cy.getElementById(p.selected.nodes[0]);
       if (n.nonempty()) {
+        // the whole 44 px button (half = 22) stays clear of the node's box, selection overlay included, by 8 px
         const bb = n.renderedBoundingBox({});
-        more = { x: bb.x2 + 4, y: bb.y1 - 4 };
+        const g = 22 + 8;
+        const cx = (bb.x1 + bb.x2) / 2;
+        const cyy = (bb.y1 + bb.y2) / 2;
+        const cands = [
+          { x: bb.x2 + g, y: bb.y1 }, { x: bb.x2 + g, y: bb.y2 }, { x: bb.x1 - g, y: bb.y1 }, { x: bb.x1 - g, y: bb.y2 },
+          { x: cx, y: bb.y1 - g }, { x: cx, y: bb.y2 + g }, { x: bb.x2 + g, y: cyy }, { x: bb.x1 - g, y: cyy },
+        ];
+        const ends: { x: number; y: number }[] = [];
+        n.connectedEdges().forEach((e) => {
+          const r = e as unknown as RenderedEdge;
+          ends.push(r.renderedSourceEndpoint(), r.renderedTargetEndpoint(), r.renderedMidpoint());
+        });
+        const boxes = cy.nodes().filter((o) => o.id() !== n.id()).map((o) => o.renderedBoundingBox({}));
+        const W = cy.width();
+        const H = cy.height();
+        const score = (c: { x: number; y: number }) => {
+          let d = Math.min(60, ...ends.map((q) => Math.hypot(q.x - c.x, q.y - c.y)));
+          for (const b of boxes) if (c.x > b.x1 - 22 && c.x < b.x2 + 22 && c.y > b.y1 - 22 && c.y < b.y2 + 22) d -= 100;
+          if (c.x < 24 || c.y < 24 || c.x > W - 24 || c.y > H - 24) d -= 50;
+          return d;
+        };
+        const ranked = cands.map((c, i) => ({ c, s: score(c) - i * 0.01 })).sort((a, b) => b.s - a.s);
+        more = ranked[0].c;
+        handle = ranked[1].c;
       }
     }
+    // UI-18 tooltip: the hovered (or the single selected) override edge shows its reason
+    let tip = null;
+    const tipId = hover.current ?? (p.selected.edges.length === 1 && !p.selected.nodes.length ? p.selected.edges[0] : null);
+    if (tipId) {
+      const e = cy.getElementById(tipId);
+      const me = p.map.edges.find((x) => x.id === tipId);
+      const text = me ? p.edgeTip(me) : null;
+      if (e.nonempty() && text) {
+        const m = (e as unknown as RenderedEdge).renderedMidpoint();
+        tip = { x: m.x, y: m.y, text };
+      }
+    }
+    // rendered geometry, mirrored on the outline for tests and assistive tech (no map text involved)
+    const pos: Record<string, { x: number; y: number; bb: string }> = {};
+    cy.nodes().forEach((n) => {
+      const q = n.renderedPosition();
+      const b = n.renderedBoundingBox({});
+      pos[n.id()] = { x: Math.round(q.x), y: Math.round(q.y), bb: [b.x1, b.y1, b.x2, b.y2].map(Math.round).join(',') };
+    });
+    const endsMap: Record<string, string> = {};
+    cy.edges().forEach((e) => {
+      const r = e as unknown as RenderedEdge;
+      const a = r.renderedSourceEndpoint();
+      const b = r.renderedTargetEndpoint();
+      endsMap[e.id()] = [a.x, a.y, b.x, b.y].map(Math.round).join(',');
+    });
     const hulls = (p.hulls ?? []).map((ids) => {
       const pts: [number, number][] = [];
       for (const id of ids) {
@@ -244,7 +316,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       }
       return hull(pts).map((q) => q.join(',')).join(' ');
     });
-    setOverlay({ loops, more, hulls });
+    setOverlay({ loops, more, handle, tip, hulls, pos, ends: endsMap });
   }, []);
 
   // mount
@@ -281,6 +353,14 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       cy.$(':selected').unselect();
       n.select();
       P.current.onContext(n.id());
+    });
+    cy.on('mouseover', 'edge', (e) => {
+      hover.current = e.target.id();
+      schedule();
+    });
+    cy.on('mouseout', 'edge', () => {
+      hover.current = null;
+      schedule();
     });
     cy.on('dragfree', 'node', (e) => {
       const moved = cy.$('node:selected').union(e.target);
@@ -501,12 +581,64 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           ⋯
         </button>
       )}
+      {overlay.handle && !drag && (
+        <button
+          type="button"
+          className="bx-btn ax-tap absolute cursor-crosshair touch-none justify-center rounded-full px-2 py-0 text-lg"
+          style={{ left: overlay.handle.x, top: overlay.handle.y, transform: 'translate(-50%, -50%)' }}
+          aria-label={C.evidence.connect}
+          title={C.evidence.connect}
+          data-testid="connect-handle"
+          onClick={() => props.onConnect(props.selected.nodes[0], '')}
+          onPointerDown={(e) => {
+            const from = props.selected.nodes[0];
+            const r = box.current!.getBoundingClientRect();
+            (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+            setDrag({ from, x0: overlay.handle!.x, y0: overlay.handle!.y, x: e.clientX - r.left, y: e.clientY - r.top });
+          }}
+        >
+          ⊸
+        </button>
+      )}
+      {drag && (
+        <div
+          className="absolute inset-0 z-10 cursor-crosshair touch-none"
+          data-testid="connect-drag"
+          onPointerMove={(e) => {
+            const r = box.current!.getBoundingClientRect();
+            setDrag((d) => d && { ...d, x: e.clientX - r.left, y: e.clientY - r.top });
+          }}
+          onPointerUp={(e) => {
+            const r = box.current!.getBoundingClientRect();
+            const x = e.clientX - r.left;
+            const y = e.clientY - r.top;
+            const cy = cyRef.current;
+            const hit = cy?.nodes().filter((n) => {
+              const b = n.renderedBoundingBox({});
+              return x >= b.x1 && x <= b.x2 && y >= b.y1 && y <= b.y2 && !n.hasClass('note');
+            });
+            const from = drag.from;
+            setDrag(null);
+            if (hit && hit.nonempty() && hit[0].id() !== from) props.onConnect(from, hit[0].id());
+          }}
+          onPointerCancel={() => setDrag(null)}
+        >
+          <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
+            <line x1={drag.x0} y1={drag.y0} x2={drag.x} y2={drag.y} stroke="var(--bx-accent)" strokeWidth={2.5} strokeDasharray="6 4" />
+          </svg>
+        </div>
+      )}
+      {overlay.tip && (
+        <div role="tooltip" className="bx-card pointer-events-none absolute z-20 max-w-xs p-2 text-xs bg-[color:var(--bx-bg)] dark:bg-night-2" style={{ left: overlay.tip.x, top: overlay.tip.y + 14, transform: 'translateX(-50%)' }} data-testid="edge-tooltip">
+          {overlay.tip.text}
+        </div>
+      )}
       {!props.map.nodes.length && <p className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-4 text-center bx-muted">{C.canvas.empty}</p>}
       <div className="sr-only">
         <h2 id="canvas-outline-h">{C.canvas.outline}</h2>
         <ul data-testid="canvas-outline">
           {props.map.nodes.map((n) => (
-            <li key={n.id} data-node={n.id} data-status={n.code_status} data-group={n.code ? colourGroup(n.code) ?? '' : ''} data-dashed={n.code_status !== 'sdoh' ? 'true' : 'false'} data-pinned={n.pinned ? 'true' : 'false'} data-state={props.highlight ? (props.highlight.nodes.has(n.id) || props.highlight.out?.has(n.id) || props.highlight.in?.has(n.id) ? 'highlighted' : 'dimmed') : 'normal'} data-selected={props.selected.nodes.includes(n.id) ? 'true' : 'false'}>
+            <li key={n.id} data-node={n.id} data-rx={overlay.pos[n.id]?.x} data-ry={overlay.pos[n.id]?.y} data-bb={overlay.pos[n.id]?.bb} data-status={n.code_status} data-group={n.code ? colourGroup(n.code) ?? '' : ''} data-dashed={n.code_status !== 'sdoh' ? 'true' : 'false'} data-pinned={n.pinned ? 'true' : 'false'} data-state={props.highlight ? (props.highlight.nodes.has(n.id) || props.highlight.out?.has(n.id) || props.highlight.in?.has(n.id) ? 'highlighted' : 'dimmed') : 'normal'} data-selected={props.selected.nodes.includes(n.id) ? 'true' : 'false'}>
               {n.kind === 'note' ? 'Note' : 'Circumstance'}: {nodeName(n, titleOf)}
               {n.code ? `, code ${n.code}` : `, ${S.codes.status[n.code_status]}`}
               {n.pinned ? ', pinned' : ''}
@@ -515,7 +647,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
             </li>
           ))}
           {props.map.edges.map((e) => (
-            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
+            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-basis={e.basis} data-check={e.check} data-ends={overlay.ends[e.id]} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
               {props.describeEdge(e)}
             </li>
           ))}

@@ -1,7 +1,7 @@
 /** Smoke: every route renders its h1; dark mode persists; 375 px; keyboard-only main surface; list-view CRUD; axe. */
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
 
 const ROUTES = ['/', '/maps', '/map', '/evidence', '/references', '/glossary', '/concepts', '/concepts/reading-clds', '/help', '/methods', '/about'];
 const NAV = ['Map', 'My maps', 'Evidence', 'References', 'Glossary', 'Primers', 'Help', 'Methods', 'About'];
@@ -62,8 +62,15 @@ test('keyboard-only path through the main surface (p-navigator)', async ({ page 
   // E → new link dialog; submit with the defaults (from the selection to the other node)
   await page.getByTestId('canvas').focus();
   await page.keyboard.press('e');
-  await expect(page.getByTestId('edge-dialog')).toBeVisible();
-  await page.getByTestId('edge-submit').focus();
+  const ed = page.getByTestId('edge-dialog');
+  await expect(ed).toBeVisible();
+  await expect(ed.getByTestId('edge-submit')).toBeDisabled();
+  await ed.getByTestId('override-checkbox').focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Tab'); // bold
+  await ed.getByRole('textbox', { name: 'Why keep this link?', exact: true }).focus();
+  await page.keyboard.type('Keyboard reason');
+  await ed.getByTestId('edge-submit').focus();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('canvas-outline').locator('li[data-edge]')).toHaveCount(1);
   // arrows move the selection, Shift+arrow nudges and pins, P toggles the pin, 1/2 neighbourhood, A menu, L loops, ? keys
@@ -112,6 +119,9 @@ test('accessible view: create, edit and delete nodes and links by keyboard', asy
   await page.getByTestId('node-submit').press('Enter');
   await expect(lv.getByTestId('nodes-table').locator('tbody tr')).toHaveCount(2);
   await lv.getByTestId('list-add-edge').press('Enter');
+  await page.getByTestId('override-checkbox').press('Space');
+  await page.getByTestId('edge-dialog').getByRole('textbox', { name: 'Why keep this link?', exact: true }).focus();
+  await page.keyboard.type('List reason');
   await page.getByTestId('edge-submit').press('Enter');
   await expect(lv.getByTestId('edges-table').locator('tbody tr')).toHaveCount(1);
   // edit the link: polarity − flips the weight sign (locked to polarity)
@@ -152,7 +162,13 @@ test.describe('axe (WCAG 2.1 AA)', () => {
       await addNode(page, { code: 'QD80', search: 'unemployment' });
       await addNode(page, { status: 'undetermined', label: 'Q' });
       await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
-      await addEdge(page, 'Problem associated with unemployment', 'Inadequate housing', { polarity: '−' });
+      await addEdge(page, 'Problem associated with unemployment', 'Inadequate housing', { polarity: '−', override: 'x' });
+      // a needs-review link: recode the unemployment node so the L03 link loses its evidence
+      await selectNodeByName(page, 'Problem associated with unemployment');
+      await panel(page, 'inspect');
+      await page.getByTestId('inspector').getByTestId('change-code').click();
+      await page.getByTestId('inspector').getByTestId('code-search').fill('stress');
+      await page.getByTestId('inspector').locator('[data-code="QE01"]').click();
       const scan = async (where: string) => {
         const res = await new AxeBuilder({ page: page as never }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
         return res.violations.map((v) => `${where}: ${v.id} — ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
@@ -165,8 +181,17 @@ test.describe('axe (WCAG 2.1 AA)', () => {
       await page.getByTestId('add-node').click();
       all.push(...(await scan('/map node dialog')));
       await page.keyboard.press('Escape');
+      await page.getByTestId('add-edge').click();
+      // an unsupported pair, so the override block is on screen for the scan
+      await page.getByTestId('edge-dialog').getByTestId('edge-from').selectOption({ label: 'Q' });
+      await page.getByTestId('edge-dialog').getByTestId('override-checkbox').check();
+      all.push(...(await scan('/map link form')));
+      await page.keyboard.press('Escape');
       await page.getByTestId('switch-view').click();
       all.push(...(await scan('/map/list')));
+      await page.getByTestId('list-edit-edge').first().click();
+      all.push(...(await scan('/map/list edge dialog')));
+      await page.keyboard.press('Escape');
       expect(all).toEqual([]);
     });
   }

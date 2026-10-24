@@ -62,12 +62,21 @@ export async function addNode(page: Page, n: NodeSpec) {
   await fillNodeDialog(page, n);
 }
 
-export async function addEdge(page: Page, from: string, to: string, opts: { polarity?: '+' | '−'; weight?: number; description?: string } = {}) {
-  await page.getByTestId('add-edge').click();
+export interface EdgeOpts {
+  polarity?: '+' | '−';
+  weight?: number;
+  description?: string;
+  /** UI-18: the override reason, when the link is not backed by evidence */
+  override?: string;
+}
+/** Fill the open link form (UI-17/18). */
+export async function fillLinkForm(page: Page, to: string | null, opts: EdgeOpts = {}) {
   const d = page.getByTestId('edge-dialog');
   await expect(d).toBeVisible();
-  await d.getByTestId('edge-from').selectOption({ label: from });
-  await d.getByTestId('edge-to').selectOption({ label: to });
+  if (to) {
+    await d.getByTestId('link-search').fill(to);
+    await d.locator('label', { has: page.getByTestId('link-target') }).filter({ hasText: to }).first().getByTestId('link-target').check();
+  }
   if (opts.polarity === '−') await d.getByTestId('polarity-minus').check({ force: true });
   if (opts.weight !== undefined) {
     const w = Math.abs(opts.weight);
@@ -76,8 +85,18 @@ export async function addEdge(page: Page, from: string, to: string, opts: { pola
     else await d.getByTestId('weight-free').fill(String(w));
   }
   if (opts.description) await typeRich(page, d, 'Describe how one leads to the other', opts.description);
+  if (opts.override !== undefined) {
+    await expect(d.getByTestId('edge-submit')).toBeDisabled();
+    await d.getByTestId('override-checkbox').check();
+    await typeRich(page, d, 'Why keep this link?', opts.override);
+  }
   await d.getByTestId('edge-submit').click();
   await expect(d).toBeHidden();
+}
+export async function addEdge(page: Page, from: string, to: string, opts: EdgeOpts = {}) {
+  await page.getByTestId('add-edge').click();
+  await page.getByTestId('edge-dialog').getByTestId('edge-from').selectOption({ label: from });
+  await fillLinkForm(page, to, opts);
 }
 
 export async function panel(page: Page, id: string) {

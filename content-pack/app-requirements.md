@@ -22,6 +22,21 @@ Every UI-* requirement below is Daniel's (2026-10-23). Each "how" line is the Re
   - **Undetermined**: not yet decided. It shows a "?" badge and appears in a "To code" list in the side panel.
   All three take part equally in edges, loops, paths and the leverage hints. Other and undetermined nodes are drawn with a neutral fill and a dashed outline, so the map shows at a glance which parts are coded. The association menu (UI-03) is offered only on SDOH nodes; on the others it says "Assign an SDOH code to see associations". Recoding between the three states keeps all edges. The loop report and CSV export carry `code_status` and `type`.
 
+- **UI-17 Link existing circumstances directly** (Daniel, 2026-10-23: "it's not clear there is a way to link to an existing circumstance — so there can never be a loop"). Three ways, all of them obvious without the help overlay:
+  - **Drag to connect:** a selected node shows a small connector handle; dragging from it onto another node opens the link form pre-filled with From and To. (How: `cytoscape-edgehandles`, or equivalent.)
+  - **From the association menu:** when a node already on the map falls in the suggested block (its code, parent, `QD71` subgroup or group), the entry offers **"Link to <existing node>"** beside "Add new". This is how a loop closes through evidence.
+  - **A visible "Link to…" button** in the selected node's toolbar and panel opens a searchable list of the other nodes (the E key does the same). The list view keeps its link form.
+- **UI-18 Evidence-checked links, with deliberate overrides** (Daniel, 2026-10-23: "restrict relationships based on this logic and require a deliberate override, and indicate the override on the map").
+  - **Check every new or edited link** against `links.yaml`, from the specific code upward: the code, its parent, the `QD71` subgroup, its group. Both ends and the direction must match a shipped link.
+  - **The link's `basis`** is one of:
+    - `evidence`: a shipped link matches in direction and polarity. The edge carries the link id, refs and grade.
+    - `override`: anything else, which covers no matching link, opposite polarity to the evidence, a link that is withheld pending evidence, or an end that is not an SDOH code (`other`/`undetermined`).
+  - **An override is deliberate:** the form says why the link is not supported (for example "No evidence link from QD51 to QD71 in this app" or "Evidence link L02 is withheld: …"), offers the nearest supported alternative if there is one, and needs a confirm plus a short reason (required, rich text allowed). The reason, the date and the check result are stored on the edge.
+  - **Overrides are visible:** each override edge carries a mid-edge **⚑ flag** glyph, a separate mark from the user's own line-type and colour choices (UI-12, UI-13). It has a legend entry ("Override: not backed by evidence in this app") and a tooltip with the reason. The link inventory, loop list and loop report show each loop's override count ("R1 · 3 links · 1 override"), and the map header shows a running count ("12 links: 4 evidence · 8 override").
+  - **The analyses** get an "Evidence-backed links only" toggle that recomputes loops, paths and leverage without the overrides.
+  - **Recoding re-checks.** When a node is recoded, its edges are checked again. An edge that loses its evidence becomes `needs-review` (a ⚑ outline, and it is listed until the user confirms an override or deletes it). It is never silently relabelled.
+  - Export and import carry `basis`, `link`, `override_reason`, `override_at` and `check`.
+
 ## Layout
 - **UI-06 Auto-arrange for readability.** One click re-lays out the map to minimise edge crossings and overlaps, spread loops apart and keep labels legible. *How:* Cytoscape.js with fCoSE (force-directed, compound-aware) as the default and ELK "stress" as an alternative, with node-overlap avoidance and label-size-aware spacing. Animate the transition, and keep the result undoable.
 - **UI-07 Grab and drag.** Nodes can be dragged freely, and a dragged node stays **pinned** (shown by a small pin). Auto-arrange respects pins unless the user chooses "Re-arrange all". Multi-select uses box-drag or Shift-click. Pan and zoom use the trackpad, mouse wheel and pinch.

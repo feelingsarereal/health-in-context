@@ -6,6 +6,7 @@ import { deleteEdges, deleteNodes, updateEdge, updateNode, type MapEdge, type Sd
 import { plainText } from '@/lib/model/rich';
 import { Dialog } from '@/components/ui/Dialog';
 import { NodeFields, EdgeFields } from './Forms';
+import { BasisPanel } from './LinkForm';
 import { RichView } from './RichView';
 import type { Highlight } from './Canvas';
 
@@ -67,7 +68,7 @@ export function ListView({ map, nm, selected, onSelect, onAddNode, onAddEdge, on
         <div className="mt-2 overflow-x-auto">
           <table className="w-full text-sm" data-testid="edges-table">
             <thead>
-              <tr className="text-left"><th scope="col" className="py-1 pr-2">From → To</th><th scope="col" className="py-1 pr-2">Polarity · weight</th><th scope="col" className="py-1 pr-2">Description</th><th scope="col" className="py-1">Actions</th></tr>
+              <tr className="text-left"><th scope="col" className="py-1 pr-2">From → To</th><th scope="col" className="py-1 pr-2">Polarity · weight</th><th scope="col" className="py-1 pr-2">Basis</th><th scope="col" className="py-1 pr-2">Description</th><th scope="col" className="py-1">Actions</th></tr>
             </thead>
             <tbody>
               {map.edges.map((e) => (
@@ -77,6 +78,7 @@ export function ListView({ map, nm, selected, onSelect, onAddNode, onAddEdge, on
                     <span aria-hidden>{nm(e.from)} → {nm(e.to)}</span>
                   </th>
                   <td className="py-1 pr-2"><span className={e.polarity === '+' ? 'ax-edge-pos font-bold' : 'ax-edge-neg font-bold'}>{e.polarity}</span> {e.weight}{e.delay ? ' ‖' : ''} · {e.confidence}{e.evidence.length ? ` · ${e.evidence.map((n) => `[${n}]`).join('')}` : ''}</td>
+                  <td className="py-1 pr-2" data-testid="edge-basis">{e.basis === 'evidence' ? `evidence ${e.link}` : e.basis === 'override' ? '⚑ override' : '⚑ needs review'}</td>
                   <td className="py-1 pr-2">{plainText(e.description) ? <RichView doc={e.description} clamp={120} /> : <span className="bx-muted">—</span>}</td>
                   <td className="py-1">
                     <div className="flex flex-wrap gap-1">
@@ -103,6 +105,20 @@ export function ListView({ map, nm, selected, onSelect, onAddNode, onAddEdge, on
         {edge && (
           <>
             {err && <p role="alert" className="bx-todo mb-2">{err}</p>}
+            <BasisPanel
+              key={`${edge.id}:${edge.basis}`}
+              edge={edge}
+              map={map}
+              nm={nm}
+              onPatch={(p) => {
+                try {
+                  apply((m) => updateEdge(m, edge.id, p));
+                  setErr(null);
+                } catch (x) {
+                  setErr((x as Error).message);
+                }
+              }}
+            />
             <EdgeFields
               draft={edge}
               onChange={(p, key) => {
