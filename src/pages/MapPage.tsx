@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { S } from '@/lib/data/core';
 import { codeMap, codesIn, type Link as PackLink } from '@/lib/data/scheme';
 import { C } from '@/lib/copy';
+import { USER_COLOURS } from '@/lib/palette';
 import { useTheme } from '@/lib/theme';
 import { getStore, pref } from '@/lib/storage';
 import { useMapDoc } from '@/components/map/useMapDoc';
@@ -406,6 +407,26 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
           {selected.nodes.length + selected.edges.length > 1 ? (
             <div>
               <p>{selected.nodes.length} circumstances and {selected.edges.length} links selected.</p>
+              {selected.nodes.length > 1 && (
+                // UI-12: colour override per selection (K2 decision 6)
+                <label className="mt-2 block text-sm text-[color:var(--bx-ink)]">
+                  <span className="mb-1 block font-semibold">{C.node.fill} ({selected.nodes.length})</span>
+                  <select
+                    className="bx-input ax-tap w-auto"
+                    value=""
+                    data-testid="selection-fill"
+                    onChange={(e) => {
+                      const fill = e.target.value === 'block' ? null : e.target.value;
+                      apply((m) => selected.nodes.reduce((acc, id) => updateNode(acc, id, { style: { ...(acc.nodes.find((n) => n.id === id)?.style ?? {}), fill } }), m));
+                      announce(`Colour set on ${selected.nodes.length} circumstances.`);
+                    }}
+                  >
+                    <option value="" disabled>Choose…</option>
+                    <option value="block">Block colour</option>
+                    {USER_COLOURS.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </label>
+              )}
               <button type="button" className="bx-btn ax-tap mt-2" onClick={removeSelection}>Delete selection</button>
             </div>
           ) : (

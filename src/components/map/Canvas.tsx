@@ -176,6 +176,18 @@ function stylesheet(dark: boolean, print: boolean): any[] {
         'text-rotation': 'autorotate',
       },
     },
+    // Daniel's call (K2 decision 5): the ⚑ is larger and sits in a haloed badge, so overrides stay findable when zoomed out
+    {
+      selector: 'edge.override, edge.review',
+      style: {
+        'font-size': 22,
+        'text-background-padding': '4px',
+        'text-border-width': 2,
+        'text-border-color': print ? '#1f1b16' : dark ? '#f2a0ae' : '#a3243b',
+        'text-border-opacity': 1,
+        'text-background-shape': 'round-rectangle',
+      },
+    },
     { selector: 'edge.review', style: { 'underlay-color': dark ? '#fbbf24' : '#b45309', 'underlay-opacity': 0.35, 'underlay-padding': 5 } },
     { selector: 'edge:selected', style: { 'overlay-color': dark ? '#8fb4ea' : '#2f5d9a', 'overlay-opacity': 0.25, 'overlay-padding': 6 } },
     { selector: '.dim', style: { opacity: 0.15 } },
@@ -638,7 +650,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         <h2 id="canvas-outline-h">{C.canvas.outline}</h2>
         <ul data-testid="canvas-outline">
           {props.map.nodes.map((n) => (
-            <li key={n.id} data-node={n.id} data-rx={overlay.pos[n.id]?.x} data-ry={overlay.pos[n.id]?.y} data-bb={overlay.pos[n.id]?.bb} data-status={n.code_status} data-group={n.code ? colourGroup(n.code) ?? '' : ''} data-dashed={n.code_status !== 'sdoh' ? 'true' : 'false'} data-pinned={n.pinned ? 'true' : 'false'} data-state={props.highlight ? (props.highlight.nodes.has(n.id) || props.highlight.out?.has(n.id) || props.highlight.in?.has(n.id) ? 'highlighted' : 'dimmed') : 'normal'} data-selected={props.selected.nodes.includes(n.id) ? 'true' : 'false'}>
+            <li key={n.id} data-node={n.id} data-rx={overlay.pos[n.id]?.x} data-ry={overlay.pos[n.id]?.y} data-bb={overlay.pos[n.id]?.bb} data-status={n.code_status} data-group={n.code ? colourGroup(n.code) ?? '' : ''} data-dashed={n.code_status !== 'sdoh' ? 'true' : 'false'} data-pinned={n.pinned ? 'true' : 'false'} data-fill={n.style.fill ?? ''} data-state={props.highlight ? (props.highlight.nodes.has(n.id) || props.highlight.out?.has(n.id) || props.highlight.in?.has(n.id) ? 'highlighted' : 'dimmed') : 'normal'} data-selected={props.selected.nodes.includes(n.id) ? 'true' : 'false'}>
               {n.kind === 'note' ? 'Note' : 'Circumstance'}: {nodeName(n, titleOf)}
               {n.code ? `, code ${n.code}` : `, ${S.codes.status[n.code_status]}`}
               {n.pinned ? ', pinned' : ''}
