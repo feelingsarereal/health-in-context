@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import { z } from 'zod';
-import { allowedMatchers, lintText, walkStrings, type LintHit } from './lint';
+import { allowedMatchers, joinPath, lintText, walkStrings, type LintHit } from './lint';
 
 // ───────────────────────── schemas (ACTION-PACK §2–§5, SAFETY §4, SUSTAIN §2)
 const dateLike = z.union([z.string(), z.date()]).transform((v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v));
@@ -105,7 +105,16 @@ const SituationItemSchema = z
     who_browser: z.string(),
     source_url: z.string().min(1, 'source_url required'),
     verified_on: dateLike,
-    crosswalk: z.object({ icd10cm: z.array(z.string()), hp2030: z.array(z.string()), proposed: z.boolean().optional() }).optional(),
+    crosswalk: z
+      .object({
+        icd10cm: z.array(z.string()),
+        hp2030: z.array(z.string()),
+        proposed: z.boolean().optional(),
+        hp2030_titles: z.array(z.string().nullable()).optional(),
+        icd10cm_titles: z.array(z.string().nullable()).optional(),
+        sources: z.array(z.number().int()).optional(),
+      })
+      .optional(),
   })
   .passthrough();
 const GroupSchema = z
@@ -182,6 +191,7 @@ export const SafetySchema = z.object({
   profile: z.enum(['general', 'health', 'crisis-adjacent']),
   notice: z.string().optional(),
   blocked_phrases: z.array(z.string()).default([]),
+  allowed_phrases: z.array(z.string()).default([]),
   allowed_contexts: z.array(z.object({ field: z.string() })).default([]),
   deidentify: z.object({ fields: z.array(z.string()), nudge: z.string() }).optional(),
   help: z.array(HelpSchema).default([]),
@@ -585,7 +595,8 @@ export function validatePack(pack: RawPack): ValidationResult {
   if (pack.scope !== undefined) data.scope = parse(ScopeSchema, pack.scope, 'scope', errors);
   data.todo = parse(TodoSchema, pack.todo ?? { items: [] }, 'todo', errors)?.items ?? [];
 
-  // H1 lint over every pack string (validate_pack.py file set + the 101s and safety notice, which render too)
+  // H1 lint (SAFETY 0.1.1): validate_pack.py 0.1.1's file set, plus the 101s, which render too. Exact allowed_phrases
+  // are removed before matching; allowed_contexts are skipped; no negation exemption.
   const lint: LintHit[] = [];
   if (sf && sf.blocked_phrases.length) {
     const allowed = allowedMatchers(sf.allowed_contexts.map((a) => a.field));
@@ -597,18 +608,19 @@ export function validatePack(pack: RawPack): ValidationResult {
       ['situations', pack.situations],
       ['glossary', pack.glossary],
       ['scope', pack.scope],
-      ['safety', { notice: sf.notice, help: sf.help, deidentify: sf.deidentify }],
+      ['references', pack.references],
+      ['safety', pack.safety],
       ...pack.concepts.map((c): [string, unknown] => [`concepts/${c.file}`, { front: c.front, body: c.body }]),
     ];
     for (const [base, obj] of files) {
       if (obj === undefined) continue;
       for (const [p, txt] of walkStrings(obj)) {
-        const full = `${base}.${p}`;
-        if (allowed.some((r) => r.test(full)) || full.includes('.must_not') || full.startsWith('scope.boundary.out')) continue;
-        lint.push(...lintText(full, txt, sf.blocked_phrases));
+        const full = joinPath(base, p);
+        if (allowed.some((r) => r.test(full)) || full.includes('.must_not') || full.startsWith('safety.blocked_phrases') || full.startsWith('safety.allowed_phrases')) continue;
+        lint.push(...lintText(full, txt, sf.blocked_phrases, sf.allowed_phrases));
       }
     }
-    for (const h of lint) if (!h.negated) E(`safety lint (H1): ${h.where} contains blocked phrase '${h.phrase}' — “${h.excerpt}”`);
+    for (const h of lint) E(`safety lint (H1): ${h.where} contains blocked phrase '${h.phrase}' — “${h.excerpt}”`);
   }
 
   return { errors, warnings, lint, data };

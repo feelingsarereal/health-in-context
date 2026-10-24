@@ -121,6 +121,13 @@ items:
     hp2030: &id002
     - econ
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD51
   title: Low income
   group: QD50-QD5Z
@@ -144,6 +151,13 @@ items:
     icd10cm: *id001
     hp2030: *id002
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD60
   title: Problems associated with inadequate drinking-water
   group: QD60-QD6Z
@@ -171,6 +185,15 @@ items:
     - econ
     - nbe
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Neighborhood and Built Environment
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    - Problems related to physical environment
+    sources:
+    - 57
+    - 58
 - code: QD61
   title: Inadequate food
   group: QD60-QD6Z
@@ -197,6 +220,15 @@ items:
     icd10cm: *id003
     hp2030: *id004
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Neighborhood and Built Environment
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    - Problems related to physical environment
+    sources:
+    - 57
+    - 58
 - code: QD70
   title: Problems associated with the natural environment or human-made changes to the environment
   group: QD70-QD7Z
@@ -223,6 +255,15 @@ items:
     - nbe
     - econ
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.0
   title: Problems associated with exposure to noise
   group: QD70-QD7Z
@@ -244,6 +285,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.1
   title: Problems associated with exposure to air pollution
   group: QD70-QD7Z
@@ -266,6 +316,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.2
   title: Problems associated with exposure to water pollution
   group: QD70-QD7Z
@@ -287,6 +346,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.3
   title: Problems associated with exposure to soil pollution
   group: QD70-QD7Z
@@ -306,6 +374,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.4
   title: Problems associated with exposure to radiation
   group: QD70-QD7Z
@@ -325,6 +402,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.5
   title: Problems associated with exposure to tobacco smoke
   group: QD70-QD7Z
@@ -353,6 +439,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD70.6
   title: Problems associated with inadequate access to electricity
   group: QD70-QD7Z
@@ -372,6 +467,15 @@ items:
     icd10cm: *id005
     hp2030: *id006
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QD71
   title: Problems associated with housing
   group: QD70-QD7Z
@@ -392,6 +496,15 @@ items:
     hp2030: *id006
     icd10cm: *id005
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
   subgroup: QD71
 - code: QD71.0
   title: Homelessness
@@ -420,6 +533,15 @@ items:
     hp2030: *id006
     icd10cm: *id005
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
   subgroup: QD71
 - code: QD71.1
   title: Inadequate housing
@@ -448,6 +570,15 @@ items:
     hp2030: *id006
     icd10cm: *id005
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
   subgroup: QD71
 - code: QD71.2
   title: Problems related to living in residential institution
@@ -472,6 +603,15 @@ items:
     hp2030: *id006
     icd10cm: *id005
     proposed: true
+    hp2030_titles:
+    - Neighborhood and Built Environment
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to physical environment
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
   subgroup: QD71
 - code: QD80
   title: Problem associated with unemployment
@@ -497,6 +637,14 @@ items:
     hp2030: &id008
     - econ
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD81
   title: Problem associated with change of job
   group: QD80-QD8Z
@@ -517,6 +665,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD82
   title: Problem associated with threat of job loss
   group: QD80-QD8Z
@@ -537,6 +693,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD83
   title: Problem with employment conditions
   group: QD80-QD8Z
@@ -555,6 +719,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD83.0
   title: Problem associated with uncongenial work
   group: QD80-QD8Z
@@ -575,6 +747,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD83.1
   title: Problem associated with stressful work schedule
   group: QD80-QD8Z
@@ -596,6 +776,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84
   title: Occupational exposure to risk-factors
   group: QD80-QD8Z
@@ -614,6 +802,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84.0
   title: Occupational exposure to dust
   group: QD80-QD8Z
@@ -636,6 +832,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84.1
   title: Occupational exposure to toxic agents in agriculture
   group: QD80-QD8Z
@@ -657,6 +861,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84.2
   title: Occupational exposure to toxic agents in industries other than agriculture
   group: QD80-QD8Z
@@ -677,6 +889,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84.3
   title: Occupational exposure to vibration
   group: QD80-QD8Z
@@ -696,6 +916,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD84.4
   title: Occupational exposure to ergonomic risk
   group: QD80-QD8Z
@@ -715,6 +943,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD85
   title: Burnout
   group: QD80-QD8Z
@@ -746,6 +982,14 @@ items:
     icd10cm: *id007
     hp2030: *id008
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    icd10cm_titles:
+    - Problems related to employment and unemployment
+    - Occupational exposure to risk factors
+    sources:
+    - 57
+    - 58
 - code: QD90
   title: Problem associated with illiteracy or low-level literacy
   group: QD90-QD9Z
@@ -771,6 +1015,13 @@ items:
     hp2030: &id010
     - edu
     proposed: true
+    hp2030_titles:
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to education and literacy
+    sources:
+    - 57
+    - 58
 - code: QD91
   title: Problem associated with education unavailable or unattainable
   group: QD90-QD9Z
@@ -792,6 +1043,13 @@ items:
     icd10cm: *id009
     hp2030: *id010
     proposed: true
+    hp2030_titles:
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to education and literacy
+    sources:
+    - 57
+    - 58
 - code: QD92
   title: Problem with educational progress
   group: QD90-QD9Z
@@ -818,6 +1076,13 @@ items:
     icd10cm: *id009
     hp2030: *id010
     proposed: true
+    hp2030_titles:
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to education and literacy
+    sources:
+    - 57
+    - 58
 - code: QE00
   title: Acculturation difficulty
   group: QE00-QE0Z
@@ -847,6 +1112,13 @@ items:
     hp2030: &id012
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE01
   title: Stress, not elsewhere classified
   group: QE00-QE0Z
@@ -870,6 +1142,13 @@ items:
     icd10cm: *id011
     hp2030: *id012
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE02
   title: Social role conflict
   group: QE00-QE0Z
@@ -889,6 +1168,13 @@ items:
     icd10cm: *id011
     hp2030: *id012
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE03
   title: Social exclusion or rejection
   group: QE00-QE0Z
@@ -915,6 +1201,13 @@ items:
     icd10cm: *id011
     hp2030: *id012
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE04
   title: Target of perceived adverse discrimination or persecution
   group: QE00-QE0Z
@@ -949,6 +1242,13 @@ items:
     icd10cm: *id011
     hp2030: *id012
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE10
   title: Hazardous alcohol use
   group: QE10-QE2Z
@@ -977,6 +1277,12 @@ items:
     - Z72
     hp2030: &id014 []
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11
   title: Hazardous drug use
   group: QE10-QE2Z
@@ -1004,6 +1310,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.0
   title: Hazardous use of opioids
   group: QE10-QE2Z
@@ -1039,6 +1351,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.1
   title: Hazardous use of cannabis
   group: QE10-QE2Z
@@ -1069,6 +1387,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.2
   title: Hazardous use of sedatives, hypnotics or anxiolytics
   group: QE10-QE2Z
@@ -1104,6 +1428,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.3
   title: Hazardous use of cocaine
   group: QE10-QE2Z
@@ -1136,6 +1466,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.4
   title: Hazardous use of stimulants including amphetamines or methamphetamine
   group: QE10-QE2Z
@@ -1166,6 +1502,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.5
   title: Hazardous use of caffeine
   group: QE10-QE2Z
@@ -1194,6 +1536,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.6
   title: Hazardous use of MDMA or related drugs
   group: QE10-QE2Z
@@ -1223,6 +1571,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.7
   title: Hazardous use of dissociative drugs including ketamine or PCP
   group: QE10-QE2Z
@@ -1253,6 +1607,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.8
   title: Hazardous use of other specified psychoactive substances
   group: QE10-QE2Z
@@ -1281,6 +1641,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE11.9
   title: Hazardous use of unknown or unspecified psychoactive substances
   group: QE10-QE2Z
@@ -1310,6 +1676,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE12
   title: Hazardous nicotine use
   group: QE10-QE2Z
@@ -1339,6 +1711,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE13
   title: Tobacco use
   group: QE10-QE2Z
@@ -1374,6 +1752,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE20
   title: Lack of physical exercise
   group: QE10-QE2Z
@@ -1394,6 +1778,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE21
   title: Hazardous gambling or betting
   group: QE10-QE2Z
@@ -1424,6 +1814,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE22
   title: Hazardous gaming
   group: QE10-QE2Z
@@ -1451,6 +1847,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE23
   title: Problems with inappropriate diet or eating habits
   group: QE10-QE2Z
@@ -1479,6 +1881,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE24
   title: Problems with hygiene behaviours
   group: QE10-QE2Z
@@ -1499,6 +1907,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE25
   title: Problems with oral health behaviours
   group: QE10-QE2Z
@@ -1519,6 +1933,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE26
   title: Problem with sun exposure behaviour
   group: QE10-QE2Z
@@ -1538,6 +1958,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE27
   title: Problem with behaviours related to psychological health or wellbeing
   group: QE10-QE2Z
@@ -1557,6 +1983,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE28
   title: Problem with health literacy
   group: QE10-QE2Z
@@ -1576,6 +2008,12 @@ items:
     icd10cm: *id013
     hp2030: *id014
     proposed: true
+    hp2030_titles: []
+    icd10cm_titles:
+    - null
+    sources:
+    - 57
+    - 58
 - code: QE30
   title: Insufficient social insurance support
   group: QE30-QE3Z
@@ -1597,6 +2035,14 @@ items:
     - econ
     - hca
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE30.0
   title: Insufficient social insurance support, aged
   group: QE30-QE3Z
@@ -1618,6 +2064,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE30.1
   title: Insufficient social insurance support, disability
   group: QE30-QE3Z
@@ -1639,6 +2093,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE30.2
   title: Insufficient social insurance support, unemployment
   group: QE30-QE3Z
@@ -1660,6 +2122,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE30.3
   title: Insufficient social insurance support, family support
   group: QE30-QE3Z
@@ -1681,6 +2151,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE31
   title: Insufficient social welfare support
   group: QE30-QE3Z
@@ -1699,6 +2177,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE31.0
   title: Insufficient social welfare support, child protection
   group: QE30-QE3Z
@@ -1720,6 +2206,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE31.1
   title: Insufficient social welfare support, protection against domestic violence
   group: QE30-QE3Z
@@ -1741,6 +2235,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE31.2
   title: Insufficient social welfare support, protection against homelessness
   group: QE30-QE3Z
@@ -1762,6 +2264,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE31.3
   title: Insufficient social welfare support, post prison services
   group: QE30-QE3Z
@@ -1783,6 +2293,14 @@ items:
     icd10cm: *id015
     hp2030: *id016
     proposed: true
+    hp2030_titles:
+    - Economic Stability
+    - Health Care Access and Quality
+    icd10cm_titles:
+    - Problems related to housing and economic circumstances
+    sources:
+    - 57
+    - 58
 - code: QE40
   title: Problem associated with conviction in civil or criminal proceedings without imprisonment
   group: QE40-QE4Z
@@ -1805,6 +2323,13 @@ items:
     hp2030: &id018
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    sources:
+    - 57
+    - 58
 - code: QE41
   title: Problem associated with imprisonment or other incarceration
   group: QE40-QE4Z
@@ -1826,6 +2351,13 @@ items:
     icd10cm: *id017
     hp2030: *id018
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    sources:
+    - 57
+    - 58
 - code: QE42
   title: Problem associated with release from prison
   group: QE40-QE4Z
@@ -1846,6 +2378,13 @@ items:
     icd10cm: *id017
     hp2030: *id018
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    sources:
+    - 57
+    - 58
 - code: QE50
   title: Problem associated with interpersonal interactions
   group: QE50-QE5Z
@@ -1869,6 +2408,14 @@ items:
     hp2030: &id020
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.0
   title: Problem associated with relationship with friend
   group: QE50-QE5Z
@@ -1888,6 +2435,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.1
   title: Relationships with teachers or classmates
   group: QE50-QE5Z
@@ -1906,6 +2461,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.10
   title: Dissatisfaction with school environment
   group: QE50-QE5Z
@@ -1926,6 +2489,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.2
   title: Problem associated with relationships with people at work
   group: QE50-QE5Z
@@ -1946,6 +2517,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.3
   title: Relationships with neighbours, tenant or landlord
   group: QE50-QE5Z
@@ -1971,6 +2550,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.4
   title: Relationship with parents, in-laws or other family members
   group: QE50-QE5Z
@@ -2001,6 +2588,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.5
   title: Discord with counsellors
   group: QE50-QE5Z
@@ -2025,6 +2620,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.6
   title: Inadequate social skills
   group: QE50-QE5Z
@@ -2046,6 +2649,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE50.7
   title: Personality difficulty
   group: QE50-QE5Z
@@ -2073,6 +2684,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE51
   title: Problem associated with interactions with spouse or partner
   group: QE50-QE5Z
@@ -2091,6 +2710,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE51.0
   title: Relationship distress with spouse or partner
   group: QE50-QE5Z
@@ -2123,6 +2750,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE51.1
   title: History of spouse or partner violence
   group: QE50-QE5Z
@@ -2149,6 +2784,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE52
   title: Problem associated with interpersonal interactions in childhood
   group: QE50-QE5Z
@@ -2167,6 +2810,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE52.0
   title: Caregiver-child relationship problem
   group: QE50-QE5Z
@@ -2190,6 +2841,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE52.1
   title: Loss of love relationship in childhood
   group: QE50-QE5Z
@@ -2213,6 +2872,14 @@ items:
     icd10cm: *id019
     hp2030: *id020
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    - Problems related to social environment
+    sources:
+    - 57
+    - 58
 - code: QE60
   title: Absence of family member
   group: QE60-QE6Z
@@ -2234,6 +2901,13 @@ items:
     hp2030: &id022
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE61
   title: Disappearance or death of family member
   group: QE60-QE6Z
@@ -2258,6 +2932,13 @@ items:
     icd10cm: *id021
     hp2030: *id022
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE61.0
   title: Loss or death of child
   group: QE60-QE6Z
@@ -2281,6 +2962,13 @@ items:
     icd10cm: *id021
     hp2030: *id022
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE62
   title: Uncomplicated bereavement
   group: QE60-QE6Z
@@ -2302,6 +2990,13 @@ items:
     icd10cm: *id021
     hp2030: *id022
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE70
   title: Problems related to primary support group, including family circumstances
   group: QE70
@@ -2326,6 +3021,13 @@ items:
     hp2030: &id024
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE70.0
   title: Inadequate family support
   group: QE70
@@ -2346,6 +3048,13 @@ items:
     icd10cm: *id023
     hp2030: *id024
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE70.1
   title: Disruption of family by separation or divorce
   group: QE70
@@ -2371,6 +3080,13 @@ items:
     icd10cm: *id023
     hp2030: *id024
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE70.2
   title: Dependent relative needing care at home
   group: QE70
@@ -2393,6 +3109,13 @@ items:
     icd10cm: *id023
     hp2030: *id024
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Other problems related to primary support group
+    sources:
+    - 57
+    - 58
 - code: QE80
   title: Victim of crime or terrorism
   group: QE80-QE8Z
@@ -2420,6 +3143,14 @@ items:
     hp2030: &id026
     - scc
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE81
   title: Exposure to disaster, war or other hostilities
   group: QE80-QE8Z
@@ -2445,6 +3176,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE82
   title: Personal history of maltreatment
   group: QE80-QE8Z
@@ -2467,6 +3206,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE82.0
   title: Personal history of physical abuse
   group: QE80-QE8Z
@@ -2491,6 +3238,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE82.1
   title: Personal history of sexual abuse
   group: QE80-QE8Z
@@ -2515,6 +3270,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE82.2
   title: Personal history of psychological abuse
   group: QE80-QE8Z
@@ -2544,6 +3307,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE82.3
   title: Personal history of neglect
   group: QE80-QE8Z
@@ -2566,6 +3337,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE83
   title: Personal frightening experience in childhood
   group: QE80-QE8Z
@@ -2587,6 +3366,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE84
   title: Acute stress reaction
   group: QE80-QE8Z
@@ -2634,6 +3421,14 @@ items:
     icd10cm: *id025
     hp2030: *id026
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    icd10cm_titles:
+    - Problems related to other psychosocial circumstances
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE90
   title: Inadequate parental supervision or control
   group: QE90-QE9Z
@@ -2660,6 +3455,14 @@ items:
     - scc
     - edu
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE91
   title: Parental overprotection
   group: QE90-QE9Z
@@ -2680,6 +3483,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE92
   title: Altered pattern of family relationships in childhood
   group: QE90-QE9Z
@@ -2705,6 +3516,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE93
   title: Removal from home in childhood
   group: QE90-QE9Z
@@ -2725,6 +3544,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE94
   title: Institutional upbringing
   group: QE90-QE9Z
@@ -2747,6 +3574,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE95
   title: Inappropriate parental pressure or other abnormal qualities of upbringing
   group: QE90-QE9Z
@@ -2769,6 +3604,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QE96
   title: Events resulting in loss of self-esteem in childhood
   group: QE90-QE9Z
@@ -2790,6 +3633,14 @@ items:
     icd10cm: *id027
     hp2030: *id028
     proposed: true
+    hp2030_titles:
+    - Social and Community Context
+    - Education Access and Quality
+    icd10cm_titles:
+    - Problems related to upbringing
+    sources:
+    - 57
+    - 58
 - code: QF20
   title: Difficulty or need for assistance with learning
   group: QF20-QF2Z

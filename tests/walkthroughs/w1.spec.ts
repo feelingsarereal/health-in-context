@@ -30,6 +30,12 @@ test('w1: map a client\'s housing–work loop and find it', async ({ page, baseU
   await expect(pop.getByTestId('no-definition')).toHaveText('No definition in ICD-11 for this code.');
   await expect(pop.getByTestId('who-link')).toHaveAttribute('href', /icd\.who\.int\/browse\/2026-01\/mms\/en#/);
   await expect(pop.getByTestId('interim-note')).toBeVisible();
+  // crosswalk (pack update, K2): titles, the proposed-mapping chip and the source citations
+  await expect(pop.getByTestId('proposed-chip')).toHaveText('Proposed mapping');
+  await expect(pop.getByTestId('xwalk-hp2030')).toHaveText(['Healthy People 2030: Neighborhood and Built Environment (nbe)', 'Healthy People 2030: Economic Stability (econ)']);
+  await expect(pop.getByTestId('xwalk-icd10cm')).toHaveText(['ICD-10-CM Z58: Problems related to physical environment', 'ICD-10-CM Z59: Problems related to housing and economic circumstances']);
+  await expect(pop.getByTestId('crosswalk').getByRole('button', { name: 'Reference 57' })).toBeVisible();
+  await expect(pop.getByTestId('crosswalk').getByRole('button', { name: 'Reference 58' })).toBeVisible();
 
   // 3 — association menu by keyboard (select, press A): Leads to / Comes from with polarity, grade, citation; L03; nothing withheld
   await selectNodeByName(page, 'Inadequate housing');

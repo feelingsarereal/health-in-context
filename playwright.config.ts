@@ -5,7 +5,7 @@ const PORT = Number(process.env.SDOH_PW_PORT ?? 4173);
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['walkthroughs/**/*.spec.ts', 'safety/**/*.spec.ts', 'smoke/**/*.spec.ts'],
+  testMatch: ['walkthroughs/**/*.spec.ts', 'safety/**/*.spec.ts', 'smoke/**/*.spec.ts', 'regressions/**/*.spec.ts'],
   timeout: 90_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,

@@ -52,7 +52,10 @@ blocked_phrases:                # H1, case-insensitive whole-phrase lint (extend
   - "diagnos"                   # stem match: diagnose/diagnosis/diagnosed
   - "you should take"
   - "treatment for you"
-allowed_contexts:               # where a blocked stem is legitimate (e.g. quoting ICD's own title text)
+allowed_phrases:                # exact phrases removed before the lint runs, e.g. the app's own "does not diagnose".
+  - "does not diagnose"         # There is NO general negation exemption: a negation test would also pass
+                                # "you don't need a diagnosis, you have …" (Daniel, 2026-10-23)
+allowed_contexts:               # where a blocked stem is legitimate (e.g. quoting ICD's own title text, verbatim abstracts)
   - field: situations.items[].definition
 deidentify:
   fields: [subject, circumstance]
@@ -71,4 +74,5 @@ Daniel decides at intake. The builder recommends:
 - `crisis-adjacent`: the app may be used by, or for, someone in acute distress (HFY Compass and Navigator).
 
 ## History
+- v0.1.1 (2026-10-23): `allowed_phrases` (exact-phrase exemptions) added to H1; a general negation exemption is ruled out (Daniel, on the SDOH Loop Mapper K1 report).
 - v0.1 (2026-10-23): first draft after A0.1. Three cumulative profiles; G1–G5, H1–H6 and C1–C4, each with a validator rule and a build test; the `safety.yaml` shape. The first `health` pilot is the SDOH Loop Mapper.

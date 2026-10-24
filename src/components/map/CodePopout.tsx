@@ -1,6 +1,7 @@
 import { codeMap, groupMap, scheme, tiers } from '@/lib/data/scheme';
 import { S } from '@/lib/data/core';
 import { Todo } from '@/components/ui/bits';
+import { CitedText } from '@/components/evidence/CitedText';
 import type { XRef } from '@/lib/data/scheme';
 
 const xref = (x: string | XRef) => (typeof x === 'string' ? x : `${x.title}${x.code ? ` (${x.code})` : ''}`);
@@ -45,12 +46,25 @@ export function CodePopout({ code, headingLevel = 3 }: { code: string; headingLe
         <div className="mt-2"><p className="font-semibold">Coded elsewhere</p><ul className="list-disc pl-5">{c.coded_elsewhere.map((x, i) => <li key={i}>{xref(x)}</li>)}</ul></div>
       )}
       {c.crosswalk && (
-        <p className="mt-2 flex flex-wrap items-center gap-1">
-          <span className="font-semibold">Crosswalk:</span>
-          {c.crosswalk.icd10cm.map((z) => <span key={z} className="bx-chip border border-[color:var(--bx-line)]">ICD-10-CM {z}</span>)}
-          {c.crosswalk.hp2030.map((h) => <span key={h} className="bx-chip border border-[color:var(--bx-line)]">HP2030 {h}</span>)}
-          {c.crosswalk.proposed && <span className="bx-chip border border-dashed border-[color:var(--bx-line)]" data-testid="proposed-chip">{S.codes.proposed_xwalk}</span>}
-        </p>
+        <div className="mt-2" data-testid="crosswalk">
+          <p className="flex flex-wrap items-center gap-1">
+            <span className="font-semibold">Crosswalk</span>
+            {c.crosswalk.proposed && <span className="bx-chip border border-dashed border-[color:var(--bx-line)]" data-testid="proposed-chip">{S.codes.proposed_xwalk}</span>}
+            {c.crosswalk.sources?.length ? <CitedText as="span" text={c.crosswalk.sources.map((n) => `[${n}]`).join(' ')} /> : null}
+          </p>
+          <ul className="mt-1 space-y-0.5">
+            {c.crosswalk.hp2030.map((h, i) => (
+              <li key={h} data-testid="xwalk-hp2030">
+                Healthy People 2030: {c.crosswalk!.hp2030_titles?.[i] ?? <Todo>domain title for “{h}” not in the pack</Todo>} <span className="font-mono text-xs bx-muted">({h})</span>
+              </li>
+            ))}
+            {c.crosswalk.icd10cm.map((z, i) => (
+              <li key={z} data-testid="xwalk-icd10cm">
+                ICD-10-CM <span className="font-mono">{z}</span>: {c.crosswalk!.icd10cm_titles?.[i] ?? <Todo>title for {z} not in the pack</Todo>}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       {c.index_terms.length > 1 && <p className="mt-2 text-xs bx-muted">Index terms: {c.index_terms.join('; ')}</p>}
       {scheme.interim_source && <p className="mt-2 text-xs bx-muted" data-testid="interim-note">{S.codes.interim}</p>}

@@ -1,38 +1,35 @@
 /**
- * SAFETY H1 lint — shared by the content build (pack strings), the dist lint (tests/safety/lint-dist.ts) and the
- * rendered-text crawl (tests/safety/h1-lint.spec.ts).
+ * SAFETY H1 lint (SAFETY 0.1.1) — shared by the content build (pack strings), the rendered-text crawl and the dist
+ * lint in tests/safety/.
  *
- * Rule (validate_pack.py): case-insensitive, word-start match of each `safety.yaml → blocked_phrases` entry
- * (so "diagnos" catches diagnose/diagnosis/diagnosed). Strings in `allowed_contexts` are skipped.
- *
- * Builder addition, listed on /methods for Daniel to ratify: a hit that is *negated* within the preceding four
- * words ("does not diagnose", "not a diagnosis", "no diagnosis language") is the safety disclaimer itself, not
- * diagnosis language. It is reported as `negated` and does not fail. Every other hit fails.
+ * Rule (tools/validate_pack.py 0.1.1): the exact `safety.yaml → allowed_phrases` are removed first (case-insensitive),
+ * then each `blocked_phrases` entry is matched case-insensitively at a word start (so "diagnos" catches
+ * diagnose/diagnosis/diagnosed). Strings in `allowed_contexts` are skipped by the caller. There is no general negation
+ * exemption (Daniel, 2026-10-23): "you don't need a diagnosis, you have …" fails.
  */
 export interface LintHit {
   where: string;
   phrase: string;
   excerpt: string;
-  negated: boolean;
 }
 
-const NEGATORS = /\b(not|no|never|nor|without|doesn't|don't|isn't|won't|cannot|can't)\b/i;
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-export function lintText(where: string, text: string, phrases: string[]): LintHit[] {
+/** Blank out the allowed phrases (same length, so excerpts keep their positions). */
+export function stripAllowed(text: string, allowedPhrases: string[]): string {
+  let t = text;
+  for (const ap of allowedPhrases) t = t.replace(new RegExp(esc(ap), 'gi'), (m) => ' '.repeat(m.length));
+  return t;
+}
+
+export function lintText(where: string, text: string, phrases: string[], allowedPhrases: string[] = []): LintHit[] {
   const hits: LintHit[] = [];
-  const low = text.toLowerCase();
+  const low = stripAllowed(text, allowedPhrases).toLowerCase();
   for (const ph of phrases) {
-    const re = new RegExp('\\b' + ph.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    const re = new RegExp('\\b' + esc(ph.toLowerCase()), 'g');
     let m: RegExpExecArray | null;
     while ((m = re.exec(low))) {
-      const before = low.slice(Math.max(0, m.index - 60), m.index);
-      const lastWords = before.split(/[.;:!?\n]/).pop()!.trim().split(/\s+/).slice(-4).join(' ');
-      hits.push({
-        where,
-        phrase: ph,
-        excerpt: text.slice(Math.max(0, m.index - 50), m.index + ph.length + 40).replace(/\s+/g, ' '),
-        negated: NEGATORS.test(lastWords),
-      });
+      hits.push({ where, phrase: ph, excerpt: text.slice(Math.max(0, m.index - 50), m.index + ph.length + 40).replace(/\s+/g, ' ') });
     }
   }
   return hits;
@@ -41,11 +38,12 @@ export function lintText(where: string, text: string, phrases: string[]): LintHi
 /** Turn `situations.items[].definition` into a matcher for walk paths like `situations.items[52].definition`. */
 export function allowedMatchers(fields: string[]): RegExp[] {
   return fields.map((f) => {
-    const esc = f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').split('\\[\\]').join('\\[\\d+\\]');
-    return new RegExp('^' + esc + '(\\[\\d+\\]|\\.|$)');
+    const e = esc(f).split('\\[\\]').join('\\[\\d+\\]');
+    return new RegExp('^' + e + '(\\[\\d+\\]|\\.|$)');
   });
 }
 
+/** Walk every string with its path; a top-level list gives `[0].x`, so callers join with the file base directly. */
 export function* walkStrings(obj: unknown, path = ''): Generator<[string, string]> {
   if (Array.isArray(obj)) {
     for (let i = 0; i < obj.length; i++) yield* walkStrings(obj[i], `${path}[${i}]`);
@@ -55,3 +53,6 @@ export function* walkStrings(obj: unknown, path = ''): Generator<[string, string
     yield [path, obj];
   }
 }
+
+/** `base` + walk path, as validate_pack.py 0.1.1 joins them (`references[3].abstract`, `situations.items[0].title`). */
+export const joinPath = (base: string, path: string) => (path.startsWith('[') ? `${base}${path}` : `${base}.${path}`);

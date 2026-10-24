@@ -13,7 +13,12 @@ blocked_phrases:
   - "treatment for you"
   - "prescri"
   - "cure"
+allowed_phrases:              # Daniel 2026-10-23: exact phrases only; no general negation exemption
+  - "does not diagnose"
+  - "not a diagnosis"
 allowed_contexts:
+  - field: scope.boundary.out
+  - field: references[].abstract
   - field: situations.items[].title
   - field: situations.items[].definition
   - field: situations.items[].inclusions

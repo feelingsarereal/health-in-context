@@ -14,7 +14,7 @@ Needs PyYAML.
 import sys, os, re, glob, datetime
 import yaml
 
-VERSION = "0.1"
+VERSION = "0.1.1"
 args = [a for a in sys.argv[1:]]
 root = args[0] if args and not args[0].startswith("--") else "."
 STALENESS = "--staleness" in args
@@ -271,15 +271,17 @@ if level >= 2:
 if level >= 1 and sf.get("blocked_phrases"):
     allowed = [a.get("field", "") for a in sf.get("allowed_contexts") or []]
     allowed_re = [re.compile("^" + re.escape(a).replace(r"\[\]", r"\[\d+\]")) for a in allowed]
-    lint_files = ["ui-strings.yaml", "links.yaml", "pathway.yaml", "scenarios.yaml", "audience.yaml", "situations.yaml", "glossary.yaml"]
+    lint_files = ["ui-strings.yaml", "links.yaml", "pathway.yaml", "scenarios.yaml", "audience.yaml", "situations.yaml", "glossary.yaml", "scope.yaml", "references.yaml", "safety.yaml"]
     for fn in lint_files:
         data = load(fn, required=False)
         if data is None: continue
         base = os.path.splitext(fn)[0]
         for path, txt in walk_strings(data):
-            full = f"{base}.{path}"
-            if any(r.match(full) for r in allowed_re) or ".must_not" in full: continue
+            full = f"{base}{path}" if path.startswith("[") else f"{base}.{path}"
+            if any(r.match(full) for r in allowed_re) or ".must_not" in full or full.startswith("safety.blocked_phrases") or full.startswith("safety.allowed_phrases"): continue
             low = txt.lower()
+            for ap in sf.get("allowed_phrases") or []:      # SAFETY 0.1.1: exact-phrase exemptions only
+                low = low.replace(str(ap).lower(), " ")
             for ph in sf["blocked_phrases"]:
                 if re.search(r"\b" + re.escape(ph.lower()), low):
                     E(f"safety lint (H1): {full} contains blocked phrase {ph!r}")

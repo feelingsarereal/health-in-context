@@ -43,7 +43,7 @@ export function CodePicker({ value, onPick, only, autoFocus }: { value?: string 
     <div data-testid="code-picker">
       <label htmlFor={`${id}-q`} className="sr-only">Search ICD-11 codes</label>
       <input id={`${id}-q`} className="bx-input ax-tap" type="search" placeholder={S.codes.picker_placeholder} value={q} onChange={(e) => setQ(e.target.value)} data-autofocus={autoFocus ? '' : undefined} data-testid="code-search" />
-      <p className="mt-1 text-xs bx-muted" role="status">{list.length} codes</p>
+      <p className="mt-1 text-xs bx-muted" role="status">{list.length} {list.length === 1 ? "code" : "codes"}</p>
       <div className="mt-1 max-h-72 overflow-y-auto rounded-md border border-[color:var(--bx-line)] p-1">
         {sections.byGroup.map(([g, cs]) => (
           <section key={g} aria-label={`${g} ${groupMap.get(g)?.title ?? ''}`}>

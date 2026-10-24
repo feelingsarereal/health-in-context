@@ -14,9 +14,8 @@ describe('the shipped pack', () => {
     const r = validatePack(REAL);
     expect(r.errors).toEqual([]);
   });
-  it('H1: only negated mentions of blocked stems outside allowed contexts', () => {
-    const r = validatePack(REAL);
-    expect(r.lint.every((h) => h.negated)).toBe(true);
+  it('H1: no blocked phrase outside allowed contexts once the allowed phrases are removed', () => {
+    expect(validatePack(REAL).lint).toEqual([]);
   });
 });
 
@@ -50,6 +49,9 @@ const RULES: [string, (p: Any) => void, RegExp][] = [
   ['notice required (H5)', (p) => delete p.safety.notice, /safety: notice required \(H5\)/],
   ['deidentify required (H3)', (p) => delete p.safety.deidentify, /deidentify\.fields required when a persona acts for others \(H3\)/],
   ['help required (H6)', (p) => (p.safety.help = []), /safety: help entries required \(H6\)/],
+  ['H1: no negation exemption (Daniel, 2026-10-23)', (p) => (p.uiStrings.home.lead = "You don't need a diagnosis, you have options."), /^(?=[\s\S]*ui-strings\.home\.lead contains blocked phrase 'diagnos')(?=[\s\S]*ui-strings\.home\.lead contains blocked phrase 'you have')/],
+  ['H1: an allowed phrase passes only verbatim', (p) => (p.uiStrings.home.lead = 'This does not diagnose. It cannot diagnose anyone.'), /ui-strings\.home\.lead contains blocked phrase 'diagnos' — “.*cannot diagnose/],
+  ['H1: lints references outside the abstract', (p) => (p.references[0].summary = 'A cure for poverty.'), /references\[0\]\.summary contains blocked phrase 'cure'/],
   ['H1 lint', (p) => (p.uiStrings.home.lead = 'You have a housing problem.'), /safety lint \(H1\): ui-strings\.home\.lead contains blocked phrase 'you have'/],
   ['scenario persona', (p) => (p.scenarios[0].persona = 'p-nobody'), /scenarios\/w1: persona 'p-nobody' not found/],
   ['scenario must_not', (p) => delete p.scenarios[0].must_not, /scenarios\/w1: must_not required under health/],

@@ -158,7 +158,17 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -191,7 +201,17 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -229,7 +249,19 @@
      "econ",
      "nbe"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Neighborhood and Built Environment"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances",
+     "Problems related to physical environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -274,7 +306,19 @@
      "econ",
      "nbe"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Neighborhood and Built Environment"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances",
+     "Problems related to physical environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -313,7 +357,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -346,7 +402,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -383,7 +451,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -419,7 +499,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -450,7 +542,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -481,7 +585,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -531,7 +647,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -562,7 +690,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -596,7 +736,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -635,7 +787,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -677,7 +841,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -715,7 +891,19 @@
      "nbe",
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Neighborhood and Built Environment",
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to physical environment",
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -747,7 +935,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -778,7 +977,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -809,7 +1019,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -837,7 +1058,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -868,7 +1100,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -900,7 +1143,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -928,7 +1182,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -959,7 +1224,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -991,7 +1267,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1022,7 +1309,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1052,7 +1350,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1082,7 +1391,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1129,7 +1449,18 @@
     "hp2030": [
      "econ"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability"
+    ],
+    "icd10cm_titles": [
+     "Problems related to employment and unemployment",
+     "Occupational exposure to risk factors"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1162,7 +1493,17 @@
     "hp2030": [
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to education and literacy"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1193,7 +1534,17 @@
     "hp2030": [
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to education and literacy"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1233,7 +1584,17 @@
     "hp2030": [
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to education and literacy"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1273,7 +1634,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1309,7 +1680,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1338,7 +1719,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1376,7 +1767,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1421,7 +1822,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1453,7 +1864,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1483,7 +1902,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1522,7 +1949,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1556,7 +1991,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1594,7 +2037,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1630,7 +2081,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1662,7 +2121,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1694,7 +2161,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1726,7 +2201,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1758,7 +2241,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1790,7 +2281,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1822,7 +2321,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1858,7 +2365,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1906,7 +2421,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1934,7 +2457,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -1968,7 +2499,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2000,7 +2539,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2043,7 +2590,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2071,7 +2626,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2099,7 +2662,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2126,7 +2697,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2153,7 +2732,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2180,7 +2767,15 @@
      "Z72"
     ],
     "hp2030": [],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [],
+    "icd10cm_titles": [
+     null
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2208,7 +2803,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2240,7 +2846,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2272,7 +2889,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2304,7 +2932,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2336,7 +2975,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2364,7 +3014,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2396,7 +3057,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2428,7 +3100,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2460,7 +3143,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2492,7 +3186,18 @@
      "econ",
      "hca"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Economic Stability",
+     "Health Care Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to housing and economic circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2522,7 +3227,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2553,7 +3268,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2583,7 +3308,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2614,7 +3349,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2644,7 +3390,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2672,7 +3429,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2703,7 +3471,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2734,7 +3513,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2770,7 +3560,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2818,7 +3619,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2853,7 +3665,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2888,7 +3711,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2923,7 +3757,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2951,7 +3796,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -2993,7 +3849,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3029,7 +3896,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3057,7 +3935,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3090,7 +3979,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3123,7 +4023,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group",
+     "Problems related to social environment"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3152,7 +4063,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3189,7 +4110,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3225,7 +4156,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3256,7 +4197,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3292,7 +4243,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3322,7 +4283,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3357,7 +4328,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3389,7 +4370,17 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Other problems related to primary support group"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3424,7 +4415,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3463,7 +4465,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3496,7 +4509,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3533,7 +4557,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3569,7 +4604,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3611,7 +4657,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3642,7 +4699,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3674,7 +4742,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3730,7 +4809,18 @@
     "hp2030": [
      "scc"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context"
+    ],
+    "icd10cm_titles": [
+     "Problems related to other psychosocial circumstances",
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3763,7 +4853,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3794,7 +4895,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3828,7 +4940,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3859,7 +4982,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3890,7 +5024,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3921,7 +5066,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },
@@ -3952,7 +5108,18 @@
      "scc",
      "edu"
     ],
-    "proposed": true
+    "proposed": true,
+    "hp2030_titles": [
+     "Social and Community Context",
+     "Education Access and Quality"
+    ],
+    "icd10cm_titles": [
+     "Problems related to upbringing"
+    ],
+    "sources": [
+     57,
+     58
+    ]
    },
    "residual": null
   },

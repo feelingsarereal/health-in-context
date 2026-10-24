@@ -1,28 +1,30 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import yaml from 'js-yaml';
 import { fileURLToPath } from 'node:url';
-import { lintText } from '../scripts/lib/lint';
+import yaml from 'js-yaml';
+import { allowedMatchers, joinPath, lintText, walkStrings } from '../scripts/lib/lint';
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-
-const safety = yaml.load(fs.readFileSync(path.resolve(HERE, '../content-pack/safety.yaml'), 'utf8')) as { blocked_phrases: string[] };
-const sit = yaml.load(fs.readFileSync(path.resolve(HERE, '../content-pack/situations.yaml'), 'utf8'), { schema: yaml.CORE_SCHEMA }) as any;
-const scope = yaml.load(fs.readFileSync(path.resolve(HERE, '../content-pack/scope.yaml'), 'utf8'), { schema: yaml.CORE_SCHEMA }) as any;
-const refs = yaml.load(fs.readFileSync(path.resolve(HERE, '../content-pack/references.yaml'), 'utf8'), { schema: yaml.CORE_SCHEMA }) as any[];
+const PACK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../content-pack');
+const load = (f: string) => yaml.load(fs.readFileSync(path.join(PACK, f), 'utf8'), { schema: yaml.CORE_SCHEMA }) as any;
+const safety = load('safety.yaml') as { blocked_phrases: string[]; allowed_phrases: string[]; allowed_contexts: { field: string }[] };
 export const PHRASES = safety.blocked_phrases;
+export const ALLOWED_PHRASES = safety.allowed_phrases ?? [];
 
-/** Text that may legitimately contain a blocked stem: ICD-11 fields (safety.yaml allowed_contexts), verbatim abstracts, and the scope's out-of-bounds list. */
-export const ALLOWED_VERBATIM: string[] = [
-  ...sit.items.flatMap((i: any) => [i.title, i.definition, ...i.index_terms, ...[...i.inclusions, ...i.exclusions, ...i.coded_elsewhere].map((x: any) => (typeof x === 'string' ? x : x.title))]),
-  ...refs.map((r) => r.abstract),
-  // builder exemption (listed on /methods): the scope's out-of-bounds list names what the app does NOT do
-  ...scope.boundary.out,
-].filter((x): x is string => typeof x === 'string' && x.length > 0);
+/**
+ * Every string the pack places in an allowed context (safety.yaml → allowed_contexts: ICD-11 verbatim fields, verbatim
+ * abstracts, the scope's out-of-bounds list). Rendered text has these removed before the lint, exactly as the pack
+ * lint skips those fields. Nothing here is builder-chosen.
+ */
+const matchers = allowedMatchers(safety.allowed_contexts.map((a) => a.field));
+export const ALLOWED_VERBATIM: string[] = [];
+for (const [base, file] of [['situations', 'situations.yaml'], ['references', 'references.yaml'], ['scope', 'scope.yaml']] as const) {
+  for (const [p, txt] of walkStrings(load(file))) if (txt && matchers.some((r) => r.test(joinPath(base, p)))) ALLOWED_VERBATIM.push(txt);
+}
+ALLOWED_VERBATIM.sort((a, b) => b.length - a.length);
 
-/** H1 over rendered text: strip allowed verbatim strings, then fail on any non-negated hit. */
+/** H1 over rendered text: strip the allowed-context strings, then lint with the exact allowed phrases. Every hit fails. */
 export function h1Violations(text: string, where: string) {
   let t = text;
-  for (const s of ALLOWED_VERBATIM.sort((a, b) => b.length - a.length)) if (t.includes(s)) t = t.split(s).join(' ');
-  return lintText(where, t, PHRASES).filter((h) => !h.negated);
+  for (const s of ALLOWED_VERBATIM) if (t.includes(s)) t = t.split(s).join(' ');
+  return lintText(where, t, PHRASES, ALLOWED_PHRASES);
 }

@@ -1,13 +1,13 @@
 /**
- * H1 no diagnosis, no treatment advice: the safety.yaml lint over dist/ — every route's rendered text (verbatim ICD-11
- * fields and verbatim abstracts stripped, as the pack's allowed_contexts declare for ICD-11) and the static dist files.
+ * H1 no diagnosis, no treatment advice (SAFETY 0.1.1): the safety.yaml lint over dist/ — every route's rendered text
+ * (strings in the pack's allowed_contexts stripped; allowed_phrases removed; no negation exemption) and the static dist files.
  */
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
-import { h1Violations, PHRASES } from '../lint';
+import { h1Violations, PHRASES, ALLOWED_PHRASES } from '../lint';
 import { lintText } from '../../scripts/lib/lint';
 
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../dist');
@@ -54,11 +54,11 @@ test('H1: the map surface — pop-out, association menu (with 2nd degree), every
 
 test('H1: static dist files (HTML, JSON)', () => {
   const files = fs.readdirSync(DIST).filter((f) => /\.(html|json)$/.test(f));
-  const hits = files.flatMap((f) => lintText(f, fs.readFileSync(path.join(DIST, f), 'utf8').replace(/<[^>]+>/g, ' '), PHRASES)).filter((h) => !h.negated);
+  const hits = files.flatMap((f) => lintText(f, fs.readFileSync(path.join(DIST, f), 'utf8').replace(/<[^>]+>/g, ' '), PHRASES, ALLOWED_PHRASES));
   expect(hits).toEqual([]);
 });
 
 test('H1: builder copy (src/lib/copy.ts) is clean', () => {
   const src = fs.readFileSync(path.resolve(DIST, '../src/lib/copy.ts'), 'utf8');
-  expect(lintText('copy.ts', src.replace(/^\s*\/?\*.*$/gm, ''), PHRASES).filter((h) => !h.negated)).toEqual([]);
+  expect(lintText('copy.ts', src.replace(/^\s*\/?\*.*$/gm, ''), PHRASES, ALLOWED_PHRASES)).toEqual([]);
 });

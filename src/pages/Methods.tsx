@@ -20,6 +20,14 @@ export default function Methods() {
   const noSummary = references.filter((r) => !r.summary);
   const checkNotes = codes.filter((c) => c.definition_check && !['diff_verified', 'quoted_direct'].includes(c.definition_check));
   const scope = bundle.scope;
+  const missingXwalk = [
+    ...new Set(
+      codes.flatMap((c) => [
+        ...(c.crosswalk?.icd10cm ?? []).filter((_, i) => !c.crosswalk?.icd10cm_titles?.[i]).map((z) => `ICD-10-CM ${z}`),
+        ...(c.crosswalk?.hp2030 ?? []).filter((_, i) => !c.crosswalk?.hp2030_titles?.[i]).map((h) => `HP2030 ${h}`),
+      ]),
+    ),
+  ].sort();
   return (
     <div className="[overflow-wrap:anywhere]">
       <PageHead title="Methods and provenance" lead="Where every fact in this app comes from, what is missing, and what is a heuristic.">
@@ -64,8 +72,9 @@ export default function Methods() {
           <li><Todo>references</Todo> {unverified.length} not verified (never cited as evidence): {unverified.map((r) => `[${r.n}] ${r.key}`).join(', ')}.</li>
           <li><Todo>abstracts</Todo> {noAbstract.length} references have no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
           <li><Todo>summaries</Todo> {noSummary.length} references have no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
-          <li><Todo>HP2030 domain names</Todo> The crosswalk gives Healthy People 2030 domain ids (econ, edu, hca, nbe, scc) but the pack does not name the domains, so the pop-out shows the ids.</li>
-          <li><Todo>ICD-10-CM titles</Todo> The crosswalk gives ICD-10-CM categories (Z55–Z65, Z72) without their titles.</li>
+          {missingXwalk.length > 0 && (
+            <li><Todo>crosswalk titles</Todo> The pack gives no title for: {missingXwalk.join(', ')} (shown in amber in the pop-out).</li>
+          )}
           <li><Todo>interface copy</Todo> Labels and instructions not yet in ui-strings.yaml live in src/lib/copy.ts for review.</li>
         </ul>
       </Section>
@@ -105,10 +114,12 @@ export default function Methods() {
       </Section>
 
       <Section id="safety" title="Safety profile: health">
-        <p>Each invariant is a test in tests/safety/ (SAFETY §1–§2): G2 no runtime fetches, G5 no telemetry, H1 no diagnosis or treatment language (a lint over the pack and over the built app), H2 nothing typed leaves the device, H3 de-identification nudges, H4 clear my data, H5 the notice, H6 help.</p>
+        <p>Each invariant is a test in tests/safety/ (SAFETY §1–§2): G2 no runtime fetches, G5 no telemetry, H1 the safety.yaml phrase lint (over the pack and over the built app), H2 nothing typed leaves the device, H3 de-identification nudges, H4 clear my data, H5 the notice, H6 help.</p>
         <p>The H1 lint checks {bundle.safety.blocked_phrases.length} blocked phrases (listed in content-pack/safety.yaml, not repeated here so this page passes its own lint). Allowed contexts: {bundle.safety.allowed_contexts.map((a: any) => a.field).join(', ')}.</p>
-        <p><span className="font-semibold">Builder rule, for review:</span> a blocked stem that is negated in the same clause (“does not diagnose”, “not a diagnosis”) is the safety disclaimer itself and does not fail the lint; the scope's out-of-bounds list is also exempt. The negated mentions found in the pack:</p>
-        <ul className="list-disc pl-5 text-sm">{bundle.lint_negated.map((h: any, i: number) => <li key={i}>{h.where}: “…{h.excerpt}…”</li>)}</ul>
+        <p>
+          Exact phrases removed before the lint runs (safety.yaml → allowed_phrases, SAFETY 0.1.1): {bundle.safety.allowed_phrases.map((x: string) => `“${x}”`).join(', ')}. There is no
+          general negation exemption. Hits in the pack at this build: {bundle.lint_hits}.
+        </p>
         <p className="text-sm bx-muted">Last recorded safety run: {p.safety_tests?.summary ?? p.safety_tests?.note}</p>
       </Section>
 

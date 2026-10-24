@@ -182,7 +182,7 @@ emit('manifest.json', {
   planner: d.planner ?? null,
   todo: d.todo ?? [],
   scenarios: (d.scenarios ?? []).map((w) => ({ id: w.id, persona: w.persona, title: w.title })),
-  lint_negated: res.lint.filter((h) => h.negated),
+  lint_hits: res.lint.length,
 });
 
 // ───────────────────────── staleness (SUSTAIN §4) — same walk as validate_pack.py --staleness
@@ -298,7 +298,7 @@ const rows: [string, string | number][] = [
   ['links offered · withheld', `${provenance.modules.links?.offered} · ${provenance.modules.links?.withheld}`],
   ['references (verified · abstracts)', `${refs.length} (${provenance.references.verified} · ${provenance.references.abstracts_present})`],
   ['glossary · concepts · todo', `${provenance.glossary} · ${provenance.concepts} · ${provenance.todo}`],
-  ['H1 lint hits (negated, allowed)', res.lint.filter((h) => h.negated).length],
+  ['H1 lint hits', res.lint.length],
   ['stale facts', stale.length],
   ['errors · warnings', `${errors.length} · ${res.warnings.length}`],
 ];

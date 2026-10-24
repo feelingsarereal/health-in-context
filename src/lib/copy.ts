@@ -1,9 +1,12 @@
 /**
- * Builder-authored interface copy that is not (yet) in content-pack/ui-strings.yaml. Kept in one file so it can be
- * reviewed and moved into the pack (ACTION-SPEC §5); listed in the scrum note. No facts live here — only labels,
- * instructions and empty states. Every string is linted with the safety lint (tests/safety).
+ * Interface copy (ACTION-SPEC §5). The pack's content-pack/ui-strings.yaml is the source: any key it defines at the
+ * same path as below (top level, or under an `app:` namespace) replaces the fallback here, string for string and list
+ * for list. The fallbacks keep the app whole until Cowork has moved every string into the pack (K2 item 3).
+ * No facts live here — only labels, instructions and empty states. Every string is linted (tests/safety).
  */
-export const C = {
+import { S } from '@/lib/data/core';
+
+const FALLBACK = {
   nav: { map: 'Map', maps: 'My maps', evidence: 'Evidence', references: 'References', glossary: 'Glossary', concepts: 'Primers', help: 'Help', methods: 'Methods', about: 'About' },
   footer: 'SDOH Loops is a thinking tool. Maps stay in this browser.',
   skip: 'Skip to main content',
@@ -98,3 +101,20 @@ export const C = {
   } as Record<string, string>,
   ref: { abstract: 'Abstract, verbatim', summary: 'Summary', notVerified: 'not verified', noAbstract: 'No abstract harvested', usedBy: 'Used by', why: 'Why it mattered', open: 'Open the source' },
 };
+
+type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
+/** Pack values win where the shape matches; anything else keeps the fallback. */
+export function overlay<T>(base: T, over: unknown): T {
+  if (over === undefined || over === null) return base;
+  if (typeof base === 'string') return (typeof over === 'string' ? over : base) as T;
+  if (Array.isArray(base)) return (Array.isArray(over) && over.length ? over : base) as T;
+  if (base && typeof base === 'object' && typeof over === 'object' && !Array.isArray(over)) {
+    const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+    for (const k of Object.keys(out)) out[k] = overlay(out[k], (over as Record<string, Json>)[k]);
+    return out as T;
+  }
+  return base;
+}
+
+export const C = overlay(overlay(FALLBACK, S), (S as { app?: unknown }).app);
+

@@ -131,7 +131,17 @@
    "prescri",
    "cure"
   ],
+  "allowed_phrases": [
+   "does not diagnose",
+   "not a diagnosis"
+  ],
   "allowed_contexts": [
+   {
+    "field": "scope.boundary.out"
+   },
+   {
+    "field": "references[].abstract"
+   },
    {
     "field": "situations.items[].title"
    },
@@ -312,6 +322,27 @@
   ]
  },
  "changes": [
+  {
+   "date": "2026-10-23",
+   "what": "safety.yaml: allowed_phrases ['does not diagnose', 'not a diagnosis'] and allowed_contexts scope.boundary.out, references[].abstract (SAFETY 0.1.1)",
+   "why": "Daniel's H1 ruling: exact phrases only, no negation exemption",
+   "records": [
+    "safety"
+   ],
+   "source": "K2",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-10-23",
+   "what": "Scenario w3 step 3 now uses L03 (Comes from) instead of the withheld L01; crosswalk gains HP2030 domain titles and ICD-10-CM category titles with sources",
+   "why": "K1 build report",
+   "records": [
+    "scenarios/w3",
+    "situations.items[].crosswalk"
+   ],
+   "source": "K1 scrum note 261023",
+   "by": "cowork"
+  },
   {
    "date": "2026-10-23",
    "what": "Felitti 1998 abstract re-harvested (harvest 0.2.1); Link & Phelan 1995 has no abstract in OpenAlex or Europe PMC",
@@ -539,24 +570,5 @@
    "title": "Sketch a relative's situation on a phone without knowing the codes"
   }
  ],
- "lint_negated": [
-  {
-   "where": "safety.notice",
-   "phrase": "diagnos",
-   "excerpt": "e World Health Organization's ICD-11; it does not diagnose anyone, give medical, legal or financi",
-   "negated": true
-  },
-  {
-   "where": "concepts/icd11-chapter24.md.body",
-   "phrase": "diagnos",
-   "excerpt": "nsistently; it is not a clinical record and not a diagnosis. ",
-   "negated": true
-  },
-  {
-   "where": "concepts/what-are-sdoh.md.body",
-   "phrase": "diagnos",
-   "excerpt": "ow the circumstances feed each other; it is not a diagnosis and not a prediction. ",
-   "negated": true
-  }
- ]
+ "lint_hits": 0
 }

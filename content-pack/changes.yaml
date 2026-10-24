@@ -13,3 +13,20 @@
   - references/link_phelan1995
   source: harvest_openalex.py 0.2.1
   by: cowork
+- date: '2026-10-23'
+  what: Scenario w3 step 3 now uses L03 (Comes from) instead of the withheld L01; crosswalk gains HP2030 domain titles and
+    ICD-10-CM category titles with sources
+  why: K1 build report
+  records:
+  - scenarios/w3
+  - situations.items[].crosswalk
+  source: K1 scrum note 261023
+  by: cowork
+- date: '2026-10-23'
+  what: 'safety.yaml: allowed_phrases [''does not diagnose'', ''not a diagnosis''] and allowed_contexts scope.boundary.out,
+    references[].abstract (SAFETY 0.1.1)'
+  why: 'Daniel''s H1 ruling: exact phrases only, no negation exemption'
+  records:
+  - safety
+  source: K2
+  by: cowork
