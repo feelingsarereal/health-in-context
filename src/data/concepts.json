@@ -1,0 +1,163 @@
+[
+ {
+  "id": "icd11-chapter24",
+  "title": "ICD-11 codes for social circumstances",
+  "one_liner": "ICD-11's Chapter 24 has codes for problems with money, housing, work, school, relationships, the law, loss and upbringing.",
+  "why_here": "Every SDOH node carries one of these codes, and its pop-out shows the code's ICD-11 title and definition.",
+  "prerequisites": [
+   "what-are-sdoh"
+  ],
+  "terms": [
+   "icd11",
+   "z-codes"
+  ],
+  "further_reading": [
+   {
+    "title": "WHO ICD-11 browser (MMS)",
+    "url": "https://icd.who.int/browse/2026-01/mms/en",
+    "kind": "textbook"
+   },
+   {
+    "title": "CMS — Using Z codes (ICD-10-CM)",
+    "url": "https://www.cms.gov/files/document/zcodes-infographic.pdf",
+    "kind": "review"
+   }
+  ],
+  "body": "\n## What it is\n\nICD-11 for Mortality and Morbidity Statistics is the World Health Organization's classification. Its Chapter 24 includes a section called 'Factors influencing health status', whose blocks QD50–QE9Z classify problems associated with finances, drinking water or nutrition, the environment (which holds housing, including homelessness), employment, education, the social or cultural environment, health behaviours, social insurance or welfare, the justice system, relationships, the absence or loss of others, the primary support group, harmful or traumatic events, and upbringing [59].\n\nIn the United States, health records currently use the older ICD-10-CM, where categories Z55–Z65 play the same role [58].\n\n## How this app uses it\n\nThe code picker offers every code in those blocks. Titles and definitions are shown exactly as ICD-11 gives them; many codes have no written definition, and the pop-out says so rather than inventing one. Each code links to its entry in the WHO browser. The crosswalk to Healthy People 2030 domains and to ICD-10-CM categories is marked as a proposed mapping until it is replaced by WHO's official mapping tables.\n\nCodes describe circumstances. Coding a circumstance in this app is a way of naming it consistently; it is not a clinical record and not a diagnosis.\n",
+  "cites": [
+   58,
+   59
+  ]
+ },
+ {
+  "id": "reading-clds",
+  "title": "Reading a causal loop diagram",
+  "one_liner": "Arrows marked + or − join circumstances; where arrows close into a loop, a change can feed itself or check itself.",
+  "why_here": "Your map is a causal loop diagram; the Loops, Paths and Leverage panels all read it this way.",
+  "prerequisites": [],
+  "terms": [
+   "cld",
+   "link-polarity",
+   "reinforcing-loop",
+   "balancing-loop",
+   "elementary-circuit",
+   "scc",
+   "leverage-hint"
+  ],
+  "further_reading": [
+   {
+    "title": "Richardson (1986), Problems with causal-loop diagrams",
+    "url": "https://doi.org/10.1002/sdr.4260020207",
+    "kind": "review"
+   },
+   {
+    "title": "Homer & Hirsch (2006), System dynamics modeling for public health",
+    "url": "https://doi.org/10.2105/AJPH.2005.062059",
+    "kind": "review"
+   },
+   {
+    "title": "McGlashan et al. (2016), Quantifying a systems map",
+    "url": "https://doi.org/10.1371/journal.pone.0165459",
+    "kind": "review"
+   }
+  ],
+  "body": "\n## What it is\n\nA causal loop diagram joins variables with arrows marked **+** or **−**. In this app a **+** arrow means that, all else equal, a change in the cause moves the effect in the same direction, and a **−** arrow means it moves it the opposite way. Each box is read as a quantity that can go up or down, not as an event.\n\nSystem dynamics uses feedback maps like this to study public-health problems shaped by accumulation and feedback [51].\n\nWhen arrows close into a loop, the loop's character is the product of its signs. An even number of − links makes it **reinforcing** (R): a change returns amplified, as in a vicious or virtuous cycle. An odd number makes it **balancing** (B): a change returns opposed. This app reads structure only; it does not simulate behaviour over time, so it cannot say which loop dominates. George Richardson's papers on causal-loop diagrams and loop polarity are listed under further reading (not yet verified here).\n\n## The maths, gently\n\n$$ \\text{sign}(\\text{loop}) = \\prod_{\\text{links } i \\in \\text{loop}} s_i, \\qquad s_i \\in \\{+1, -1\\} $$\n\n- $s_i$ is the sign of link $i$; the product is $+1$ for a reinforcing loop and $-1$ for a balancing one.\n\nThe app lists every loop with Johnson's algorithm, which finds every elementary circuit of a directed graph [49]. It groups nodes that sit inside shared feedback using graph partitions [50], and it ranks nodes with network measures, which can flag central variables as candidate leverage points [52].\n\n## How this app uses it\n\nEach node is read as \"how much of this circumstance is present\". Loop strength and leverage are structural heuristics, labelled as such: they are prompts for discussion, not findings about the person or group.\n",
+  "cites": [
+   49,
+   50,
+   51,
+   52
+  ]
+ },
+ {
+  "id": "structural-intermediary",
+  "title": "Structural and intermediary determinants",
+  "one_liner": "Some determinants set people's position in society; others are the routes through which that position reaches their health.",
+  "why_here": "The association menu lists structural determinants first, then the intermediary ones they act through.",
+  "prerequisites": [
+   "what-are-sdoh"
+  ],
+  "terms": [
+   "structural-determinants",
+   "intermediary-determinants"
+  ],
+  "further_reading": [
+   {
+    "title": "Solar & Irwin (2010), A conceptual framework for action on the social determinants of health (WHO)",
+    "url": "https://www.afro.who.int/sites/default/files/2017-06/SDH_conceptual_framework_for_action.pdf",
+    "kind": "review"
+   },
+   {
+    "title": "Braveman, Egerter & Williams (2011), The social determinants of health: coming of age",
+    "url": "https://doi.org/10.1146/annurev-publhealth-031210-101218",
+    "kind": "review"
+   }
+  ],
+  "body": "\n## What it is\n\nThe WHO conceptual framework separates two kinds of determinant [2]. **Structural determinants** are the socioeconomic and political context, the mechanisms that stratify a society, and the socioeconomic position people end up in — by income, education, occupation, social class, gender and race or ethnicity. **Intermediary determinants** are the routes through which that position reaches health: material circumstances such as housing, neighbourhood and the means to buy food; psychosocial circumstances such as stressors, relationships and social support; behavioural and biological factors; and the health system itself [2].\n\nSocioeconomic status has been described as underlying health care, environmental exposure and health behaviour at once, with chronic stress as a further pathway [15].\n\n## How this app uses it\n\nThe association menu orders its suggestions by these tiers: finances, employment, education, the social and cultural environment, social insurance and the justice system first; then housing and environment, nutrition and water; then relationships, loss, family, trauma and upbringing; then health behaviours. The tier assignment of each ICD-11 block is the builder's reading of the framework, and the menu says so.\n",
+  "cites": [
+   2,
+   15
+  ]
+ },
+ {
+  "id": "weights-fcm",
+  "title": "Weights on links",
+  "one_liner": "A weight from −1 to +1 records your judgement of how strongly one circumstance pushes another.",
+  "why_here": "Every link you draw can carry a weight; loop strength, paths and the what-if pulse use them.",
+  "prerequisites": [
+   "reading-clds"
+  ],
+  "terms": [
+   "edge-weight"
+  ],
+  "further_reading": [
+   {
+    "title": "Kosko (1986), Fuzzy cognitive maps",
+    "url": "https://doi.org/10.1016/S0020-7373(86)80040-2",
+    "kind": "review"
+   },
+   {
+    "title": "Özesmi & Özesmi (2004), Ecological models based on people's knowledge",
+    "url": "https://doi.org/10.1016/j.ecolmodel.2003.10.027",
+    "kind": "review"
+   }
+  ],
+  "body": "\n## What it is\n\nThis app borrows the idea of signed, weighted causal links from fuzzy cognitive mapping, a method that has been used to model systems from the knowledge of the people who live in them. The two founding sources are under further reading (not yet verified here).\n\n## How this app uses it\n\nA weight's sign must match the link's polarity, and its size is a judgement, not a measured effect size. Weights feed three heuristics: a loop's strength (the product of its weights), the weight of a path between two circumstances, and the optional what-if pulse, which shows only the direction in which a change might ripple. None of these is a prediction, and the app labels each one.\n",
+  "cites": []
+ },
+ {
+  "id": "what-are-sdoh",
+  "title": "What social determinants of health are",
+  "one_liner": "The conditions people live in — and their access to power, money and resources — shape their health.",
+  "why_here": "Every node you add is a circumstance of this kind; this primer says what counts and why it matters.",
+  "prerequisites": [],
+  "terms": [
+   "sdoh",
+   "social-gradient",
+   "fundamental-cause"
+  ],
+  "further_reading": [
+   {
+    "title": "WHO — Social determinants of health",
+    "url": "https://www.who.int/health-topics/social-determinants-of-health",
+    "kind": "review"
+   },
+   {
+    "title": "Healthy People 2030 — Social Determinants of Health",
+    "url": "https://odphp.health.gov/healthypeople/priority-areas/social-determinants-health",
+    "kind": "review"
+   }
+  ],
+  "body": "\n## What it is\n\nThe World Health Organization describes the social determinants of health as the conditions in which people are born, grow, live, work and age, together with their access to power, money and resources — conditions that have a powerful influence on health inequities [56]. The US Healthy People 2030 framework uses a similar definition and sorts these conditions into five domains: Economic Stability; Education Access and Quality; Health Care Access and Quality; Neighborhood and Built Environment; and Social and Community Context [57].\n\nThe Commission on Social Determinants of Health was created to marshal the evidence on what can be done to promote health equity and to foster a global movement to achieve it [1]. Reviews of the evidence point to socioeconomic factors such as income, wealth and education as fundamental causes of a wide range of health outcomes [3], and to upstream determinants — economic resources, education, racial discrimination — that shape the downstream behaviours most programmes target [4].\n\n## How big the effects are\n\nThe differences are large and they follow a gradient. In US tax and death records, higher income was associated with longer life at every point of the income distribution, not only at the bottom [11]. One estimate attributed about 245,000 US deaths in 2000 to low education, 176,000 to racial segregation and 162,000 to low social support — numbers comparable to deaths attributed to familiar medical and behavioural causes [12]. Weak social relationships carry a mortality risk comparable to well-established risk factors [18].\n\n## How this app uses it\n\nEach node in your map is one social circumstance in someone's life, coded where possible with an ICD-11 code. The association menu suggests other circumstances that the research links to it, with the strength of that evidence. The map is a way of thinking about how the circumstances feed each other; it is not a diagnosis and not a prediction.\n",
+  "cites": [
+   1,
+   3,
+   4,
+   11,
+   12,
+   18,
+   56,
+   57
+  ]
+ }
+]

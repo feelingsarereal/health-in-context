@@ -1,0 +1,25 @@
+# manifest.yaml — SDOH Loop Mapper · ACTION-PACK 0.1 · written 2026-10-23
+slug: sdoh-loops
+title: "SDOH Loop Mapper: map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place"
+short_title: "SDOH Loops"
+kind: workbench
+modules: [situations, links, planner]
+safety_profile: health
+question: >-
+  How do the social determinants of a person's or group's health, well-being and livelihood — named with ICD-11's codes —
+  feed one another, and which reinforcing and balancing loops hold their situation in place?
+purpose: tool
+as_of: 2026-10-23
+authors: ["Actualizer (commissioned research)"]
+venue: "Commissioned research — not peer reviewed"
+evidence:
+  body: records
+delivery: local
+storage: device
+github_account: feelingsarereal
+builder: { name: "Actualizer", version: "0.1", date: "2026-10-23" }
+permissions:
+  text: "builder-authored; ICD-11 titles and definitions reproduced verbatim with source (WHO, CC BY-ND 3.0 IGO per WHO's ICD-11 licence — to confirm, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer"
+  figures: "none reproduced"
+concept_self_checks: false
+notes_storage: browser

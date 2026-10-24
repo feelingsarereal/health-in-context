@@ -1,0 +1,3459 @@
+# situations.yaml — ICD-11 MMS Chapter 24 SDOH codes · built 2026-10-23 by build_pack.py from source/icd11_sdoh_codes.json
+scheme:
+  id: icd11-mms
+  name: ICD-11 MMS
+  release: 2026-01
+  source: World Health Organization
+  official_browser: https://icd.who.int/browse/2026-01/mms/en
+  verified_on: '2026-10-23'
+  interim_source: Text read from the findacode.com mirror of ICD-11 MMS v2026-01 because the WHO browser could not be read
+    from the research environment. Long definitions were checked by a model-run comparison, not a byte diff (definition_check).
+    Every code links to its WHO entry. Re-pull from the WHO ICD-API before any release beyond the pilot (todo T-ICD-01).
+tiers:
+  structural: Structural determinants
+  intermediary_material: Material circumstances
+  intermediary_psychosocial: Psychosocial circumstances
+  intermediary_behavioural: Behavioural factors
+  functioning: Functioning (outside the SDOH set)
+tier_basis: Block-to-tier assignment is the builder's reading of the WHO framework [2]; shown as such in the menu.
+groups:
+- id: QD50-QD5Z
+  title: Problems associated with finances
+  tier: structural
+  uri: http://id.who.int/icd/entity/824927288
+  source_url: https://www.findacode.com/icd-11/block-824927288.html
+- id: QD60-QD6Z
+  title: Problems associated with drinking water or nutrition
+  tier: intermediary_material
+  uri: http://id.who.int/icd/entity/76222516
+  source_url: https://www.findacode.com/icd-11/block-76222516.html
+- id: QD70-QD7Z
+  title: Problems associated with the environment
+  tier: intermediary_material
+  uri: http://id.who.int/icd/entity/266601618
+  source_url: https://www.findacode.com/icd-11/block-266601618.html
+- id: QD80-QD8Z
+  title: Problems associated with employment or unemployment
+  tier: structural
+  uri: http://id.who.int/icd/entity/1440218064
+  source_url: https://www.findacode.com/icd-11/block-1440218064.html
+- id: QD90-QD9Z
+  title: Problems associated with education
+  tier: structural
+  uri: http://id.who.int/icd/entity/561687345
+  source_url: https://www.findacode.com/icd-11/block-561687345.html
+- id: QE00-QE0Z
+  title: Problems associated with social or cultural environment
+  tier: structural
+  uri: http://id.who.int/icd/entity/462621464
+  source_url: https://www.findacode.com/icd-11/block-462621464.html
+- id: QE10-QE2Z
+  title: Problems associated with health behaviours
+  tier: intermediary_behavioural
+  uri: http://id.who.int/icd/entity/48322409
+  source_url: https://www.findacode.com/icd-11/block-48322409.html
+- id: QE30-QE3Z
+  title: Problems associated with social insurance or welfare
+  tier: structural
+  uri: http://id.who.int/icd/entity/566804336
+  source_url: https://www.findacode.com/icd-11/block-566804336.html
+- id: QE40-QE4Z
+  title: Problems associated with the justice system
+  tier: structural
+  uri: http://id.who.int/icd/entity/560926494
+  source_url: https://www.findacode.com/icd-11/block-560926494.html
+- id: QE50-QE5Z
+  title: Problems associated with relationships
+  tier: intermediary_psychosocial
+  uri: http://id.who.int/icd/entity/1509667156
+  source_url: https://www.findacode.com/icd-11/block-1509667156.html
+- id: QE60-QE6Z
+  title: Problems associated with absence, loss or death of others
+  tier: intermediary_psychosocial
+  uri: http://id.who.int/icd/entity/1399046120
+  source_url: https://www.findacode.com/icd-11/block-1399046120.html
+- id: QE70
+  title: Problems related to primary support group, including family circumstances
+  tier: intermediary_psychosocial
+  uri: http://id.who.int/icd/entity/812634854
+  source_url: https://www.findacode.com/icd-11/code-812634854.html
+- id: QE80-QE8Z
+  title: Problems associated with harmful or traumatic events
+  tier: intermediary_psychosocial
+  uri: http://id.who.int/icd/entity/675461815
+  source_url: https://www.findacode.com/icd-11/block-675461815.html
+- id: QE90-QE9Z
+  title: Problems associated with upbringing
+  tier: intermediary_psychosocial
+  uri: http://id.who.int/icd/entity/1428430704
+  source_url: https://www.findacode.com/icd-11/block-1428430704.html
+- id: QF20-QF2Z
+  title: Difficulty or need for assistance with activities
+  tier: functioning
+  uri: http://id.who.int/icd/entity/340003177
+  source_url: https://www.findacode.com/icd-11/block-340003177.html
+  functioning: true
+- id: QD71
+  title: Problems associated with housing
+  tier: intermediary_material
+  subgroup_of: QD70-QD7Z
+  note: A category, exposed as a link target
+items:
+- code: QD50
+  title: Poverty
+  group: QD50-QD5Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Poverty
+  - extreme poverty
+  uri: http://id.who.int/icd/entity/755867815
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#755867815
+  source_url: https://www.findacode.com/icd-11/code-755867815.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id001
+    - Z59
+    hp2030: &id002
+    - econ
+    proposed: true
+- code: QD51
+  title: Low income
+  group: QD50-QD5Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Low income
+  - inadequate income
+  - inadequate material resources
+  - lack of financial resources
+  - lack of material resources
+  uri: http://id.who.int/icd/entity/1503719512
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1503719512
+  source_url: https://www.findacode.com/icd-11/code-1503719512.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id001
+    hp2030: *id002
+    proposed: true
+- code: QD60
+  title: Problems associated with inadequate drinking-water
+  group: QD60-QD6Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Effects of thirst
+    code: NF07.1
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with inadequate drinking-water
+  - problem associated with inadequate drinking water supply
+  - problem associated with inadequate drinking-water
+  uri: http://id.who.int/icd/entity/1163409625
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1163409625
+  source_url: https://www.findacode.com/icd-11/code-1163409625.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id003
+    - Z59
+    - Z58
+    hp2030: &id004
+    - econ
+    - nbe
+    proposed: true
+- code: QD61
+  title: Inadequate food
+  group: QD60-QD6Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Effects of hunger
+    code: NF07.0
+  - title: Problems with inappropriate diet or eating habits
+    code: QE23
+  - title: malnutrition
+    code: 5B50-5B7Z
+  coded_elsewhere: []
+  index_terms:
+  - Inadequate food
+  - lack of adequate food
+  uri: http://id.who.int/icd/entity/1212575027
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1212575027
+  source_url: https://www.findacode.com/icd-11/code-1212575027.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id003
+    hp2030: *id004
+    proposed: true
+- code: QD70
+  title: Problems associated with the natural environment or human-made changes to the environment
+  group: QD70-QD7Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Occupational exposure to risk-factors
+    code: QD84
+  coded_elsewhere:
+  - title: Problems associated with inadequate drinking-water
+    code: QD60
+  index_terms: []
+  uri: http://id.who.int/icd/entity/1307910936
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1307910936
+  source_url: https://www.findacode.com/icd-11/code-1307910936.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id005
+    - Z58
+    - Z59
+    hp2030: &id006
+    - nbe
+    - econ
+    proposed: true
+- code: QD70.0
+  title: Problems associated with exposure to noise
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with exposure to noise
+  - exposure to noise causing accidental injury
+  - problems related to exposure to noise
+  uri: http://id.who.int/icd/entity/1409115865
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1409115865
+  source_url: https://www.findacode.com/icd-11/code-1409115865.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.1
+  title: Problems associated with exposure to air pollution
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with exposure to tobacco smoke
+    code: QD70.5
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with exposure to air pollution
+  - dust exposure
+  uri: http://id.who.int/icd/entity/917941069
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#917941069
+  source_url: https://www.findacode.com/icd-11/code-917941069.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.2
+  title: Problems associated with exposure to water pollution
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with inadequate drinking-water
+    code: QD60
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with exposure to water pollution
+  uri: http://id.who.int/icd/entity/1109130164
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1109130164
+  source_url: https://www.findacode.com/icd-11/code-1109130164.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.3
+  title: Problems associated with exposure to soil pollution
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with exposure to soil pollution
+  uri: http://id.who.int/icd/entity/659568166
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#659568166
+  source_url: https://www.findacode.com/icd-11/code-659568166.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.4
+  title: Problems associated with exposure to radiation
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with exposure to radiation
+  uri: http://id.who.int/icd/entity/1421780402
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1421780402
+  source_url: https://www.findacode.com/icd-11/code-1421780402.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.5
+  title: Problems associated with exposure to tobacco smoke
+  group: QD70-QD7Z
+  parent: QD70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of nicotine
+    code: 6C4A
+  - title: Personal history of psychoactive substance abuse
+    code: QC46
+  - title: Tobacco use
+    code: QE13
+  coded_elsewhere:
+  - title: Exposure to tobacco smoke in the perinatal period
+    code: KD37
+  index_terms:
+  - Problems associated with exposure to tobacco smoke
+  - passive smoking
+  uri: http://id.who.int/icd/entity/538178893
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#538178893
+  source_url: https://www.findacode.com/icd-11/code-538178893.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD70.6
+  title: Problems associated with inadequate access to electricity
+  group: QD70-QD7Z
+  parent: QD70
+  definition: Inadequate power that may restrict healthy living.
+  definition_check: quoted_direct
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems associated with inadequate access to electricity
+  uri: http://id.who.int/icd/entity/201495283
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#201495283
+  source_url: https://www.findacode.com/icd-11/code-201495283.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id005
+    hp2030: *id006
+    proposed: true
+- code: QD71
+  title: Problems associated with housing
+  group: QD70-QD7Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with inadequate drinking-water
+    code: QD60
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/683601550
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#683601550
+  source_url: https://www.findacode.com/icd-11/code-683601550.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    hp2030: *id006
+    icd10cm: *id005
+    proposed: true
+  subgroup: QD71
+- code: QD71.0
+  title: Homelessness
+  group: QD70-QD7Z
+  parent: QD71
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Homelessness
+  - hobo
+  - lack of housing
+  - lack of shelter
+  - problem of homelessness
+  - social migrant
+  - tramp
+  - transient
+  - vagabond
+  uri: http://id.who.int/icd/entity/1325772378
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1325772378
+  source_url: https://www.findacode.com/icd-11/code-1325772378.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    hp2030: *id006
+    icd10cm: *id005
+    proposed: true
+  subgroup: QD71
+- code: QD71.1
+  title: Inadequate housing
+  group: QD70-QD7Z
+  parent: QD71
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with the natural environment or human-made changes to the environment
+    code: QD70
+  coded_elsewhere: []
+  index_terms:
+  - Inadequate housing
+  - lack of adequate housing
+  - problem with inadequate housing
+  - restriction of housing space
+  - technical defects in home preventing adequate care
+  - unsatisfactory surroundings
+  - Lack of heating
+  uri: http://id.who.int/icd/entity/709780428
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#709780428
+  source_url: https://www.findacode.com/icd-11/code-709780428.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    hp2030: *id006
+    icd10cm: *id005
+    proposed: true
+  subgroup: QD71
+- code: QD71.2
+  title: Problems related to living in residential institution
+  group: QD70-QD7Z
+  parent: QD71
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Institutional upbringing
+    code: QE94
+  coded_elsewhere: []
+  index_terms:
+  - Problems related to living in residential institution
+  - medical counselling of boarding school resident
+  - medical counselling of institutional resident
+  uri: http://id.who.int/icd/entity/1000930983
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1000930983
+  source_url: https://www.findacode.com/icd-11/code-1000930983.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    hp2030: *id006
+    icd10cm: *id005
+    proposed: true
+  subgroup: QD71
+- code: QD80
+  title: Problem associated with unemployment
+  group: QD80-QD8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with unemployment
+  - employment unavailable
+  - unemployment problem
+  uri: http://id.who.int/icd/entity/25263588
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#25263588
+  source_url: https://www.findacode.com/icd-11/code-25263588.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id007
+    - Z56
+    - Z57
+    hp2030: &id008
+    - econ
+    proposed: true
+- code: QD81
+  title: Problem associated with change of job
+  group: QD80-QD8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with change of job
+  - adjustment problem with change of job
+  uri: http://id.who.int/icd/entity/1691005042
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1691005042
+  source_url: https://www.findacode.com/icd-11/code-1691005042.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD82
+  title: Problem associated with threat of job loss
+  group: QD80-QD8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with threat of job loss
+  - problem with threatened unemployment
+  uri: http://id.who.int/icd/entity/275243151
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#275243151
+  source_url: https://www.findacode.com/icd-11/code-275243151.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD83
+  title: Problem with employment conditions
+  group: QD80-QD8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/1756207334
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1756207334
+  source_url: https://www.findacode.com/icd-11/code-1756207334.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD83.0
+  title: Problem associated with uncongenial work
+  group: QD80-QD8Z
+  parent: QD83
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with uncongenial work
+  - difficult conditions at work
+  uri: http://id.who.int/icd/entity/1669952283
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1669952283
+  source_url: https://www.findacode.com/icd-11/code-1669952283.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD83.1
+  title: Problem associated with stressful work schedule
+  group: QD80-QD8Z
+  parent: QD83
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with stressful work schedule
+  - difficult work schedule
+  - problem with work schedule
+  uri: http://id.who.int/icd/entity/1965829403
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1965829403
+  source_url: https://www.findacode.com/icd-11/code-1965829403.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84
+  title: Occupational exposure to risk-factors
+  group: QD80-QD8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/815543898
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#815543898
+  source_url: https://www.findacode.com/icd-11/code-815543898.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84.0
+  title: Occupational exposure to dust
+  group: QD80-QD8Z
+  parent: QD84
+  definition: Occupational exposure to dust is exposure to dust during work, at the work location, or from the work location.
+    The primary route of exposure is inhalation. Dusts are technically defined as dry particle aerosols produced by mechanical
+    processes such as breaking, grinding, and pulverizing. Dusts may be of biological or nonbiological origin.
+  definition_check: assembled_from_verbatim_fragments_then_diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Occupational exposure to dust
+  - exposure to occupational dust contaminants
+  uri: http://id.who.int/icd/entity/211757070
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#211757070
+  source_url: https://www.findacode.com/icd-11/code-211757070.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84.1
+  title: Occupational exposure to toxic agents in agriculture
+  group: QD80-QD8Z
+  parent: QD84
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Occupational exposure to toxic agents in agriculture
+  - exposure to agricultural agents in the form of solids, liquids, gases or vapours
+  - exposure to toxic agricultural agents
+  uri: http://id.who.int/icd/entity/440038928
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#440038928
+  source_url: https://www.findacode.com/icd-11/code-440038928.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84.2
+  title: Occupational exposure to toxic agents in industries other than agriculture
+  group: QD80-QD8Z
+  parent: QD84
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Occupational exposure to toxic agents in industries other than agriculture
+  - occupational exposure to toxic agents in the form of solids, liquids, gases or vapours
+  uri: http://id.who.int/icd/entity/2138160026
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2138160026
+  source_url: https://www.findacode.com/icd-11/code-2138160026.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84.3
+  title: Occupational exposure to vibration
+  group: QD80-QD8Z
+  parent: QD84
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Occupational exposure to vibration
+  uri: http://id.who.int/icd/entity/1855399665
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1855399665
+  source_url: https://www.findacode.com/icd-11/code-1855399665.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD84.4
+  title: Occupational exposure to ergonomic risk
+  group: QD80-QD8Z
+  parent: QD84
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Occupational exposure to ergonomic risk
+  uri: http://id.who.int/icd/entity/473240871
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#473240871
+  source_url: https://www.findacode.com/icd-11/code-473240871.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD85
+  title: Burnout
+  group: QD80-QD8Z
+  parent: null
+  definition: 'Burnout is a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully
+    managed. It is characterised by three dimensions: 1) feelings of energy depletion or exhaustion; 2) increased mental distance
+    from one’s job, or feelings of negativism or cynicism related to one’s job; and 3) a sense of ineffectiveness and lack
+    of accomplishment. Burn-out refers specifically to phenomena in the occupational context and should not be applied to
+    describe experiences in other areas of life.'
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Anxiety or fear-related disorders
+    code: 6B00-6B0Z
+  - title: Mood disorders
+    code: 6A60-6A8Z
+  - title: Adjustment disorder
+    code: 6B43
+  - title: Disorders specifically associated with stress
+    code: 6B40-6B4Z
+  coded_elsewhere: []
+  index_terms:
+  - Burnout
+  uri: http://id.who.int/icd/entity/129180281
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#129180281
+  source_url: https://www.findacode.com/icd-11/code-129180281.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id007
+    hp2030: *id008
+    proposed: true
+- code: QD90
+  title: Problem associated with illiteracy or low-level literacy
+  group: QD90-QD9Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with illiteracy or low-level literacy
+  - illiteracy
+  - illiterate
+  - low-level literacy
+  - problem with illiteracy
+  uri: http://id.who.int/icd/entity/450012
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#450012
+  source_url: https://www.findacode.com/icd-11/code-450012.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id009
+    - Z55
+    hp2030: &id010
+    - edu
+    proposed: true
+- code: QD91
+  title: Problem associated with education unavailable or unattainable
+  group: QD90-QD9Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with education unavailable or unattainable
+  - schooling unattainable
+  - schooling unavailable
+  uri: http://id.who.int/icd/entity/1699549262
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1699549262
+  source_url: https://www.findacode.com/icd-11/code-1699549262.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id009
+    hp2030: *id010
+    proposed: true
+- code: QD92
+  title: Problem with educational progress
+  group: QD90-QD9Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions:
+  - Underachievement in school
+  exclusions:
+  - title: Disorders of intellectual development
+    code: 6A00
+  coded_elsewhere: []
+  index_terms:
+  - Problem with educational progress
+  - Underachievement in school
+  - lack of achievement in school
+  - problem of underachievement in school
+  - Failed examinations
+  uri: http://id.who.int/icd/entity/299909297
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#299909297
+  source_url: https://www.findacode.com/icd-11/code-299909297.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id009
+    hp2030: *id010
+    proposed: true
+- code: QE00
+  title: Acculturation difficulty
+  group: QE00-QE0Z
+  parent: null
+  definition: Problems resulting from the inability to adjust to a different culture or environment.
+  definition_check: quoted_direct
+  inclusions: []
+  exclusions:
+  - title: Disorders specifically associated with stress
+    code: 6B40-6B4Z
+  coded_elsewhere: []
+  index_terms:
+  - Acculturation difficulty
+  - acculturation problem
+  - cultural deprivation
+  - cultural shock
+  - migration
+  - social migrant difficulty
+  - social transplantation
+  uri: http://id.who.int/icd/entity/1652814217
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1652814217
+  source_url: https://www.findacode.com/icd-11/code-1652814217.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id011
+    - Z60
+    hp2030: &id012
+    - scc
+    proposed: true
+- code: QE01
+  title: Stress, not elsewhere classified
+  group: QE00-QE0Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with employment or unemployment
+    code: QD80-QD8Z
+  coded_elsewhere: []
+  index_terms:
+  - Stress, not elsewhere classified
+  - stress NOS
+  - Physical or mental strain not elsewhere classified
+  uri: http://id.who.int/icd/entity/1931375240
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1931375240
+  source_url: https://www.findacode.com/icd-11/code-1931375240.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id011
+    hp2030: *id012
+    proposed: true
+- code: QE02
+  title: Social role conflict
+  group: QE00-QE0Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Social role conflict
+  uri: http://id.who.int/icd/entity/1706765446
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1706765446
+  source_url: https://www.findacode.com/icd-11/code-1706765446.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id011
+    hp2030: *id012
+    proposed: true
+- code: QE03
+  title: Social exclusion or rejection
+  group: QE00-QE0Z
+  parent: null
+  definition: Exclusion and rejection on the basis of personal characteristics such as physical appearance, sexual orientation,
+    gender identity and expression, illness or behaviour.
+  definition_check: diff_corrected_not_reconfirmed
+  inclusions: []
+  exclusions:
+  - title: Target of perceived adverse discrimination or persecution
+    code: QE04
+  coded_elsewhere: []
+  index_terms:
+  - Social exclusion or rejection
+  - Social deprivation
+  - Social exclusion
+  - Social isolation
+  - Social rejection
+  uri: http://id.who.int/icd/entity/292381213
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#292381213
+  source_url: https://www.findacode.com/icd-11/code-292381213.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id011
+    hp2030: *id012
+    proposed: true
+- code: QE04
+  title: Target of perceived adverse discrimination or persecution
+  group: QE00-QE0Z
+  parent: null
+  definition: Persecution or discrimination, perceived as reality by an individual or real, on the basis of membership in
+    some group (such as defined by skin colour, religion, ethnic origin, sexual orientation, gender identity and expression,
+    etc.) rather than personal characteristics
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Social exclusion or rejection
+    code: QE03
+  coded_elsewhere: []
+  index_terms:
+  - Target of perceived adverse discrimination or persecution
+  - Exposure to discrimination
+  - Ethnic discrimination
+  - Political discrimination
+  - Racial discrimination
+  - Religious discrimination
+  - Sexual discrimination
+  - sex discrimination
+  - Social rejection due to discrimination
+  - Exposure to persecution
+  - Social persecution
+  - Social rejection due to persecution
+  uri: http://id.who.int/icd/entity/1948692361
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1948692361
+  source_url: https://www.findacode.com/icd-11/code-1948692361.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id011
+    hp2030: *id012
+    proposed: true
+- code: QE10
+  title: Hazardous alcohol use
+  group: QE10-QE2Z
+  parent: null
+  definition: A pattern of alcohol use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk
+    may be from the frequency of alcohol use, from the amount used on a given occasion, or from risky behaviours associated
+    with alcohol use or the context of use, or from a combination of these. The risk may be related to short-term effects
+    of alcohol or to longer-term cumulative effects on physical or mental health or functioning. Hazardous alcohol use has
+    not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The
+    pattern of alcohol use often persists in spite of awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of alcohol
+    code: 6C40
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous alcohol use
+  uri: http://id.who.int/icd/entity/499098434
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#499098434
+  source_url: https://www.findacode.com/icd-11/code-499098434.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id013
+    - Z72
+    hp2030: &id014 []
+    proposed: true
+- code: QE11
+  title: Hazardous drug use
+  group: QE10-QE2Z
+  parent: null
+  definition: A pattern of use of psychoactive substance(s) other than nicotine or alcohol that appreciably increases the
+    risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and
+    advice from health professionals. The increased risk may be from the frequency of substance use, from the amount used
+    on a given occasion, from risky behaviours associated with substance use or the context of use, from a harmful route of
+    administration, or from a combination of these. The risk may be related to short-term effects of the substance or to longer-term
+    cumulative effects on physical or mental health or functioning. Hazardous drug use has not yet reached the level of having
+    caused harm to physical or mental health of the user or others around the user. The pattern of drug use often persists
+    in spite of awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to substance use
+    code: 6C40-6C4Z
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/179140499
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#179140499
+  source_url: https://www.findacode.com/icd-11/code-179140499.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.0
+  title: Hazardous use of opioids
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of opioid use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk
+    may be from the frequency of opioid use, from the amount used on a given occasion, from risky behaviours associated with
+    opioid use or the context of use, from a harmful route of administration, or from a combination of these. The risk may
+    be related to short-term effects of opioids or to longer-term cumulative effects on physical or mental health or functioning.
+    Hazardous use of opioids has not yet reached the level of having caused harm to physical or mental health of the user
+    or others around the user. The pattern of opioid use often persists in spite of awareness of increased risk of harm to
+    the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of opioids
+    code: 6C43
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of opioids
+  - narcotic analgesic use
+  - narcotic use
+  - opiate habit
+  - opiate use
+  - Heroin habit
+  - Methadone habit
+  - methadone use
+  uri: http://id.who.int/icd/entity/603861372
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#603861372
+  source_url: https://www.findacode.com/icd-11/code-603861372.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.1
+  title: Hazardous use of cannabis
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of cannabis use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk
+    may be from the frequency of cannabis use, from the amount used on a given occasion, from risky behaviours associated
+    with cannabis use or the context of use, from a harmful route of administration, or from a combination of these. The risk
+    may be related to short-term effects of cannabis or to longer-term cumulative effects on physical or mental health or
+    functioning. Hazardous use of cannabis has not yet reached the level of having caused harm to physical or mental health
+    of the user or others around the user. The pattern of cannabis use often persists in spite of awareness of increased risk
+    of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of cannabis
+    code: 6C41
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of cannabis
+  - cannabis use
+  - marijuana use
+  uri: http://id.who.int/icd/entity/1389430127
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1389430127
+  source_url: https://www.findacode.com/icd-11/code-1389430127.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.2
+  title: Hazardous use of sedatives, hypnotics or anxiolytics
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of sedatives, hypnotics or anxiolytics that appreciably increases the risk of harmful physical
+    or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals.
+    The increased risk may be from the frequency of use of sedatives, hypnotics or anxiolytics, from the amount used on a
+    given occasion, from risky behaviours associated with use of sedatives, hypnotics or anxiolytics or the context of use,
+    from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects
+    of sedatives, hypnotics or anxiolytics or to longer-term cumulative effects on physical or mental health or functioning.
+    Hazardous use of sedatives, hypnotics or anxiolytics has not yet reached the level of having caused harm to physical or
+    mental health of the user or others around the user. The pattern of use of sedatives, hypnotics or anxiolytics often persists
+    in spite of awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of sedatives, hypnotics or anxiolytics
+    code: 6C44
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of sedatives, hypnotics or anxiolytics
+  - Hazardous use of anxiolytics
+  - Hazardous use of hypnotics
+  - hypnotic use
+  - Hazardous use of sedatives
+  - sedative use
+  - sleeping pill use
+  uri: http://id.who.int/icd/entity/756014816
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#756014816
+  source_url: https://www.findacode.com/icd-11/code-756014816.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.3
+  title: Hazardous use of cocaine
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of cocaine use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk
+    may be from the frequency of cocaine use, from the amount used on a given occasion, from risky behaviours associated with
+    cocaine use or the context of use, from a harmful route of administration, or from a combination of these. The risk may
+    be related to short-term effects of cocaine or to longer-term cumulative effects on physical or mental health or functioning.
+    Hazardous use of cocaine has not yet reached the level of having caused harm to physical or mental health of the user
+    or others around the user. The pattern of cocaine use often persists in spite of awareness of increased risk of harm to
+    the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of cocaine
+    code: 6C45
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of cocaine
+  - cocaine use
+  - intravenous cocaine use
+  - Hazardous use of crack cocaine
+  - crack cocaine use
+  uri: http://id.who.int/icd/entity/1385385359
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1385385359
+  source_url: https://www.findacode.com/icd-11/code-1385385359.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.4
+  title: Hazardous use of stimulants including amphetamines or methamphetamine
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of stimulants including amphetamines and methamphetamine that appreciably increases the risk
+    of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice
+    from health professionals. The increased risk may be from the frequency of use of stimulants including amphetamines and
+    methamphetamine, from the amount used on a given occasion, from risky behaviours associated with use of stimulants including
+    amphetamines and methamphetamine or the context of use, from a harmful route of administration, or from a combination
+    of these. The risk may be related to short-term effects of stimulants including amphetamines and methamphetamine or to
+    longer-term cumulative effects on physical or mental health or functioning. Hazardous use of stimulants including amphetamines
+    and methamphetamine has not yet reached the level of having caused harm to physical or mental health of the user or others
+    around the user. The pattern of use of stimulants including amphetamines and methamphetamine often persists in spite of
+    awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of stimulants including amphetamines, methamphetamine or methcathinone
+    code: 6C46
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of stimulants including amphetamines or methamphetamine
+  uri: http://id.who.int/icd/entity/154205648
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#154205648
+  source_url: https://www.findacode.com/icd-11/code-154205648.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.5
+  title: Hazardous use of caffeine
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of caffeine use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk
+    may be from the frequency of caffeine use, from the amount used on a given occasion, from risky behaviours associated
+    with caffeine use or the context of use, from a harmful route of administration, or from a combination of these. The risk
+    may be related to short-term effects of caffeine or to longer-term cumulative effects on physical or mental health or
+    functioning. Hazardous use of caffeine has not yet reached the level of having caused harm to physical or mental health
+    of the user or others around the user. The pattern of caffeine use often persists in spite of awareness of increased risk
+    of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of caffeine
+    code: 6C48
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of caffeine
+  uri: http://id.who.int/icd/entity/656164398
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#656164398
+  source_url: https://www.findacode.com/icd-11/code-656164398.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.6
+  title: Hazardous use of MDMA or related drugs
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of MDMA or related drugs that appreciably increases the risk of harmful physical or mental
+    health consequences to the user or to others to an extent that warrants attention and advice from health professionals.
+    The increased risk may be from the frequency of use of MDMA or related drugs, from the amount used on a given occasion,
+    from risky behaviours associated with use of MDMA or related drugs or the context of use, from a harmful route of administration,
+    or from a combination of these. The risk may be related to short-term effects of MDMA or related drugs or to longer-term
+    cumulative effects on physical or mental health or functioning. Hazardous use of MDMA or related drugs has not yet reached
+    the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use
+    of MDMA or related drugs often persists in spite of awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of methylene-dioxymethamphetamine [MDMA] or related drugs, including methylene-dioxyamphetamine
+      [MDA]
+    code: 6C4C
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of MDMA or related drugs
+  uri: http://id.who.int/icd/entity/113982884
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#113982884
+  source_url: https://www.findacode.com/icd-11/code-113982884.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.7
+  title: Hazardous use of dissociative drugs including ketamine or PCP
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of dissociative drugs including ketamine and PCP (phencyclidine) that appreciably increases
+    the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention
+    and advice from health professionals. The increased risk may be from the frequency of use of dissociative drugs including
+    ketamine and PCP, from the amount used on a given occasion, from risky behaviours associated with use of dissociative
+    drugs including ketamine and PCP or the context of use, from a harmful route of administration, or from a combination
+    of these. The risk may be related to short-term effects of dissociative drugs including ketamine and PCP or to longer-term
+    cumulative effects on physical or mental health or functioning. Hazardous use of dissociative drugs including ketamine
+    and PCP has not yet reached the level of having caused harm to physical or mental health of the user or others around
+    the user. The pattern of use of dissociative drugs including ketamine and PCP often persists in spite of awareness of
+    increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of dissociative drugs including ketamine or phencyclidine (PCP)
+    code: 6C4D
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of dissociative drugs including ketamine or PCP
+  uri: http://id.who.int/icd/entity/1235812153
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1235812153
+  source_url: https://www.findacode.com/icd-11/code-1235812153.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.8
+  title: Hazardous use of other specified psychoactive substances
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of other specified psychoactive substances that appreciably increases the risk of harmful physical
+    or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals.
+    The increased risk may be from the frequency of use of the substance, from the amount used on a given occasion, from risky
+    behaviours associated with use of the substance or the context of use, from a harmful route of administration, or from
+    a combination of these. The risk may be related to short-term effects of the specified substance or to longer-term cumulative
+    effects on physical or mental health or functioning. Hazardous use of other specified psychoactive substances has not
+    yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern
+    of substance use often persists in spite of awareness of increased risk of harm to the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of other specified psychoactive substances, including medications
+    code: 6C4E
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of other specified psychoactive substances
+  uri: http://id.who.int/icd/entity/688207252
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#688207252
+  source_url: https://www.findacode.com/icd-11/code-688207252.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE11.9
+  title: Hazardous use of unknown or unspecified psychoactive substances
+  group: QE10-QE2Z
+  parent: QE11
+  definition: A pattern of use of unknown or unspecified psychoactive substances that appreciably increases the risk of harmful
+    physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health
+    professionals. The increased risk may be from the frequency of use of the substance, from the amount used on a given occasion,
+    from risky behaviours associated with use of the substance or the context of use, from a harmful route of administration,
+    or from a combination of these. The risk may be related to short-term effects of the unknown or unspecified substance
+    or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of unknown or unspecified
+    psychoactive substances has not yet reached the level of having caused harm to physical or mental health of the user or
+    others around the user. The pattern of substance use often persists in spite of awareness of increased risk of harm to
+    the user or to others.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Disorders due to use of unknown or unspecified psychoactive substances
+    code: 6C4G
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous use of unknown or unspecified psychoactive substances
+  uri: http://id.who.int/icd/entity/1240119257
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1240119257
+  source_url: https://www.findacode.com/icd-11/code-1240119257.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE12
+  title: Hazardous nicotine use
+  group: QE10-QE2Z
+  parent: null
+  definition: A pattern of nicotine use that appreciably increases the risk of harmful physical or mental health consequences
+    to the user or to others to an extent that warrants attention and advice from health professionals. Most often nicotine
+    is consumed in the form of tobacco, but there are also other forms of nicotine delivery (e.g., nicotine vapour). Hazardous
+    nicotine use has not yet reached the level of having caused harm to physical or mental health of the user or others around
+    the user. The pattern of nicotine use often persists in spite of awareness of increased risk of harm to the user or to
+    others. This category is not intended to include the use of nicotine replacement therapies under medical supervision when
+    these are used as part of attempts to stop or reduce smoking.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Tobacco use
+    code: QE13
+  - title: Disorders due to use of nicotine
+    code: 6C4A
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous nicotine use
+  uri: http://id.who.int/icd/entity/63012279
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#63012279
+  source_url: https://www.findacode.com/icd-11/code-63012279.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE13
+  title: Tobacco use
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Use of Nicotine in non-tobacco forms
+    code: QE12
+  - title: Disorders due to use of nicotine
+    code: 6C4A
+  coded_elsewhere: []
+  index_terms:
+  - Tobacco use
+  - active smoking
+  - chain smoker
+  - chronic smoker
+  - chronic smoking
+  - cigarette smoking
+  - current tobacco use
+  - hazardous tobacco use
+  - heavy smoker
+  - problem with tobacco use
+  - smoking NOS
+  - tobacco smoking
+  - tobacco use NOS
+  uri: http://id.who.int/icd/entity/457960184
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#457960184
+  source_url: https://www.findacode.com/icd-11/code-457960184.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE20
+  title: Lack of physical exercise
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Lack of physical exercise
+  - sedentary lifestyle
+  uri: http://id.who.int/icd/entity/1877391879
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1877391879
+  source_url: https://www.findacode.com/icd-11/code-1877391879.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE21
+  title: Hazardous gambling or betting
+  group: QE10-QE2Z
+  parent: null
+  definition: Hazardous gambling and betting refers to a pattern of gambling or betting that appreciably increases the risk
+    of harmful physical or mental health consequences to the individual or to others around the individual. The increased
+    risk may be from the frequency of gambling or betting, the amount of time spent on these activities, the context of gambling
+    or betting, the neglect of other activities and priorities, risky behaviours associated with gambling or betting or its
+    context, the adverse consequences of gambling or betting, or from the combination of these factors. The pattern of gambling
+    or betting often persists in spite of awareness of increased risk of harm to the individual or to others. This category
+    may be used when the pattern of gambling or betting warrants attention and advice from health professionals but does not
+    meet the diagnostic requirements for Gambling Disorder.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Gambling disorder
+    code: 6C50
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous gambling or betting
+  - betting
+  - gambling
+  uri: http://id.who.int/icd/entity/233747706
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#233747706
+  source_url: https://www.findacode.com/icd-11/code-233747706.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE22
+  title: Hazardous gaming
+  group: QE10-QE2Z
+  parent: null
+  definition: Hazardous gaming refers to a pattern of gaming, either online or offline, that appreciably increases the risk
+    of harmful physical or mental health consequences to the individual or to others around the individual. The increased
+    risk may be from the frequency of gaming, the amount of time spent on these activities, the neglect of other activities
+    and priorities, risky behaviours associated with gaming or its context, the adverse consequences of gaming, or from the
+    combination of these factors. The pattern of gaming often persists in spite of awareness of increased risk of harm to
+    the individual or to others. This category may be used when the pattern of gaming behaviour warrants attention and advice
+    from health professionals but does not meet the diagnostic requirements for Gaming Disorder.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Gaming disorder
+    code: 6C51
+  coded_elsewhere: []
+  index_terms:
+  - Hazardous gaming
+  uri: http://id.who.int/icd/entity/1586542716
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1586542716
+  source_url: https://www.findacode.com/icd-11/code-1586542716.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE23
+  title: Problems with inappropriate diet or eating habits
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Feeding or eating disorders
+    code: 6B80-6B8Z
+  - title: Inadequate food
+    code: QD61
+  - title: malnutrition and other nutritional deficiencies
+    code: 5B50-5C3Z
+  coded_elsewhere: []
+  index_terms:
+  - Problems with inappropriate diet or eating habits
+  - inadequate eating habits
+  - inappropriate diet
+  - inappropriate eating habits
+  uri: http://id.who.int/icd/entity/470296979
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#470296979
+  source_url: https://www.findacode.com/icd-11/code-470296979.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE24
+  title: Problems with hygiene behaviours
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems with hygiene behaviours
+  - problem with hygiene behaviour
+  uri: http://id.who.int/icd/entity/515575378
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#515575378
+  source_url: https://www.findacode.com/icd-11/code-515575378.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE25
+  title: Problems with oral health behaviours
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problems with oral health behaviours
+  - problem with oral health behaviour
+  uri: http://id.who.int/icd/entity/2064361961
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2064361961
+  source_url: https://www.findacode.com/icd-11/code-2064361961.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE26
+  title: Problem with sun exposure behaviour
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem with sun exposure behaviour
+  uri: http://id.who.int/icd/entity/1261978211
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1261978211
+  source_url: https://www.findacode.com/icd-11/code-1261978211.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE27
+  title: Problem with behaviours related to psychological health or wellbeing
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem with behaviours related to psychological health or wellbeing
+  uri: http://id.who.int/icd/entity/453104436
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#453104436
+  source_url: https://www.findacode.com/icd-11/code-453104436.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE28
+  title: Problem with health literacy
+  group: QE10-QE2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem with health literacy
+  uri: http://id.who.int/icd/entity/86445206
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#86445206
+  source_url: https://www.findacode.com/icd-11/code-86445206.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id013
+    hp2030: *id014
+    proposed: true
+- code: QE30
+  title: Insufficient social insurance support
+  group: QE30-QE3Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/1022049742
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1022049742
+  source_url: https://www.findacode.com/icd-11/code-1022049742.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id015
+    - Z59
+    hp2030: &id016
+    - econ
+    - hca
+    proposed: true
+- code: QE30.0
+  title: Insufficient social insurance support, aged
+  group: QE30-QE3Z
+  parent: QE30
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social insurance support, aged
+  - inadequate age insurance support
+  - insufficient age insurance support
+  uri: http://id.who.int/icd/entity/707116764
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#707116764
+  source_url: https://www.findacode.com/icd-11/code-707116764.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE30.1
+  title: Insufficient social insurance support, disability
+  group: QE30-QE3Z
+  parent: QE30
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social insurance support, disability
+  - inadequate disability insurance support
+  - insufficient disability insurance support
+  uri: http://id.who.int/icd/entity/549655480
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#549655480
+  source_url: https://www.findacode.com/icd-11/code-549655480.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE30.2
+  title: Insufficient social insurance support, unemployment
+  group: QE30-QE3Z
+  parent: QE30
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social insurance support, unemployment
+  - inadequate unemployment insurance support
+  - insufficient unemployment insurance support
+  uri: http://id.who.int/icd/entity/1435529051
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1435529051
+  source_url: https://www.findacode.com/icd-11/code-1435529051.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE30.3
+  title: Insufficient social insurance support, family support
+  group: QE30-QE3Z
+  parent: QE30
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social insurance support, family support
+  - inadequate family insurance support
+  - insufficient family insurance support
+  uri: http://id.who.int/icd/entity/1895465705
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1895465705
+  source_url: https://www.findacode.com/icd-11/code-1895465705.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE31
+  title: Insufficient social welfare support
+  group: QE30-QE3Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/722188140
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#722188140
+  source_url: https://www.findacode.com/icd-11/code-722188140.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE31.0
+  title: Insufficient social welfare support, child protection
+  group: QE30-QE3Z
+  parent: QE31
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social welfare support, child protection
+  - inadequate child protection support
+  - insufficient child protection support
+  uri: http://id.who.int/icd/entity/63010289
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#63010289
+  source_url: https://www.findacode.com/icd-11/code-63010289.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE31.1
+  title: Insufficient social welfare support, protection against domestic violence
+  group: QE30-QE3Z
+  parent: QE31
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social welfare support, protection against domestic violence
+  - inadequate protection against domestic violence
+  - insufficient protection against domestic violence
+  uri: http://id.who.int/icd/entity/966443399
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#966443399
+  source_url: https://www.findacode.com/icd-11/code-966443399.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE31.2
+  title: Insufficient social welfare support, protection against homelessness
+  group: QE30-QE3Z
+  parent: QE31
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social welfare support, protection against homelessness
+  - inadequate protection against homelessness
+  - insufficient protection against homelessness
+  uri: http://id.who.int/icd/entity/1018097273
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1018097273
+  source_url: https://www.findacode.com/icd-11/code-1018097273.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE31.3
+  title: Insufficient social welfare support, post prison services
+  group: QE30-QE3Z
+  parent: QE31
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Insufficient social welfare support, post prison services
+  - inadequate post prison services support
+  - insufficient post prison services support
+  uri: http://id.who.int/icd/entity/1495157188
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1495157188
+  source_url: https://www.findacode.com/icd-11/code-1495157188.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id015
+    hp2030: *id016
+    proposed: true
+- code: QE40
+  title: Problem associated with conviction in civil or criminal proceedings without imprisonment
+  group: QE40-QE4Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with conviction in civil or criminal proceedings without imprisonment
+  - problem with conviction in legal proceedings
+  uri: http://id.who.int/icd/entity/807975049
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#807975049
+  source_url: https://www.findacode.com/icd-11/code-807975049.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id017
+    - Z65
+    hp2030: &id018
+    - scc
+    proposed: true
+- code: QE41
+  title: Problem associated with imprisonment or other incarceration
+  group: QE40-QE4Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with imprisonment or other incarceration
+  - problem with conviction in legal proceedings with imprisonment
+  - problem with imprisonment or incarceration
+  uri: http://id.who.int/icd/entity/1432581405
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1432581405
+  source_url: https://www.findacode.com/icd-11/code-1432581405.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id017
+    hp2030: *id018
+    proposed: true
+- code: QE42
+  title: Problem associated with release from prison
+  group: QE40-QE4Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with release from prison
+  - problem related to release from prison
+  uri: http://id.who.int/icd/entity/567158242
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#567158242
+  source_url: https://www.findacode.com/icd-11/code-567158242.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id017
+    hp2030: *id018
+    proposed: true
+- code: QE50
+  title: Problem associated with interpersonal interactions
+  group: QE50-QE5Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with interpersonal interactions
+  - Factors associated with behavior of or relationships with others
+  uri: http://id.who.int/icd/entity/1765280656
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1765280656
+  source_url: https://www.findacode.com/icd-11/code-1765280656.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id019
+    - Z63
+    - Z60
+    hp2030: &id020
+    - scc
+    proposed: true
+- code: QE50.0
+  title: Problem associated with relationship with friend
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with relationship with friend
+  uri: http://id.who.int/icd/entity/970113767
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#970113767
+  source_url: https://www.findacode.com/icd-11/code-970113767.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.1
+  title: Relationships with teachers or classmates
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/121970353
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#121970353
+  source_url: https://www.findacode.com/icd-11/code-121970353.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.10
+  title: Dissatisfaction with school environment
+  group: QE50-QE5Z
+  parent: QE50.1
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Dissatisfaction with school environment
+  - educational maladjustment
+  uri: http://id.who.int/icd/entity/2088979863
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2088979863
+  source_url: https://www.findacode.com/icd-11/code-2088979863.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.2
+  title: Problem associated with relationships with people at work
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Problem associated with relationships with people at work
+  - discord with boss or workmates
+  uri: http://id.who.int/icd/entity/113426063
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#113426063
+  source_url: https://www.findacode.com/icd-11/code-113426063.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.3
+  title: Relationships with neighbours, tenant or landlord
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Relationships with neighbours, tenant or landlord
+  - discord with boarder
+  - discord with landlord
+  - discord with lodgers
+  - discord with neighbours
+  - discord with room-mate
+  - discord with tenant
+  uri: http://id.who.int/icd/entity/1591948083
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1591948083
+  source_url: https://www.findacode.com/icd-11/code-1591948083.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.4
+  title: Relationship with parents, in-laws or other family members
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problem associated with interactions with spouse or partner
+    code: QE51
+  - title: Caregiver-child relationship problem
+    code: QE52.0
+  - title: Problems associated with upbringing
+    code: QE90-QE9Z
+  coded_elsewhere: []
+  index_terms:
+  - Relationship with parents, in-laws or other family members
+  - Problems in relationship with parents
+  - problem with parent
+  - Problem with aged parent
+  - Problem with sibling
+  - Problems in relationship with in-laws
+  uri: http://id.who.int/icd/entity/1927466204
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1927466204
+  source_url: https://www.findacode.com/icd-11/code-1927466204.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.5
+  title: Discord with counsellors
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Discord with counsellors
+  - conflict with counsellor
+  - Discord with probation officer
+  - problem with probation officer
+  - Discord with social worker
+  - problem with social worker
+  uri: http://id.who.int/icd/entity/731100003
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#731100003
+  source_url: https://www.findacode.com/icd-11/code-731100003.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.6
+  title: Inadequate social skills
+  group: QE50-QE5Z
+  parent: QE50
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Mental, behavioural or neurodevelopmental disorders
+    code: Chapter 06
+  coded_elsewhere: []
+  index_terms:
+  - Inadequate social skills
+  uri: http://id.who.int/icd/entity/15786260
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#15786260
+  source_url: https://www.findacode.com/icd-11/code-15786260.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE50.7
+  title: Personality difficulty
+  group: QE50-QE5Z
+  parent: QE50
+  definition: Personality difficulty refers to pronounced personality characteristics that may affect treatment or health
+    services but do not rise to the level of severity to merit a diagnosis of Personality disorder. Personality difficulty
+    is characterised by long-standing difficulties (e.g., at least 2 years), in the individual’s way of experiencing and thinking
+    about the self, others and the world. In contrast to Personality disorders, these difficulties are manifested in cognitive
+    and emotional experience and expression only intermittently (e.g., during times of stress) or at low intensity. The difficulties
+    are associated with some problems in functioning but these are insufficiently severe to cause notable disruption in social,
+    occupational, and interpersonal relationships and may be limited to specific relationships or situations.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: Personality disorder
+    code: 6D10
+  coded_elsewhere: []
+  index_terms:
+  - Personality difficulty
+  uri: http://id.who.int/icd/entity/853711607
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#853711607
+  source_url: https://www.findacode.com/icd-11/code-853711607.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE51
+  title: Problem associated with interactions with spouse or partner
+  group: QE50-QE5Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/396951882
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#396951882
+  source_url: https://www.findacode.com/icd-11/code-396951882.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE51.0
+  title: Relationship distress with spouse or partner
+  group: QE50-QE5Z
+  parent: QE51
+  definition: Substantial and sustained dissatisfaction with a spouse or intimate partner associated with significant disturbance
+    in functioning.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Relationship distress with spouse or partner
+  - conjugal maladjustment
+  - marital conflict
+  - marital disruption
+  - marital maladjustment
+  - marriage disruption
+  - marriage problem
+  - Relationship distress with current spouse or partner
+  - Relationship distress with current partner
+  - Relationship distress with current spouse
+  - Relationship distress with former spouse or partner
+  - Relationship distress with former partner
+  - Relationship distress with former spouse
+  uri: http://id.who.int/icd/entity/848664338
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#848664338
+  source_url: https://www.findacode.com/icd-11/code-848664338.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE51.1
+  title: History of spouse or partner violence
+  group: QE50-QE5Z
+  parent: QE51
+  definition: Non-accidental acts of physical force, forced or coerced sexual acts, verbal or symbolic acts, or significant
+    caregiving omissions that result in harm to a spouse or intimate partner or that have a reasonable potential for harm.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - History of spouse or partner violence
+  - partner violence
+  - spouse violence
+  - History of spouse or partner violence, physical
+  - History of spouse or partner violence, psychological
+  - History of spouse or partner violence, sexual
+  - History of spouse or partner violence, neglect
+  uri: http://id.who.int/icd/entity/1233531556
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1233531556
+  source_url: https://www.findacode.com/icd-11/code-1233531556.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE52
+  title: Problem associated with interpersonal interactions in childhood
+  group: QE50-QE5Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/901608346
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#901608346
+  source_url: https://www.findacode.com/icd-11/code-901608346.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE52.0
+  title: Caregiver-child relationship problem
+  group: QE50-QE5Z
+  parent: QE52
+  definition: Substantial and sustained dissatisfaction within a caregiver-child relationship, including a parental relationship,
+    associated with significant disturbance in functioning.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Caregiver-child relationship problem
+  - parent-child relationship problem
+  - Caregiver-child relationship problem with current caregiver
+  - Caregiver-child relationship problem with former caregiver
+  uri: http://id.who.int/icd/entity/547677013
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#547677013
+  source_url: https://www.findacode.com/icd-11/code-547677013.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE52.1
+  title: Loss of love relationship in childhood
+  group: QE50-QE5Z
+  parent: QE52
+  definition: Loss of an emotionally close relationship, such as of a parent, a sibling, a very special friend or a loved
+    pet, by death or permanent departure or rejection.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Loss of love relationship in childhood
+  - life event in childhood of loss of love relationship
+  - negative life event in childhood of loss of love relationship
+  - Loss of parent in childhood
+  uri: http://id.who.int/icd/entity/181823991
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#181823991
+  source_url: https://www.findacode.com/icd-11/code-181823991.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id019
+    hp2030: *id020
+    proposed: true
+- code: QE60
+  title: Absence of family member
+  group: QE60-QE6Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Absence of family member
+  uri: http://id.who.int/icd/entity/1661227447
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1661227447
+  source_url: https://www.findacode.com/icd-11/code-1661227447.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id021
+    - Z63
+    hp2030: &id022
+    - scc
+    proposed: true
+- code: QE61
+  title: Disappearance or death of family member
+  group: QE60-QE6Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Prolonged grief disorder
+    code: 6B42
+  coded_elsewhere: []
+  index_terms:
+  - Disappearance or death of family member
+  - assumed death of family member
+  - death of family member
+  - disappearance of family member
+  uri: http://id.who.int/icd/entity/283820579
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#283820579
+  source_url: https://www.findacode.com/icd-11/code-283820579.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id021
+    hp2030: *id022
+    proposed: true
+- code: QE61.0
+  title: Loss or death of child
+  group: QE60-QE6Z
+  parent: QE61
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Prolonged grief disorder
+    code: 6B42
+  coded_elsewhere: []
+  index_terms:
+  - Loss or death of child
+  - death of child
+  - loss of child
+  uri: http://id.who.int/icd/entity/144715807
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#144715807
+  source_url: https://www.findacode.com/icd-11/code-144715807.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id021
+    hp2030: *id022
+    proposed: true
+- code: QE62
+  title: Uncomplicated bereavement
+  group: QE60-QE6Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Uncomplicated bereavement
+  - bereavement NOS
+  - normal grief
+  uri: http://id.who.int/icd/entity/2009949293
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2009949293
+  source_url: https://www.findacode.com/icd-11/code-2009949293.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id021
+    hp2030: *id022
+    proposed: true
+- code: QE70
+  title: Problems related to primary support group, including family circumstances
+  group: QE70
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Problems associated with upbringing
+    code: QE90-QE9Z
+  - title: Problems associated with harmful or traumatic events
+    code: QE80-QE8Z
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/812634854
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#812634854
+  source_url: https://www.findacode.com/icd-11/code-812634854.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id023
+    - Z63
+    hp2030: &id024
+    - scc
+    proposed: true
+- code: QE70.0
+  title: Inadequate family support
+  group: QE70
+  parent: QE70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Inadequate family support
+  - inadequate family support NOS
+  uri: http://id.who.int/icd/entity/105880611
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#105880611
+  source_url: https://www.findacode.com/icd-11/code-105880611.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id023
+    hp2030: *id024
+    proposed: true
+- code: QE70.1
+  title: Disruption of family by separation or divorce
+  group: QE70
+  parent: QE70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Disruption of family by separation or divorce
+  - divorce causing family disruption
+  - marital disruption involving divorce
+  - marital disruption involving separation
+  - marital maladjustment involving divorce
+  - marital maladjustment involving estrangement
+  - marriage problem involving divorce
+  uri: http://id.who.int/icd/entity/1973489591
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1973489591
+  source_url: https://www.findacode.com/icd-11/code-1973489591.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id023
+    hp2030: *id024
+    proposed: true
+- code: QE70.2
+  title: Dependent relative needing care at home
+  group: QE70
+  parent: QE70
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Dependent relative needing care at home
+  - Anxiety (normal) about sick person in family
+  - Ill or disturbed family member
+  - Sick or handicapped person in family needing care at home
+  uri: http://id.who.int/icd/entity/17588040
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#17588040
+  source_url: https://www.findacode.com/icd-11/code-17588040.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id023
+    hp2030: *id024
+    proposed: true
+- code: QE80
+  title: Victim of crime or terrorism
+  group: QE80-QE8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Victim of crime or terrorism
+  - victim of crime
+  - Exposure to terrorism
+  - victim of terrorism
+  - Exposure to torture
+  - victim of torture
+  uri: http://id.who.int/icd/entity/929790948
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#929790948
+  source_url: https://www.findacode.com/icd-11/code-929790948.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id025
+    - Z65
+    - Z62
+    hp2030: &id026
+    - scc
+    proposed: true
+- code: QE81
+  title: Exposure to disaster, war or other hostilities
+  group: QE80-QE8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Target of perceived adverse discrimination or persecution
+    code: QE04
+  coded_elsewhere: []
+  index_terms:
+  - Exposure to disaster, war or other hostilities
+  - disaster victim
+  - exposure to disaster
+  - exposure to war
+  - war victim
+  uri: http://id.who.int/icd/entity/1377875574
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1377875574
+  source_url: https://www.findacode.com/icd-11/code-1377875574.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE82
+  title: Personal history of maltreatment
+  group: QE80-QE8Z
+  parent: null
+  definition: Personal history of non-accidental acts of physical force, forced or coerced sexual acts, verbal or symbolic
+    acts, or significant caregiving omissions that result in harm or have a reasonable potential for harm. These categories
+    are applied to the victim of the maltreatment, not the perpetrator.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: History of spouse or partner violence
+    code: QE51.1
+  coded_elsewhere: []
+  index_terms: []
+  uri: http://id.who.int/icd/entity/1703296220
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1703296220
+  source_url: https://www.findacode.com/icd-11/code-1703296220.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE82.0
+  title: Personal history of physical abuse
+  group: QE80-QE8Z
+  parent: QE82
+  definition: Personal history of non-accidental acts of physical force that result, or have reasonable potential to result,
+    in physical harm or that evoke significant fear. This category is applied to the victim of the maltreatment, not the perpetrator.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: History of spouse or partner violence, physical
+    code: QE51.1
+  coded_elsewhere: []
+  index_terms:
+  - Personal history of physical abuse
+  - Personal history of physical maltreatment
+  - Physical abuse of child
+  uri: http://id.who.int/icd/entity/360494969
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#360494969
+  source_url: https://www.findacode.com/icd-11/code-360494969.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE82.1
+  title: Personal history of sexual abuse
+  group: QE80-QE8Z
+  parent: QE82
+  definition: Personal history of forced or coerced sexual acts, sexual acts with someone who is unable to consent, or sexual
+    acts involving a child that are intended to provide sexual gratification to an adult. This category is applied to the
+    victim of the maltreatment, not the perpetrator.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: History of spouse or partner violence, sexual
+    code: QE51.1
+  coded_elsewhere: []
+  index_terms:
+  - Personal history of sexual abuse
+  - Personal history of sexual maltreatment
+  uri: http://id.who.int/icd/entity/1206394097
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1206394097
+  source_url: https://www.findacode.com/icd-11/code-1206394097.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE82.2
+  title: Personal history of psychological abuse
+  group: QE80-QE8Z
+  parent: QE82
+  definition: Personal history of non-accidental verbal or symbolic act that results in significant psychological harm. This
+    category is applied to the victim of the maltreatment, not the perpetrator.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions:
+  - title: History of spouse or partner violence, psychological
+    code: QE51.1
+  coded_elsewhere: []
+  index_terms:
+  - Personal history of psychological abuse
+  - Personal history of psychological maltreatment
+  - bullying
+  - child emotional abuse
+  - child verbal abuse
+  - Hostility towards or scapegoating of child
+  - Hostility towards child
+  - Scapegoating affecting child
+  uri: http://id.who.int/icd/entity/1334495652
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1334495652
+  source_url: https://www.findacode.com/icd-11/code-1334495652.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE82.3
+  title: Personal history of neglect
+  group: QE80-QE8Z
+  parent: QE82
+  definition: Personal history of egregious acts or omissions by a caregiver that deprive a child of needed age-appropriate
+    care or an adult who is incapable of self-care and that result, or have reasonable potential to result, in physical or
+    psychological harm. This category is applied to the victim of the neglect, not the perpetrator.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Personal history of neglect
+  - Emotional neglect of child
+  uri: http://id.who.int/icd/entity/1172477528
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1172477528
+  source_url: https://www.findacode.com/icd-11/code-1172477528.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE83
+  title: Personal frightening experience in childhood
+  group: QE80-QE8Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Personal frightening experience in childhood
+  - problem of negative life events in childhood
+  - problem related to negative life events in childhood of a frightening experience
+  uri: http://id.who.int/icd/entity/2033777251
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2033777251
+  source_url: https://www.findacode.com/icd-11/code-2033777251.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE84
+  title: Acute stress reaction
+  group: QE80-QE8Z
+  parent: null
+  definition: Acute stress reaction refers to the development of transient emotional, somatic, cognitive, or behavioural symptoms
+    as a result of exposure to an event or situation (either short- or long-lasting) of an extremely threatening or horrific
+    nature (e.g., natural or human-made disasters, combat, serious accidents, sexual violence, assault). Symptoms may include
+    autonomic signs of anxiety (e.g., tachycardia, sweating, flushing), being in a daze, confusion, sadness, anxiety, anger,
+    despair, overactivity, inactivity, social withdrawal, or stupor. The response to the stressor is considered to be normal
+    given the severity of the stressor, and usually begins to subside within a few days after the event or following removal
+    from the threatening situation.
+  definition_check: diff_verified
+  inclusions:
+  - acute crisis reaction
+  - acute reaction to stress
+  exclusions:
+  - title: Post traumatic stress disorder
+    code: 6B40
+  coded_elsewhere: []
+  index_terms:
+  - Acute stress reaction
+  - acute crisis reaction
+  - acute reaction to stress
+  - acute situational disorder
+  - acute situational disturbance
+  - acute situational reaction
+  - acute stress disorder
+  - brief reactive dissociative disorder
+  - crisis state
+  - psychic shock
+  - shellshock
+  - stupor reaction to exceptional stress
+  - Acute reaction to stress, agitated state
+  - Acute reaction to stress, emotional crisis
+  - panic reaction to exceptional stress
+  - Exhaustion delirium
+  - Exhaustion psychosis
+  - Fugue reaction to exceptional stress
+  - Combat fatigue
+  uri: http://id.who.int/icd/entity/505909942
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#505909942
+  source_url: https://www.findacode.com/icd-11/code-505909942.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id025
+    hp2030: *id026
+    proposed: true
+- code: QE90
+  title: Inadequate parental supervision or control
+  group: QE90-QE9Z
+  parent: null
+  definition: Lack of parental knowledge of what the child is doing or where the child is; poor control; lack of concern,
+    understanding or comprehension or lack of attempted intervention when the child is in risky situations.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Inadequate parental supervision or control
+  - inadequate parental supervision or control of child
+  - inadequate supervision of child by parent
+  - lack of parental control of child
+  uri: http://id.who.int/icd/entity/189909449
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#189909449
+  source_url: https://www.findacode.com/icd-11/code-189909449.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: &id027
+    - Z62
+    hp2030: &id028
+    - scc
+    - edu
+    proposed: true
+- code: QE91
+  title: Parental overprotection
+  group: QE90-QE9Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Parental overprotection
+  - overprotection of child by parent
+  uri: http://id.who.int/icd/entity/1847198813
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1847198813
+  source_url: https://www.findacode.com/icd-11/code-1847198813.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QE92
+  title: Altered pattern of family relationships in childhood
+  group: QE90-QE9Z
+  parent: null
+  definition: Departure of a family member or arrival of a new person into a family resulting in adverse change in child's
+    relationships. May include new relationship or marriage by a parent, death or illness of a parent, illness or birth of
+    a sibling.
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Altered pattern of family relationships in childhood
+  - altered pattern of family relationships affecting child
+  - problem of negative life events in childhood of altered pattern of family relationships
+  - Problem of birth of sibling affecting child
+  - Sibling rivalry affecting child
+  uri: http://id.who.int/icd/entity/456193180
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#456193180
+  source_url: https://www.findacode.com/icd-11/code-456193180.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QE93
+  title: Removal from home in childhood
+  group: QE90-QE9Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Removal from home in childhood
+  - problem of negative life events in childhood of removal from home
+  uri: http://id.who.int/icd/entity/1872602211
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1872602211
+  source_url: https://www.findacode.com/icd-11/code-1872602211.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QE94
+  title: Institutional upbringing
+  group: QE90-QE9Z
+  parent: null
+  definition: Group foster care in which parenting responsibilities are largely taken over by some form of institution (such
+    as residential nursery, orphanage, or children's home), or therapeutic care over a prolonged period in which the child
+    is in a hospital, convalescent home or the like, without at least one parent living with the child.
+  definition_check: diff_corrected_not_reconfirmed
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Institutional upbringing
+  - institutionalisation affecting child
+  uri: http://id.who.int/icd/entity/448222372
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#448222372
+  source_url: https://www.findacode.com/icd-11/code-448222372.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QE95
+  title: Inappropriate parental pressure or other abnormal qualities of upbringing
+  group: QE90-QE9Z
+  parent: null
+  definition: Parents forcing the child to be different from the local norm, either sex-inappropriate (e.g. dressing a boy
+    in girl's clothes), age-inappropriate (e.g. forcing a child to take on responsibilities above her or his own age) or otherwise
+    inappropriate (e.g. pressing the child to engage in unwanted or too difficult activities).
+  definition_check: diff_verified
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Inappropriate parental pressure or other abnormal qualities of upbringing
+  - problem of inappropriate parental pressure
+  uri: http://id.who.int/icd/entity/502568905
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#502568905
+  source_url: https://www.findacode.com/icd-11/code-502568905.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QE96
+  title: Events resulting in loss of self-esteem in childhood
+  group: QE90-QE9Z
+  parent: null
+  definition: Events resulting in a negative self-reappraisal by the child such as failure in tasks with high personal investment;
+    disclosure or discovery of a shameful or stigmatizing personal or family event; or other humiliating experiences.
+  definition_check: diff_corrected_not_reconfirmed
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Events resulting in loss of self-esteem in childhood
+  - problem of negative life events in childhood of loss of self-esteem
+  uri: http://id.who.int/icd/entity/2122004746
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2122004746
+  source_url: https://www.findacode.com/icd-11/code-2122004746.html
+  verified_on: '2026-10-23'
+  crosswalk:
+    icd10cm: *id027
+    hp2030: *id028
+    proposed: true
+- code: QF20
+  title: Difficulty or need for assistance with learning
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with learning
+  - learning difficulty
+  - need for assistance with learning
+  uri: http://id.who.int/icd/entity/1539042104
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1539042104
+  source_url: https://www.findacode.com/icd-11/code-1539042104.html
+  verified_on: '2026-10-23'
+- code: QF21
+  title: Difficulty or need for assistance with general life tasks or life management
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions:
+  - difficulty with carrying out tasks and daily routine
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with general life tasks or life management
+  - difficulty with carrying out tasks and daily routine
+  - difficulty with life management tasks
+  - life management problem
+  - Difficulty with dealing with change such as relocation
+  - Migration and difficulty adjusting to a new culture
+  uri: http://id.who.int/icd/entity/2127627914
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#2127627914
+  source_url: https://www.findacode.com/icd-11/code-2127627914.html
+  verified_on: '2026-10-23'
+- code: QF22
+  title: Difficulty or need for assistance with communication
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with communication
+  - communication difficulty
+  - need for assistance with communication
+  uri: http://id.who.int/icd/entity/1349734380
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1349734380
+  source_url: https://www.findacode.com/icd-11/code-1349734380.html
+  verified_on: '2026-10-23'
+- code: QF23
+  title: Difficulty or need for assistance with mobility
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Abnormalities of gait or mobility
+    code: MB44
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with mobility
+  - ambulatory dysfunction
+  - dependent on care provider due to impaired mobility
+  - difficulty with changing and maintaining body position
+  - difficulty with mobility
+  - difficulty with moving around using transportation
+  - difficulty with walking and moving around with and without equipment
+  - need for assistance due to reduced mobility
+  - need for assistance with mobility
+  - problem with decreased activity
+  - problem with impaired mobility
+  uri: http://id.who.int/icd/entity/1019892537
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1019892537
+  source_url: https://www.findacode.com/icd-11/code-1019892537.html
+  verified_on: '2026-10-23'
+- code: QF24
+  title: Difficulty or need for assistance with self-care
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with self-care
+  - difficulty with self-care
+  - need for assistance with personal care
+  - need for assistance with self-care
+  - Difficulty or need for assistance with dressing
+  - Difficulty or need for assistance with eating
+  - Difficulty with personal hygiene
+  uri: http://id.who.int/icd/entity/1501666989
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1501666989
+  source_url: https://www.findacode.com/icd-11/code-1501666989.html
+  verified_on: '2026-10-23'
+- code: QF25
+  title: Difficulty or need for assistance with relationships
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with relationships
+  - difficulty with relationships
+  - need for assistance with relationships
+  - Difficulty or need for assistance with family relationships
+  - Difficulty or need for assistance with formal relationships
+  - Difficulty or need for assistance with complex interpersonal interaction
+  uri: http://id.who.int/icd/entity/1079783118
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1079783118
+  source_url: https://www.findacode.com/icd-11/code-1079783118.html
+  verified_on: '2026-10-23'
+- code: QF26
+  title: Difficulty or need for assistance with household tasks
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with household tasks
+  - difficulty with acquiring necessities
+  - difficulty with household tasks
+  - need for assistance with household tasks
+  uri: http://id.who.int/icd/entity/4906683
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#4906683
+  source_url: https://www.findacode.com/icd-11/code-4906683.html
+  verified_on: '2026-10-23'
+- code: QF27
+  title: Difficulty or need for assistance at home and no other household member able to render care
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance at home and no other household member able to render care
+  - caregiver burn out
+  - dependent on care provider and no other household member able to render care
+  - lack of care in home
+  - lack of person able to render necessary care
+  uri: http://id.who.int/icd/entity/757911124
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#757911124
+  source_url: https://www.findacode.com/icd-11/code-757911124.html
+  verified_on: '2026-10-23'
+- code: QF28
+  title: Difficulty or need for assistance with work activities
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with work activities
+  - difficulty with work activities
+  - need for assistance with work activities
+  uri: http://id.who.int/icd/entity/402200913
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#402200913
+  source_url: https://www.findacode.com/icd-11/code-402200913.html
+  verified_on: '2026-10-23'
+- code: QF29
+  title: Difficulty or need for assistance with major areas of life
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with major areas of life
+  - difficulty with major areas of life
+  - need for assistance with major areas of life
+  - Difficulty or need for assistance with education
+  - Difficulty or needs for assistance with work and economic life
+  uri: http://id.who.int/icd/entity/874042445
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#874042445
+  source_url: https://www.findacode.com/icd-11/code-874042445.html
+  verified_on: '2026-10-23'
+- code: QF2A
+  title: Difficulty or need for assistance with community participation
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions:
+  - Lack of relaxation or leisure
+  exclusions: []
+  coded_elsewhere: []
+  index_terms:
+  - Difficulty or need for assistance with community participation
+  - difficulty with community participation
+  - difficulty with community, social and civic life
+  - need for assistance with community participation
+  - need for assistance with community, social and civic life
+  - Lack of relaxation or leisure
+  - lack of leisure time
+  - lack of relaxation
+  uri: http://id.who.int/icd/entity/1580775818
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1580775818
+  source_url: https://www.findacode.com/icd-11/code-1580775818.html
+  verified_on: '2026-10-23'
+- code: QF2B
+  title: Need for continuous supervision
+  group: QF20-QF2Z
+  parent: null
+  definition: null
+  definition_check: null
+  inclusions: []
+  exclusions:
+  - title: Difficulty or need for assistance at home and no other household member able to render care
+    code: QF27
+  coded_elsewhere: []
+  index_terms:
+  - Need for continuous supervision
+  uri: http://id.who.int/icd/entity/1214710726
+  who_browser: https://icd.who.int/browse/2026-01/mms/en#1214710726
+  source_url: https://www.findacode.com/icd-11/code-1214710726.html
+  verified_on: '2026-10-23'
+residuals:
+- code: QD5Y
+  title: Other specified problems associated with finances
+  parent: QD50-QD5Z
+  parent_title: Problems associated with finances
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-824927288/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD5Z
+  title: Problems associated with finances, unspecified
+  parent: QD50-QD5Z
+  parent_title: Problems associated with finances
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-824927288/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD6Z
+  title: Problems associated with drinking water or nutrition, unspecified
+  parent: QD60-QD6Z
+  parent_title: Problems associated with drinking water or nutrition
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-76222516/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD70.Z
+  title: Problems associated with the natural environment or human-made changes to the environment, unspecified
+  parent: QD70
+  parent_title: Problems associated with the natural environment or human-made changes to the environment
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1307910936/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD71.Z
+  title: Problems associated with housing, unspecified
+  parent: QD71
+  parent_title: Problems associated with housing
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-683601550/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD7Y
+  title: Other specified problems associated with the environment
+  parent: QD70-QD7Z
+  parent_title: Problems associated with the environment
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-266601618/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD7Z
+  title: Problems associated with the environment, unspecified
+  parent: QD70-QD7Z
+  parent_title: Problems associated with the environment
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-266601618/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD83.Y
+  title: Other specified problem with employment conditions
+  parent: QD83
+  parent_title: Problem with employment conditions
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1756207334/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD83.Z
+  title: Problem with employment conditions, unspecified
+  parent: QD83
+  parent_title: Problem with employment conditions
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1756207334/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD84.Y
+  title: Other specified occupational exposure to risk-factors
+  parent: QD84
+  parent_title: Occupational exposure to risk-factors
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-815543898/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD84.Z
+  title: Occupational exposure to risk-factors, unspecified
+  parent: QD84
+  parent_title: Occupational exposure to risk-factors
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-815543898/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD8Y
+  title: Other specified problems associated with employment or unemployment
+  parent: QD80-QD8Z
+  parent_title: Problems associated with employment or unemployment
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1440218064/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD8Z
+  title: Problems associated with employment or unemployment, unspecified
+  parent: QD80-QD8Z
+  parent_title: Problems associated with employment or unemployment
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1440218064/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD9Y
+  title: Other specified problems associated with education
+  parent: QD90-QD9Z
+  parent_title: Problems associated with education
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-561687345/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QD9Z
+  title: Problems associated with education, unspecified
+  parent: QD90-QD9Z
+  parent_title: Problems associated with education
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-561687345/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE0Y
+  title: Other specified problems associated with social or cultural environment
+  parent: QE00-QE0Z
+  parent_title: Problems associated with social or cultural environment
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-462621464/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE0Z
+  title: Problems associated with social or cultural environment, unspecified
+  parent: QE00-QE0Z
+  parent_title: Problems associated with social or cultural environment
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-462621464/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE11.Y
+  title: Other specified hazardous drug use
+  parent: QE11
+  parent_title: Hazardous drug use
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-179140499/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE11.Z
+  title: Hazardous drug use, unspecified
+  parent: QE11
+  parent_title: Hazardous drug use
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-179140499/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE1Y
+  title: Other specified hazardous substance use
+  parent: QE10-QE1Z
+  parent_title: null
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1466350777/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE1Z
+  title: Hazardous substance use, unspecified
+  parent: QE10-QE1Z
+  parent_title: null
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1466350777/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE2Y
+  title: Problems with other specified health-related behaviours
+  parent: QE10-QE2Z
+  parent_title: Problems associated with health behaviours
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-48322409/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE2Z
+  title: Problem with health-related behaviours, unspecified
+  parent: QE10-QE2Z
+  parent_title: Problems associated with health behaviours
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-48322409/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE30.Z
+  title: Insufficient social insurance support, unspecified
+  parent: QE30
+  parent_title: Insufficient social insurance support
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1022049742/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE31.Z
+  title: Insufficient social welfare support, unspecified
+  parent: QE31
+  parent_title: Insufficient social welfare support
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-722188140/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE3Y
+  title: Other specified problems associated with social insurance or welfare
+  parent: QE30-QE3Z
+  parent_title: Problems associated with social insurance or welfare
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-566804336/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE3Z
+  title: Problems associated with social insurance or welfare, unspecified
+  parent: QE30-QE3Z
+  parent_title: Problems associated with social insurance or welfare
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-566804336/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE4Y
+  title: Other specified problems associated with the justice system
+  parent: QE40-QE4Z
+  parent_title: Problems associated with the justice system
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-560926494/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE4Z
+  title: Problems associated with the justice system, unspecified
+  parent: QE40-QE4Z
+  parent_title: Problems associated with the justice system
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-560926494/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE50.1Y
+  title: Other specified relationships with teachers or classmates
+  parent: QE50.1
+  parent_title: Relationships with teachers or classmates
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-121970353/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE50.1Z
+  title: Relationships with teachers or classmates, unspecified
+  parent: QE50.1
+  parent_title: Relationships with teachers or classmates
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-121970353/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE50.Y
+  title: Other specified problem associated with interpersonal interactions
+  parent: QE50
+  parent_title: Problem associated with interpersonal interactions
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1765280656/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE51.Y
+  title: Other specified problem associated with interactions with spouse or partner
+  parent: QE51
+  parent_title: Problem associated with interactions with spouse or partner
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-396951882/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE51.Z
+  title: Problem associated with interactions with spouse or partner, unspecified
+  parent: QE51
+  parent_title: Problem associated with interactions with spouse or partner
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-396951882/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE52.Y
+  title: Other specified problem associated with interpersonal interactions in childhood
+  parent: QE52
+  parent_title: Problem associated with interpersonal interactions in childhood
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-901608346/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE52.Z
+  title: Problem associated with interpersonal interactions in childhood, unspecified
+  parent: QE52
+  parent_title: Problem associated with interpersonal interactions in childhood
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-901608346/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE5Y
+  title: Other specified problems associated with relationships
+  parent: QE50-QE5Z
+  parent_title: Problems associated with relationships
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1509667156/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE5Z
+  title: Problems associated with relationships, unspecified
+  parent: QE50-QE5Z
+  parent_title: Problems associated with relationships
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1509667156/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE61.Y
+  title: Disappearance or death of other family member
+  parent: QE61
+  parent_title: Disappearance or death of family member
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-283820579/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE6Y
+  title: Other specified problems associated with absence, loss or death of others
+  parent: QE60-QE6Z
+  parent_title: Problems associated with absence, loss or death of others
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1399046120/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE6Z
+  title: Problems associated with absence, loss or death of others, unspecified
+  parent: QE60-QE6Z
+  parent_title: Problems associated with absence, loss or death of others
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1399046120/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE70.Z
+  title: Problems related to primary support group, including family circumstances, unspecified
+  parent: QE70
+  parent_title: Problems related to primary support group, including family circumstances
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-812634854/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE82.Y
+  title: Other specified personal history of maltreatment
+  parent: QE82
+  parent_title: Personal history of maltreatment
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1703296220/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE82.Z
+  title: Personal history of maltreatment, unspecified
+  parent: QE82
+  parent_title: Personal history of maltreatment
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1703296220/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE8Y
+  title: Other specified problems associated with harmful or traumatic events
+  parent: QE80-QE8Z
+  parent_title: Problems associated with harmful or traumatic events
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-675461815/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE8Z
+  title: Problems associated with harmful or traumatic events, unspecified
+  parent: QE80-QE8Z
+  parent_title: Problems associated with harmful or traumatic events
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-675461815/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE9Y
+  title: Other specified problems associated with upbringing
+  parent: QE90-QE9Z
+  parent_title: Problems associated with upbringing
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1428430704/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QE9Z
+  title: Problems associated with upbringing, unspecified
+  parent: QE90-QE9Z
+  parent_title: Problems associated with upbringing
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-1428430704/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QF2Y
+  title: Difficulty or need for assistance with other specified activity
+  parent: QF20-QF2Z
+  parent_title: Difficulty or need for assistance with activities
+  kind: other
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-340003177/other.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+- code: QF2Z
+  title: Difficulty or need for assistance with unspecified activity
+  parent: QF20-QF2Z
+  parent_title: Difficulty or need for assistance with activities
+  kind: unspecified
+  foundation_id: null
+  source_url: https://www.findacode.com/icd-11/code-340003177/unspecified.html
+  release: ICD-11 MMS v2026-01 (as mirrored by findacode.com)
+known_gaps:
+- 'WHO ICD-11 browser (icd.who.int/browse/2025-01/mms/en) was NOT readable: WebFetch got only the landing page shell (a JavaScript
+  app); the GetConcept endpoint returned a client error. All data comes from the findacode.com mirror, release v2026-01.'
+- The full MMS PDF (familysupport.org.za) could not be fetched (proxy HTTP 504), so it was not used.
+- 'foundation_id: findacode does not print WHO URIs; IDs come from the numeric part of each findacode URL (block-<id>/code-<id>),
+  which matches the WHO foundation entity ID as described in the task brief. Not checked against id.who.int (that API needs
+  a token).'
+- Residual Y/Z codes have no foundation_id (findacode serves them at code-<parent-id>/other.html or /unspecified.html); foundation_id
+  is null for them.
+- 'Description text: the fetch tool will not quote more than about 125 characters. Long descriptions were rebuilt and then
+  checked against the page with a model-run, character-by-character comparison (''diff_verified'' = reported IDENTICAL; ''diff_corrected_not_reconfirmed''
+  = small corrections taken from the comparison but not re-checked: QE03, QE94, QE96 and the QE10-QE1Z sub-block description).
+  This was done by a language model, not a programmatic diff, so small typographic details (straight vs curly quotes, double
+  spaces, dashes) may be wrong. Curly apostrophes were confirmed only in QD85 and QE50.7; QE92, QE94 and QE95 use straight
+  apostrophes here and those were not confirmed.'
+- Inclusions / exclusions / coded-elsewhere titles were read through the same summarising fetch tool. They are short and were
+  asked for exactly, but no second fetch checked them character by character. Exclusion links (hrefs) were not kept; codes
+  were.
+- index_terms are findacode's 'synonyms' list (WHO index terms). For QE51.1 only 7 of about 47 terms are kept.
+- 'Not captured: ''code also'' / ''use additional code'' notes, postcoordination axes, and coding notes. None were seen on
+  the pages read, but the fetch prompts did not ask for them specifically.'
+- 'Structure as findacode shows it: QE50 has no QE50.Z; QE61 has only QE61.0 and QE61.Y (no .Z); QE70 has no .Y; QD70 and
+  QD71 have only .Z; QD6 has no QD6Y. These were not checked against WHO.'
+- QE11.8 and QE11.9 have their own foundation entities, so they are listed as codes, not residuals.
+- QE70 is a standalone category, not a block; it is listed as its own group with range 'QE70'.
+- Block-level descriptions exist only for QF20-QF2Z and the QE10-QE1Z sub-block; the other blocks show none on findacode.
+- 'Possible source oddity, recorded as found: the QD80-QD8Z block exclusion reads ''problems related to housing and economic
+  circumstances (QD71)''.'
+- QE62 Uncomplicated bereavement has no description on findacode v2026-01; recorded as null.
+- The section (QD50-QF2Z, findacode block-57624301) has no description; QF00-QF0Z and QF10 are out of scope and left out.

@@ -1,0 +1,44 @@
+# todo.yaml — nothing here is rendered as fact
+items:
+- id: T-ICD-01
+  what: Re-pull all 125 ICD-11 codes from the WHO ICD-API (release 2026-01) and replace the findacode-mirror text; confirm
+    foundation IDs, definitions (37 present / 88 null), inclusions, exclusions, "code also" notes.
+  blocks: any release beyond the pilot (Daniel chose the interim mirror for the pilot, 2026-10-23)
+- id: T-ICD-02
+  what: Re-check QE03, QE94, QE96 and the QE10–QE1Z sub-block description (corrected, not re-confirmed); the QE41 title wording;
+    the missing QE50.Z / QE61.Z / QE70.Y / QD6Y.
+- id: T-LIC-01
+  what: Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before
+    any delivery other than local.
+- id: T-BIB-03
+  what: Abstracts for Link & Phelan 1995 and Paul & Moser 2009 — neither is in OpenAlex or Europe PMC (checked 2026-10-23);
+    needs library access. L22 is withheld until Paul & Moser is summarised.
+- id: T-BIB-04
+  what: Read Richardson 1986 and 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (UAH library) so the methods references
+    can be marked verified; until then the glossary and 101s that cite them show "not verified".
+- id: T-BIB-02
+  what: Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010
+    verified 2026-10-23 against the WHO PDF.
+- id: T-XWALK-01
+  what: Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside
+    Z55–Z65.
+- id: T-EVID-01
+  what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
+    financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
+    L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
+- id: T-REF-link_phelan1995
+  what: 'references/8 (link_phelan1995): summary pending abstract'
+- id: T-REF-paul_moser2009
+  what: 'references/26 (paul_moser2009): summary pending abstract'
+- id: T-REF-richardson1986
+  what: 'references/47 (richardson1986): source not read beyond metadata'
+- id: T-REF-richardson1995
+  what: 'references/48 (richardson1995): source not read beyond metadata'
+- id: T-REF-kosko1986
+  what: 'references/53 (kosko1986): source not read beyond metadata'
+- id: T-REF-ozesmi2004
+  what: 'references/54 (ozesmi2004): source not read beyond metadata'
+- id: T-REF-hovmand2014
+  what: 'references/55 (hovmand2014): source not read beyond metadata'
+- id: T-LINKS
+  what: 'Links blocked by unverified references: L01, L02, L05, L07, L08, L14, L16, L22, L23, L24, C01'

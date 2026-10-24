@@ -1,0 +1,15 @@
+- date: '2026-10-23'
+  what: Pack created
+  why: A2.1 pilot
+  records:
+  - all
+  source: this build
+  by: cowork
+- date: '2026-10-23'
+  what: Felitti 1998 abstract re-harvested (harvest 0.2.1); Link & Phelan 1995 has no abstract in OpenAlex or Europe PMC
+  why: tag-stripping bug fixed
+  records:
+  - references/felitti1998
+  - references/link_phelan1995
+  source: harvest_openalex.py 0.2.1
+  by: cowork

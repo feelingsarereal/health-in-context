@@ -1,0 +1,388 @@
+{
+ "grades": {
+  "S": "Systematic review, meta-analysis or large cohort",
+  "M": "Single strong study or field experiment",
+  "F": "Framework or conceptual source"
+ },
+ "framing": "Problem framing: each node is the severity of a circumstance; + means more of A tends to come with more of B.",
+ "links": [
+  {
+   "id": "L03",
+   "from": "QD71",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Among low-income working renters, a forced move was followed by higher odds of being laid off. [23]",
+   "refs": [
+    23
+   ],
+   "suggest": [
+    "QD80",
+    "QD82"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L04",
+   "from": "QD50-QD5Z",
+   "to": "QD60-QD6Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Food insecurity — the inability to afford enough food — is associated with hypertension and hyperlipidaemia among low-income adults. [24]",
+   "refs": [
+    24
+   ],
+   "suggest": [],
+   "counter": false
+  },
+  {
+   "id": "L06",
+   "from": "QD50-QD5Z",
+   "to": "QE90-QE9Z",
+   "polarity": "+",
+   "grade": "F",
+   "mechanism": "Health disparities associated with poverty could be reduced by alleviating toxic stress in childhood. [36]",
+   "refs": [
+    36
+   ],
+   "suggest": [],
+   "counter": false
+  },
+  {
+   "id": "L09",
+   "from": "QD90-QD9Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Lower education and health literacy are associated with riskier health behaviours and worse outcomes. [33] [32]",
+   "refs": [
+    33,
+    32
+   ],
+   "suggest": [],
+   "counter": false
+  },
+  {
+   "id": "L10",
+   "from": "QE40-QE4Z",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "In an audit experiment with matched job applicants, a criminal record was a major barrier to employment. [30]",
+   "refs": [
+    30
+   ],
+   "suggest": [
+    "QD80"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L11",
+   "from": "QE40-QE4Z",
+   "to": "QE70",
+   "polarity": "+",
+   "grade": "F",
+   "mechanism": "Mass incarceration is linked to negative health impacts on the partners and children of incarcerated men. [29]",
+   "refs": [
+    29
+   ],
+   "suggest": [
+    "QE70"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L12",
+   "from": "QE00-QE0Z",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "In a field experiment, résumés with White-sounding names received 50% more interview callbacks than identical résumés with African-American-sounding names. [31]",
+   "refs": [
+    31
+   ],
+   "suggest": [
+    "QD80",
+    "QD83"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L13",
+   "from": "QE00-QE0Z",
+   "to": "QD71",
+   "polarity": "+",
+   "grade": "F",
+   "mechanism": "Structural racism operates through mutually reinforcing systems that include housing. [21]",
+   "refs": [
+    21
+   ],
+   "suggest": [
+    "QD71.1"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L15",
+   "from": "QE80-QE8Z",
+   "to": "QD71",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Intimate partner violence is associated with housing instability. [43]",
+   "refs": [
+    43
+   ],
+   "suggest": [
+    "QD71.0",
+    "QD71.1"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L17",
+   "from": "QE50-QE5Z",
+   "to": "QE00-QE0Z",
+   "polarity": "+",
+   "grade": "F",
+   "mechanism": "Perceived availability of social support buffers the effects of stressful events. [44]",
+   "refs": [
+    44
+   ],
+   "suggest": [
+    "QE01"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L18",
+   "from": "QE90-QE9Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Adverse childhood experiences show a graded association with adult health-risk behaviours. [19] [34]",
+   "refs": [
+    19,
+    34
+   ],
+   "suggest": [],
+   "counter": false
+  },
+  {
+   "id": "L19",
+   "from": "QE90-QE9Z",
+   "to": "QD90-QD9Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "ACEs are associated with lower educational attainment. [35]",
+   "refs": [
+    35
+   ],
+   "suggest": [
+    "QD92"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L20",
+   "from": "QE90-QE9Z",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Higher adverse-childhood-experience scores are associated with adult unemployment and household poverty. [35]",
+   "refs": [
+    35
+   ],
+   "suggest": [
+    "QD80"
+   ],
+   "counter": false
+  },
+  {
+   "id": "L21",
+   "from": "QE80-QE8Z",
+   "to": "QE90-QE9Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Household violence and abuse are themselves counted as adverse childhood experiences. [19]",
+   "refs": [
+    19
+   ],
+   "suggest": [],
+   "counter": false
+  },
+  {
+   "id": "C02",
+   "from": "QE70",
+   "to": "QE00-QE0Z",
+   "polarity": "−",
+   "grade": "F",
+   "mechanism": "When support is perceived as available, it buffers the effects of stressful events. Model it as a protective edge from a relationship node. [44]",
+   "refs": [
+    44
+   ],
+   "suggest": [],
+   "counter": true
+  }
+ ],
+ "not_offered": [
+  {
+   "id": "L01",
+   "from": "QD80-QD8Z",
+   "to": "QD50-QD5Z",
+   "polarity": "+",
+   "grade": "S",
+   "refs": [
+    27,
+    10
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited studies cover unemployment and mortality, and employment grade and illness, not job loss leading to income loss. Needs a source on earnings losses after job loss (todo T-EVID-01)."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L02",
+   "from": "QD50-QD5Z",
+   "to": "QD71",
+   "polarity": "+",
+   "grade": "M",
+   "refs": [
+    22
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited study examines what follows eviction, not low income leading to eviction. Needs a source on income, rent burden and eviction risk (T-EVID-01)."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L05",
+   "from": "QD50-QD5Z",
+   "to": "QE00-QE0Z",
+   "polarity": "+",
+   "grade": "M",
+   "refs": [
+    42
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited study found poverty-related concerns reduce cognitive performance, and that stress did not explain it; no ICD-11 social-environment code fits that outcome."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L07",
+   "from": "QE30-QE3Z",
+   "to": "QD50-QD5Z",
+   "polarity": "+",
+   "grade": "S",
+   "refs": [
+    25
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited study links uninsurance to mortality, not insurance gaps to financial strain; its grade would be M, not S (T-EVID-01)."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L08",
+   "from": "QD90-QD9Z",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "F",
+   "refs": [
+    35,
+    4
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited studies cover adverse childhood experiences leading to education and employment, not limited education leading to unemployment (T-EVID-01)."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L14",
+   "from": "QE00-QE0Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "refs": [
+    20,
+    38
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited studies report associations with health and mortality, not with health behaviours, so the target block does not fit."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L16",
+   "from": "QE60-QE6Z",
+   "to": "QE00-QE0Z",
+   "polarity": "+",
+   "grade": "S",
+   "refs": [
+    37
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited study shows bereavement increases the survivor's mortality; it does not show a social-environment problem such as stress or exclusion."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L22",
+   "from": "QD80-QD8Z",
+   "to": "QE00-QE0Z",
+   "polarity": "+",
+   "grade": "S",
+   "refs": [
+    26,
+    41
+   ],
+   "reason": [
+    "[26] not verified"
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L23",
+   "from": "QD50-QD5Z",
+   "to": "QD70-QD7Z",
+   "polarity": "+",
+   "grade": "F",
+   "refs": [
+    39
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited paper is a methods review of neighbourhood-effects research and does not say that income sorts people into neighbourhoods (T-EVID-01)."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L24",
+   "from": "QD70-QD7Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "M",
+   "refs": [
+    40
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the opportunity to move to a low-poverty neighbourhood was associated with lower extreme obesity and diabetes, which are conditions, not the health-behaviour block this link targets."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "C01",
+   "from": "QE30-QE3Z",
+   "to": "QD50-QD5Z",
+   "polarity": "−",
+   "grade": "F",
+   "refs": [
+    1
+   ],
+   "reason": [
+    "Withheld 2026-10-23 after independent check: the cited summary does not state that social protection reduces income poverty (T-EVID-01)."
+   ],
+   "kind": "withheld"
+  }
+ ]
+}

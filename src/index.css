@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MI DESIGN-SYSTEM §2–§3, verbatim, plus the Actualizer canvas classes (DESIGN-SYSTEM §3). */
+@layer base {
+  :root {
+    color-scheme: light;
+    --bx-bg: #faf8f4;
+    --bx-bg-2: #f1ede6;
+    --bx-ink: #1f1b16;
+    --bx-muted: #5d5750;
+    --bx-line: #d9d2c7;
+    --bx-accent: #2f5d9a;
+    --bx-amber: #b45309;
+    --ax-pos: #2f5d9a;
+    --ax-neg: #a3243b;
+    --ax-hl-out: #0f766e;
+    --ax-hl-in: #b45309;
+  }
+  .dark {
+    color-scheme: dark;
+    --bx-bg: #15130f;
+    --bx-bg-2: #211d18;
+    --bx-ink: #efeae2;
+    --bx-muted: #b3aca1;
+    --bx-line: #3a342c;
+    --bx-accent: #8fb4ea;
+    --bx-amber: #fbbf24;
+    --ax-pos: #8fb4ea;
+    --ax-neg: #f2a0ae;
+    --ax-hl-out: #5eead4;
+    --ax-hl-in: #fbbf24;
+  }
+  body { background: var(--bx-bg); color: var(--bx-ink); @apply font-body; }
+  h1, h2, h3, h4 { @apply font-display tracking-tight; }
+  :focus-visible { outline: 3px solid var(--bx-accent); outline-offset: 2px; border-radius: 2px; }
+  a { text-underline-offset: 2px; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+  sub, sup { line-height: 0; }
+  dialog::backdrop { background: rgb(21 19 15 / 0.45); }
+}
+
+@layer components {
+  .bx-card        { @apply rounded-xl border border-[color:var(--bx-line)] bg-white/70 dark:bg-night-2/80 shadow-sm; }
+  .bx-btn         { @apply inline-flex items-center gap-1.5 rounded-md border border-[color:var(--bx-line)] bg-white/80 dark:bg-night-2 px-2.5 py-1.5 text-sm font-medium hover:bg-paper-2 dark:hover:bg-[#2b261f] disabled:opacity-40 disabled:cursor-not-allowed; }
+  .bx-btn-primary { @apply inline-flex items-center gap-1.5 rounded-md bg-ink text-paper dark:bg-night-ink dark:text-night px-3 py-1.5 text-sm font-semibold hover:opacity-90; }
+  .bx-btn-on      { @apply !bg-ink !text-paper dark:!bg-night-ink dark:!text-night; }
+  .bx-input       { @apply w-full rounded-md border border-[color:var(--bx-line)] bg-white dark:bg-night-2 px-2.5 py-1.5 text-sm; }
+  .bx-chip        { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold leading-5; }
+  .bx-prose       { @apply text-[15px] leading-7 text-ink-muted dark:text-night-muted; }
+  .bx-kbd         { @apply rounded border border-[color:var(--bx-line)] px-1 font-mono text-[11px]; }
+  .bx-muted       { @apply text-ink-muted dark:text-night-muted; }
+  .bx-term        { @apply underline decoration-dotted decoration-[color:var(--bx-accent)] underline-offset-[3px] cursor-help rounded-sm hover:bg-paper-2 dark:hover:bg-night-2; }
+  .bx-cite        { @apply align-super text-[11px] font-semibold text-[color:var(--bx-accent)] hover:underline cursor-pointer; }
+  .bx-foldout     { @apply bx-card mt-2 mb-4 p-3 text-sm border-l-4 border-l-[color:var(--bx-accent)]; }
+  .bx-todo        { @apply bx-chip bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200; }
+  .bx-reader      { @apply max-w-[68ch] text-[17px] leading-8 font-body; }
+  .bx-synthesis   { @apply border-l-2 border-[color:var(--bx-line)] pl-4 my-4; }
+  .bx-synthesis-label { @apply block mb-1 text-[11px] uppercase tracking-wider bx-muted font-semibold; }
+  .bx-asof        { @apply bx-chip bg-paper-2 dark:bg-night-2 bx-muted; }
+  .bx-tier        { @apply bx-chip border border-[color:var(--bx-line)] bx-muted; }
+  .bx-banner      { @apply bx-card p-3 mb-6 text-sm border-l-4 border-l-[color:var(--bx-accent)]; }
+  .bx-status      { @apply bx-chip border border-[color:var(--bx-line)] bx-muted; }
+  .sr-only-focusable:not(:focus) { @apply sr-only; }
+
+  /* Actualizer canvas (DESIGN-SYSTEM §3) */
+  .ax-canvas      { @apply relative bg-[color:var(--bx-bg)]; background-image: radial-gradient(circle, rgb(31 27 22 / 0.06) 1px, transparent 1.2px); background-size: 24px 24px; }
+  .dark .ax-canvas { background-image: radial-gradient(circle, rgb(239 234 226 / 0.06) 1px, transparent 1.2px); }
+  .ax-loop-r, .ax-loop-b { @apply absolute flex items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-[11px] font-bold leading-none shadow-sm; width: 30px; height: 30px; transform: translate(-50%, -50%); }
+  .ax-loop-r      { border-color: var(--ax-pos); color: var(--ax-pos); }
+  .ax-loop-b      { border-color: var(--ax-neg); color: var(--ax-neg); }
+  .ax-pin         { @apply text-[11px]; }
+  .ax-heuristic   { @apply bx-chip border border-[color:var(--bx-line)] bx-muted; }
+  .ax-rt          { }
+  .ax-edge-pos    { color: var(--ax-pos); }
+  .ax-edge-neg    { color: var(--ax-neg); }
+  .ax-tap         { @apply min-h-[44px] min-w-[44px]; }
+}
+
+.bx-101 h2 { @apply text-2xl mt-8; }
+.bx-101 h3 { @apply text-xl mt-6; }
+.bx-101 p { @apply my-3; }
+.bx-101 ul { @apply list-disc pl-5 my-3; }
+.bx-101 ol { @apply list-decimal pl-5 my-3; }
+.bx-101 li { @apply my-1; }
+.bx-101 .katex-display { @apply overflow-x-auto py-2; }
+.bx-101 code { @apply font-mono text-[0.9em] rounded bg-paper-2 dark:bg-night-2 px-1; }
+.bx-101 strong { @apply font-semibold; }
+
+/* The map's print / greyscale theme (UI-14) and print stylesheet for outputs */
+.ax-print .ax-canvas { filter: grayscale(1); }
+@media print {
+  header, footer, nav, .no-print { display: none !important; }
+  body { background: white; color: black; }
+  .bx-card { box-shadow: none; border-color: #999; }
+}

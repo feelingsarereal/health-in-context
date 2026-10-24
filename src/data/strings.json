@@ -1,0 +1,66 @@
+{
+ "home": {
+  "lead": "Map how someone's circumstances connect — money, housing, work, school, family, safety — and see which ones feed each other.",
+  "start": "Start a map",
+  "evidence": "See the research"
+ },
+ "first_run": {
+  "title": "Before you start",
+  "body_from": "safety.notice",
+  "ok": "Got it",
+  "body": "This is a thinking tool for mapping how a person's or a group's social circumstances connect. It describes circumstances using codes from the World Health Organization's ICD-11; it does not diagnose anyone, give medical, legal or financial advice, or replace a professional who knows the situation. Everything you type stays in this browser on this device unless you export it."
+ },
+ "codes": {
+  "picker_placeholder": "Search codes — try 'rent', 'job', 'school'",
+  "no_definition": "No definition in ICD-11 for this code.",
+  "open_who": "Open in the WHO ICD-11 browser",
+  "interim": "Text from a copy of ICD-11 (release 2026-01). Check the WHO entry for the official wording.",
+  "proposed_xwalk": "Proposed mapping",
+  "status": {
+   "sdoh": "SDOH code",
+   "other": "Other (not an SDOH code)",
+   "undetermined": "Not sure yet"
+  },
+  "assign_for_associations": "Assign an SDOH code to see associations."
+ },
+ "associations": {
+  "title": "What the research links to this",
+  "leads_to": "Leads to",
+  "comes_from": "Comes from",
+  "grade": {
+   "S": "Strong: systematic review or large cohort",
+   "M": "Moderate: one strong study",
+   "F": "Framework: conceptual source"
+  },
+  "tiers_note": "Ordered from structural to intermediary determinants (the builder's reading of the WHO framework).",
+  "counter": "Protective link",
+  "second_degree": "Show 2nd-degree"
+ },
+ "edges": {
+  "polarity_plus": "+ same direction",
+  "polarity_minus": "− opposite direction",
+  "weight_help": "Your judgement of strength, −1 to +1. Not a measured effect.",
+  "delay": "Delay"
+ },
+ "loops": {
+  "title": "Loops",
+  "reinforcing": "Reinforcing",
+  "balancing": "Balancing",
+  "strength_label": "Loop strength — structural heuristic, not loop dominance",
+  "none": "No loops yet. A loop forms when arrows lead back to where they started.",
+  "truncated": "Too many loops to list them all; showing the first 500."
+ },
+ "analyses": {
+  "paths_title": "How does one circumstance affect another?",
+  "leverage_title": "Leverage hints",
+  "leverage_label": "Heuristic — hints for discussion",
+  "pulse_label": "What-if pulse — qualitative exploration, not prediction"
+ },
+ "privacy": {
+  "saved_here": "Saved in this browser on this device only — export to keep a copy.",
+  "clear": "Clear my data",
+  "clear_confirm": "Delete every map stored in this browser? This cannot be undone."
+ },
+ "deidentify_from": "safety.deidentify.nudge",
+ "deidentify": "Use initials or a label. Don't enter names, dates of birth, addresses or record numbers."
+}

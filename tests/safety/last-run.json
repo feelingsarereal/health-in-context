@@ -1,0 +1,34 @@
+{
+ "date": "2026-10-23",
+ "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-10-23)",
+ "safety": {
+  "passed": 14,
+  "failed": 0,
+  "tests": [
+   "✓ G2/H2: a typed sentinel never appears in any request; no off-origin requests",
+   "✓ G5: no external script or stylesheet in dist/index.html",
+   "✓ G5: no known analytics, error-reporter or font hosts anywhere in the bundle",
+   "✓ G5: fonts are system fonts or bundled (KaTeX), never fetched from a font service",
+   "✓ H1: rendered text of every route",
+   "✓ H1: the map surface — pop-out, association menu (with 2nd degree), every panel, list view",
+   "✓ H1: static dist files (HTML, JSON)",
+   "✓ H1: builder copy (src/lib/copy.ts) is clean",
+   "✓ H3: the nudge renders on every field in safety.yaml → deidentify.fields",
+   "✓ H4: clear my data empties storage on this device",
+   "✓ H5: the not-advice notice on first run, on / and on /about",
+   "✓ H6: help lists every pack entry with source and date; no inputs, no branching",
+   "✓ G3: as_of is visible on /, /about and /methods; the interim source is named",
+   "✓ G4: every heuristic result carries its label where it renders"
+  ]
+ },
+ "walkthroughs": {
+  "passed": 4,
+  "failed": 0,
+  "tests": [
+   "✓ w1: map a client's housing–work loop and find it",
+   "✓ w2: two-loop model, weights, analyses, export and re-import",
+   "✓ w3: a relative's situation on a phone, no codes needed",
+   "✓ w3: long-press on a node opens the association menu (touch alternative to right-click)"
+  ]
+ }
+}

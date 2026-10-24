@@ -1,0 +1,253 @@
+# glossary.yaml — authored 2026-10-23
+- id: sdoh
+  term: Social determinants of health
+  kind: science
+  variants:
+  - social determinants
+  - SDOH
+  - SDH
+  - social determinant of health
+  - social determinant
+  short: The conditions in which people are born, grow, live, work and age — and their access to power, money and resources.
+  definition: WHO defines the social determinants of health as the conditions in which people are born, grow, live, work and
+    age, and people's access to power, money and resources [56]. Healthy People 2030 adds learning, playing and worshipping,
+    and groups them into five domains [57].
+  concept: what-are-sdoh
+  see:
+  - structural-determinants
+  - intermediary-determinants
+  - icd11
+- id: structural-determinants
+  term: Structural determinants
+  kind: science
+  variants:
+  - structural determinant
+  short: The context and stratifying mechanisms — income, education, occupation, class, gender, race/ethnicity — that set
+    people's social position.
+  definition: In the WHO conceptual framework, structural determinants are the socioeconomic and political context, the mechanisms
+    that stratify society, and the resulting socioeconomic position of individuals; they act through intermediary determinants
+    [2].
+  concept: structural-intermediary
+  see:
+  - intermediary-determinants
+- id: intermediary-determinants
+  term: Intermediary determinants
+  kind: science
+  variants:
+  - intermediary determinant
+  short: Material and psychosocial circumstances, behaviours and biology, and the health system — the routes structural determinants
+    act through.
+  definition: 'The WHO conceptual framework names four groups of intermediary determinants: material circumstances, psychosocial
+    circumstances, behavioural and biological factors, and the health system itself [2].'
+  concept: structural-intermediary
+  see:
+  - structural-determinants
+- id: social-gradient
+  term: Social gradient
+  kind: science
+  variants:
+  - gradient in health
+  - health gradient
+  short: Health improves step by step with social position, not just between the poorest and everyone else.
+  definition: In US tax and death records, higher income was associated with greater longevity throughout the income distribution,
+    not only at the bottom [11].
+  concept: what-are-sdoh
+- id: fundamental-cause
+  term: Fundamental cause
+  kind: science
+  variants:
+  - fundamental causes
+  short: A social condition, such as income or education, that keeps shaping health even as the specific risk factors change.
+  definition: Socioeconomic factors such as income, wealth and education have been described as fundamental causes of a wide
+    range of health outcomes [3].
+  concept: what-are-sdoh
+  further_refs:
+  - 8
+- id: icd11
+  term: ICD-11
+  kind: methods
+  variants:
+  - International Classification of Diseases
+  - ICD-11 MMS
+  - MMS
+  short: WHO's International Classification of Diseases, 11th revision; its Chapter 24 codes social circumstances (QD50–QE9Z).
+  definition: ICD-11 for Mortality and Morbidity Statistics is WHO's classification. Its Chapter 24 section 'Factors influencing
+    health status' has blocks QD50–QE9Z for problems associated with finances, housing and environment, employment, education,
+    the social environment, justice, relationships, loss, family, trauma and upbringing [59].
+  concept: icd11-chapter24
+  see:
+  - z-codes
+- id: z-codes
+  term: Z codes
+  kind: methods
+  variants:
+  - Z code
+  - ICD-10-CM Z codes
+  - Z55–Z65
+  short: The ICD-10-CM categories Z55–Z65 used in the US to record social determinants in health records.
+  definition: In ICD-10-CM, categories Z55–Z65 record problems related to education, employment, occupational exposure, physical
+    environment, housing and economic circumstances, social environment, upbringing, primary support group and psychosocial
+    circumstances [58].
+  concept: icd11-chapter24
+  see:
+  - icd11
+- id: cld
+  term: Causal loop diagram
+  kind: methods
+  variants:
+  - causal loop diagrams
+  - CLD
+  - CLDs
+  - causal loop
+  short: A map of variables joined by signed arrows (+ or −) that shows the feedback loops in a system.
+  definition: A diagram of variables joined by arrows marked + or −. System dynamics uses such feedback maps to study public-health
+    problems [51].
+  concept: reading-clds
+  see:
+  - link-polarity
+  - reinforcing-loop
+  - balancing-loop
+  further_refs:
+  - 47
+- id: link-polarity
+  term: Link polarity
+  kind: methods
+  variants:
+  - polarity
+  - positive link
+  - negative link
+  short: + if the effect moves in the same direction as the cause (all else equal); − if it moves the opposite way.
+  definition: 'In this app: + means the effect moves the same way as the cause, all else equal; − means the opposite way.'
+  concept: reading-clds
+  further_refs:
+  - 47
+- id: reinforcing-loop
+  term: Reinforcing loop
+  kind: methods
+  variants:
+  - reinforcing loops
+  - R loop
+  - vicious cycle
+  - virtuous cycle
+  short: 'A loop with an even number of − links: a change travels round and comes back amplified.'
+  definition: 'In this app: a loop whose link signs multiply to + (an even number of − links), so a change returns amplified.'
+  concept: reading-clds
+  see:
+  - balancing-loop
+  further_refs:
+  - 48
+- id: balancing-loop
+  term: Balancing loop
+  kind: methods
+  variants:
+  - balancing loops
+  - B loop
+  - goal-seeking loop
+  short: 'A loop with an odd number of − links: a change travels round and comes back opposed.'
+  definition: 'In this app: a loop whose link signs multiply to − (an odd number of − links), so a change returns opposed.'
+  concept: reading-clds
+  see:
+  - reinforcing-loop
+  further_refs:
+  - 48
+- id: elementary-circuit
+  term: Elementary circuit
+  kind: methods
+  variants:
+  - elementary circuits
+  short: A path that returns to its start without visiting any node twice — what the app lists as a loop.
+  definition: An elementary circuit of a directed graph is a closed path with no repeated vertex; Johnson's algorithm finds
+    all of them in time proportional to the graph's size times the number of circuits [49].
+  concept: reading-clds
+- id: scc
+  term: Feedback cluster
+  kind: methods
+  variants:
+  - strongly connected component
+  - strongly connected components
+  - SCC
+  short: A group of nodes that all reach each other through arrows — the parts of a map that sit inside shared feedback.
+  definition: Graph partitions that contain all of a model's feedback loops can be found and decomposed with graph theory,
+    giving a granular view of feedback complexity [50].
+  concept: reading-clds
+- id: edge-weight
+  term: Link weight
+  kind: methods
+  variants:
+  - edge weight
+  - weights
+  - weight
+  short: Your judgement of how strongly one circumstance pushes another, from −1 to +1 — not a measured effect size.
+  definition: 'In this app: your judgement of a link''s strength, from −1 to +1, matching its polarity. Not a measured effect
+    size.'
+  concept: weights-fcm
+  further_refs:
+  - 53
+  - 54
+- id: leverage-hint
+  term: Leverage hint
+  kind: methods
+  variants:
+  - leverage hints
+  - leverage point
+  - leverage points
+  short: A node that network measures flag as central — a prompt for discussion, not proof of where to act.
+  definition: Network-analytic measures applied to a causal loop diagram can flag central variables as candidate leverage
+    points [52].
+  concept: reading-clds
+- id: aces
+  term: Adverse childhood experiences
+  kind: science
+  variants:
+  - adverse childhood experience
+  - ACEs
+  - ACE
+  short: Abuse, neglect and household dysfunction in childhood — linked to adult health and to adult education, work and income.
+  definition: Adverse childhood experiences include childhood abuse and household dysfunction [19]. People with four or more
+    have higher risks across many health outcomes [34], and higher ACE scores are associated with lower education, unemployment
+    and poverty in adulthood [35].
+  see:
+  - toxic-stress
+- id: toxic-stress
+  term: Toxic stress
+  kind: science
+  variants: []
+  short: Prolonged, unbuffered stress in early childhood that can leave lasting effects on development and health.
+  definition: An ecobiodevelopmental framework describes how early adversity and toxic stress can leave a lasting signature
+    on the genetic predispositions that affect emerging brain architecture and long-term health [36].
+- id: health-literacy
+  term: Health literacy
+  kind: science
+  variants: []
+  short: The ability to find, understand and use health information.
+  definition: Low health literacy is consistently associated with more hospitalisations, more emergency care, lower receipt
+    of screening and vaccination, and poorer ability to demonstrate taking medications appropriately [32].
+- id: buffering
+  term: Buffering hypothesis
+  kind: science
+  variants:
+  - stress buffering
+  - buffering
+  short: The idea that social support protects people from the harm of stressful events.
+  definition: The buffering model holds that social support protects people from the adverse effects of stressful events;
+    evidence fits it when support is measured as perceived availability of help, and a main effect when measured as network
+    integration [44].
+- id: social-isolation
+  term: Social isolation
+  kind: science
+  variants:
+  - loneliness
+  - isolation
+  short: Having few social contacts (objective) or feeling alone (subjective); both are linked to earlier death.
+  definition: Social isolation, loneliness and living alone are each associated with increased mortality, with effects comparable
+    to well-established risk factors [38].
+- id: eviction
+  term: Eviction
+  kind: science
+  variants:
+  - evicted
+  - forced move
+  - forced moves
+  short: Involuntary removal from a home — linked to hardship, depression and later job loss.
+  definition: Eviction is followed by more material hardship, depression and parenting stress among low-income mothers [22],
+    and forced moves are followed by a higher likelihood of being laid off [23].

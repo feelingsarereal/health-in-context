@@ -1,0 +1,116 @@
+{
+ "slug": "sdoh-loops",
+ "as_of": "2026-10-23",
+ "built": "2026-10-23",
+ "pack_version": "0.1",
+ "scheme": {
+  "name": "ICD-11 MMS",
+  "release": "2026-01",
+  "interim_source": "Text read from the findacode.com mirror of ICD-11 MMS v2026-01 because the WHO browser could not be read from the research environment. Long definitions were checked by a model-run comparison, not a byte diff (definition_check). Every code links to its WHO entry. Re-pull from the WHO ICD-API before any release beyond the pilot (todo T-ICD-01)."
+ },
+ "modules": {
+  "situations": {
+   "codes": 125,
+   "sdoh_codes": 113,
+   "functioning_codes": 12,
+   "residuals": 50,
+   "groups": 16,
+   "definitions_present": 37,
+   "definitions_null": 88,
+   "definition_check": {
+    "none": 88,
+    "quoted_direct": 2,
+    "assembled_from_verbatim_fragments_then_diff_verified": 1,
+    "diff_verified": 31,
+    "diff_corrected_not_reconfirmed": 3
+   },
+   "crosswalk_proposed": 113
+  },
+  "links": {
+   "offered": 15,
+   "by_grade": {
+    "M": 7,
+    "F": 5,
+    "S": 3
+   },
+   "counter": 1,
+   "withheld": 11
+  },
+  "actions": 0,
+  "gates": 0,
+  "resources": null
+ },
+ "references": {
+  "total": 59,
+  "by_tier": {
+   "seminal": 9,
+   "current": 26,
+   "classic": 11,
+   "background": 13
+  },
+  "verified": 52,
+  "unverified": 7,
+  "abstracts_present": 46
+ },
+ "glossary": 21,
+ "concepts": 5,
+ "todo": 16,
+ "heuristics": [
+  {
+   "id": "A4",
+   "what": "Loop strength (product of |weights|)",
+   "label": "Loop strength — structural heuristic, not loop dominance"
+  },
+  {
+   "id": "A7",
+   "what": "Leverage hints (weighted degree, betweenness, loop participation)",
+   "label": "Heuristic — hints for discussion"
+  },
+  {
+   "id": "A8",
+   "what": "What-if pulse (FCM iteration)",
+   "label": "What-if pulse — qualitative exploration, not prediction"
+  },
+  {
+   "id": "tiers",
+   "what": "Association menu order by Solar–Irwin tier",
+   "label": "Block-to-tier assignment is the builder's reading of the WHO framework [2]; shown as such in the menu."
+  }
+ ],
+ "stale": 0,
+ "build_errors": 0,
+ "safety_tests": {
+  "date": "2026-10-23",
+  "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-10-23)",
+  "safety": {
+   "passed": 14,
+   "failed": 0,
+   "tests": [
+    "✓ G2/H2: a typed sentinel never appears in any request; no off-origin requests",
+    "✓ G5: no external script or stylesheet in dist/index.html",
+    "✓ G5: no known analytics, error-reporter or font hosts anywhere in the bundle",
+    "✓ G5: fonts are system fonts or bundled (KaTeX), never fetched from a font service",
+    "✓ H1: rendered text of every route",
+    "✓ H1: the map surface — pop-out, association menu (with 2nd degree), every panel, list view",
+    "✓ H1: static dist files (HTML, JSON)",
+    "✓ H1: builder copy (src/lib/copy.ts) is clean",
+    "✓ H3: the nudge renders on every field in safety.yaml → deidentify.fields",
+    "✓ H4: clear my data empties storage on this device",
+    "✓ H5: the not-advice notice on first run, on / and on /about",
+    "✓ H6: help lists every pack entry with source and date; no inputs, no branching",
+    "✓ G3: as_of is visible on /, /about and /methods; the interim source is named",
+    "✓ G4: every heuristic result carries its label where it renders"
+   ]
+  },
+  "walkthroughs": {
+   "passed": 4,
+   "failed": 0,
+   "tests": [
+    "✓ w1: map a client's housing–work loop and find it",
+    "✓ w2: two-loop model, weights, analyses, export and re-import",
+    "✓ w3: a relative's situation on a phone, no codes needed",
+    "✓ w3: long-press on a node opens the association menu (touch alternative to right-click)"
+   ]
+  }
+ }
+}

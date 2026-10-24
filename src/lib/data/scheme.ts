@@ -1,0 +1,103 @@
+/** ICD-11 codes (situations.json) and the evidence-graded links (links.json), with the association matcher (UI-03). */
+import situationsJson from '@/data/situations.json';
+import linksJson from '@/data/links.json';
+
+export interface XRef { title: string; code?: string | null }
+export interface Code {
+  code: string; title: string; group: string; parent: string | null; subgroup: string | null;
+  definition: string | null; definition_check: string | null;
+  inclusions: (string | XRef)[]; exclusions: (string | XRef)[]; coded_elsewhere: (string | XRef)[];
+  index_terms: string[]; uri: string | null; who_browser: string | null; source_url: string; verified_on: string;
+  crosswalk: { icd10cm: string[]; hp2030: string[]; proposed?: boolean } | null;
+  residual: null | 'other' | 'unspecified'; parent_title?: string | null;
+}
+export interface Group { id: string; title: string; tier: string; uri?: string; source_url?: string; functioning?: boolean; subgroup_of?: string; note?: string }
+export interface Link {
+  id: string; from: string; to: string; polarity: '+' | '−'; grade: string; mechanism: string; refs: number[]; suggest: string[]; counter: boolean;
+}
+export interface NotOffered { id: string; from: string; to: string; polarity: string; grade: string; refs: number[]; reason: string[]; kind: 'withheld' | 'unverified' }
+
+const SJ = situationsJson as any;
+export const scheme = SJ.scheme as { id: string; name: string; release: string; source: string; official_browser: string; verified_on: string; interim_source?: string };
+export const tiers = SJ.tiers as Record<string, string>;
+export const tierBasis = SJ.tier_basis as string | null;
+export const groups = SJ.groups as Group[];
+export const codes = SJ.codes as Code[];
+export const pickerOrder = SJ.picker_order as string[];
+export const knownGaps = SJ.known_gaps as string[];
+const LJ = linksJson as any;
+export const grades = LJ.grades as Record<string, string>;
+export const linkFraming = LJ.framing as string | null;
+export const links = LJ.links as Link[];
+export const notOffered = LJ.not_offered as NotOffered[];
+
+export const codeMap = new Map(codes.map((c) => [c.code, c]));
+export const groupMap = new Map(groups.map((g) => [g.id, g]));
+export const TIER_ORDER = Object.keys(tiers);
+export const isFunctioning = (c: Code) => !!groupMap.get(c.group)?.functioning;
+
+/** The block (or the QD71 housing sub-block) a code is coloured by. */
+export function colourGroup(code: string): string | undefined {
+  const c = codeMap.get(code);
+  return c ? c.subgroup ?? c.group : undefined;
+}
+export function endpointTitle(id: string): string {
+  return codeMap.get(id)?.title ?? groupMap.get(id)?.title ?? id;
+}
+export function endpointTier(id: string): string {
+  const c = codeMap.get(id);
+  const g = groupMap.get(c ? c.subgroup ?? c.group : id);
+  return g?.tier ?? 'functioning';
+}
+
+/** Keys a code matches in links.yaml: itself, its parents, its QD71 sub-block, its block (KICKOFF §8.3.4). */
+export function matchKeys(code: string): string[] {
+  const keys: string[] = [];
+  let c = codeMap.get(code);
+  const seen = new Set<string>();
+  while (c && !seen.has(c.code)) {
+    seen.add(c.code);
+    keys.push(c.code);
+    if (c.subgroup) keys.push(c.subgroup);
+    c = c.parent ? codeMap.get(c.parent) : undefined;
+  }
+  const g = codeMap.get(code)?.group;
+  if (g) keys.push(g);
+  return [...new Set(keys)];
+}
+/** Is a code inside a link endpoint (a code, a sub-block or a block)? */
+export function inEndpoint(code: string, endpoint: string): boolean {
+  return matchKeys(code).includes(endpoint);
+}
+/** Codes the picker offers for an endpoint (for "Choose a code in this block"). */
+export function codesIn(endpoint: string): Code[] {
+  return pickerOrder.map((c) => codeMap.get(c)!).filter((c) => inEndpoint(c.code, endpoint));
+}
+
+const GRADE_ORDER = ['S', 'M', 'F'];
+function rank(l: Link, other: string) {
+  return [TIER_ORDER.indexOf(endpointTier(other)), GRADE_ORDER.indexOf(l.grade), l.id] as const;
+}
+const cmp = (a: readonly (number | string)[], b: readonly (number | string)[]) => {
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1;
+  return 0;
+};
+/** UI-03: Leads to / Comes from for a code, ordered by tier (structural → behavioural), then grade, then id. */
+export function associations(code: string, endpoint?: string) {
+  const keys = endpoint ? (codeMap.has(endpoint) ? matchKeys(endpoint) : [endpoint, groupMap.get(endpoint)?.subgroup_of].filter((x): x is string => !!x)) : matchKeys(code);
+  const leadsTo = links.filter((l) => keys.includes(l.from)).sort((a, b) => cmp(rank(a, a.to), rank(b, b.to)));
+  const comesFrom = links.filter((l) => keys.includes(l.to)).sort((a, b) => cmp(rank(a, a.from), rank(b, b.from)));
+  return { leadsTo, comesFrom };
+}
+
+/** Code picker search over code, title and index_terms. */
+export function searchCodes(q: string): Code[] {
+  const t = q.trim().toLowerCase();
+  const all = pickerOrder.map((c) => codeMap.get(c)!);
+  if (!t) return all;
+  const words = t.split(/\s+/);
+  return all.filter((c) => {
+    const hay = [c.code, c.title, ...c.index_terms].join(' \u0001 ').toLowerCase();
+    return words.every((w) => hay.includes(w));
+  });
+}

@@ -1,0 +1,51 @@
+# safety.yaml — profile health (SAFETY v0.1). Written 2026-10-23.
+profile: health
+notice: >-
+  This is a thinking tool for mapping how a person's or a group's social circumstances connect. It describes
+  circumstances using codes from the World Health Organization's ICD-11; it does not diagnose anyone, give medical,
+  legal or financial advice, or replace a professional who knows the situation. Everything you type stays in this
+  browser on this device unless you export it.
+blocked_phrases:
+  - "you have"
+  - "you are suffering"
+  - "diagnos"
+  - "you should take"
+  - "treatment for you"
+  - "prescri"
+  - "cure"
+allowed_contexts:
+  - field: situations.items[].title
+  - field: situations.items[].definition
+  - field: situations.items[].inclusions
+  - field: situations.items[].exclusions
+  - field: situations.items[].index_terms
+  - field: situations.items[].coded_elsewhere
+deidentify:
+  fields: [subject, circumstance, label, description, notes]
+  nudge: "Use initials or a label. Don't enter names, dates of birth, addresses or record numbers."
+help:
+  - name: "988 Suicide & Crisis Lifeline"
+    how: "Call or text 988, or chat online — anytime, day or night"
+    url: "https://988lifeline.org/"
+    source: "988lifeline.org home page"
+    verified_on: 2026-10-23
+    recheck_days: 90
+  - name: "211"
+    how: "Dial 211, or find your local 211 online, for help with local services"
+    url: "https://www.211.org/"
+    source: "211.org home page"
+    verified_on: 2026-10-23
+    recheck_days: 90
+  - name: "National Domestic Violence Hotline"
+    how: "Call 1-800-799-7233, text START to 88788, or chat online"
+    url: "https://www.thehotline.org/"
+    source: "thehotline.org home page"
+    verified_on: 2026-10-23
+    recheck_days: 90
+  - name: "Emergency"
+    how: "Call 911 if someone is in immediate danger"
+    url: "https://www.thehotline.org/"
+    source: "thehotline.org safety note ('Please contact 911 if you feel like you are in immediate danger…')"
+    verified_on: 2026-10-23
+    recheck_days: 90
+crisis: []

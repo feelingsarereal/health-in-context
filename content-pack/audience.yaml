@@ -1,0 +1,53 @@
+# audience.yaml — SDOH Loop Mapper · written 2026-10-23 from Daniel's intake (HFY audiences: researchers/students,
+# navigators and providers, advocates, the public) and the pilot request ("a person's or group's health, well-being
+# and livelihood circumstances").
+personas:
+  - id: p-navigator
+    label: "A navigator or community health worker mapping a client's situation"
+    acts_for: other
+    situation: "Meets a client whose problems — rent, work, a partner, a child's school — keep feeding each other."
+    deciding: "Which circumstances to tackle first, and how to explain the knot to a supervisor or a referral partner."
+    constraints:
+      reading_level: grade-9
+      device: [laptop, tablet]
+      stress: moderate
+      languages: [en]
+      accessibility: [keyboard-only]
+      time: "15–30 minutes, often between appointments"
+    jobs:
+      - "Turn what the client told me into a map I can show someone else"
+      - "See which problems sit inside the same loop, so one fix might ease several"
+      - "Code each circumstance the way the health system will recognise it"
+  - id: p-student
+    label: "A student or researcher learning SDOH and causal loop diagrams"
+    acts_for: group
+    situation: "Studies social determinants and wants to model how they interact for a population or a case."
+    deciding: "How to represent the causal structure, and which links are backed by evidence."
+    constraints:
+      reading_level: professional
+      device: [laptop]
+      stress: low
+      languages: [en]
+      accessibility: [screen-reader]
+      time: "an hour or more"
+    jobs:
+      - "Find the seminal research behind each social determinant"
+      - "Build a causal loop diagram and list its reinforcing and balancing loops"
+      - "Weight the links and export the map and a loop report for a paper or class"
+  - id: p-caregiver
+    label: "A family caregiver trying to make sense of a relative's situation"
+    acts_for: other
+    situation: "Helping a parent or sibling whose money, housing and health problems feel like one tangle."
+    deciding: "What is driving what, and what to raise with a social worker or navigator."
+    constraints:
+      reading_level: grade-6
+      device: [phone, tablet]
+      stress: high
+      languages: [en]
+      accessibility: []
+      time: "10–15 minutes at a time"
+    jobs:
+      - "Write down what is going on without having to know the codes"
+      - "Show a navigator a simple picture of how things connect"
+constraints_global:
+  min_target: 375px

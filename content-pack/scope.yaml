@@ -1,0 +1,39 @@
+# scope.yaml — SDOH Loop Mapper · the scoping interview and how the research was done (shown on /methods)
+interview:
+  - q: "Which GitHub account?"
+    a: "feelingsarereal (LOF)"
+    date: 2026-10-23
+  - q: "Pilot (A0.2) or a separate app?"
+    a: "This is the A0.2 pilot"
+    date: 2026-10-23
+  - q: "Safety profile and storage?"
+    a: "health profile, on-device only"
+    date: 2026-10-23
+  - q: "Code scope?"
+    a: "ICD-11 codes, with the literature crosswalked to Healthy People 2030, WHO CSDH and ICD-10-CM Z55–Z65"
+    date: 2026-10-23
+  - q: "ICD-11 text source for the pilot?"
+    a: "Interim mirror (option A); each pop-out links the WHO entry; WHO ICD-API before any wider release"
+    date: 2026-10-23
+boundary:
+  in:
+    - "ICD-11 MMS Chapter 24 blocks QD50–QE9Z (the SDOH set); QF20–QF2Z carried as 'functioning', outside the SDOH set"
+    - "Seminal frameworks (WHO CSDH, Solar–Irwin), the social gradient and fundamental-cause literature"
+    - "Domain evidence for associations between the ICD-11 blocks, graded S/M/F"
+    - "Causal-loop and fuzzy-cognitive-map methods for the analyses"
+  out:
+    - "Clinical diagnosis and treatment (health safety profile)"
+    - "Local services and resources (resources module off in the pilot)"
+    - "Quantitative effect sizes as edge weights — weights are the user's judgement"
+search_strategy:
+  approach: >-
+    Seeded from the seminal SDOH literature known to the builder, then every DOI verified one at a time against OpenAlex and
+    Crossref (sequential, paced) and abstracts harvested verbatim by tools/harvest_openalex.py on Daniel's machine, with Europe
+    PMC as the fallback. ICD-11 codes extracted block by block from the findacode.com mirror of release 2026-01. Framework pages
+    (WHO, ODPHP, CMS) read directly. This is a scope-bounded commissioned research pack, not a systematic review.
+  sources: [OpenAlex, Crossref, Europe PMC, findacode.com ICD-11 mirror, who.int, odphp.health.gov, cms.gov]
+  date_closed: 2026-10-23
+  known_gaps:
+    - "No systematic search with hit counts; the corpus is curated, not exhaustive"
+    - "Links are block-level; code-level evidence is suggested, not established"
+    - "Evidence is mostly from the United States and the United Kingdom"

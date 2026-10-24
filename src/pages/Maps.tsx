@@ -1,0 +1,134 @@
+import { useEffect, useId, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { S } from '@/lib/data/core';
+import { C } from '@/lib/copy';
+import { getStore, type MapSummary } from '@/lib/storage';
+import { newMap, newId } from '@/lib/model/map';
+import { Field, PageHead } from '@/components/ui/bits';
+import { ClearData } from '@/components/ui/ClearData';
+import { importFile } from '@/lib/model/importFile';
+
+/** The workspace index (/maps): several named maps per device; duplicate, rename, delete (ACTION-SPEC §4). */
+export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?: (id: string) => void }) {
+  const nav = useNavigate();
+  const open = (id: string) => (onOpen ? onOpen(id) : nav(`/map?id=${id}`));
+  const [list, setList] = useState<MapSummary[] | null>(null);
+  const [name, setName] = useState('');
+  const [subject, setSubject] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
+  const [renaming, setRenaming] = useState<string | null>(null);
+  const [draft, setDraft] = useState('');
+  const id = useId();
+  const refresh = async () => setList(await (await getStore()).list());
+  useEffect(() => {
+    refresh();
+  }, []);
+  return (
+    <div>
+      <PageHead title={C.maps.title} lead={`${C.maps.lead} ${S.privacy.saved_here}`} />
+      <form
+        className="bx-card mb-6 p-4"
+        aria-labelledby={`${id}-new`}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const m = newMap(name, subject);
+          await (await getStore()).save(m);
+          open(m.id);
+        }}
+      >
+        <h2 id={`${id}-new`} className="mb-2 text-xl font-semibold">{C.maps.new}</h2>
+        <Field label={C.maps.name} htmlFor={`${id}-name`}>
+          <input id={`${id}-name`} className="bx-input ax-tap" value={name} onChange={(e) => setName(e.target.value)} data-testid="new-map-name" />
+        </Field>
+        <Field label={C.maps.subject} htmlFor={`${id}-subject`} nudgeId={`${id}-subject-n`}>
+          <input id={`${id}-subject`} className="bx-input ax-tap" value={subject} onChange={(e) => setSubject(e.target.value)} aria-describedby={`${id}-subject-n`} data-testid="new-map-subject" />
+        </Field>
+        <button type="submit" className="bx-btn-primary ax-tap" data-testid="create-map">{C.maps.create}</button>
+      </form>
+      <h2 className="text-2xl">Saved maps</h2>
+      {list === null ? <p role="status" className="bx-muted">Loading…</p> : !list.length ? <p className="mt-2 bx-muted" data-testid="no-maps">{C.maps.empty}</p> : (
+        <ul className="mt-2 space-y-2" data-testid="map-list">
+          {list.map((m) => (
+            <li key={m.id} className="bx-card flex flex-wrap items-center gap-2 p-3" data-testid="map-row">
+              {renaming === m.id ? (
+                <form
+                  className="flex flex-1 flex-wrap gap-1"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const s = await getStore();
+                    const full = await s.load(m.id);
+                    if (full) await s.save({ ...full, name: draft.trim() || full.name, updated: new Date().toISOString() });
+                    setRenaming(null);
+                    refresh();
+                  }}
+                >
+                  <label className="sr-only" htmlFor={`${id}-r-${m.id}`}>{C.maps.name}</label>
+                  <input id={`${id}-r-${m.id}`} className="bx-input w-48" value={draft} onChange={(e) => setDraft(e.target.value)} autoFocus />
+                  <button type="submit" className="bx-btn ax-tap">Save</button>
+                </form>
+              ) : (
+                <div className="min-w-0 flex-1">
+                  <Link to={`/map?id=${m.id}`} className="font-semibold underline" onClick={(e) => { if (onOpen) { e.preventDefault(); open(m.id); } }}>{m.name}</Link>
+                  <p className="text-xs bx-muted">{m.nodes} circumstances · {m.edges} links · saved {new Date(m.updated).toLocaleString()}</p>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-1">
+                <button type="button" className="bx-btn ax-tap" onClick={() => { setRenaming(m.id); setDraft(m.name); }} aria-label={`${C.maps.rename} ${m.name}`}>{C.maps.rename}</button>
+                <button
+                  type="button"
+                  className="bx-btn ax-tap"
+                  aria-label={`${C.maps.duplicate} ${m.name}`}
+                  onClick={async () => {
+                    const s = await getStore();
+                    const full = await s.load(m.id);
+                    if (full) await s.save({ ...full, id: newId('map'), name: `${full.name} (copy)`, created: new Date().toISOString(), updated: new Date().toISOString() });
+                    refresh();
+                  }}
+                >
+                  {C.maps.duplicate}
+                </button>
+                <button
+                  type="button"
+                  className="bx-btn ax-tap"
+                  aria-label={`${C.maps.delete} ${m.name}`}
+                  onClick={async () => {
+                    if (!window.confirm(C.maps.deleteConfirm)) return;
+                    await (await getStore()).remove(m.id);
+                    refresh();
+                  }}
+                >
+                  {C.maps.delete}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-6 bx-card p-4">
+        <label className="block text-sm font-semibold" htmlFor={`${id}-imp`}>{C.maps.import}</label>
+        <input
+          id={`${id}-imp`}
+          type="file"
+          accept=".json,.csv,application/json,text/csv"
+          className="mt-1 block w-full text-sm"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            try {
+              const m = await importFile(f);
+              open(m.id);
+            } catch (err) {
+              setMsg((err as Error).message);
+            }
+          }}
+        />
+        {msg && <p role="alert" className="mt-2 text-sm">{msg}</p>}
+      </div>
+      {!embedded && (
+        <div className="mt-6">
+          <ClearData />
+        </div>
+      )}
+    </div>
+  );
+}

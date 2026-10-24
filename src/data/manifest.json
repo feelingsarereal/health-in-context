@@ -1,0 +1,562 @@
+{
+ "manifest": {
+  "slug": "sdoh-loops",
+  "title": "SDOH Loop Mapper: map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place",
+  "short_title": "SDOH Loops",
+  "kind": "workbench",
+  "modules": [
+   "situations",
+   "links",
+   "planner"
+  ],
+  "safety_profile": "health",
+  "question": "How do the social determinants of a person's or group's health, well-being and livelihood — named with ICD-11's codes — feed one another, and which reinforcing and balancing loops hold their situation in place?",
+  "purpose": "tool",
+  "as_of": "2026-10-23",
+  "authors": [
+   "Actualizer (commissioned research)"
+  ],
+  "venue": "Commissioned research — not peer reviewed",
+  "evidence": {
+   "body": "records"
+  },
+  "delivery": "local",
+  "storage": "device",
+  "github_account": "feelingsarereal",
+  "builder": {
+   "name": "Actualizer",
+   "version": "0.1",
+   "date": "2026-10-23"
+  },
+  "permissions": {
+   "text": "builder-authored; ICD-11 titles and definitions reproduced verbatim with source (WHO, CC BY-ND 3.0 IGO per WHO's ICD-11 licence — to confirm, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
+   "figures": "none reproduced"
+  },
+  "concept_self_checks": false,
+  "notes_storage": "browser"
+ },
+ "audience": {
+  "personas": [
+   {
+    "id": "p-navigator",
+    "label": "A navigator or community health worker mapping a client's situation",
+    "acts_for": "other",
+    "situation": "Meets a client whose problems — rent, work, a partner, a child's school — keep feeding each other.",
+    "deciding": "Which circumstances to tackle first, and how to explain the knot to a supervisor or a referral partner.",
+    "constraints": {
+     "reading_level": "grade-9",
+     "device": [
+      "laptop",
+      "tablet"
+     ],
+     "stress": "moderate",
+     "languages": [
+      "en"
+     ],
+     "accessibility": [
+      "keyboard-only"
+     ],
+     "time": "15–30 minutes, often between appointments"
+    },
+    "jobs": [
+     "Turn what the client told me into a map I can show someone else",
+     "See which problems sit inside the same loop, so one fix might ease several",
+     "Code each circumstance the way the health system will recognise it"
+    ]
+   },
+   {
+    "id": "p-student",
+    "label": "A student or researcher learning SDOH and causal loop diagrams",
+    "acts_for": "group",
+    "situation": "Studies social determinants and wants to model how they interact for a population or a case.",
+    "deciding": "How to represent the causal structure, and which links are backed by evidence.",
+    "constraints": {
+     "reading_level": "professional",
+     "device": [
+      "laptop"
+     ],
+     "stress": "low",
+     "languages": [
+      "en"
+     ],
+     "accessibility": [
+      "screen-reader"
+     ],
+     "time": "an hour or more"
+    },
+    "jobs": [
+     "Find the seminal research behind each social determinant",
+     "Build a causal loop diagram and list its reinforcing and balancing loops",
+     "Weight the links and export the map and a loop report for a paper or class"
+    ]
+   },
+   {
+    "id": "p-caregiver",
+    "label": "A family caregiver trying to make sense of a relative's situation",
+    "acts_for": "other",
+    "situation": "Helping a parent or sibling whose money, housing and health problems feel like one tangle.",
+    "deciding": "What is driving what, and what to raise with a social worker or navigator.",
+    "constraints": {
+     "reading_level": "grade-6",
+     "device": [
+      "phone",
+      "tablet"
+     ],
+     "stress": "high",
+     "languages": [
+      "en"
+     ],
+     "accessibility": [],
+     "time": "10–15 minutes at a time"
+    },
+    "jobs": [
+     "Write down what is going on without having to know the codes",
+     "Show a navigator a simple picture of how things connect"
+    ]
+   }
+  ],
+  "constraints_global": {
+   "min_target": "375px"
+  }
+ },
+ "safety": {
+  "profile": "health",
+  "notice": "This is a thinking tool for mapping how a person's or a group's social circumstances connect. It describes circumstances using codes from the World Health Organization's ICD-11; it does not diagnose anyone, give medical, legal or financial advice, or replace a professional who knows the situation. Everything you type stays in this browser on this device unless you export it.",
+  "blocked_phrases": [
+   "you have",
+   "you are suffering",
+   "diagnos",
+   "you should take",
+   "treatment for you",
+   "prescri",
+   "cure"
+  ],
+  "allowed_contexts": [
+   {
+    "field": "situations.items[].title"
+   },
+   {
+    "field": "situations.items[].definition"
+   },
+   {
+    "field": "situations.items[].inclusions"
+   },
+   {
+    "field": "situations.items[].exclusions"
+   },
+   {
+    "field": "situations.items[].index_terms"
+   },
+   {
+    "field": "situations.items[].coded_elsewhere"
+   }
+  ],
+  "deidentify": {
+   "fields": [
+    "subject",
+    "circumstance",
+    "label",
+    "description",
+    "notes"
+   ],
+   "nudge": "Use initials or a label. Don't enter names, dates of birth, addresses or record numbers."
+  },
+  "help": [
+   {
+    "name": "988 Suicide & Crisis Lifeline",
+    "how": "Call or text 988, or chat online — anytime, day or night",
+    "url": "https://988lifeline.org/",
+    "source": "988lifeline.org home page",
+    "verified_on": "2026-10-23",
+    "recheck_days": 90
+   },
+   {
+    "name": "211",
+    "how": "Dial 211, or find your local 211 online, for help with local services",
+    "url": "https://www.211.org/",
+    "source": "211.org home page",
+    "verified_on": "2026-10-23",
+    "recheck_days": 90
+   },
+   {
+    "name": "National Domestic Violence Hotline",
+    "how": "Call 1-800-799-7233, text START to 88788, or chat online",
+    "url": "https://www.thehotline.org/",
+    "source": "thehotline.org home page",
+    "verified_on": "2026-10-23",
+    "recheck_days": 90
+   },
+   {
+    "name": "Emergency",
+    "how": "Call 911 if someone is in immediate danger",
+    "url": "https://www.thehotline.org/",
+    "source": "thehotline.org safety note ('Please contact 911 if you feel like you are in immediate danger…')",
+    "verified_on": "2026-10-23",
+    "recheck_days": 90
+   }
+  ],
+  "crisis": []
+ },
+ "scope": {
+  "interview": [
+   {
+    "q": "Which GitHub account?",
+    "a": "feelingsarereal (LOF)",
+    "date": "2026-10-23"
+   },
+   {
+    "q": "Pilot (A0.2) or a separate app?",
+    "a": "This is the A0.2 pilot",
+    "date": "2026-10-23"
+   },
+   {
+    "q": "Safety profile and storage?",
+    "a": "health profile, on-device only",
+    "date": "2026-10-23"
+   },
+   {
+    "q": "Code scope?",
+    "a": "ICD-11 codes, with the literature crosswalked to Healthy People 2030, WHO CSDH and ICD-10-CM Z55–Z65",
+    "date": "2026-10-23"
+   },
+   {
+    "q": "ICD-11 text source for the pilot?",
+    "a": "Interim mirror (option A); each pop-out links the WHO entry; WHO ICD-API before any wider release",
+    "date": "2026-10-23"
+   }
+  ],
+  "boundary": {
+   "in": [
+    "ICD-11 MMS Chapter 24 blocks QD50–QE9Z (the SDOH set); QF20–QF2Z carried as 'functioning', outside the SDOH set",
+    "Seminal frameworks (WHO CSDH, Solar–Irwin), the social gradient and fundamental-cause literature",
+    "Domain evidence for associations between the ICD-11 blocks, graded S/M/F",
+    "Causal-loop and fuzzy-cognitive-map methods for the analyses"
+   ],
+   "out": [
+    "Clinical diagnosis and treatment (health safety profile)",
+    "Local services and resources (resources module off in the pilot)",
+    "Quantitative effect sizes as edge weights — weights are the user's judgement"
+   ]
+  },
+  "search_strategy": {
+   "approach": "Seeded from the seminal SDOH literature known to the builder, then every DOI verified one at a time against OpenAlex and Crossref (sequential, paced) and abstracts harvested verbatim by tools/harvest_openalex.py on Daniel's machine, with Europe PMC as the fallback. ICD-11 codes extracted block by block from the findacode.com mirror of release 2026-01. Framework pages (WHO, ODPHP, CMS) read directly. This is a scope-bounded commissioned research pack, not a systematic review.",
+   "sources": [
+    "OpenAlex",
+    "Crossref",
+    "Europe PMC",
+    "findacode.com ICD-11 mirror",
+    "who.int",
+    "odphp.health.gov",
+    "cms.gov"
+   ],
+   "date_closed": "2026-10-23",
+   "known_gaps": [
+    "No systematic search with hit counts; the corpus is curated, not exhaustive",
+    "Links are block-level; code-level evidence is suggested, not established",
+    "Evidence is mostly from the United States and the United Kingdom"
+   ]
+  }
+ },
+ "upkeep": {
+  "classes": [
+   {
+    "id": "scheme",
+    "what": "ICD-11 MMS codes, titles and verbatim definitions",
+    "recheck_days": 365,
+    "how": "Compare with the next ICD-11 MMS release; swap the interim mirror for the WHO ICD-API (todo T-ICD-01)"
+   },
+   {
+    "id": "reference",
+    "what": "DOI metadata and abstracts",
+    "recheck_days": 365,
+    "how": "tools/harvest_openalex.py"
+   },
+   {
+    "id": "link",
+    "what": "Evidence-graded associations",
+    "recheck_days": 730,
+    "how": "Re-sweep each link pair for new systematic reviews"
+   },
+   {
+    "id": "help",
+    "what": "Help entries on /help",
+    "recheck_days": 90,
+    "how": "Re-read each source page"
+   },
+   {
+    "id": "web-source",
+    "what": "WHO, ODPHP and CMS framework pages",
+    "recheck_days": 365,
+    "how": "Re-read; log changes in changes.yaml"
+   }
+  ],
+  "harvests": [
+   {
+    "id": "openalex",
+    "script": "../../tools/harvest_openalex.py",
+    "writes": "source/literature.json",
+    "note": "Run on Daniel's Mac; OpenAlex is not reachable from the Cowork sandbox or VM"
+   }
+  ],
+  "sweeps": [
+   {
+    "id": "quarterly-help",
+    "every_days": 90,
+    "scope": "help entries"
+   },
+   {
+    "id": "annual",
+    "every_days": 365,
+    "scope": "ICD-11 release notes; new SR/MA per link; abstracts"
+   }
+  ]
+ },
+ "changes": [
+  {
+   "date": "2026-10-23",
+   "what": "Felitti 1998 abstract re-harvested (harvest 0.2.1); Link & Phelan 1995 has no abstract in OpenAlex or Europe PMC",
+   "why": "tag-stripping bug fixed",
+   "records": [
+    "references/felitti1998",
+    "references/link_phelan1995"
+   ],
+   "source": "harvest_openalex.py 0.2.1",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-10-23",
+   "what": "Pack created",
+   "why": "A2.1 pilot",
+   "records": [
+    "all"
+   ],
+   "source": "this build",
+   "by": "cowork"
+  }
+ ],
+ "planner": {
+  "holds": "map",
+  "schema_version": 1,
+  "export": [
+   "json",
+   "csv-edges",
+   "png",
+   "svg",
+   "md-report"
+  ],
+  "import": [
+   "json",
+   "csv-edges"
+  ],
+  "file_extension": ".sdohmap.json",
+  "fields": {
+   "map": [
+    "id",
+    "name",
+    "subject",
+    "created",
+    "updated",
+    "icd11_release",
+    "pack_version",
+    "layout",
+    "notes"
+   ],
+   "node": [
+    "id",
+    "code_status",
+    "code",
+    "type",
+    "ref",
+    "label",
+    "circumstance",
+    "severity",
+    "since",
+    "notes",
+    "style",
+    "pinned",
+    "x",
+    "y",
+    "created",
+    "updated"
+   ],
+   "edge": [
+    "id",
+    "from",
+    "to",
+    "polarity",
+    "weight",
+    "delay",
+    "confidence",
+    "description",
+    "evidence",
+    "style"
+   ],
+   "loop": [
+    "id",
+    "name",
+    "members"
+   ]
+  },
+  "enums": {
+   "code_status": [
+    "sdoh",
+    "other",
+    "undetermined"
+   ],
+   "other_type": [
+    "outcome",
+    "policy",
+    "event",
+    "resource",
+    "personal",
+    "other"
+   ],
+   "polarity": [
+    "+",
+    "−"
+   ],
+   "confidence": [
+    "low",
+    "medium",
+    "high"
+   ],
+   "severity": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "line": [
+    "solid",
+    "dashed",
+    "dotted"
+   ],
+   "route": [
+    "curved",
+    "straight"
+   ]
+  },
+  "rich_text": {
+   "fields": [
+    "label",
+    "circumstance",
+    "description",
+    "notes",
+    "canvas-note"
+   ],
+   "marks": [
+    "bold",
+    "italic",
+    "underline",
+    "size",
+    "color"
+   ],
+   "storage": "restricted JSON document (never raw HTML)"
+  },
+  "templates": []
+ },
+ "todo": [
+  {
+   "id": "T-ICD-01",
+   "what": "Re-pull all 125 ICD-11 codes from the WHO ICD-API (release 2026-01) and replace the findacode-mirror text; confirm foundation IDs, definitions (37 present / 88 null), inclusions, exclusions, \"code also\" notes.",
+   "blocks": "any release beyond the pilot (Daniel chose the interim mirror for the pilot, 2026-10-23)"
+  },
+  {
+   "id": "T-ICD-02",
+   "what": "Re-check QE03, QE94, QE96 and the QE10–QE1Z sub-block description (corrected, not re-confirmed); the QE41 title wording; the missing QE50.Z / QE61.Z / QE70.Y / QD6Y."
+  },
+  {
+   "id": "T-LIC-01",
+   "what": "Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before any delivery other than local."
+  },
+  {
+   "id": "T-BIB-03",
+   "what": "Abstracts for Link & Phelan 1995 and Paul & Moser 2009 — neither is in OpenAlex or Europe PMC (checked 2026-10-23); needs library access. L22 is withheld until Paul & Moser is summarised."
+  },
+  {
+   "id": "T-BIB-04",
+   "what": "Read Richardson 1986 and 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (UAH library) so the methods references can be marked verified; until then the glossary and 101s that cite them show \"not verified\"."
+  },
+  {
+   "id": "T-BIB-02",
+   "what": "Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010 verified 2026-10-23 against the WHO PDF."
+  },
+  {
+   "id": "T-XWALK-01",
+   "what": "Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside Z55–Z65."
+  },
+  {
+   "id": "T-EVID-01",
+   "what": "Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps → financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23."
+  },
+  {
+   "id": "T-REF-link_phelan1995",
+   "what": "references/8 (link_phelan1995): summary pending abstract"
+  },
+  {
+   "id": "T-REF-paul_moser2009",
+   "what": "references/26 (paul_moser2009): summary pending abstract"
+  },
+  {
+   "id": "T-REF-richardson1986",
+   "what": "references/47 (richardson1986): source not read beyond metadata"
+  },
+  {
+   "id": "T-REF-richardson1995",
+   "what": "references/48 (richardson1995): source not read beyond metadata"
+  },
+  {
+   "id": "T-REF-kosko1986",
+   "what": "references/53 (kosko1986): source not read beyond metadata"
+  },
+  {
+   "id": "T-REF-ozesmi2004",
+   "what": "references/54 (ozesmi2004): source not read beyond metadata"
+  },
+  {
+   "id": "T-REF-hovmand2014",
+   "what": "references/55 (hovmand2014): source not read beyond metadata"
+  },
+  {
+   "id": "T-LINKS",
+   "what": "Links blocked by unverified references: L01, L02, L05, L07, L08, L14, L16, L22, L23, L24, C01"
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "w1",
+   "persona": "p-navigator",
+   "title": "Map a client's housing–work loop and find it"
+  },
+  {
+   "id": "w2",
+   "persona": "p-student",
+   "title": "Build a two-loop model, weight it, read the analyses and export"
+  },
+  {
+   "id": "w3",
+   "persona": "p-caregiver",
+   "title": "Sketch a relative's situation on a phone without knowing the codes"
+  }
+ ],
+ "lint_negated": [
+  {
+   "where": "safety.notice",
+   "phrase": "diagnos",
+   "excerpt": "e World Health Organization's ICD-11; it does not diagnose anyone, give medical, legal or financi",
+   "negated": true
+  },
+  {
+   "where": "concepts/icd11-chapter24.md.body",
+   "phrase": "diagnos",
+   "excerpt": "nsistently; it is not a clinical record and not a diagnosis. ",
+   "negated": true
+  },
+  {
+   "where": "concepts/what-are-sdoh.md.body",
+   "phrase": "diagnos",
+   "excerpt": "ow the circumstances feed each other; it is not a diagnosis and not a prediction. ",
+   "negated": true
+  }
+ ]
+}
