@@ -13,7 +13,9 @@ export interface Code {
 }
 export interface Group { id: string; title: string; tier: string; uri?: string; source_url?: string; functioning?: boolean; subgroup_of?: string; note?: string }
 export interface Link {
-  id: string; from: string; to: string; polarity: '+' | '−'; grade: string; mechanism: string; refs: number[]; suggest: string[]; counter: boolean;
+  id: string; from: string; to: string; polarity: '+' | '−'; grade: string; mechanism: string; refs: number[]; suggest: string[];
+  /** the codes the cited evidence names on each end; a code also backs its descendants (ACTION-PACK 0.1.1, option B) */
+  codes: { from: string[]; to: string[] };
 }
 export interface NotOffered { id: string; from: string; to: string; polarity: string; grade: string; refs: number[]; reason: string[]; kind: 'withheld' | 'unverified' }
 
@@ -30,6 +32,8 @@ export const grades = LJ.grades as Record<string, string>;
 export const linkFraming = LJ.framing as string | null;
 export const links = LJ.links as Link[];
 export const notOffered = LJ.not_offered as NotOffered[];
+/** Computed at build time from the shipped links' code graph (K3 item 6). */
+export const linksCanCycle = LJ.can_cycle as boolean;
 
 export const codeMap = new Map(codes.map((c) => [c.code, c]));
 export const groupMap = new Map(groups.map((g) => [g.id, g]));
@@ -65,13 +69,24 @@ export function matchKeys(code: string): string[] {
   if (g) keys.push(g);
   return [...new Set(keys)];
 }
-/** Is a code inside a link endpoint (a code, a sub-block or a block)? */
-export function inEndpoint(code: string, endpoint: string): boolean {
-  return matchKeys(code).includes(endpoint);
+/** Is a code one of `listed`, or a descendant of one? A link's `codes` back their descendants, never their parents. */
+export function covers(listed: string[], code: string): boolean {
+  let c = codeMap.get(code);
+  const seen = new Set<string>();
+  while (c && !seen.has(c.code)) {
+    seen.add(c.code);
+    if (listed.includes(c.code)) return true;
+    c = c.parent ? codeMap.get(c.parent) : undefined;
+  }
+  return false;
 }
-/** Codes the picker offers for an endpoint (for "Choose a code in this block"). */
-export function codesIn(endpoint: string): Code[] {
-  return pickerOrder.map((c) => codeMap.get(c)!).filter((c) => inEndpoint(c.code, endpoint));
+/** The listed codes without those a listed ancestor already covers: what a person reads ("QE82", not QE82 and QE82.0–3). */
+export function rootsOf(listed: string[]): string[] {
+  return listed.filter((c) => !listed.some((o) => o !== c && covers([o], c)));
+}
+/** Codes the picker offers on one end of a link: the listed codes and their descendants. */
+export function codesUnder(listed: string[]): Code[] {
+  return pickerOrder.map((c) => codeMap.get(c)!).filter((c) => covers(listed, c.code));
 }
 
 const GRADE_ORDER = ['S', 'M', 'F'];
@@ -82,11 +97,15 @@ const cmp = (a: readonly (number | string)[], b: readonly (number | string)[]) =
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1;
   return 0;
 };
-/** UI-03: Leads to / Comes from for a code, ordered by tier (structural → behavioural), then grade, then id. */
-export function associations(code: string, endpoint?: string) {
-  const keys = endpoint ? (codeMap.has(endpoint) ? matchKeys(endpoint) : [endpoint, groupMap.get(endpoint)?.subgroup_of].filter((x): x is string => !!x)) : matchKeys(code);
-  const leadsTo = links.filter((l) => keys.includes(l.from)).sort((a, b) => cmp(rank(a, a.to), rank(b, b.to)));
-  const comesFrom = links.filter((l) => keys.includes(l.to)).sort((a, b) => cmp(rank(a, a.from), rank(b, b.from)));
+/**
+ * UI-03 at code level (UI-18): a link is under Leads to only when the code is in its `codes.from`, and under Comes from
+ * only when it is in its `codes.to`. Ordered by tier (structural → behavioural), then grade, then id. With a list of
+ * codes (the 2nd-degree view), a link is listed when its codes and the list overlap either way.
+ */
+export function associations(code: string | string[]) {
+  const on = (listed: string[]) => (Array.isArray(code) ? code.some((c) => covers(listed, c) || listed.some((x) => covers([c], x))) : covers(listed, code));
+  const leadsTo = links.filter((l) => on(l.codes.from)).sort((a, b) => cmp(rank(a, a.to), rank(b, b.to)));
+  const comesFrom = links.filter((l) => on(l.codes.to)).sort((a, b) => cmp(rank(a, a.from), rank(b, b.from)));
   return { leadsTo, comesFrom };
 }
 

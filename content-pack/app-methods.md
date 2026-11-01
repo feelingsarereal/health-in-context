@@ -27,7 +27,7 @@ A directed **edge** A → B says "a change in A causes a change in B, all else e
 - `confidence`: low / medium / high (the user's own).
 - `description`: free text describing the mechanism.
 - `evidence`: optional list of bibliography ids. Edges created from the association menu carry the menu entry's citations automatically.
-- `basis`: `evidence` | `override` | `needs-review` (UI-18). An edge is `evidence` only when a shipped link in `links.yaml` matches its endpoints (code → parent → `QD71` subgroup → group) in direction **and** polarity; then `link` holds the link id and `evidence` its refs. Every other edge is an `override` with a required `override_reason`, an `override_at` date and the `check` result (`no-link` · `opposite-polarity` · `withheld:<id>` · `uncoded-end`).
+- `basis`: `evidence` | `override` | `needs-review` (UI-18). An edge is `evidence` only when a shipped link in `links.yaml` lists the edge's **from** code in `codes.from` and its **to** code in `codes.to` (a listed code also covers its descendants), in the same direction **and** polarity — matching never widens to the whole block (Daniel, 2026-10-24, option B); then `link` holds the link id and `evidence` its refs. Every other edge is an `override` with a required `override_reason`, an `override_at` date and the `check` result (`no-link` · `outside-codes:<id>` · `opposite-polarity` · `withheld:<id>` · `uncoded-end`). `outside-codes` means a link connects the two blocks but its evidence names other codes; the form names that link and its codes as the nearest supported alternative.
 
 ## 3. Analyses ("interrogate the map")
 

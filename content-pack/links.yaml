@@ -15,7 +15,13 @@ links:
   - 23
   suggest:
   - QD80
-  - QD82
+  codes:
+    from:
+    - QD71.0
+    - QD71.1
+    to:
+    - QD80
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L04
   from: QD50-QD5Z
   to: QD60-QD6Z
@@ -25,26 +31,15 @@ links:
     low-income adults. [24]
   refs:
   - 24
-  suggest: []
-- id: L06
-  from: QD50-QD5Z
-  to: QE90-QE9Z
-  polarity: +
-  grade: F
-  mechanism: Health disparities associated with poverty could be reduced by alleviating toxic stress in childhood. [36]
-  refs:
-  - 36
-  suggest: []
-- id: L09
-  from: QD90-QD9Z
-  to: QE10-QE2Z
-  polarity: +
-  grade: S
-  mechanism: Lower education and health literacy are associated with riskier health behaviours and worse outcomes. [33] [32]
-  refs:
-  - 33
-  - 32
-  suggest: []
+  suggest:
+  - QD61
+  codes:
+    from:
+    - QD50
+    - QD51
+    to:
+    - QD61
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L10
   from: QE40-QE4Z
   to: QD80-QD8Z
@@ -55,6 +50,14 @@ links:
   - 30
   suggest:
   - QD80
+  codes:
+    from:
+    - QE40
+    - QE41
+    - QE42
+    to:
+    - QD80
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L11
   from: QE40-QE4Z
   to: QE70
@@ -65,6 +68,12 @@ links:
   - 29
   suggest:
   - QE70
+  codes:
+    from:
+    - QE41
+    to:
+    - QE70
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L12
   from: QE00-QE0Z
   to: QD80-QD8Z
@@ -76,7 +85,12 @@ links:
   - 31
   suggest:
   - QD80
-  - QD83
+  codes:
+    from:
+    - QE04
+    to:
+    - QD80
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L13
   from: QE00-QE0Z
   to: QD71
@@ -87,17 +101,31 @@ links:
   - 21
   suggest:
   - QD71.1
+  codes:
+    from:
+    - QE04
+    to:
+    - QD71.1
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L15
-  from: QE80-QE8Z
+  from: QE50-QE5Z
   to: QD71
   polarity: +
   grade: M
-  mechanism: Intimate partner violence is associated with housing instability. [43]
+  mechanism: Intimate partner violence in the past year is associated with almost four times the odds of housing instability.
+    [43]
   refs:
   - 43
   suggest:
-  - QD71.0
   - QD71.1
+  - QD71.0
+  codes:
+    from:
+    - QE51.1
+    to:
+    - QD71.0
+    - QD71.1
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L17
   from: QE50-QE5Z
   to: QE00-QE0Z
@@ -108,57 +136,92 @@ links:
   - 44
   suggest:
   - QE01
+  codes:
+    from:
+    - QE50.4
+    - QE51.0
+    to:
+    - QE01
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L18
-  from: QE90-QE9Z
+  from: QE80-QE8Z
   to: QE10-QE2Z
   polarity: +
   grade: S
-  mechanism: Adverse childhood experiences show a graded association with adult health-risk behaviours. [19] [34]
+  mechanism: Childhood abuse and household dysfunction show a graded association with adult smoking, alcohol and drug misuse
+    and physical inactivity. [19] [34]
   refs:
   - 19
   - 34
-  suggest: []
+  suggest:
+  - QE13
+  - QE10
+  - QE11
+  - QE20
+  codes:
+    from:
+    - QE82
+    - QE82.0
+    - QE82.1
+    - QE82.2
+    - QE82.3
+    to:
+    - QE10
+    - QE11
+    - QE13
+    - QE20
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L19
-  from: QE90-QE9Z
+  from: QE80-QE8Z
   to: QD90-QD9Z
   polarity: +
   grade: M
-  mechanism: ACEs are associated with lower educational attainment. [35]
+  mechanism: Higher adverse-childhood-experience scores are associated with not completing high school. [35]
   refs:
   - 35
   suggest:
   - QD92
+  codes:
+    from: &id001
+    - QE82
+    - QE82.0
+    - QE82.1
+    - QE82.2
+    to:
+    - QD92
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L20
-  from: QE90-QE9Z
+  from: QE80-QE8Z
   to: QD80-QD8Z
   polarity: +
   grade: M
-  mechanism: Higher adverse-childhood-experience scores are associated with adult unemployment and household poverty. [35]
+  mechanism: Higher adverse-childhood-experience scores are associated with adult unemployment. [35]
   refs:
   - 35
   suggest:
   - QD80
-- id: L21
+  codes:
+    from: *id001
+    to:
+    - QD80
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
+- id: L25
   from: QE80-QE8Z
-  to: QE90-QE9Z
+  to: QD50-QD5Z
   polarity: +
-  grade: S
-  mechanism: Household violence and abuse are themselves counted as adverse childhood experiences. [19]
+  grade: M
+  mechanism: Higher adverse-childhood-experience scores are associated with living in a household below the federal poverty
+    level. [35]
   refs:
-  - 19
-  suggest: []
-counter_links:
-- id: C02
-  from: QE70
-  to: QE00-QE0Z
-  polarity: −
-  grade: F
-  mechanism: When support is perceived as available, it buffers the effects of stressful events. Model it as a protective
-    edge from a relationship node. [44]
-  refs:
-  - 44
-  suggest: []
-  counter: true
+  - 35
+  suggest:
+  - QD50
+  codes:
+    from: *id001
+    to:
+    - QD50
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
+counter_links: []
 withheld_links:
 - id: L01
   from: QD80-QD8Z
@@ -202,6 +265,18 @@ withheld_links:
   withheld_because:
   - 'Withheld 2026-10-23 after independent check: the cited study found poverty-related concerns reduce cognitive performance,
     and that stress did not explain it; no ICD-11 social-environment code fits that outcome.'
+- id: L06
+  from: QD50-QD5Z
+  to: QE90-QE9Z
+  polarity: +
+  grade: F
+  mechanism: Health disparities associated with poverty could be reduced by alleviating toxic stress in childhood. [36]
+  refs:
+  - 36
+  suggest: []
+  withheld_because:
+  - 'Withheld 2026-10-24 under code-level matching (Daniel''s option B): ICD-11 has no upbringing code that corresponds to
+    toxic stress, so the evidence names no target code.'
 - id: L07
   from: QE30-QE3Z
   to: QD50-QD5Z
@@ -231,6 +306,20 @@ withheld_links:
   withheld_because:
   - 'Withheld 2026-10-23 after independent check: the cited studies cover adverse childhood experiences leading to education
     and employment, not limited education leading to unemployment (T-EVID-01).'
+- id: L09
+  from: QD90-QD9Z
+  to: QE10-QE2Z
+  polarity: +
+  grade: S
+  mechanism: Lower education and health literacy are associated with riskier health behaviours and worse outcomes. [33] [32]
+  refs:
+  - 33
+  - 32
+  suggest: []
+  withheld_because:
+  - 'Withheld 2026-10-24 under code-level matching (Daniel''s option B): the cited abstracts report education and health-literacy
+    gradients in health behaviours and outcomes without naming specific behaviours, so no target codes can be listed (T-EVID-02:
+    map from full text).'
 - id: L14
   from: QE00-QE0Z
   to: QE10-QE2Z
@@ -259,6 +348,18 @@ withheld_links:
   withheld_because:
   - 'Withheld 2026-10-23 after independent check: the cited study shows bereavement increases the survivor''s mortality; it
     does not show a social-environment problem such as stress or exclusion.'
+- id: L21
+  from: QE80-QE8Z
+  to: QE90-QE9Z
+  polarity: +
+  grade: S
+  mechanism: Household violence and abuse are themselves counted as adverse childhood experiences. [19]
+  refs:
+  - 19
+  suggest: []
+  withheld_because:
+  - 'Withheld 2026-10-24 under code-level matching (Daniel''s option B): with code-level matching the abuse codes (QE82.x)
+    are themselves the adverse childhood experiences, so the link is definitional, not causal.'
 - id: L22
   from: QD80-QD8Z
   to: QE00-QE0Z
@@ -310,3 +411,18 @@ withheld_links:
   withheld_because:
   - 'Withheld 2026-10-23 after independent check: the cited summary does not state that social protection reduces income poverty
     (T-EVID-01).'
+- id: C02
+  from: QE70
+  to: QE00-QE0Z
+  polarity: −
+  grade: F
+  mechanism: When support is perceived as available, it buffers the effects of stressful events. Model it as a protective
+    edge from a relationship node. [44]
+  refs:
+  - 44
+  suggest: []
+  counter: true
+  withheld_because:
+  - 'Withheld 2026-10-24 under code-level matching (Daniel''s option B): in problem framing an ICD-11 code names a problem,
+    so ''inadequate family support'' cannot carry a protective − link. Model support as an ''other'' node of type resource
+    (see the primer); the buffering evidence stays on L17.'

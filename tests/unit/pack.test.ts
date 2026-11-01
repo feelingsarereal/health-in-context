@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readPack, validatePack, type RawPack } from '../../scripts/lib/pack';
+import { linksCanCycle, readPack, validatePack, type RawPack } from '../../scripts/lib/pack';
 
 const { pack: REAL, loadErrors } = readPack(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../content-pack'));
 const clone = (): RawPack => structuredClone(REAL);
@@ -45,6 +45,9 @@ const RULES: [string, (p: Any) => void, RegExp][] = [
   ['link refs verified', (p) => { p.links.links[0].refs = [23, 8]; p.links.links[0].mechanism += ' [8]'; }, /links\/L03: ref 8 is not verified — the link may not ship/],
   ['suggest is a code', (p) => (p.links.links[0].suggest = ['QX99']), /links\/L03: suggest QX99 not a code/],
   ['suggest inside target', (p) => (p.links.links[0].suggest = ['QD51']), /links\/L03: suggest QD51 is not inside QD80-QD8Z/],
+  ['codes are codes', (p) => (p.links.links[0].codes.from = ['QX99']), /links\/L03: codes\.from QX99 not a code/],
+  ['codes inside the endpoint', (p) => (p.links.links[0].codes.to = ['QD51']), /links\/L03: codes\.to QD51 is not inside QD80-QD8Z/],
+  ['suggest inside codes.to', (p) => (p.links.links[0].suggest = ['QD82']), /links\/L03: suggest QD82 is outside codes\.to/],
   ['safety profile matches', (p) => (p.safety.profile = 'general'), /safety: profile 'general' does not match manifest 'health'/],
   ['notice required (H5)', (p) => delete p.safety.notice, /safety: notice required \(H5\)/],
   ['deidentify required (H3)', (p) => delete p.safety.deidentify, /deidentify\.fields required when a persona acts for others \(H3\)/],
@@ -71,4 +74,19 @@ describe('one error per rule', () => {
       expect(r.errors.join('\n')).toMatch(msg);
     });
   }
+});
+
+describe('K3 item 6: can the shipped links close a loop on evidence alone? (build time)', () => {
+  const parent: Record<string, string> = { 'A.1': 'A', 'B.1': 'B' };
+  const at = (c: string) => parent[c] ?? null;
+  const link = (id: string, from: string[], to: string[]) => ({ id, codes: { from, to } });
+  it('no cycle when nothing leads back', () => {
+    expect(linksCanCycle([link('1', ['A'], ['B']), link('2', ['B'], ['C'])], at)).toBe(false);
+  });
+  it('a cycle through a listed code and its descendant, either way round', () => {
+    expect(linksCanCycle([link('1', ['A'], ['B.1']), link('2', ['B'], ['A.1'])], at)).toBe(true);
+  });
+  it('sibling codes do not connect', () => {
+    expect(linksCanCycle([link('1', ['A.1'], ['B']), link('2', ['B'], ['A.2'])], at)).toBe(false);
+  });
 });

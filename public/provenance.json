@@ -27,14 +27,13 @@
    "crosswalk_proposed": 113
   },
   "links": {
-   "offered": 15,
+   "offered": 12,
    "by_grade": {
-    "M": 7,
-    "F": 5,
-    "S": 3
+    "M": 8,
+    "F": 3,
+    "S": 1
    },
-   "counter": 1,
-   "withheld": 11
+   "withheld": 15
   },
   "actions": 0,
   "gates": 0,

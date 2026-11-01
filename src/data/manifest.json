@@ -323,6 +323,21 @@
  },
  "changes": [
   {
+   "date": "2026-10-24",
+   "what": "Code-level evidence scope (option B): links gain codes.from/codes.to; ACE links L18–L20 re-pointed to QE82.x (maltreatment) and L15 to QE51.1 (partner violence); new L25 (ACEs → household poverty, Metzler); L06, L09, L21 and C02 withheld; app-methods §2 and UI-18 match at code level with an outside-codes check; w2 and w3 updated; reading-clds primer explains protective factors as resource nodes",
+   "why": "Daniel's decision with Claude Code, 261024 (K3)",
+   "records": [
+    "links",
+    "app-methods",
+    "app-requirements",
+    "scenarios/w2",
+    "scenarios/w3",
+    "concepts/reading-clds"
+   ],
+   "source": "Daniel, 2026-10-24",
+   "by": "cowork"
+  },
+  {
    "date": "2026-10-23",
    "what": "UI-17 (link existing circumstances: drag-to-connect, 'Link to existing' in the association menu, 'Link to…' button) and UI-18 (evidence-checked links, deliberate overrides flagged ⚑ on the map, evidence-only toggle); app-methods edge basis and A0; planner schema_version 2; walkthroughs w1 and w2 rewritten",
    "why": "Daniel's walkthrough: no visible way to link existing nodes, so no loops; no evidence constraint on hand-drawn links",
@@ -478,6 +493,7 @@
    "check": [
     "match",
     "no-link",
+    "outside-codes",
     "opposite-polarity",
     "withheld",
     "uncoded-end"
@@ -581,7 +597,7 @@
   },
   {
    "id": "T-LINKS",
-   "what": "Links blocked by unverified references: L01, L02, L05, L07, L08, L14, L16, L22, L23, L24, C01"
+   "what": "Links blocked by unverified references: L01, L02, L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02"
   }
  ],
  "scenarios": [

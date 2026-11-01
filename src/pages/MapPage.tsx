@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { S } from '@/lib/data/core';
-import { codeMap, codesIn, type Link as PackLink } from '@/lib/data/scheme';
+import { codeMap, codesUnder, type Link as PackLink } from '@/lib/data/scheme';
 import { C } from '@/lib/copy';
 import { USER_COLOURS } from '@/lib/palette';
 import { useTheme } from '@/lib/theme';
@@ -655,8 +655,9 @@ function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq
 function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq) => void; anchorName: string }) {
   const [draft, setDraft] = useState<NodeDraft>(() => ({ kind: req.kind === 'note' ? 'note' : 'circumstance', code_status: 'undetermined', code: null, type: null, ref: null, label: emptyDoc(), circumstance: emptyDoc(), severity: null, since: null, notes: emptyDoc(), style: {}, pinned: false }));
   const link = req.follow?.link ?? null;
-  const endpoint = link ? (req.follow!.direction === 'out' ? link.to : link.from) : null;
-  const only = endpoint ? codesIn(endpoint) : undefined;
+  // K3: 'Add new' offers only codes the link's evidence names — its `suggest` codes downstream, its `codes.from` upstream
+  const offered = link ? (req.follow!.direction === 'out' ? link.suggest : link.codes.from) : undefined;
+  const only = offered ? codesUnder(offered) : undefined;
   return (
         <form
           onSubmit={(e) => {
@@ -676,7 +677,7 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
               )}
             </p>
           )}
-          <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen only={only} suggested={link?.suggest} compact />
+          <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen only={only} suggested={offered} compact />
           <div className="mt-2 flex flex-wrap gap-2">
             <button type="submit" className="bx-btn-primary ax-tap" data-testid="node-submit" disabled={draft.code_status === 'sdoh' && !draft.code}>
               {req.kind === 'note' ? C.node.addNote : C.node.add}

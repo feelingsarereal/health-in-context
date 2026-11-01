@@ -14,7 +14,7 @@ Needs PyYAML.
 import sys, os, re, glob, datetime
 import yaml
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 args = [a for a in sys.argv[1:]]
 root = args[0] if args and not args[0].startswith("--") else "."
 STALENESS = "--staleness" in args
@@ -216,9 +216,21 @@ if "links" in mods:
         for n in rs:
             if n not in REF: E(f"links/{lid}: ref {n} not found")
             elif n not in VERIFIED: E(f"links/{lid}: ref {n} is not verified — the link may not ship (ACTION-PACK §3.3)")
+        cods = ln.get("codes") or {}
+        for end in ("from", "to"):                      # ACTION-PACK 0.1.1: code-level scope (Daniel's option B)
+            for c in cods.get(end) or []:
+                if c not in item_codes: E(f"links/{lid}: codes.{end} {c} not a code")
+                elif not in_target(c, ln.get(end)): E(f"links/{lid}: codes.{end} {c} is not inside {ln.get(end)}")
+        def under(c, roots):
+            it = item_codes.get(c)
+            while it is not None:
+                if it["code"] in roots: return True
+                it = item_codes.get(it.get("parent"))
+            return False
         for c in ln.get("suggest") or []:
             if c not in item_codes: E(f"links/{lid}: suggest {c} not a code")
             elif not in_target(c, ln.get("to")): E(f"links/{lid}: suggest {c} is not inside {ln.get('to')}")
+            elif cods.get("to") and not under(c, set(cods["to"])): E(f"links/{lid}: suggest {c} is outside codes.to")
 
 # ───────────────────────── pathway / resources / planner
 if "pathway" in mods:

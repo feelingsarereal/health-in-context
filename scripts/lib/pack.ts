@@ -160,6 +160,8 @@ const LinkSchema = z
     mechanism: z.string(),
     refs: z.array(z.number().int()),
     suggest: z.array(z.string()).default([]),
+    /** ACTION-PACK 0.1.1: the codes the cited evidence names; a code also backs its descendants (option B) */
+    codes: z.object({ from: z.array(z.string()).default([]), to: z.array(z.string()).default([]) }).default({}),
     counter: z.boolean().optional(),
     withheld_because: z.array(z.string()).optional(),
   })
@@ -526,6 +528,18 @@ export function validatePack(pack: RawPack): ValidationResult {
     return false;
   };
 
+  /** a code, or one of its parents, is in `roots` (a link's codes back their descendants) */
+  const under = (code: string, roots: string[]): boolean => {
+    let it = items.get(code);
+    const seen = new Set<string>();
+    while (it && !seen.has(it.code)) {
+      seen.add(it.code);
+      if (roots.includes(it.code)) return true;
+      it = it.parent ? items.get(it.parent) : undefined;
+    }
+    return false;
+  };
+
   // links
   if (mods.has('links')) {
     const L = parse(LinksSchema, pack.links, 'links', errors);
@@ -546,9 +560,15 @@ export function validatePack(pack: RawPack): ValidationResult {
           if (!REF.has(n)) E(`links/${ln.id}: ref ${n} not found`);
           else if (!VERIFIED.has(n)) E(`links/${ln.id}: ref ${n} is not verified — the link may not ship (ACTION-PACK §3.3)`);
         }
+        for (const end of ['from', 'to'] as const)
+          for (const c of ln.codes[end]) {
+            if (!items.has(c)) E(`links/${ln.id}: codes.${end} ${c} not a code`);
+            else if (!inTarget(c, ln[end])) E(`links/${ln.id}: codes.${end} ${c} is not inside ${ln[end]}`);
+          }
         for (const c of ln.suggest) {
           if (!items.has(c)) E(`links/${ln.id}: suggest ${c} not a code`);
           else if (!inTarget(c, ln.to)) E(`links/${ln.id}: suggest ${c} is not inside ${ln.to}`);
+          else if (ln.codes.to.length && !under(c, ln.codes.to)) E(`links/${ln.id}: suggest ${c} is outside codes.to`);
         }
       }
       for (const ln of L.withheld_links) if (seen.has(ln.id)) E(`links/${ln.id}: both shipped and withheld`);
@@ -624,6 +644,33 @@ export function validatePack(pack: RawPack): ValidationResult {
   }
 
   return { errors, warnings, lint, data };
+}
+
+/**
+ * K3 item 6: can the shipped links close a loop on evidence alone? Each link is a step from its `codes.from` to its
+ * `codes.to`; one link leads into another when a code on the first's To end and one on the second's From end overlap
+ * (one is the other or its ancestor, so a single node's code is covered by both). Any cycle among links → true.
+ */
+export function linksCanCycle(links: { id: string; codes: { from: string[]; to: string[] } }[], parentOf: (code: string) => string | null | undefined): boolean {
+  const up = (c: string) => {
+    const out: string[] = [];
+    for (let x: string | null | undefined = c; x && !out.includes(x); x = parentOf(x)) out.push(x);
+    return out;
+  };
+  const overlap = (a: string, b: string) => up(a).includes(b) || up(b).includes(a);
+  const next = new Map(links.map((l) => [l.id, links.filter((m) => l.codes.to.some((a) => m.codes.from.some((b) => overlap(a, b))))]));
+  const done = new Set<string>();
+  const onPath = new Set<string>();
+  const dfs = (id: string): boolean => {
+    if (onPath.has(id)) return true;
+    if (done.has(id)) return false;
+    onPath.add(id);
+    for (const m of next.get(id) ?? []) if (dfs(m.id)) return true;
+    onPath.delete(id);
+    done.add(id);
+    return false;
+  };
+  return links.some((l) => dfs(l.id));
 }
 
 /** Find the group whose code range (e.g. QE10-QE2Z) contains a code or sub-block id (e.g. QE10-QE1Z). */

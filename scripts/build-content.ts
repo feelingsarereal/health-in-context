@@ -9,7 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readPack, validatePack, resolveRangeGroup, cites, type Validated } from './lib/pack';
+import { readPack, validatePack, resolveRangeGroup, cites, linksCanCycle, type Validated } from './lib/pack';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACK = path.join(ROOT, 'content-pack');
@@ -109,11 +109,12 @@ if (s) {
   });
 }
 
-// ───────────────────────── links (shipped + counter); withheld only as a list for /methods
+// ───────────────────────── links (shipped); withheld only as a list for /methods
 const L = d.links;
+const situationParent = new Map((d.situations?.items ?? []).map((it) => [it.code, it.parent ?? null]));
 const unverifiedRefs = new Set((d.references ?? []).filter((r) => !r.verified).map((r) => r.n));
 if (L) {
-  const ship = [...L.links, ...L.counter_links].map((l) => ({ ...l, polarity: l.polarity === '-' ? '−' : l.polarity, counter: !!l.counter }));
+  const ship = [...L.links, ...L.counter_links].map(({ counter: _c, ...l }) => ({ ...l, polarity: l.polarity === '-' ? '−' : l.polarity }));
   // Belt and braces (KICKOFF §1): a shipped link resting on an unverified reference is not offered.
   const offered = ship.filter((l) => !l.refs.some((n) => unverifiedRefs.has(n)));
   const blocked = ship.filter((l) => l.refs.some((n) => unverifiedRefs.has(n)));
@@ -121,6 +122,8 @@ if (L) {
     grades: L.grades,
     framing: L.framing ?? null,
     links: offered,
+    // K3 item 6: whether the shipped links' code graph has a cycle decides the evidence-only empty-state wording
+    can_cycle: linksCanCycle(offered, (c) => situationParent.get(c)),
     not_offered: [
       ...L.withheld_links.map((l) => ({ id: l.id, from: l.from, to: l.to, polarity: l.polarity, grade: l.grade, refs: l.refs, reason: l.withheld_because ?? [], kind: 'withheld' })),
       ...blocked.map((l) => ({ id: l.id, from: l.from, to: l.to, polarity: l.polarity, grade: l.grade, refs: l.refs, reason: ['cites an unverified reference'], kind: 'unverified' })),
@@ -251,7 +254,6 @@ const provenance = {
       ? {
           offered: L.links.length + L.counter_links.length,
           by_grade: count([...L.links, ...L.counter_links], (l) => l.grade),
-          counter: L.counter_links.length,
           withheld: L.withheld_links.length,
         }
       : null,

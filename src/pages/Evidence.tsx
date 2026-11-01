@@ -3,8 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { links, grades, groups, groupMap, codeMap, endpointTitle, linkFraming, notOffered, tierBasis } from '@/lib/data/scheme';
 
 const inGroup = (endpoint: string, g: string) => endpoint === g || groupMap.get(endpoint)?.subgroup_of === g || codeMap.get(endpoint)?.group === g;
-import { S } from '@/lib/data/core';
 import { CitedText } from '@/components/evidence/CitedText';
+import { scopeOf } from '@/lib/model/evidence';
 import { GradeChip, PageHead, PolarityChip } from '@/components/ui/bits';
 
 /** ACTION-SPEC §2 /evidence under evidence.body: records — every graded link, filterable by grade and group. */
@@ -24,7 +24,7 @@ export default function Evidence() {
   );
   return (
     <div>
-      <PageHead title="Evidence" lead={`${links.length} evidence-graded links between ICD-11 blocks. These feed the association menu on the map.`} />
+      <PageHead title="Evidence" lead={`${links.length} evidence-graded links, each backing only the ICD-11 codes its evidence names. These feed the association menu on the map.`} />
       {linkFraming && <p className="bx-banner">{linkFraming}</p>}
       <div className="mb-4 flex flex-wrap gap-3">
         <label className="text-sm">
@@ -54,10 +54,12 @@ export default function Evidence() {
               <span className="font-mono text-xs bx-muted">{l.id}</span>
               <PolarityChip p={l.polarity} />
               <GradeChip grade={l.grade} />
-              {l.counter && <span className="bx-chip border border-[color:var(--bx-line)]">{S.associations.counter}</span>}
             </div>
             <p className="mt-2 font-semibold">
               {l.from} {endpointTitle(l.from)} → {l.to} {endpointTitle(l.to)}
+            </p>
+            <p className="mt-1 text-sm" data-testid="evidence-scope">
+              Backs only <span className="font-mono">{scopeOf(l)}</span> (and their sub-codes).
             </p>
             <CitedText text={l.mechanism} className="mt-1 bx-prose" />
           </li>

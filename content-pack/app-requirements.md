@@ -27,7 +27,8 @@ Every UI-* requirement below is Daniel's (2026-10-23). Each "how" line is the Re
   - **From the association menu:** when a node already on the map falls in the suggested block (its code, parent, `QD71` subgroup or group), the entry offers **"Link to <existing node>"** beside "Add new". This is how a loop closes through evidence.
   - **A visible "Link to…" button** in the selected node's toolbar and panel opens a searchable list of the other nodes (the E key does the same). The list view keeps its link form.
 - **UI-18 Evidence-checked links, with deliberate overrides** (Daniel, 2026-10-23: "restrict relationships based on this logic and require a deliberate override, and indicate the override on the map").
-  - **Check every new or edited link** against `links.yaml`, from the specific code upward: the code, its parent, the `QD71` subgroup, its group. Both ends and the direction must match a shipped link.
+  - **Check every new or edited link** against `links.yaml` at **code level**: the from-code must be in a shipped link's `codes.from` and the to-code in its `codes.to` (a listed code covers its descendants), same direction (Daniel, 2026-10-24, option B: a link backs only the codes it names). A block-level near miss is an override whose message names the nearest supported link and its codes ("L12 connects these blocks but its evidence covers QE04 → QD80 only").
+  - **The association menu** uses the same scope: a link appears under 'Leads to' only on nodes whose code is in its `codes.from`, and under 'Comes from' only on nodes in its `codes.to`; 'Add new' offers only `suggest` codes.
   - **The link's `basis`** is one of:
     - `evidence`: a shipped link matches in direction and polarity. The edge carries the link id, refs and grade.
     - `override`: anything else, which covers no matching link, opposite polarity to the evidence, a link that is withheld pending evidence, or an end that is not an SDOH code (`other`/`undetermined`).

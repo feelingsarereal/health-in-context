@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from 'react';
 import { S } from '@/lib/data/core';
 import { C } from '@/lib/copy';
-import { checkLink, type CheckResult } from '@/lib/model/evidence';
+import { checkLink, scopeOf, type CheckResult } from '@/lib/model/evidence';
 import { newEdge, ModelError, type MapEdge, type SdohMap } from '@/lib/model/map';
 import { emptyDoc, isEmpty, type RichDoc } from '@/lib/model/rich';
 import { DEFAULT_WEIGHT, edgeError, type Polarity } from '@/lib/analysis';
@@ -33,7 +33,7 @@ export function CheckNote({ r, onUse }: { r: CheckResult; onUse?: (p: Polarity) 
       )}
       {r.check !== 'opposite-polarity' && r.alternatives.length > 0 && (
         <p className="mt-2 text-xs bx-muted">
-          {C.evidence.nearest}: {r.alternatives.map((l) => `${l.id} ${l.from} → ${l.to} (${l.polarity})`).join(' · ')}
+          {C.evidence.nearest}: {r.alternatives.map((l) => `${l.id} ${scopeOf(l)} (${l.polarity})`).join(' · ')}
         </p>
       )}
     </div>

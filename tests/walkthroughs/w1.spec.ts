@@ -121,6 +121,8 @@ test("w1: one evidence link, two deliberate overrides, and the evidence-only tog
   await page.getByTestId('evidence-toggle').check();
   await expect(page.getByTestId('loop-item')).toHaveCount(0);
   await expect(page.getByTestId('loops-empty')).toContainText('No loop is closed by evidence alone');
+  // K3 item 6: the shipped links' code graph has no cycle (links.json can_cycle, computed at build time), so it says none can be
+  await expect(page.getByTestId('loops-empty')).toContainText('With the links in this app, none can be');
   await page.getByTestId('evidence-toggle').uncheck();
   await expect(page.getByTestId('loop-item')).toHaveCount(1);
   await expect(page.getByTestId('loop-name')).toHaveText('R1');

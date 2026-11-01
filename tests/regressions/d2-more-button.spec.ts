@@ -36,7 +36,7 @@ for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 812 }]) {
     await addNode(page, { code: 'QD80', search: 'unemployment' });
     await addNode(page, { code: 'QD82', search: 'job' });
     await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
-    await addEdge(page, 'Inadequate housing', 'Problem associated with threat of job loss');
+    await addEdge(page, 'Inadequate housing', 'Problem associated with threat of job loss', { override: 'Hours cut after the move' }); // outside L03's codes (K3)
     await page.getByTestId('arrange').click();
     await page.waitForTimeout(900);
     await selectNodeByName(page, 'Inadequate housing');

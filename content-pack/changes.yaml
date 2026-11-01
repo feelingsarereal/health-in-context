@@ -43,3 +43,18 @@
   - scenarios/w2
   source: Daniel, 2026-10-23
   by: cowork
+- date: '2026-10-24'
+  what: 'Code-level evidence scope (option B): links gain codes.from/codes.to; ACE links L18–L20 re-pointed to QE82.x (maltreatment)
+    and L15 to QE51.1 (partner violence); new L25 (ACEs → household poverty, Metzler); L06, L09, L21 and C02 withheld; app-methods
+    §2 and UI-18 match at code level with an outside-codes check; w2 and w3 updated; reading-clds primer explains protective
+    factors as resource nodes'
+  why: Daniel's decision with Claude Code, 261024 (K3)
+  records:
+  - links
+  - app-methods
+  - app-requirements
+  - scenarios/w2
+  - scenarios/w3
+  - concepts/reading-clds
+  source: Daniel, 2026-10-24
+  by: cowork

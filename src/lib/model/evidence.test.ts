@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { checkLink, evidenceCanCloseALoop } from './evidence';
-import { EVIDENCE_CASES, RECODE_CASE } from './__fixtures__/evidence-golden';
+import { associations } from '@/lib/data/scheme';
+import { EVIDENCE_CASES, RECODE_CASE, V2_BLOCK_LEVEL_CASE } from './__fixtures__/evidence-golden';
 import { addEdge, addNode, migrate, newEdge, newMap, newNode, updateEdge, updateNode, ModelError } from './map';
 import { docFromText } from './rich';
 
@@ -18,8 +19,32 @@ describe('UI-18 evidence check — golden fixtures', () => {
     expect(r.link).toBeNull();
     expect(r.message).toMatch(/^Evidence link L02 is withheld: /);
   });
-  it('with the links shipped in this pack, no loop can close on evidence alone', () => {
+  it('a block-level near miss names that link and the codes its evidence covers', () => {
+    const r = checkLink({ code_status: 'sdoh', code: 'QE01' }, { code_status: 'sdoh', code: 'QD80' }, '+');
+    expect(r.link).toBeNull();
+    expect(r.alternatives.map((l) => l.id)).toEqual(['L12']);
+    expect(r.message).toBe('Evidence link L12 connects these blocks, but its evidence covers QE04 → QD80 only.');
+  });
+  it('with the links shipped in this pack, no loop can close on evidence alone (computed at build time)', () => {
     expect(evidenceCanCloseALoop()).toBe(false);
+  });
+});
+
+describe('association menu at code level (K3 item 2)', () => {
+  const ids = (ls: { id: string }[]) => ls.map((l) => l.id);
+  it('a link is under Leads to only for codes in its codes.from', () => {
+    expect(ids(associations('QE04').leadsTo)).toEqual(expect.arrayContaining(['L12', 'L13']));
+    expect(ids(associations('QE01').leadsTo)).toEqual([]);
+    expect(ids(associations('QE82.0').leadsTo)).toEqual(expect.arrayContaining(['L18', 'L19', 'L20', 'L25']));
+    expect(ids(associations('QE90').leadsTo)).toEqual([]);
+  });
+  it('a link is under Comes from only for codes in its codes.to', () => {
+    expect(ids(associations('QD80').comesFrom)).toEqual(expect.arrayContaining(['L03', 'L10', 'L12', 'L20']));
+    expect(ids(associations('QD82').comesFrom)).toEqual([]);
+  });
+  it('a parent code is not covered by its children: QD71 has no Leads to', () => {
+    expect(ids(associations('QD71').leadsTo)).toEqual([]);
+    expect(ids(associations('QD71.1').leadsTo)).toContain('L03');
   });
 });
 
@@ -79,5 +104,12 @@ describe('UI-18 in the model', () => {
     const out = migrate(v1);
     expect(out.schema_version).toBe(2);
     expect(out.edges.map((e) => [e.basis, e.check])).toEqual([['evidence', 'match'], ['needs-review', 'withheld:L01']]);
+  });
+  it('a v2 import with a block-level evidence edge now outside the codes becomes needs-review', () => {
+    const c = V2_BLOCK_LEVEL_CASE;
+    const { m, x, y } = twoNodes(c.from, c.to);
+    const v2 = { ...m, edges: [{ id: 'a', from: x.id, to: y.id, polarity: '+', weight: 0.5, evidence: [31], link: c.link, basis: 'evidence', check: 'match' }] };
+    const e = migrate(v2).edges[0];
+    expect([e.basis, e.check, e.link]).toEqual([c.basis, c.check, c.link]);
   });
 });

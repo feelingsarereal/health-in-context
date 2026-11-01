@@ -18,20 +18,20 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   await expect(page.getByTestId('map-name')).toHaveText('Mom');
   await noHScroll();
   await page.getByTestId('add-node').tap();
-  await fillNodeDialog(page, { circumstance: "Mom's hours were cut" });
+  await fillNodeDialog(page, { circumstance: 'Mom was laid off' });
   const outline = page.getByTestId('canvas-outline');
   const first = outline.locator('li[data-node]').first();
   await expect(first).toHaveAttribute('data-status', 'undetermined');
   await expect(first).toContainText('Not sure yet');
 
-  // 2 — the picker's search for 'job' on that node; choose QD82; the description stays
+  // 2 — the picker's search for 'unemploy' on that node; choose QD80; the description stays
   const insp = page.getByTestId('inspector');
   await insp.getByTestId('choose-code').tap();
-  await insp.getByTestId('code-search').fill('job');
-  await insp.locator('[data-code="QD82"]').tap();
-  await expect(first).toContainText('code QD82');
+  await insp.getByTestId('code-search').fill('unemploy');
+  await insp.locator('[data-code="QD80"]').tap();
+  await expect(first).toContainText('code QD80');
   await expect(first).toHaveAttribute('data-status', 'sdoh');
-  await expect(insp.getByRole('textbox', { name: 'Describe the circumstance', exact: true })).toHaveText("Mom's hours were cut");
+  await expect(insp.getByRole('textbox', { name: 'Describe the circumstance', exact: true })).toHaveText('Mom was laid off');
 
   // 3 — the ⋯ button (the touch alternative to right-click / long-press) opens the association menu; under
   //     'Comes from' choose L03 and the code QD71.1: a linked node is added upstream, with L03's citation on the edge
@@ -50,7 +50,7 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   await expect(outline.locator('li[data-node]')).toHaveCount(2);
   const edge = outline.locator('li[data-edge]');
   await expect(edge).toHaveCount(1);
-  await expect(edge).toContainText('Inadequate housing to Problem associated with threat of job loss');
+  await expect(edge).toContainText('Inadequate housing to Problem associated with unemployment');
   await expect(edge).toContainText('cites [23]');
 
   // 4 — list view: both nodes and the edge; edit the second node's description; saved

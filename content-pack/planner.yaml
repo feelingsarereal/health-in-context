@@ -15,7 +15,7 @@ enums:
   polarity: ["+", "−"]
   confidence: [low, medium, high]
   basis: [evidence, override, needs-review]
-  check: [match, no-link, opposite-polarity, withheld, uncoded-end]
+  check: [match, no-link, outside-codes, opposite-polarity, withheld, uncoded-end]
   severity: [0, 1, 2, 3]
   line: [solid, dashed, dotted]
   route: [curved, straight]

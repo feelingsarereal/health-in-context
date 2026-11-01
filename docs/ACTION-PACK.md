@@ -156,11 +156,14 @@ links:
     mechanism: "Low income raises rent burden and eviction risk … [12]"   # cited prose
     grade: M
     refs: [12]
-    suggest: [QD71.1, QD71.0]       # items pre-offered when the user follows this link
+    codes:                          # the codes the cited evidence names (a code also backs its descendants)
+      from: [QD50, QD51]            # matching uses these, not the whole group (v0.1.1, Daniel's "option B")
+      to: [QD71.1, QD71.0]
+    suggest: [QD71.1, QD71.0]       # items pre-offered when the user follows this link; inside codes.to
     counter: false                  # true = a protective/balancing suggestion
 ```
 
-Rules: `from` and `to` resolve; every `refs` number resolves to a `verified: true` reference; `mechanism` carries `[n]`; `suggest` codes are inside `to`. A link whose evidence is not yet verified is moved to `withheld_links` (same shape, plus `withheld_because`): the app does not offer it, and `/methods` lists it. The validator does not check withheld links.
+Rules: `from` and `to` resolve; every `refs` number resolves to a `verified: true` reference; `mechanism` carries `[n]`; `suggest` codes are inside `to`. `codes` scopes the link to what its evidence names: an app matches a user's link against `codes` (with descendants), never against the whole `from`/`to` group; `from`/`to` stay as the display grouping and must contain the listed codes. A link whose evidence is not yet verified is moved to `withheld_links` (same shape, plus `withheld_because`): the app does not offer it, and `/methods` lists it. The validator does not check withheld links.
 
 ### 3.4 pathway.yaml — module `pathway`
 
@@ -269,4 +272,5 @@ Rules: at least one scenario per persona; every `expect` must be observable on s
 - [ ] `python3 tools/validate_pack.py apps/<slug>/content-pack` → 0 errors.
 
 ## History
+- v0.1.1 (2026-10-24): `links[].codes` — code-level scope for every link (Daniel's option B on the SDOH pilot). Validator 0.1.2.
 - v0.1 (2026-10-23): first draft, forked from CONTENT-PACK 0.10.2 after Daniel ratified A0.1. Adds app `kind`, `modules`, the action layer (audience · situations · links · pathway · resources · planner), `evidence.body: records`, verbatim harvested abstracts, the required safety, scenarios and upkeep blocks, and the change ledger. Pilot: SDOH Loop Mapper.

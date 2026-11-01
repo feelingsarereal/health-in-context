@@ -40,7 +40,7 @@ export default function Methods() {
           <li>{sit.codes} ICD-11 codes ({sit.sdoh_codes} SDOH, {sit.functioning_codes} functioning) in {sit.groups} groups, plus {sit.residuals} "other specified / unspecified" residual codes.</li>
           <li>Definitions: {sit.definitions_present} present (verbatim), {sit.definitions_null} with no definition in ICD-11. Definition checks: {Object.entries(sit.definition_check).map(([k, v]) => `${k} ${v}`).join(' · ')}.</li>
           <li>Crosswalks (ICD-10-CM, HP2030): {sit.crosswalk_proposed} marked proposed.</li>
-          <li>Links offered: {p.modules.links.offered} (by grade: {Object.entries(p.modules.links.by_grade).map(([k, v]) => `${k} ${v}`).join(' · ')}; {p.modules.links.counter} protective). Withheld: {p.modules.links.withheld}.</li>
+          <li>Links offered: {p.modules.links.offered} (by grade: {Object.entries(p.modules.links.by_grade).map(([k, v]) => `${k} ${v}`).join(' · ')}). Withheld: {p.modules.links.withheld}.</li>
           <li>References: {p.references.total} ({Object.entries(p.references.by_tier).map(([k, v]) => `${k} ${v}`).join(' · ')}); {p.references.verified} verified, {p.references.unverified} not verified; {p.references.abstracts_present} with verbatim abstracts.</li>
           <li>Glossary terms: {p.glossary}. Primers: {p.concepts}. Open research items (todo): {p.todo}. Stale facts: {p.stale}. Build errors: {p.build_errors}.</li>
         </ul>
@@ -135,9 +135,10 @@ export default function Methods() {
         <p>The map is read as a causal loop diagram. Loops are every elementary circuit (Johnson's algorithm), capped at 12 circumstances per loop and 500 loops; a loop with an even number of − links is reinforcing (R), an odd number balancing (B). Paths between two circumstances are capped at 200. Clusters are strongly connected components (Tarjan). Leverage hints combine weighted in/out degree, betweenness and loop count. The what-if pulse iterates x(t+1) = tanh(x(t) + Wᵀx(t)) with the pushed circumstance held fixed, for at most 30 steps. {S.loops.strength_label}.</p>
         <p>{tierBasis}</p>
         <p>
-          Every link is checked against the evidence links when it is drawn, edited, re-coded or imported (UI-18): each end is read from its code upward (code, parent, the QD71
-          housing sub-block, block), and a shipped link must match both ends, the direction and the polarity. Anything else is an override, flagged ⚑ on the map and kept
-          only with a reason the person gives. "Evidence-backed links only" re-runs every analysis without the overrides.{' '}
+          Every link is checked against the evidence links when it is drawn, edited, re-coded or imported (UI-18). A shipped link backs only the codes its evidence names: the
+          From code must be one of its From codes and the To code one of its To codes (a listed code covers its sub-codes), in the same direction and with the same polarity.
+          Matching never widens to the whole block; a link between the right blocks but outside those codes is reported as such, naming the codes the evidence does cover.
+          Anything else is an override, flagged ⚑ on the map and kept only with a reason the person gives. "Evidence-backed links only" re-runs every analysis without the overrides.{' '}
           {evidenceCanCloseALoop() ? '' : 'With the links in this pack, no loop can close on evidence alone.'}
         </p>
       </Section>

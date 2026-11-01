@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { associations, codeMap, endpointTitle, inEndpoint, tierBasis, type Link } from '@/lib/data/scheme';
+import { associations, codeMap, covers, endpointTitle, rootsOf, tierBasis, type Link } from '@/lib/data/scheme';
 import { S } from '@/lib/data/core';
 import { C } from '@/lib/copy';
 import { CitedText } from '@/components/evidence/CitedText';
@@ -20,21 +20,24 @@ export interface Existing {
   linked: boolean;
 }
 
-function Entry({ l, dir, onFollow, second, existing }: { l: Link; dir: 'out' | 'in'; onFollow: (r: FollowRequest) => void; second: boolean; existing: (endpoint: string, dir: 'out' | 'in') => Existing[] }) {
+function Entry({ l, dir, onFollow, second, existing }: { l: Link; dir: 'out' | 'in'; onFollow: (r: FollowRequest) => void; second: boolean; existing: (listed: string[], dir: 'out' | 'in') => Existing[] }) {
   const other = dir === 'out' ? l.to : l.from;
-  const here = existing(other, dir);
-  const next = second ? associations('', other) : null;
+  const scope = dir === 'out' ? l.codes.to : l.codes.from;
+  const here = existing(scope, dir);
+  const next = second ? associations(scope) : null;
   return (
     <li className="bx-card p-3" data-testid="assoc-entry" data-link={l.id}>
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="font-mono text-xs bx-muted">{l.id}</span>
         <PolarityChip p={l.polarity} />
         <GradeChip grade={l.grade} />
-        {l.counter && <span className="bx-chip border border-[color:var(--bx-line)]">{S.associations.counter}</span>}
       </div>
       <p className="mt-1 font-semibold">
         {dir === 'out' ? '→ ' : '← '}
         <span className="font-mono text-sm">{other}</span> {endpointTitle(other)}
+      </p>
+      <p className="text-xs bx-muted" data-testid="assoc-scope">
+        {rootsOf(scope).map((c) => `${c} ${endpointTitle(c)}`).join(' · ')}
       </p>
       <CitedText text={l.mechanism} className="mt-1 text-sm bx-prose leading-6" />
       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -77,10 +80,10 @@ function Entry({ l, dir, onFollow, second, existing }: { l: Link; dir: 'out' | '
 /** UI-03 association menu: evidence-graded Leads to / Comes from for an SDOH node; never the withheld links. */
 export function AssociationMenu({ node, onFollow, map, nameOf }: { node: MapNode; onFollow: (r: FollowRequest) => void; map: SdohMap; nameOf: (id: string) => string }) {
   const [second, setSecond] = useState(false);
-  /** UI-17: circumstances already on the map whose code falls in the entry's endpoint (code, parent, QD71, block) */
-  const existing = (endpoint: string, dir: 'out' | 'in'): Existing[] =>
+  /** UI-17: circumstances already on the map whose code is inside the codes the entry's evidence names (or their sub-codes) */
+  const existing = (listed: string[], dir: 'out' | 'in'): Existing[] =>
     map.nodes
-      .filter((n) => n.id !== node.id && n.kind !== 'note' && n.code_status === 'sdoh' && n.code && inEndpoint(n.code, endpoint))
+      .filter((n) => n.id !== node.id && n.kind !== 'note' && n.code_status === 'sdoh' && n.code && covers(listed, n.code))
       .map((n) => ({ id: n.id, name: nameOf(n.id), code: n.code!, linked: map.edges.some((e) => (dir === 'out' ? e.from === node.id && e.to === n.id : e.from === n.id && e.to === node.id)) }));
   if (node.code_status !== 'sdoh' || !node.code) {
     return (

@@ -33,3 +33,6 @@ The app lists every loop with Johnson's algorithm, which finds every elementary 
 
 <!-- framing -->
 Each node is read as "how much of this circumstance is present". Loop strength and leverage are structural heuristics, labelled as such: they are prompts for discussion, not findings about the person or group.
+
+<!-- framing -->
+Every ICD-11 code here names a problem, so a protective factor — a supportive sister, a benefits advisor, a stable job — is added as an "other" node of type resource. Its links to the problems it eases are − links, and like every link without a matching evidence link they are marked as overrides.

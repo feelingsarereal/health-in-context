@@ -1,13 +1,13 @@
-/** w2 · p-student · "Close a link through evidence, build a two-loop model with overrides, read the analyses and export" (rewritten K2). */
+/** w2 · p-student · "Close a link through evidence, build a two-loop model with overrides, read the analyses and export" (rewritten K2; K3 code-level evidence). */
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, fillLinkForm, newMap, offOrigin, panel, recordRequests, selectNodeByName } from '../helpers';
 import { h1Violations } from '../lint';
 
 const UNEMP = 'Problem associated with unemployment';
 const LOWINC = 'Low income';
 const STRESS = 'Stress, not elsewhere classified';
-const UPBR = 'Inadequate parental supervision or control'; // QE90, in block QE90-QE9Z 'Problems associated with upbringing'
+const ABUSE = 'Personal history of physical abuse'; // QE82.0, one of the codes L20's evidence names
 
 test('w2: evidence link between existing nodes, overrides, analyses, export and re-import', async ({ page, baseURL }) => {
   const reqs = recordRequests(page);
@@ -17,10 +17,10 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   const outline = page.getByTestId('canvas-outline');
   const edges = outline.locator('li[data-edge]');
 
-  // 1 — QE90 and QD80, unlinked; the association menu on QE90 offers 'Link to' the existing QD80 under L20, beside 'Add new'
-  await addNode(page, { code: 'QE90', search: 'QE90' });
+  // 1 — QE82.0 and QD80, unlinked; the association menu on QE82.0 offers 'Link to' the existing QD80 under L20, beside 'Add new'
+  await addNode(page, { code: 'QE82.0', search: 'physical abuse' });
   await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await selectNodeByName(page, UPBR);
+  await selectNodeByName(page, ABUSE);
   await page.keyboard.press('a');
   const l20 = page.getByTestId('assoc-menu').getByTestId('leads-to').locator('[data-link="L20"]');
   await expect(l20.getByTestId('assoc-link-existing')).toContainText(`Link to ${UNEMP}`);
@@ -46,25 +46,29 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   await expect(page.getByTestId('assoc-needs-code')).toHaveText('Assign an SDOH code to see associations.');
   await page.keyboard.press('Escape');
 
-  // 4 — the four links. QD80 → QD51 (L01 withheld), QD51 → QE01 (L05 withheld) and QE01 → Self-rated health (uncoded end)
-  //     need overrides. QE01 → QD80: scenarios.yaml expects an override, but by the matching rule (code → parent → QD71 →
-  //     group) QE01 sits in QE00-QE0Z and the shipped L12 (QE00-QE0Z → QD80-QD8Z, +) backs it. The spec asserts the rule;
-  //     the mismatch is flagged to Cowork (K2 scrum note).
+  // 4 — the four links, each an override: QD80 → QD51 (L01 withheld), QD51 → QE01 (L05 withheld), QE01 → QD80 (outside
+  //     L12's codes, which cover only QE04 → QD80, and the form says so) and QE01 → Self-rated health (uncoded end)
   await addEdge(page, UNEMP, LOWINC, { override: 'Income stops with the job' });
   await expect(edges.nth(1)).toHaveAttribute('data-check', 'withheld:L01');
   await addEdge(page, LOWINC, STRESS, { override: 'Money worries' });
   await expect(edges.nth(2)).toHaveAttribute('data-check', 'withheld:L05');
-  await addEdge(page, STRESS, UNEMP);
-  await expect(edges.nth(3)).toHaveAttribute('data-basis', 'evidence');
-  await expect(edges.nth(3)).toContainText('evidence L12');
+  await page.getByTestId('add-edge').click();
+  const form = page.getByTestId('edge-dialog');
+  await form.getByTestId('edge-from').selectOption({ label: STRESS });
+  await form.getByTestId('link-search').fill(UNEMP);
+  await form.locator('label', { has: page.getByTestId('link-target') }).filter({ hasText: UNEMP }).first().getByTestId('link-target').check();
+  await expect(form.getByTestId('check-note')).toHaveAttribute('data-check', 'outside-codes:L12');
+  await expect(form.getByTestId('check-message')).toHaveText('Evidence link L12 connects these blocks, but its evidence covers QE04 → QD80 only.');
+  await fillLinkForm(page, null, { override: 'Stress makes it hard to keep a job' });
+  await expect(edges.nth(3)).toHaveAttribute('data-check', 'outside-codes:L12');
   await addEdge(page, STRESS, 'Self-rated health', { polarity: '−', override: 'Outcome node for the class' });
   await expect(edges.nth(4)).toHaveAttribute('data-check', 'uncoded-end');
-  for (const i of [1, 2, 4]) await expect(edges.nth(i)).toHaveAttribute('data-basis', 'override');
+  for (const i of [1, 2, 3, 4]) await expect(edges.nth(i)).toHaveAttribute('data-basis', 'override');
   await panel(page, 'loops');
   await expect(page.getByTestId('loop-item')).toHaveCount(1);
   await expect(page.getByTestId('loop-item').first()).toHaveAttribute('data-kind', 'R');
   await expect(page.getByTestId('loop-item').first().getByTestId('loop-length')).toHaveText('3');
-  await expect(page.getByTestId('loop-item').first().getByTestId('loop-overrides')).toHaveText('2 overrides ⚑');
+  await expect(page.getByTestId('loop-item').first().getByTestId('loop-overrides')).toHaveText('3 overrides ⚑');
   await panel(page, 'links');
   await expect(page.getByTestId('link-summary')).toHaveText('4 + links, 1 − links.');
 
@@ -119,7 +123,7 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   const md = await dl('export-md');
   expect(fs.readFileSync(csv, 'utf8').split('\n')[0]).toContain('basis,link,check,override_reason,override_at');
   const report = fs.readFileSync(md, 'utf8');
-  expect(report).toMatch(/\| R\d \| Reinforcing \| 3 \| 2 \|/);
+  expect(report).toMatch(/\| R\d \| Reinforcing \| 3 \| 3 \|/);
   expect(report).toContain('⚑ withheld:L01 — Income stops with the job');
   const before = JSON.parse(fs.readFileSync(json, 'utf8'));
   expect(before.schema_version).toBe(2);
@@ -128,8 +132,8 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   await expect(outline.locator('li[data-node]')).toHaveCount(before.nodes.length);
   const after = await edges.evaluateAll((els) => els.map((e) => [e.getAttribute('data-pol'), e.getAttribute('data-basis'), e.getAttribute('data-check'), /weight (-?[\d.]+)/.exec(e.textContent ?? '')?.[1], /: ([^:]*)$/.exec(e.textContent ?? '')?.[1]]));
   expect(after.map((a) => a.slice(0, 4))).toEqual(before.edges.map((e: any) => [e.polarity, e.basis, e.check, String(e.weight)]));
-  expect(after.filter((a) => a[1] === 'override').map((a) => a[4])).toEqual(['Income stops with the job', 'Money worries', 'Outcome node for the class', 'She helps', 'She worries too']);
-  await expect(page.getByTestId('link-counts')).toHaveText('7 links: 2 evidence · 5 override');
+  expect(after.filter((a) => a[1] === 'override').map((a) => a[4])).toEqual(['Income stops with the job', 'Money worries', 'Stress makes it hard to keep a job', 'Outcome node for the class', 'She helps', 'She worries too']);
+  await expect(page.getByTestId('link-counts')).toHaveText('7 links: 1 evidence · 6 override');
   await panel(page, 'loops');
   await expect(page.getByTestId('loop-item')).toHaveCount(2);
 
