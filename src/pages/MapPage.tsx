@@ -94,6 +94,8 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const [newNodeReq, setNewNodeReq] = useState<NewNodeReq | null>(null);
   const [linkReq, setLinkReq] = useState<{ from: string | null; to: string | null } | null>(null);
   const openLink = (from: string | null, to: string | null = null) => setLinkReq({ from, to });
+  // w2 walk: a just-added link is the selection, so From carries on from that link's source, not the map's first node
+  const linkFrom = () => selected.nodes[0] ?? (selected.edges.length === 1 ? map.edges.find((e) => e.id === selected.edges[0])?.from ?? null : null);
   const [evidenceOnly, setEvidenceOnly] = useState(false);
   // A0: the evidence filter — every analysis runs on evidence-backed links only when the toggle is on
   const basisOf = useMemo(() => new Map(map.edges.map((e) => [e.id, e.basis])), [map.edges]);
@@ -282,7 +284,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         case 'e':
         case 'E':
           e.preventDefault();
-          openLink(selected.nodes[0] ?? null);
+          openLink(linkFrom());
           break;
         case 'a':
         case 'A':
@@ -375,7 +377,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
       </span>
       <button type="button" className="bx-btn-primary ax-tap" onClick={() => setNewNodeReq({})} data-testid="add-node" aria-keyshortcuts="N">{C.toolbar.addNode}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(selected.nodes[0] ?? null)} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
+      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(linkFrom())} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc()} disabled={!selNode || selNode.kind === 'note'} data-testid="open-assoc" aria-keyshortcuts="A">{C.toolbar.assoc}</button>
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
       {view === 'canvas' && (
@@ -513,7 +515,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const toCodeCount = map.nodes.filter((n) => n.kind !== 'note' && n.code_status === 'undetermined').length;
 
   const side = (
-    <aside className="bx-card flex min-h-0 flex-col p-0" aria-label="Map panels">
+    <aside className="bx-card flex min-h-0 min-w-0 flex-1 flex-col p-0" aria-label="Map panels">
       <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
         <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
         <span id="evidence-toggle-label">{C.evidence.toggle}</span>
@@ -573,7 +575,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
               />
             </Suspense>
           </div>
-          <div className="lg:h-[calc(100vh-11rem)] min-h-0 flex">{side}</div>
+          <div className="lg:h-[calc(100vh-11rem)] min-h-0 min-w-0 flex">{side}</div>
         </div>
       ) : (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
