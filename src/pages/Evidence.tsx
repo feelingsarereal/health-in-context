@@ -66,7 +66,7 @@ export default function Evidence() {
         ))}
       </ul>
       <p className="mt-6 text-sm bx-muted">
-        {tierBasis} {notOffered.length} further links are withheld after an independent check of their evidence; they are listed with the reasons on{' '}
+        {tierBasis} {notOffered.length === 1 ? '1 further link is' : `${notOffered.length} further links are`} withheld after an independent check of their evidence; they are listed with the reasons on{' '}
         <Link to="/methods#withheld" className="underline">Methods</Link> and are never offered on the map.
       </p>
     </div>

@@ -13,6 +13,7 @@ codes:
   open_who: "Open in the WHO ICD-11 browser"
   interim: "Text from a copy of ICD-11 (release 2026-01). Check the WHO entry for the official wording."
   proposed_xwalk: "Proposed mapping"
+  builder_alias: "Builder alias — not an ICD-11 index term"
   status:
     sdoh: "SDOH code"
     other: "Other (not an SDOH code)"
@@ -85,7 +86,7 @@ app:
     deleteConfirm: Delete this map from this browser? This cannot be undone.
     import: Import a map (.json or .csv)
   node:
-    variableHint: Read this box as 'how much of this is present'.
+    variableHint: Describe it as something that can go up or down; read the box as 'how much of this is present'.
     status: Code status
     code: ICD-11 code
     chooseCode: Choose a code

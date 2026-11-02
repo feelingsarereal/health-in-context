@@ -3,6 +3,7 @@ import { checkLink, evidenceCanCloseALoop } from './evidence';
 import { aliasHits, associations } from '@/lib/data/scheme';
 import { EVIDENCE_CASES, QD71_1_EVICTION_CASE, RECODE_CASE, V2_BLOCK_LEVEL_CASE, W1_LOOP } from './__fixtures__/evidence-golden';
 import { findLoops } from '@/lib/analysis';
+import { assignLoopNames } from './interchange';
 import { addEdge, addNode, migrate, newEdge, newMap, newNode, toGraph, updateEdge, updateNode, ModelError } from './map';
 import { docFromText } from './rich';
 
@@ -21,10 +22,10 @@ describe('UI-18 evidence check — golden fixtures', () => {
     expect(r.message).toMatch(/^Evidence link L05 is withheld: /);
   });
   it('a block-level near miss names that link and the codes its evidence covers', () => {
-    const r = checkLink({ code_status: 'sdoh', code: 'QE01' }, { code_status: 'sdoh', code: 'QD80' }, '+');
+    const r = checkLink({ code_status: 'sdoh', code: 'QE82.0' }, { code_status: 'sdoh', code: 'QD51' }, '+');
     expect(r.link).toBeNull();
-    expect(r.alternatives.map((l) => l.id)).toEqual(['L12']);
-    expect(r.message).toBe('Evidence link L12 connects these blocks, but its evidence covers QE04 → QD80 only.');
+    expect(r.alternatives.map((l) => l.id)).toEqual(['L25']);
+    expect(r.message).toBe('Evidence link L25 connects these blocks, but its evidence covers QE82 → QD50 only.');
   });
   it('with the links shipped in this pack, loops can close on evidence alone (computed at build time, K5)', () => {
     expect(evidenceCanCloseALoop()).toBe(true);
@@ -35,12 +36,12 @@ describe('association menu at code level (K3 item 2)', () => {
   const ids = (ls: { id: string }[]) => ls.map((l) => l.id);
   it('a link is under Leads to only for codes in its codes.from', () => {
     expect(ids(associations('QE04').leadsTo)).toEqual(expect.arrayContaining(['L12', 'L13']));
-    expect(ids(associations('QE01').leadsTo)).toEqual([]);
+    expect(ids(associations('QE01').leadsTo)).toEqual(['L29']); // K6
     expect(ids(associations('QE82.0').leadsTo)).toEqual(expect.arrayContaining(['L18', 'L19', 'L20', 'L25']));
     expect(ids(associations('QE90').leadsTo)).toEqual([]);
   });
   it('a link is under Comes from only for codes in its codes.to', () => {
-    expect(ids(associations('QD80').comesFrom)).toEqual(expect.arrayContaining(['L03', 'L10', 'L12', 'L20']));
+    expect(ids(associations('QD80').comesFrom)).toEqual(expect.arrayContaining(['L03', 'L10', 'L12', 'L20', 'L29']));
     expect(ids(associations('QD71.Z').comesFrom)).toEqual(expect.arrayContaining(['L02', 'L15', 'L26']));
     expect(ids(associations('QD82').comesFrom)).toEqual([]);
   });
@@ -148,5 +149,27 @@ describe('K5: builder search aliases', () => {
   });
   it('a finished ordinary word, or an unrelated one, does not', () => {
     for (const q of ['', 'housing', 'behind', 'forced', 'eve', 'inadequate housing', 'unemploy']) expect(hit(q), q).toEqual([]);
+  });
+});
+
+describe('K6: loop names are stable for the life of the map', () => {
+  const g = (edges: [string, string, number][]) => ({ nodes: [...new Set(edges.flatMap(([a, b]) => [a, b]))].map((id) => ({ id })), edges: edges.map(([from, to, weight], i) => ({ id: `e${i}-${from}${to}`, from, to, polarity: '+' as const, weight })) });
+  it('adding a stronger loop does not renumber the existing one; the new loop takes the next free number', () => {
+    const first = findLoops(g([['A', 'B', 0.25], ['B', 'A', 0.25]]));
+    const a = assignLoopNames([], first);
+    expect([...a.names.values()]).toEqual(['R1']);
+    const both = findLoops(g([['A', 'B', 0.25], ['B', 'A', 0.25], ['B', 'C', 1], ['C', 'B', 1]]));
+    const b = assignLoopNames(a.added, both);
+    const byMembers = new Map(both.loops.map((l) => [[...l.nodes].sort().join(''), b.names.get(l.key)]));
+    expect(byMembers.get('AB')).toBe('R1'); // the weaker, older loop keeps R1
+    expect(byMembers.get('BC')).toBe('R2');
+    expect(b.added.map((l) => l.name)).toEqual(['R2']);
+  });
+  it('a renamed loop keeps its name, and a number in use is never given twice', () => {
+    const r = findLoops(g([['A', 'B', 0.5], ['B', 'A', 0.5], ['B', 'C', 0.5], ['C', 'B', 0.5]]));
+    const [l1, l2] = r.loops;
+    const n = assignLoopNames([{ id: l1.key, name: 'Rent spiral', members: l1.nodes }, { id: 'gone', name: 'R1', members: [] }], r).names;
+    expect(n.get(l1.key)).toBe('Rent spiral');
+    expect(n.get(l2.key)).toBe('R2');
   });
 });

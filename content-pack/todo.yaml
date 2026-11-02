@@ -29,19 +29,24 @@ items:
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
+- id: T-EVID-04
+  what: 'L22 Unemployment → Stress stays withheld. The best direct test found (Lawes et al. 2022, hair cortisol, German jobseeker
+    panel, n=526) is mixed: no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment
+    with low re-employment expectations (abstract harvested 2026-11-01; independent check calls it mixed, not counter-evidence).
+    Shown on /methods when L22 is next reviewed. Paul & Moser 2009 still needs library access.'
 - id: T-REF-link_phelan1995
   what: 'references/8 (link_phelan1995): summary pending abstract'
 - id: T-REF-paul_moser2009
   what: 'references/26 (paul_moser2009): summary pending abstract'
 - id: T-REF-richardson1986
-  what: 'references/50 (richardson1986): source not read beyond metadata'
+  what: 'references/52 (richardson1986): source not read beyond metadata'
 - id: T-REF-richardson1995
-  what: 'references/51 (richardson1995): source not read beyond metadata'
+  what: 'references/53 (richardson1995): source not read beyond metadata'
 - id: T-REF-kosko1986
-  what: 'references/56 (kosko1986): source not read beyond metadata'
+  what: 'references/58 (kosko1986): source not read beyond metadata'
 - id: T-REF-ozesmi2004
-  what: 'references/57 (ozesmi2004): source not read beyond metadata'
+  what: 'references/59 (ozesmi2004): source not read beyond metadata'
 - id: T-REF-hovmand2014
-  what: 'references/58 (hovmand2014): source not read beyond metadata'
+  what: 'references/60 (hovmand2014): source not read beyond metadata'
 - id: T-LINKS
   what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02'

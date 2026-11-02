@@ -8,6 +8,7 @@ import { nodeName } from '@/lib/model/interchange';
 import type { SdohMap } from '@/lib/model/map';
 import { Heuristic } from '@/components/ui/bits';
 import { CitedText } from '@/components/evidence/CitedText';
+import { count } from '@/lib/plural';
 
 const titleOf = (c: string) => codeMap.get(c)?.title;
 export const nameOf = (map: SdohMap) => {
@@ -60,9 +61,17 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
         {shown.map((l) => (
           <li key={l.key} className={`bx-card p-2 ${active === l.key ? 'ring-2 ring-[color:var(--bx-accent)]' : ''}`} data-testid="loop-item" data-kind={l.kind}>
             <div className="flex flex-wrap items-center gap-2">
-              <button type="button" className="ax-tap flex-1 text-left" aria-pressed={active === l.key} onClick={() => onPick(active === l.key ? null : l)} data-testid="loop-pick">
+              <button
+                type="button"
+                className="ax-tap flex-1 text-left"
+                aria-pressed={active === l.key}
+                onClick={() => onPick(active === l.key ? null : l)}
+                data-testid="loop-pick"
+                // K6 D5: one name for the whole entry (the parts below are split across spans and read badly)
+                aria-label={`${names.get(l.key)}, ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${l.length} ${l.length === 1 ? 'link' : 'links'}, ${overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'}`}, strength ${l.strength.toFixed(3)}: ${l.nodes.map(nm).join(' to ')}`}
+              >
                 <span className={`${l.kind === 'R' ? 'ax-edge-pos' : 'ax-edge-neg'} font-bold`}>{l.kind === 'R' ? '↻' : '↺'}{l.kind}</span>{' '}
-                <span className="font-semibold" data-testid="loop-name">{names.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing} · <span data-testid="loop-length">{l.length}</span> links · <span data-testid="loop-overrides">{overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'} ⚑`}</span> · strength {l.strength.toFixed(3)}
+                <span className="font-semibold" data-testid="loop-name">{names.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing} · <span data-testid="loop-length">{l.length}</span> {l.length === 1 ? 'link' : 'links'} · <span data-testid="loop-overrides">{overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'} ⚑`}</span> · strength {l.strength.toFixed(3)}
                 <span className="mt-0.5 block text-xs bx-muted">{l.nodes.map(nm).join(' → ')} → ↺</span>
               </button>
             </div>
@@ -116,7 +125,7 @@ export function LinksPanel({ map, graph, onPick, basisOf }: { map: SdohMap; grap
   );
   return (
     <div data-testid="links-panel">
-      <p className="text-sm" data-testid="link-summary">{inv.positive.length} + links, {inv.negative.length} − links.</p>
+      <p className="text-sm" data-testid="link-summary">{count(inv.positive.length, '+ link')}, {count(inv.negative.length, '− link')}.</p>
       <p className="text-sm" data-testid="link-basis-summary">{graph.edges.filter((e) => basisOf.get(e.id) === 'evidence').length} evidence · {graph.edges.filter((e) => basisOf.get(e.id) !== 'evidence').length} override ⚑</p>
       {amb.length > 0 && (
         <p className="mt-1 text-sm bx-todo">{C.edge.ambiguity} ({amb.map((a) => `${nm(a.from)} → ${nm(a.to)}`).join('; ')})</p>
@@ -241,7 +250,7 @@ export function PulsePanel({ map, graph, announce }: { map: SdohMap; graph: AGra
           e.preventDefault();
           const r = pulse(graph, stim, dir);
           setRes(r);
-          announce(`What-if pulse run for ${r.steps} steps.`);
+          announce(`What-if pulse run for ${count(r.steps, 'step')}.`);
         }}
       >
         <label className="text-sm" htmlFor={`${id}-s`}>{C.pulse.stimulus}</label>

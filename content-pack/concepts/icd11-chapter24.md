@@ -12,9 +12,9 @@ further_reading:
 
 ## What it is
 
-ICD-11 for Mortality and Morbidity Statistics is the World Health Organization's classification. Its Chapter 24 includes a section called 'Factors influencing health status', whose blocks QD50–QE9Z classify problems associated with finances, drinking water or nutrition, the environment (which holds housing, including homelessness), employment, education, the social or cultural environment, health behaviours, social insurance or welfare, the justice system, relationships, the absence or loss of others, the primary support group, harmful or traumatic events, and upbringing [62].
+ICD-11 for Mortality and Morbidity Statistics is the World Health Organization's classification. Its Chapter 24 includes a section called 'Factors influencing health status', whose blocks QD50–QE9Z classify problems associated with finances, drinking water or nutrition, the environment (which holds housing, including homelessness), employment, education, the social or cultural environment, health behaviours, social insurance or welfare, the justice system, relationships, the absence or loss of others, the primary support group, harmful or traumatic events, and upbringing [64].
 
-In the United States, health records currently use the older ICD-10-CM, where categories Z55–Z65 play the same role [61].
+In the United States, health records currently use the older ICD-10-CM, where categories Z55–Z65 play the same role [63].
 
 ## How this app uses it
 

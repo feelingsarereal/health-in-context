@@ -85,3 +85,17 @@
   - scenarios/w3
   source: Daniel, 2026-11-01
   by: cowork
+- date: '2026-11-01'
+  what: New L29 (QE01 stress → QD80 unemployment, grade M, Maehlisen et al. 2018, verbatim abstract); Lawes et al. 2022 added
+    as mixed evidence on the withheld L22; reference card years now follow the citation's issue year (8 cards had OpenAlex's
+    online-first year); w2 step 4 updated (QE01 → QD80 is evidence) and a new w2 step checks the 'outside the evidence's codes'
+    message with QE82.0 → QD51 (L25)
+  why: T-EVID-03/04 after K5 review; independent check passed with wording fixes
+  records:
+  - links/L29
+  - references/maehlisen2018
+  - references/lawes2022
+  - references[].year
+  - scenarios/w2
+  source: OpenAlex harvest 2026-11-01; independent reviewer
+  by: cowork

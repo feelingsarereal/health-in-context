@@ -113,7 +113,6 @@ const FALLBACK = {
     addNode: 'New circumstance', addEdge: 'Link to…', assoc: 'Associations', arrange: 'Auto-arrange', arrangeAll: 'Re-arrange all (ignore pins)', arrangeSel: 'Arrange selection',
     engine: 'Layout', undo: 'Undo', redo: 'Redo', hood1: '1st-degree', hood2: '2nd-degree', fit: 'Fit', listView: 'List view', canvasView: 'Canvas view', keys: 'Keyboard', more: 'More actions for the selected circumstance', moreTools: 'More', print: 'Print / greyscale',
   },
-  picker: { alias: 'Builder alias' },
   canvas: { label: 'Map canvas. Use the arrow keys to move between circumstances, Enter to edit, A for associations, N for a new circumstance, and ? for every key.', empty: 'Double-click the canvas or press N to add the first circumstance.', emptyTouch: 'Tap New circumstance to add the first circumstance.', outline: 'Everything on the canvas' },
   exportI: { title: 'Export', json: 'Map (.json)', csv: 'Edge list (.csv)', md: 'Loop report (.md)', png: 'Picture (.png)', svg: 'Picture (.svg)', importTitle: 'Import into a new map', imported: 'Imported into a new map.' },
   list: { title: 'List view', lead: 'Everything on the canvas, as tables. Every action here works by keyboard.', nodes: 'Circumstances', edges: 'Links', edit: 'Edit', delete: 'Delete', none: 'Nothing here yet.' },

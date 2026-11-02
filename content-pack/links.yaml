@@ -311,6 +311,25 @@ links:
     - QD71.0
   codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
     (T-EVID-01).
+- id: L29
+  from: QE00-QE0Z
+  to: QD80-QD8Z
+  polarity: +
+  grade: M
+  mechanism: Among employed adults in a Danish regional cohort, high perceived everyday-life stress is associated with a higher
+    subsequent risk of unemployment (a prospective register-linked study; an association, not shown to be causal). [48]
+  refs:
+  - 48
+  suggest:
+  - QD80
+  codes:
+    from:
+    - QE01
+    to:
+    - QD80
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstract, 2026-11-01
+    (T-EVID-03) — the study measured perceived everyday-life stress (Cohen's Perceived Stress Scale), read here as QE01 Stress,
+    not elsewhere classified.
 counter_links: []
 withheld_links:
 - id: L05

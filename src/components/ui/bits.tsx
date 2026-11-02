@@ -27,13 +27,13 @@ export function Nudge({ id }: { id: string }) {
     </p>
   );
 }
-export function Field({ label, htmlFor, children, nudgeId, hint }: { label: string; htmlFor: string; children: ReactNode; nudgeId?: string; hint?: string }) {
+export function Field({ label, htmlFor, children, nudgeId, hint, hintId }: { label: string; htmlFor: string; children: ReactNode; nudgeId?: string; hint?: string; hintId?: string }) {
   return (
     <div className="mb-3">
       <label htmlFor={htmlFor} className="mb-1 block text-sm font-semibold">
         {label}
       </label>
-      {hint && <p className="mb-1 text-xs bx-muted">{hint}</p>}
+      {hint && <p id={hintId} className="mb-1 text-xs bx-muted" data-testid={hintId ? 'field-hint' : undefined}>{hint}</p>}
       {children}
       {nudgeId && <Nudge id={nudgeId} />}
     </div>

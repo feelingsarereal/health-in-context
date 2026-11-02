@@ -3,7 +3,7 @@ import { getStore, setPref } from '@/lib/storage';
 import type { SdohMap } from '@/lib/model/map';
 import { toGraph } from '@/lib/model/map';
 import { findLoops } from '@/lib/analysis';
-import { defaultLoopNames } from '@/lib/model/interchange';
+import { assignLoopNames } from '@/lib/model/interchange';
 
 const MAX_HISTORY = 100;
 
@@ -99,11 +99,16 @@ export function useMapDoc(id: string | null) {
 
   const graph = useMemo(() => (map ? toGraph(map) : { nodes: [], edges: [] }), [map]);
   const loops = useMemo(() => findLoops(graph), [graph]);
-  const loopNames = useMemo(() => {
-    const d = defaultLoopNames(loops);
-    for (const l of map?.loops ?? []) if (d.has(l.id)) d.set(l.id, l.name);
-    return d;
-  }, [loops, map?.loops]);
+  const named = useMemo(() => assignLoopNames(map?.loops ?? [], loops), [loops, map?.loops]);
+  const loopNames = named.names;
+  // K6 D4: store a new loop's number with the map (outside the undo history), so it never renumbers
+  useEffect(() => {
+    const m = cur.current;
+    if (!m || !named.added.length) return;
+    const have = new Set(m.loops.map((l) => l.id));
+    const add = named.added.filter((l) => !have.has(l.id));
+    if (add.length) commit({ ...m, loops: [...m.loops, ...add] });
+  }, [named, commit]);
 
   return {
     map,

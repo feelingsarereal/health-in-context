@@ -3,6 +3,7 @@ import { scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes } from '
 import { references } from '@/lib/data/refs';
 import { evidenceCanCloseALoop } from '@/lib/model/evidence';
 import { AsOf, PageHead, Todo } from '@/components/ui/bits';
+import { CitedText } from '@/components/evidence/CitedText';
 
 const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
   <section id={id} className="mt-10 scroll-mt-20" aria-labelledby={`${id}-h`}>
@@ -21,6 +22,8 @@ export default function Methods() {
   const noSummary = references.filter((r) => !r.summary);
   const checkNotes = codes.filter((c) => c.definition_check && !['diff_verified', 'quoted_direct'].includes(c.definition_check));
   const scope = bundle.scope;
+  /** K6: references that back no link but are recorded against one (role_note names it), e.g. Lawes 2022 on the withheld L22 */
+  const recordedOn = (id: string) => references.filter((r) => !r.used_by.length && r.role_note && new RegExp(`\\b${id}\\b`).test(r.role_note));
   const missingXwalk = [
     ...new Set(
       codes.flatMap((c) => [
@@ -71,8 +74,8 @@ export default function Methods() {
             <li key={t.id}><Todo>{t.id}</Todo> {t.what}{t.blocks ? ` — blocks: ${t.blocks}` : ''}</li>
           ))}
           <li><Todo>references</Todo> {unverified.length} not verified (never cited as evidence): {unverified.map((r) => `[${r.n}] ${r.key}`).join(', ')}.</li>
-          <li><Todo>abstracts</Todo> {noAbstract.length} references have no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
-          <li><Todo>summaries</Todo> {noSummary.length} references have no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
+          <li><Todo>abstracts</Todo> {noAbstract.length === 1 ? '1 reference has' : `${noAbstract.length} references have`} no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
+          <li><Todo>summaries</Todo> {noSummary.length === 1 ? '1 reference has' : `${noSummary.length} references have`} no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
           {missingXwalk.length > 0 && (
             <li><Todo>crosswalk titles</Todo> The pack gives no title for: {missingXwalk.join(', ')} (shown in amber in the pop-out).</li>
           )}
@@ -84,9 +87,15 @@ export default function Methods() {
         <p>These links are never offered on the map or shown as evidence.</p>
         <ul className="space-y-2" data-testid="withheld-list">
           {notOffered.map((l) => (
-            <li key={l.id} className="bx-card p-3">
+            <li key={l.id} className="bx-card p-3" data-withheld={l.id}>
               <span className="font-mono text-xs">{l.id}</span> {l.from} {endpointTitle(l.from)} → {l.to} {endpointTitle(l.to)} ({l.polarity}, grade {l.grade}, refs {l.refs.join(', ')}).
               <ul className="mt-1 list-disc pl-5 text-sm bx-muted">{l.reason.map((r) => <li key={r}>{r}</li>)}</ul>
+              {recordedOn(l.id).map((r) => (
+                <div key={r.n} className="mt-2 border-l-2 border-[color:var(--bx-line)] pl-3 text-sm" data-testid="recorded-ref" data-ref={r.n}>
+                  <CitedText text={`Also recorded (${r.role_here.replace(/-/g, ' ')}; backs no link): [${r.n}]`} className="font-semibold" />
+                  <p className="mt-1">{r.role_note}</p>
+                </div>
+              ))}
             </li>
           ))}
         </ul>

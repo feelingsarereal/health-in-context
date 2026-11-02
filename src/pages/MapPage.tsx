@@ -6,12 +6,13 @@ import { C } from '@/lib/copy';
 import { USER_COLOURS } from '@/lib/palette';
 import { useTheme } from '@/lib/theme';
 import { useCoarsePointer } from '@/lib/pointer';
+import { count } from '@/lib/plural';
 import { getStore, pref } from '@/lib/storage';
 import { useMapDoc } from '@/components/map/useMapDoc';
 import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap } from '@/lib/model/map';
 import { emptyDoc, plainText } from '@/lib/model/rich';
 import { feedbackClusters, neighbourhood, findLoops, DEFAULT_WEIGHT, type Loop } from '@/lib/analysis';
-import { defaultLoopNames } from '@/lib/model/interchange';
+import { assignLoopNames } from '@/lib/model/interchange';
 import { evidenceCanCloseALoop, checkLink } from '@/lib/model/evidence';
 import { LinkForm, BasisPanel } from '@/components/map/LinkForm';
 import { nodeName } from '@/lib/model/interchange';
@@ -100,10 +101,11 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const loops = useMemo(() => (evidenceOnly ? findLoops(graph) : doc.loops), [evidenceOnly, graph, doc.loops]);
   const loopNames = useMemo(() => {
     if (!evidenceOnly) return doc.loopNames;
-    const d = defaultLoopNames(loops);
+    // the evidence-only loops are a subset, keyed the same way: their stored names carry over (K6 D4)
+    const d = assignLoopNames(map.loops, loops).names;
     for (const [k, v] of doc.loopNames) if (d.has(k)) d.set(k, v);
     return d;
-  }, [evidenceOnly, loops, doc.loopNames]);
+  }, [evidenceOnly, loops, doc.loopNames, map.loops]);
   const overrides = (l: Loop) => l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
   const counts = { all: map.edges.length, evidence: map.edges.filter((e) => e.basis === 'evidence').length, review: map.edges.filter((e) => e.basis === 'needs-review').length };
   const [assocFor, setAssocFor] = useState<string | null>(null);
@@ -175,7 +177,9 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
     setPathHl(null);
     setHood(null);
     setActiveLoop(l?.key ?? null);
-    if (l) announce(`Highlighting loop ${loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${l.length} circumstances. Everything else is dimmed.`);
+    // K6 D3: show the whole loop, with padding, never zoomed past Fit's cap
+    if (l && view === 'canvas') canvas.current?.fitTo(l.nodes);
+    if (l) announce(`Highlighting loop ${loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${count(l.length, 'circumstance')}. Everything else is dimmed.`);
   };
 
   // ── actions
@@ -412,7 +416,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         <div className="text-sm bx-muted">
           {selected.nodes.length + selected.edges.length > 1 ? (
             <div>
-              <p>{selected.nodes.length} circumstances and {selected.edges.length} links selected.</p>
+              <p>{count(selected.nodes.length, 'circumstance')} and {count(selected.edges.length, 'link')} selected.</p>
               {selected.nodes.length > 1 && (
                 // UI-12: colour override per selection (K2 decision 6)
                 <label className="mt-2 block text-sm text-[color:var(--bx-ink)]">
@@ -424,7 +428,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
                     onChange={(e) => {
                       const fill = e.target.value === 'block' ? null : e.target.value;
                       apply((m) => selected.nodes.reduce((acc, id) => updateNode(acc, id, { style: { ...(acc.nodes.find((n) => n.id === id)?.style ?? {}), fill } }), m));
-                      announce(`Colour set on ${selected.nodes.length} circumstances.`);
+                      announce(`Colour set on ${count(selected.nodes.length, 'circumstance')}.`);
                     }}
                   >
                     <option value="" disabled>Choose…</option>

@@ -3,7 +3,7 @@
  * PNG/SVG come from the canvas (src/components/map/Canvas.tsx); everything here is pure text.
  */
 import { findLoops, strongestLoops, type LoopResult } from '../analysis';
-import { migrate, newEdge, newMap, newNode, toGraph, today, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType } from './map';
+import { migrate, newEdge, newMap, newNode, toGraph, today, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType, type MapLoopName } from './map';
 import { docFromText, plainText } from './rich';
 
 export type TitleOf = (code: string) => string | undefined;
@@ -173,8 +173,7 @@ export interface ReportLabels {
 export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, result?: LoopResult): string {
   const r = result ?? findLoops(toGraph(m));
   const byId = new Map(m.nodes.map((n) => [n.id, n]));
-  const named = new Map(m.loops.map((l) => [l.id, l.name]));
-  const names = defaultLoopNames(r);
+  const { names } = assignLoopNames(m.loops, r);
   const desc = (id: string) => {
     const n = byId.get(id)!;
     const tag = n.code_status === 'sdoh' ? n.code : n.code_status === 'other' ? `other${n.type ? `: ${n.type}` : ''}` : 'undetermined';
@@ -203,7 +202,7 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
     const basisOf = new Map(m.edges.map((e) => [e.id, e.basis]));
     for (const l of strongestLoops(r)) {
       const ov = l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
-      out.push(`| ${named.get(l.key) ?? names.get(l.key)} | ${l.kind === 'R' ? L.reinforcing : L.balancing} | ${l.length} | ${ov} | ${l.strength.toFixed(4)} | ${l.nodes.map(desc).join(' → ')} → ↺ |`);
+      out.push(`| ${names.get(l.key)} | ${l.kind === 'R' ? L.reinforcing : L.balancing} | ${l.length} | ${ov} | ${l.strength.toFixed(4)} | ${l.nodes.map(desc).join(' → ')} → ↺ |`);
     }
     out.push('');
   }
@@ -216,10 +215,28 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
   return out.join('\n') + '\n';
 }
 
-/** Default loop names R1, R2, B1… in strength order (app-methods §4). */
-export function defaultLoopNames(r: LoopResult): Map<string, string> {
-  const c = { R: 0, B: 0 };
-  const out = new Map<string, string>();
-  for (const l of strongestLoops(r)) out.set(l.key, `${l.kind}${++c[l.kind]}`);
-  return out;
+/**
+ * Loop names, stable for the life of the map (K6 D4). A loop is keyed by its edge set; a name stored in `m.loops` (a
+ * rename, or a number given earlier) is kept. A loop without one takes the next free number of its kind (R1, R2, B1…),
+ * in strength order when several appear at once (app-methods §4). `added` lists the new names, for the caller to store.
+ */
+export function assignLoopNames(stored: MapLoopName[], r: LoopResult): { names: Map<string, string>; added: MapLoopName[] } {
+  const byKey = new Map(stored.map((l) => [l.id, l.name]));
+  const used = new Set(stored.map((l) => l.name));
+  const names = new Map<string, string>();
+  const added: MapLoopName[] = [];
+  for (const l of strongestLoops(r)) {
+    const have = byKey.get(l.key);
+    if (have) {
+      names.set(l.key, have);
+      continue;
+    }
+    let n = 1;
+    while (used.has(`${l.kind}${n}`)) n++;
+    const name = `${l.kind}${n}`;
+    used.add(name);
+    names.set(l.key, name);
+    added.push({ id: l.key, name, members: l.nodes });
+  }
+  return { names, added };
 }

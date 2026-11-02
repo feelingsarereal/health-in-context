@@ -12,7 +12,7 @@ further_reading:
 
 ## What it is
 
-The World Health Organization describes the social determinants of health as the conditions in which people are born, grow, live, work and age, together with their access to power, money and resources — conditions that have a powerful influence on health inequities [59]. The US Healthy People 2030 framework uses a similar definition and sorts these conditions into five domains: Economic Stability; Education Access and Quality; Health Care Access and Quality; Neighborhood and Built Environment; and Social and Community Context [60].
+The World Health Organization describes the social determinants of health as the conditions in which people are born, grow, live, work and age, together with their access to power, money and resources — conditions that have a powerful influence on health inequities [61]. The US Healthy People 2030 framework uses a similar definition and sorts these conditions into five domains: Economic Stability; Education Access and Quality; Health Care Access and Quality; Neighborhood and Built Environment; and Social and Community Context [62].
 
 The Commission on Social Determinants of Health was created to marshal the evidence on what can be done to promote health equity and to foster a global movement to achieve it [1]. Reviews of the evidence point to socioeconomic factors such as income, wealth and education as fundamental causes of a wide range of health outcomes [3], and to upstream determinants — economic resources, education, racial discrimination — that shape the downstream behaviours most programmes target [4].
 

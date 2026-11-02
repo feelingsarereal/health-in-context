@@ -324,6 +324,20 @@
  "changes": [
   {
    "date": "2026-11-01",
+   "what": "New L29 (QE01 stress → QD80 unemployment, grade M, Maehlisen et al. 2018, verbatim abstract); Lawes et al. 2022 added as mixed evidence on the withheld L22; reference card years now follow the citation's issue year (8 cards had OpenAlex's online-first year); w2 step 4 updated (QE01 → QD80 is evidence) and a new w2 step checks the 'outside the evidence's codes' message with QE82.0 → QD51 (L25)",
+   "why": "T-EVID-03/04 after K5 review; independent check passed with wording fixes",
+   "records": [
+    "links/L29",
+    "references/maehlisen2018",
+    "references/lawes2022",
+    "references[].year",
+    "scenarios/w2"
+   ],
+   "source": "OpenAlex harvest 2026-11-01; independent reviewer",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-11-01",
    "what": "Eviction/housing instability recoded from QD71.1 to QD71.Z with a builder search alias ('evict', 'forced move', 'housing instability', 'behind on rent'); QD71.Z promoted to a linkable code; L03, L15, L02, L26, L27, L28 re-scoped; independent-check wording fixes (association not cause; subgroup concentration; reduced income); w1 and w3 updated",
    "why": "Independent check: QD71.1 'Inadequate housing' means poor conditions; Daniel chose QD71.Z",
    "records": [
@@ -596,6 +610,10 @@
    "what": "Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps → financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23."
   },
   {
+   "id": "T-EVID-04",
+   "what": "L22 Unemployment → Stress stays withheld. The best direct test found (Lawes et al. 2022, hair cortisol, German jobseeker panel, n=526) is mixed: no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment with low re-employment expectations (abstract harvested 2026-11-01; independent check calls it mixed, not counter-evidence). Shown on /methods when L22 is next reviewed. Paul & Moser 2009 still needs library access."
+  },
+  {
    "id": "T-REF-link_phelan1995",
    "what": "references/8 (link_phelan1995): summary pending abstract"
   },
@@ -605,23 +623,23 @@
   },
   {
    "id": "T-REF-richardson1986",
-   "what": "references/50 (richardson1986): source not read beyond metadata"
+   "what": "references/52 (richardson1986): source not read beyond metadata"
   },
   {
    "id": "T-REF-richardson1995",
-   "what": "references/51 (richardson1995): source not read beyond metadata"
+   "what": "references/53 (richardson1995): source not read beyond metadata"
   },
   {
    "id": "T-REF-kosko1986",
-   "what": "references/56 (kosko1986): source not read beyond metadata"
+   "what": "references/58 (kosko1986): source not read beyond metadata"
   },
   {
    "id": "T-REF-ozesmi2004",
-   "what": "references/57 (ozesmi2004): source not read beyond metadata"
+   "what": "references/59 (ozesmi2004): source not read beyond metadata"
   },
   {
    "id": "T-REF-hovmand2014",
-   "what": "references/58 (hovmand2014): source not read beyond metadata"
+   "what": "references/60 (hovmand2014): source not read beyond metadata"
   },
   {
    "id": "T-LINKS",

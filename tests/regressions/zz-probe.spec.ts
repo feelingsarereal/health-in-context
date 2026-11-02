@@ -1,0 +1,27 @@
+import { test } from '@playwright/test';
+import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+const bb = async (page: any) => (await page.getByTestId('canvas-outline').locator('li[data-node]').first().getAttribute('data-bb'));
+test('probe', async ({ page }) => {
+  await page.goto('/'); await dismissFirstRun(page); await newMap(page, 'P');
+  await addNode(page, { code: 'QD71.Z', search: 'evict' });
+  await addNode(page, { code: 'QD80', search: 'unemployment' });
+  await addNode(page, { code: 'QD51', search: 'low income' });
+  await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
+  await addEdge(page, 'Problem associated with unemployment', 'Low income');
+  await addEdge(page, 'Low income', 'Problems associated with housing, unspecified');
+  await page.waitForTimeout(500);
+  console.log('start', await bb(page));
+  await page.getByRole('button', { name: 'Zoom in' }).click(); await page.waitForTimeout(300);
+  console.log('zoom in', await bb(page));
+  await page.getByRole('button', { name: 'Zoom out' }).click(); await page.waitForTimeout(300);
+  console.log('zoom out', await bb(page));
+  await panel(page, 'loops');
+  await page.getByTestId('loop-pick').first().click(); await page.waitForTimeout(800);
+  console.log('after loop pick', await bb(page));
+  await page.getByTestId('loop-glyph').first().click(); await page.waitForTimeout(800);
+  console.log('after glyph', await bb(page));
+  const c = (await page.getByTestId('canvas').boundingBox())!;
+  await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2);
+  await page.mouse.wheel(0, -100); await page.waitForTimeout(300); console.log('wheel in 1', await bb(page));
+  await page.mouse.wheel(0, -100); await page.waitForTimeout(300); console.log('wheel in 2', await bb(page));
+});

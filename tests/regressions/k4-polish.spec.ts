@@ -18,12 +18,13 @@ async function at(page: Page, x: number, y: number) {
 
 test('D5: the override tooltip closes once the pointer leaves the edge, even while the edge is selected', async ({ page }) => {
   await start(page, 'D5');
+  // QD51 → QE01: L05 is withheld, so an override (K6: QE01 → QD80 is evidence now, L29)
+  await addNode(page, { code: 'QD51', search: 'low income' });
   await addNode(page, { code: 'QE01', search: 'stress' });
-  await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await addEdge(page, 'Stress, not elsewhere classified', 'Problem associated with unemployment', { override: 'Stress makes it hard to keep a job' });
+  await addEdge(page, 'Low income', 'Stress, not elsewhere classified', { override: 'Money worries' });
   // the new link is selected, so its reason shows without a hover
   const tip = page.getByTestId('edge-tooltip');
-  await expect(tip).toContainText('Stress makes it hard to keep a job');
+  await expect(tip).toContainText('Money worries');
   const [x1, y1, x2, y2] = (await page.getByTestId('canvas-outline').locator('li[data-edge]').first().getAttribute('data-ends'))!.split(',').map(Number);
   const mid = await at(page, (x1 + x2) / 2, (y1 + y2) / 2);
   await page.mouse.move(mid.x, mid.y, { steps: 4 });
@@ -109,7 +110,8 @@ test('D10: on a desktop the hint keeps the double-click and N, and every tool is
   await expect(page.getByTestId('toolbar-more')).toBeHidden();
 });
 
-test('D10: the ⋯ and link handles scale with zoom and hide below the 44 px floor', async ({ page }) => {
+// K6 D1 changed this: below the 44 px floor the buttons now stay at 44 px instead of hiding
+test('D10: the ⋯ and link handles scale with zoom, and stay at the 44 px floor when zoomed out', async ({ page }) => {
   await start(page, 'D10 zoom');
   await addNode(page, { code: 'QD71.Z', search: 'evict' });
   await selectNodeByName(page, 'Problems associated with housing, unspecified');
@@ -123,9 +125,7 @@ test('D10: the ⋯ and link handles scale with zoom and hide below the 44 px flo
   await zoomIn.click();
   await expect.poll(async () => (await more.boundingBox())?.width ?? 0).toBeGreaterThan(w0);
   for (let i = 0; i < 6; i++) await zoomOut.click();
-  await expect(more).toBeHidden();
-  await expect(handle).toBeHidden();
-  for (let i = 0; i < 6; i++) await zoomIn.click();
   await expect(more).toBeVisible();
-  expect((await handle.boundingBox())!.width).toBeGreaterThanOrEqual(44);
+  await expect(handle).toBeVisible();
+  for (const b of [more, handle]) expect(Math.round((await b.boundingBox())!.width)).toBe(44);
 });

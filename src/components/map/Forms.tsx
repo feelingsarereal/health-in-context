@@ -35,7 +35,6 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
             </label>
           ))}
         </div>
-        <p className="mt-1 text-xs bx-muted">{C.node.variableHint}</p>
       </fieldset>
 
       {draft.code_status === 'undetermined' && !pickerOpen && !picking && (
@@ -93,8 +92,9 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
       <Field label={C.node.label} htmlFor={`${id}-label`} nudgeId={`${id}-label-n`}>
         <RichField id={`${id}-label`} label={C.node.label} value={draft.label} onChange={(d) => onChange({ label: d }, 'label')} describedBy={`${id}-label-n`} singleLine />
       </Field>
-      <Field label={C.node.circumstance} htmlFor={`${id}-circ`} nudgeId={`${id}-circ-n`}>
-        <RichField id={`${id}-circ`} label={C.node.circumstance} value={draft.circumstance} onChange={(d) => onChange({ circumstance: d }, 'circumstance')} describedBy={`${id}-circ-n`} />
+      {/* K6 D6: the variable hint is about how to word the circumstance, so it sits with that field */}
+      <Field label={C.node.circumstance} htmlFor={`${id}-circ`} nudgeId={`${id}-circ-n`} hint={C.node.variableHint} hintId={`${id}-circ-h`}>
+        <RichField id={`${id}-circ`} label={C.node.circumstance} value={draft.circumstance} onChange={(d) => onChange({ circumstance: d }, 'circumstance')} describedBy={`${id}-circ-h ${id}-circ-n`} />
       </Field>
       {!compact && (
         <>

@@ -6,7 +6,9 @@ import { getStore, type MapSummary } from '@/lib/storage';
 import { newMap, newId } from '@/lib/model/map';
 import { Field, PageHead } from '@/components/ui/bits';
 import { ClearData } from '@/components/ui/ClearData';
+import { Dialog } from '@/components/ui/Dialog';
 import { importFile } from '@/lib/model/importFile';
+import { count } from '@/lib/plural';
 
 /** The workspace index (/maps): several named maps per device; duplicate, rename, delete (ACTION-SPEC §4). */
 export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?: (id: string) => void }) {
@@ -18,6 +20,8 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
   const [msg, setMsg] = useState<string | null>(null);
   const [renaming, setRenaming] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
+  /** K6 D9: the map awaiting a delete confirmation, in the app's own dialog (as Clear my data does) */
+  const [deleting, setDeleting] = useState<MapSummary | null>(null);
   const id = useId();
   const refresh = async () => setList(await (await getStore()).list());
   useEffect(() => {
@@ -25,6 +29,28 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
   }, []);
   return (
     <div>
+      <Dialog open={!!deleting} onClose={() => setDeleting(null)} title={deleting ? `${C.maps.delete}: ${deleting.name}` : ''} testId="delete-map-dialog">
+        <p className="mb-4">{C.maps.deleteConfirm}</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="bx-btn-primary ax-tap"
+            data-testid="delete-map-confirm"
+            onClick={async () => {
+              const m = deleting;
+              setDeleting(null);
+              if (!m) return;
+              await (await getStore()).remove(m.id);
+              refresh();
+            }}
+          >
+            {C.maps.delete}
+          </button>
+          <button type="button" className="bx-btn ax-tap" onClick={() => setDeleting(null)}>
+            Cancel
+          </button>
+        </div>
+      </Dialog>
       <PageHead title={C.maps.title} lead={`${C.maps.lead} ${S.privacy.saved_here}`} />
       <form
         className="bx-card mb-6 p-4"
@@ -69,7 +95,7 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
               ) : (
                 <div className="min-w-0 flex-1">
                   <Link to={`/map?id=${m.id}`} className="font-semibold underline" onClick={(e) => { if (onOpen) { e.preventDefault(); open(m.id); } }}>{m.name}</Link>
-                  <p className="text-xs bx-muted">{m.nodes} circumstances · {m.edges} links · saved {new Date(m.updated).toLocaleString()}</p>
+                  <p className="text-xs bx-muted">{count(m.nodes, 'circumstance')} · {count(m.edges, 'link')} · saved {new Date(m.updated).toLocaleString()}</p>
                 </div>
               )}
               <div className="flex flex-wrap gap-1">
@@ -91,11 +117,8 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
                   type="button"
                   className="bx-btn ax-tap"
                   aria-label={`${C.maps.delete} ${m.name}`}
-                  onClick={async () => {
-                    if (!window.confirm(C.maps.deleteConfirm)) return;
-                    await (await getStore()).remove(m.id);
-                    refresh();
-                  }}
+                  onClick={() => setDeleting(m)}
+                  data-testid="delete-map"
                 >
                   {C.maps.delete}
                 </button>

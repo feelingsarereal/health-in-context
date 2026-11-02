@@ -23,8 +23,9 @@ test('H3: the nudge renders on every field in safety.yaml → deidentify.fields'
   await page.getByTestId('add-node').click();
   const d = page.getByTestId('node-dialog');
   for (const name of ['Short label (optional)', 'Describe the circumstance']) {
-    const id = await d.getByRole('textbox', { name, exact: true }).getAttribute('aria-describedby');
-    await expect(page.locator(`[id="${id}"]`)).toHaveText(NUDGE);
+    // a field may be described by a hint as well (K6: the variable hint on 'Describe the circumstance'); the nudge is the last
+    const ids = (await d.getByRole('textbox', { name, exact: true }).getAttribute('aria-describedby'))!.split(' ');
+    await expect(page.locator(`[id="${ids[ids.length - 1]}"]`)).toHaveText(NUDGE);
   }
   await d.getByTestId('node-submit').click();
   await addNode(page, { status: 'undetermined', label: 'B' });

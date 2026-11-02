@@ -274,7 +274,7 @@
   "key": "hood2016",
   "tier": "current",
   "citation": "Hood CM, Gennuso KP, Swain GR, Catlin BB. County Health Rankings: relationships between determinant factors and health outcomes. American Journal of Preventive Medicine. 2016.",
-  "year": 2015,
+  "year": 2016,
   "doi": "10.1016/j.amepre.2015.08.024",
   "url": "https://doi.org/10.1016/j.amepre.2015.08.024",
   "isbn": null,
@@ -339,7 +339,7 @@
   "key": "pickett_wilkinson2015",
   "tier": "current",
   "citation": "Pickett KE, Wilkinson RG. Income inequality and health: a causal review. Social Science & Medicine. 2015.",
-  "year": 2014,
+  "year": 2015,
   "doi": "10.1016/j.socscimed.2014.12.031",
   "url": "https://doi.org/10.1016/j.socscimed.2014.12.031",
   "isbn": null,
@@ -429,7 +429,7 @@
   "key": "williams_mohammed2009",
   "tier": "classic",
   "citation": "Williams DR, Mohammed SA. Discrimination and racial disparities in health: evidence and needed research. Journal of Behavioral Medicine. 2009.",
-  "year": 2008,
+  "year": 2009,
   "doi": "10.1007/s10865-008-9185-0",
   "url": "https://doi.org/10.1007/s10865-008-9185-0",
   "isbn": null,
@@ -522,7 +522,7 @@
   "key": "seligman2010",
   "tier": "current",
   "citation": "Seligman HK, Laraia BA, Kushel MB. Food insecurity is associated with chronic disease among low-income NHANES participants. Journal of Nutrition. 2010.",
-  "year": 2009,
+  "year": 2010,
   "doi": "10.3945/jn.109.112573",
   "url": "https://doi.org/10.3945/jn.109.112573",
   "isbn": null,
@@ -726,7 +726,7 @@
   "key": "cutler_llerasmuney2010",
   "tier": "current",
   "citation": "Cutler DM, Lleras-Muney A. Understanding differences in health behaviors by education. Journal of Health Economics. 2010.",
-  "year": 2009,
+  "year": 2010,
   "doi": "10.1016/j.jhealeco.2009.10.003",
   "url": "https://doi.org/10.1016/j.jhealeco.2009.10.003",
   "isbn": null,
@@ -773,7 +773,7 @@
   "key": "metzler2017",
   "tier": "current",
   "citation": "Metzler M, Merrick MT, Klevens J, Ports KA, Ford DC. Adverse childhood experiences and life opportunities: shifting the narrative. Children and Youth Services Review. 2017.",
-  "year": 2016,
+  "year": 2017,
   "doi": "10.1016/j.childyouth.2016.10.021",
   "url": "https://doi.org/10.1016/j.childyouth.2016.10.021",
   "isbn": null,
@@ -800,7 +800,7 @@
   "key": "shonkoff2012",
   "tier": "current",
   "citation": "Shonkoff JP, Garner AS, et al. The lifelong effects of early childhood adversity and toxic stress. Pediatrics. 2012.",
-  "year": 2011,
+  "year": 2012,
   "doi": "10.1542/peds.2011-2663",
   "url": "https://doi.org/10.1542/peds.2011-2663",
   "isbn": null,
@@ -1080,6 +1080,50 @@
  },
  {
   "n": 48,
+  "key": "maehlisen2018",
+  "tier": "current",
+  "citation": "Maehlisen MH, Pasgaard AA, Mortensen RN, Vardinghus-Nielsen H, Torp-Pedersen C, Boggild H. Perceived stress as a risk factor of unemployment: a register-based cohort study. BMC Public Health. 2018;18:728.",
+  "year": 2018,
+  "doi": "10.1186/s12889-018-5618-z",
+  "url": "https://doi.org/10.1186/s12889-018-5618-z",
+  "isbn": null,
+  "abstract": "BACKGROUND: Although unemployment and high levels of perceived stress have been associated in cross-sectional studies, the direction of causation is unknown. We prospectively examined if high levels of perceived everyday life stress increased the risk of subsequent unemployment and further if differences existed between socioeconomic status-groups. METHODS: We included 9335 18-64-year-old employed respondents of a health survey (North Denmark Health Profile 2010) in which Cohen's Perceived Stress Scale was used to assess the level of perceived stress. Data were linked individually to national administrative registers. Cox proportional hazards model was used to investigate the association between perceived stress quintiles and risk of unemployment during 98 weeks of follow-up. Analyses were further performed in subgroups defined by education and income. RESULTS: In total, 224 people (10.4%) of the high stress group became unemployed during follow-up, which was higher than the lower stress groups. After adjusting for gender, age, education and income, the risk of unemployment was 1.64 (95% CI: 1.28;2.11) in the high stress group compared to the low stress group. After adjusting for gender and age, a similar trend was observed across different education levels and among the lower income groups, but no higher risk of unemployment due to perceived stress was found among the higher income groups. However, there was no statistically significant interaction between perceived stress and income level (p = 0.841) or perceived stress and education level (p = 0.587). CONCLUSION: Perceived everyday life stress nearly doubled the risk of subsequent unemployment in a working population. No statistically significant interactions between SES and perceived stress were found. This indicates that stress prevention among the working population should not solely focus on stress in the workplace but also include stress from everyday life.",
+  "abstract_source": "openalex",
+  "abstract_note": null,
+  "harvested_on": "2026-11-01",
+  "summary": "In a cohort of 9,335 employed adults aged 18–64 from a 2010 North Denmark health survey, linked to national registers, those in the high-stress group (top quintile of Cohen's Perceived Stress Scale) had a higher risk of becoming unemployed over 98 weeks than the low-stress group (hazard ratio 1.64, 95% CI 1.28–2.11, adjusted for gender, age, education and income). No higher risk was seen in the higher-income groups, but the interactions with income and education were not statistically significant.",
+  "why_it_mattered": null,
+  "role_here": "support",
+  "role_note": null,
+  "verified": true,
+  "verified_on": "2026-10-23",
+  "used_by": [
+   "links/L29"
+  ]
+ },
+ {
+  "n": 49,
+  "key": "lawes2022",
+  "tier": "current",
+  "citation": "Lawes M, Hetschko C, Schoeb R, Stephan G, Eid M. Unemployment and hair cortisol as a biomarker of chronic stress. Scientific Reports. 2022;12:21573.",
+  "year": 2022,
+  "doi": "10.1038/s41598-022-25775-1",
+  "url": "https://doi.org/10.1038/s41598-022-25775-1",
+  "isbn": null,
+  "abstract": "Unemployment is widely considered an important chronic stressor. Using longitudinal data of initially employed German jobseekers, the present study examines whether unemployment is related to changes in hair cortisol concentration (HCC), a reliable biomarker for chronic stress. The results indicate that HCC is the highest initially when individuals are insecurely employed and decreases as people gain certainty about whether they enter unemployment or not. We find no effects when comparing the average changes in HCC between individuals who entered unemployment to those of continuously employed individuals. However, medium-term unemployment was associated with a stronger mean increase in HCC if re-employment expectations were low compared to when re-employment expectations were high. Taken together, our results support two key conclusions. First, experiencing the uncertainty of looming unemployment is associated with more pronounced cortisol secretion than unemployment itself. Second, whether working or being unemployed is associated with higher HCC is highly context-dependent, with poor re-employment prospects during unemployment being a key predictor of increased HCC. Overall, our study provides further evidence that the physiological stress system is especially sensitive to uncontrollable situations and unfamiliar challenge.",
+  "abstract_source": "openalex",
+  "abstract_note": null,
+  "harvested_on": "2026-11-01",
+  "summary": "In longitudinal data on initially employed German jobseekers, hair cortisol (a biomarker of chronic stress) was highest while employment was insecure and fell as people learned whether they would become unemployed. The average change in hair cortisol did not differ between people who entered unemployment and those who stayed employed; medium-term unemployment with low re-employment expectations was associated with a larger increase.",
+  "why_it_mattered": null,
+  "role_here": "prior-result",
+  "role_note": "Mixed, context-dependent evidence for the withheld link L22 (unemployment → stress): no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment with low re-employment expectations; it measures a biomarker, not perceived stress. Recorded on /methods, not used to back a link.",
+  "verified": true,
+  "verified_on": "2026-10-23",
+  "used_by": []
+ },
+ {
+  "n": 50,
   "key": "lund2018",
   "tier": "current",
   "citation": "Lund C, Brooke-Sumner C, Baingana F, et al. Social determinants of mental disorders and the Sustainable Development Goals: a systematic review of reviews. Lancet Psychiatry. 2018.",
@@ -1100,7 +1144,7 @@
   "used_by": []
  },
  {
-  "n": 49,
+  "n": 51,
   "key": "allen2014",
   "tier": "current",
   "citation": "Allen J, Balfour R, Bell R, Marmot M. Social determinants of mental health. International Review of Psychiatry. 2014.",
@@ -1121,7 +1165,7 @@
   "used_by": []
  },
  {
-  "n": 50,
+  "n": 52,
   "key": "richardson1986",
   "tier": "background",
   "citation": "Richardson GP. Problems with causal-loop diagrams. System Dynamics Review. 1986.",
@@ -1142,7 +1186,7 @@
   "used_by": []
  },
  {
-  "n": 51,
+  "n": 53,
   "key": "richardson1995",
   "tier": "background",
   "citation": "Richardson GP. Loop polarity, loop dominance, and the concept of dominant polarity. System Dynamics Review. 1995;11(1):67-88.",
@@ -1163,7 +1207,7 @@
   "used_by": []
  },
  {
-  "n": 52,
+  "n": 54,
   "key": "johnson1975",
   "tier": "background",
   "citation": "Johnson DB. Finding all the elementary circuits of a directed graph. SIAM Journal on Computing. 1975.",
@@ -1187,7 +1231,7 @@
   ]
  },
  {
-  "n": 53,
+  "n": 55,
   "key": "oliva2004",
   "tier": "background",
   "citation": "Oliva R. Model structure analysis through graph theory: partition heuristics and feedback structure decomposition. System Dynamics Review. 2004;20(4):313-336.",
@@ -1211,7 +1255,7 @@
   ]
  },
  {
-  "n": 54,
+  "n": 56,
   "key": "homer_hirsch2006",
   "tier": "background",
   "citation": "Homer JB, Hirsch GB. System dynamics modeling for public health: background and opportunities. American Journal of Public Health. 2006;96(3):452-458.",
@@ -1235,7 +1279,7 @@
   ]
  },
  {
-  "n": 55,
+  "n": 57,
   "key": "mcglashan2016",
   "tier": "background",
   "citation": "McGlashan J, Johnstone M, Creighton D, de la Haye K, Allender S. Quantifying a systems map: network analysis of a childhood obesity causal loop diagram. PLOS ONE. 2016.",
@@ -1259,7 +1303,7 @@
   ]
  },
  {
-  "n": 56,
+  "n": 58,
   "key": "kosko1986",
   "tier": "background",
   "citation": "Kosko B. Fuzzy cognitive maps. International Journal of Man-Machine Studies. 1986;24(1):65-75.",
@@ -1280,7 +1324,7 @@
   "used_by": []
  },
  {
-  "n": 57,
+  "n": 59,
   "key": "ozesmi2004",
   "tier": "background",
   "citation": "Özesmi U, Özesmi SL. Ecological models based on people's knowledge: a multi-step fuzzy cognitive mapping approach. Ecological Modelling. 2004.",
@@ -1301,11 +1345,11 @@
   "used_by": []
  },
  {
-  "n": 58,
+  "n": 60,
   "key": "hovmand2014",
   "tier": "background",
   "citation": "Hovmand PS. Community Based System Dynamics. New York: Springer; 2014.",
-  "year": 2013,
+  "year": 2014,
   "doi": "10.1007/978-1-4614-8763-0",
   "url": "https://doi.org/10.1007/978-1-4614-8763-0",
   "isbn": null,
@@ -1322,7 +1366,7 @@
   "used_by": []
  },
  {
-  "n": 59,
+  "n": 61,
   "key": "who_sdoh_page",
   "tier": "background",
   "citation": "World Health Organization. Social determinants of health [health topic page]. Accessed 2026-10-23.",
@@ -1346,7 +1390,7 @@
   ]
  },
  {
-  "n": 60,
+  "n": 62,
   "key": "hp2030_page",
   "tier": "background",
   "citation": "Office of Disease Prevention and Health Promotion. Healthy People 2030: Social Determinants of Health. Accessed 2026-10-23.",
@@ -1370,7 +1414,7 @@
   ]
  },
  {
-  "n": 61,
+  "n": 63,
   "key": "cms_zcodes",
   "tier": "background",
   "citation": "Centers for Medicare & Medicaid Services, Office of Minority Health. Using Z Codes: The Social Determinants of Health (SDOH) Data Journey to Better Outcomes [infographic]. Revised June 2023.",
@@ -1394,7 +1438,7 @@
   ]
  },
  {
-  "n": 62,
+  "n": 64,
   "key": "icd11_mms",
   "tier": "background",
   "citation": "World Health Organization. ICD-11 for Mortality and Morbidity Statistics (MMS), release 2026-01. Chapter 24, Factors influencing health status or contact with health services. Text read via the findacode.com mirror, 2026-10-23.",

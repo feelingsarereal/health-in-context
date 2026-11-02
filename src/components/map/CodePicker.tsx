@@ -1,6 +1,5 @@
 import { useMemo, useState, useId } from 'react';
 import { aliasHits, codeMap, groupMap, searchCodes, isFunctioning, type Code } from '@/lib/data/scheme';
-import { C } from '@/lib/copy';
 import { S } from '@/lib/data/core';
 import { Popover } from '@/components/ui/Popover';
 import { CodePopout } from './CodePopout';
@@ -51,8 +50,8 @@ export function CodePicker({ value, onPick, only, autoFocus }: { value?: string 
       <p className="mt-1 text-xs bx-muted" role="status">{count} {count === 1 ? "code" : "codes"}</p>
       <div className="mt-1 max-h-72 overflow-y-auto rounded-md border border-[color:var(--bx-line)] p-1">
         {aliases.map((a) => (
-          <section key={a.term} aria-label={`${C.picker.alias}: ${a.term}`} className="mb-1 rounded-md bg-paper-2 dark:bg-night" data-testid="alias-hit" data-alias={a.term}>
-            <h4 className="px-2 py-1 text-xs font-semibold bx-muted">{C.picker.alias}: “{a.term}”</h4>
+          <section key={a.term} aria-label={`${S.codes.builder_alias}: ${a.term}`} className="mb-1 rounded-md bg-paper-2 dark:bg-night" data-testid="alias-hit" data-alias={a.term}>
+            <h4 className="px-2 py-1 text-xs font-semibold bx-muted">“{a.term}” · {S.codes.builder_alias}</h4>
             <ul>{row(codeMap.get(a.code)!)}</ul>
             <p className="px-2 pb-2 text-xs" data-testid="alias-note">{a.note}</p>
           </section>

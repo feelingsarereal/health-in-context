@@ -44,10 +44,13 @@
   - do: Add nodes coded QD51 (low income) and QE01 (stress), and one 'other' node of type outcome labelled 'Self-rated health'
     expect: The 'other' node has a neutral fill and dashed outline; no association menu is offered on it
   - do: Link QD80 → QD51 (+), QD51 → QE01 (+), QE01 → QD80 (+) and QE01 → Self-rated health (−), confirming an override with a reason
-      for each
-    expect: Three of the four links ask for an override and show ⚑ (L05 is withheld; QE01 → QD80 is outside L12's codes, which cover
-      only QE04 → QD80, and the form says so; Self-rated health is not an SDOH code); QD80 → QD51 is backed by L01 with no ⚑; loop R1
-      (3 links, 2 overrides) is detected; the link inventory lists four + links and one − link
+      wherever the form asks for one
+    expect: Two of the four links ask for an override and show ⚑ (L05 is withheld; Self-rated health is not an SDOH code); QD80 → QD51
+      is backed by L01 and QE01 → QD80 by L29, both with no ⚑; loop R1 (3 links, 1 override) is detected; the link inventory lists
+      four + links and one − link
+  - do: Link QE82.0 → QD51 (+)
+    expect: The form says the link is outside L25's codes, which cover QE82.0 → QD50 (poverty) only, and asks for an override; once
+      confirmed with a reason the edge shows ⚑ and no new loop appears
   - do: Add an 'undetermined' node labelled 'Support from sister', link it → QE01 with polarity − weight −0.5 and QE01 → it with polarity
       − weight −0.25, confirming the overrides
     expect: A second loop is detected and labelled R (two − links multiply to +); the undetermined node shows a '?' badge and is listed

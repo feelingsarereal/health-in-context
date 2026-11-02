@@ -27,10 +27,10 @@
    "crosswalk_proposed": 114
   },
   "links": {
-   "offered": 17,
+   "offered": 18,
    "by_grade": {
     "F": 4,
-    "M": 12,
+    "M": 13,
     "S": 1
    },
    "withheld": 13
@@ -40,20 +40,20 @@
   "resources": null
  },
  "references": {
-  "total": 62,
+  "total": 64,
   "by_tier": {
    "seminal": 9,
-   "current": 29,
+   "current": 31,
    "classic": 11,
    "background": 13
   },
-  "verified": 55,
+  "verified": 57,
   "unverified": 7,
-  "abstracts_present": 49
+  "abstracts_present": 51
  },
  "glossary": 21,
  "concepts": 5,
- "todo": 16,
+ "todo": 17,
  "heuristics": [
   {
    "id": "A4",
@@ -105,7 +105,7 @@
    "passed": 4,
    "failed": 0,
    "tests": [
-    "✓ w1: one evidence link, two deliberate overrides, and the evidence-only toggle",
+    "✓ w1: a loop built through the association menu closes on evidence, then one deliberate override",
     "✓ w2: evidence link between existing nodes, overrides, analyses, export and re-import",
     "✓ w3: a relative's situation on a phone, no codes needed",
     "✓ w3: long-press on a node opens the association menu (touch alternative to right-click)"

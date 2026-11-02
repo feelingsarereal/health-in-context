@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, useCallback } from 'react';
-import cytoscape, { type Core, type ElementDefinition } from 'cytoscape';
+import cytoscape, { type Core, type EdgeCollection, type EdgeSingular, type ElementDefinition } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 import cySvg from 'cytoscape-svg';
 import { codeMap, colourGroup } from '@/lib/data/scheme';
@@ -31,6 +31,8 @@ export interface CanvasHandle {
   layout(scope: 'unpinned' | 'all' | 'selection', engine: 'fcose' | 'elk-stress'): void;
   circle(ids: string[]): void;
   fit(): void;
+  /** K6 D3: fit these circumstances (a loop) with padding, capped like Fit */
+  fitTo(ids: string[]): void;
   zoom(f: number): void;
   png(): string;
   svg(): string;
@@ -220,17 +222,81 @@ function hull(pts: [number, number][]): [number, number][] {
 /** Rendered-coordinate edge methods Cytoscape has but its typings omit. */
 type RenderedEdge = { renderedSourceEndpoint(): { x: number; y: number }; renderedTargetEndpoint(): { x: number; y: number }; renderedMidpoint(): { x: number; y: number } };
 
-/** K4 D10: the ⋯ and connector buttons are this big at zoom 1 and scale with zoom, never past 72 px; below the 44 px
- *  touch-target floor they are hidden rather than drawn larger than the node (the context menu and keys still work). */
+/** The ⋯ and connector buttons are this big at zoom 1 and scale with zoom between the 44 px touch-target floor and
+ *  72 px. They never hide (K6 D1: hiding them below 44 px made drag-to-link vanish after Fit on four or more nodes). */
 const HANDLE_PX = 52;
-const handleSize = (zoom: number) => Math.min(72, Math.round(HANDLE_PX * zoom));
+const handleSize = (zoom: number) => Math.max(44, Math.min(72, Math.round(HANDLE_PX * zoom)));
+/** K6 D10: a link whose straight line would run through another circumstance bends around it, by this much clearance */
+const BEND_CLEAR = 18;
 
-function fitCapped(cy: Core) {
-  if (!cy.nodes().length) return;
-  cy.fit(cy.nodes(), 50);
+function fitCapped(cy: Core, eles = cy.nodes(), pad = 50) {
+  if (!eles.length) return;
+  cy.fit(eles, pad);
   if (cy.zoom() > 1.2) {
     cy.zoom(1.2);
-    cy.center(cy.nodes());
+    cy.center(eles);
+  }
+}
+
+/**
+ * K6 D10: bend a link around any circumstance its straight line would cross, without moving anything. A one-point
+ * (quadratic) bezier strays 2t(1−t)·c from the line at t, so c is the clearance needed where the blocking box sits,
+ * divided by that; the side needing less bend wins. Links between the same two circumstances (either way) bend as a
+ * group, side by side, 26 px apart. Straight-routed links are left alone, and so is a group with nothing in its way
+ * (Cytoscape spreads parallel links itself). The bend is kept in scratch for the outline (data-bend).
+ */
+function routeEdges(cy: Core) {
+  const SPREAD = 26;
+  const groups = new Map<string, EdgeCollection>();
+  cy.edges().forEach((e) => {
+    const [a, b] = [e.source().id(), e.target().id()].sort();
+    const k = `${a}|${b}`;
+    groups.set(k, (groups.get(k) ?? cy.collection()).union(e));
+  });
+  const clear = (e: EdgeSingular) => {
+    if (e.scratch('bend')) e.removeStyle('curve-style control-point-distances control-point-weights');
+    e.scratch('bend', 0);
+  };
+  for (const [k, es] of groups) {
+    const [aId, bId] = k.split('|');
+    const s = cy.getElementById(aId);
+    const t = cy.getElementById(bId);
+    const A = s.position();
+    const B = t.position();
+    const L = Math.hypot(B.x - A.x, B.y - A.y);
+    if (aId === bId || L < 1 || es.some((e) => e.data('curve') === 'straight')) {
+      es.forEach(clear);
+      continue;
+    }
+    const ux = (B.x - A.x) / L;
+    const uy = (B.y - A.y) / L;
+    let up = 0;
+    let down = 0;
+    cy.nodes().forEach((n) => {
+      if (n.id() === aId || n.id() === bId) return;
+      const bb = n.boundingBox({});
+      const corners = [[bb.x1 - BEND_CLEAR, bb.y1 - BEND_CLEAR], [bb.x2 + BEND_CLEAR, bb.y1 - BEND_CLEAR], [bb.x1 - BEND_CLEAR, bb.y2 + BEND_CLEAR], [bb.x2 + BEND_CLEAR, bb.y2 + BEND_CLEAR]];
+      const along = corners.map(([x, y]) => (x - A.x) * ux + (y - A.y) * uy);
+      const across = corners.map(([x, y]) => -(x - A.x) * uy + (y - A.y) * ux);
+      if (!(Math.min(...across) < 0 && Math.max(...across) > 0 && Math.max(...along) > 0 && Math.min(...along) < L)) return;
+      const tm = Math.min(0.85, Math.max(0.15, (((bb.x1 + bb.x2) / 2 - A.x) * ux + ((bb.y1 + bb.y2) / 2 - A.y) * uy) / L));
+      const kk = 2 * tm * (1 - tm);
+      up = Math.max(up, Math.max(...across) / kk);
+      down = Math.max(down, -Math.min(...across) / kk);
+    });
+    if (!up && !down) {
+      es.forEach(clear);
+      continue;
+    }
+    const side = up <= down ? 1 : -1;
+    const base = up <= down ? up : down;
+    es.forEach((e, i) => {
+      // the i-th link of the group sits i spreads further out; a link drawn b → a measures distance the other way
+      const c = side * (base + (i * SPREAD) / 0.5);
+      const bend = Math.round(e.source().id() === aId ? c : -c);
+      e.style({ 'curve-style': 'unbundled-bezier', 'control-point-distances': bend, 'control-point-weights': 0.5 });
+      e.scratch('bend', bend);
+    });
   }
 }
 
@@ -250,7 +316,10 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     hulls: string[];
     pos: Record<string, { x: number; y: number; bb: string }>;
     ends: Record<string, string>;
-  }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {} });
+    /** rendered midpoint x,y and the K6 bend, per edge (outline only) */
+    mids: Record<string, string>;
+    zoom: number;
+  }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {}, mids: {}, zoom: 1 });
   const coarse = useCoarsePointer();
   const hover = useRef<string | null>(null);
   /** K4 D5: the selected edge whose tooltip the pointer has moved away from; it stays hidden until the selection changes */
@@ -272,7 +341,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     let more = null;
     let handle = null;
     const size = handleSize(cy.zoom());
-    if (size >= 44 && p.selected.nodes.length === 1 && !p.selected.edges.length) {
+    if (p.selected.nodes.length === 1 && !p.selected.edges.length) {
       const n = cy.getElementById(p.selected.nodes[0]);
       if (n.nonempty()) {
         // the whole button stays clear of the node's box, selection overlay included, by 8 px
@@ -303,6 +372,32 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         handle = ranked[1].c;
       }
     }
+    // K6 D7: a loop glyph (30 px) starts at its loop's centre and is nudged to the nearest spot clear of every node box,
+    // every edge's mid-edge mark (⚑, ‖), the ⋯ and connector buttons and the glyphs already placed, scored like the handles
+    {
+      const G = 15 + 4;
+      const nodeBoxes = cy.nodes().map((n) => n.renderedBoundingBox({}));
+      const marks = cy.edges().map((e) => (e as unknown as RenderedEdge).renderedMidpoint());
+      const taken: { x: number; y: number; r: number }[] = [...[more, handle].filter((c): c is { x: number; y: number } => !!c).map((c) => ({ ...c, r: size / 2 }))];
+      const W = cy.width();
+      const H = cy.height();
+      for (const g of loops) {
+        const cands = [{ x: g.x, y: g.y }];
+        for (const r of [36, 60, 90, 130]) for (let i = 0; i < 12; i++) cands.push({ x: g.x + r * Math.cos((i * Math.PI) / 6), y: g.y + r * Math.sin((i * Math.PI) / 6) });
+        const score = (c: { x: number; y: number }) => {
+          let d = -Math.hypot(c.x - g.x, c.y - g.y);
+          for (const b of nodeBoxes) if (c.x > b.x1 - G && c.x < b.x2 + G && c.y > b.y1 - G && c.y < b.y2 + G) d -= 1000;
+          for (const o of taken) if (Math.hypot(c.x - o.x, c.y - o.y) < o.r + G) d -= 500;
+          for (const q of marks) if (Math.hypot(c.x - q.x, c.y - q.y) < G + 16) d -= 300;
+          if (c.x < G || c.y < G || c.x > W - G || c.y > H - G) d -= 50;
+          return d;
+        };
+        const best = cands.reduce((a, c) => (score(c) > score(a) ? c : a), cands[0]);
+        g.x = best.x;
+        g.y = best.y;
+        taken.push({ ...best, r: 15 });
+      }
+    }
     // UI-18 tooltip: the hovered (or the single selected) override edge shows its reason
     let tip = null;
     const sel = p.selected.edges.length === 1 && !p.selected.nodes.length ? p.selected.edges[0] : null;
@@ -325,11 +420,14 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       pos[n.id()] = { x: Math.round(q.x), y: Math.round(q.y), bb: [b.x1, b.y1, b.x2, b.y2].map(Math.round).join(',') };
     });
     const endsMap: Record<string, string> = {};
+    const midMap: Record<string, string> = {};
     cy.edges().forEach((e) => {
       const r = e as unknown as RenderedEdge;
       const a = r.renderedSourceEndpoint();
       const b = r.renderedTargetEndpoint();
+      const m = r.renderedMidpoint();
       endsMap[e.id()] = [a.x, a.y, b.x, b.y].map(Math.round).join(',');
+      midMap[e.id()] = `${Math.round(m.x)},${Math.round(m.y)},${e.scratch('bend') ?? 0}`;
     });
     const hulls = (p.hulls ?? []).map((ids) => {
       const pts: [number, number][] = [];
@@ -342,7 +440,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       }
       return hull(pts).map((q) => q.join(',')).join(' ');
     });
-    setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap });
+    setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap, mids: midMap, zoom: cy.zoom() });
   }, []);
 
   // mount
@@ -355,6 +453,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       boxSelectionEnabled: true,
       minZoom: 0.2,
       maxZoom: 3,
+      // K6 D2: one wheel tick was about 2.5×; damped so a tick is a small step
+      wheelSensitivity: 0.2,
     });
     cyRef.current = cy;
     if (P.current.map.nodes.length) fitCapped(cy);
@@ -455,6 +555,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       });
       if (outside) fitCapped(cy);
     }
+    routeEdges(cy);
     recompute();
   }, [props.map, props.dark, recompute]);
 
@@ -564,6 +665,12 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     fit() {
       if (cyRef.current) fitCapped(cyRef.current);
     },
+    fitTo(ids) {
+      const cy = cyRef.current;
+      if (!cy) return;
+      const eles = cy.collection(ids.map((id) => cy.getElementById(id)).filter((n) => n.nonempty()));
+      fitCapped(cy, eles, 70);
+    },
     zoom(f) {
       const cy = cyRef.current;
       if (!cy) return;
@@ -578,7 +685,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   }));
 
   return (
-    <div className="ax-canvas h-full w-full overflow-hidden" data-testid="canvas-wrap">
+    <div className="ax-canvas h-full w-full overflow-hidden" data-testid="canvas-wrap" data-zoom={overlay.zoom.toFixed(3)}>
       <div
         ref={box}
         className="absolute inset-0"
@@ -687,7 +794,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
             </li>
           ))}
           {props.map.edges.map((e) => (
-            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-basis={e.basis} data-check={e.check} data-ends={overlay.ends[e.id]} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
+            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-basis={e.basis} data-check={e.check}  data-ends={overlay.ends[e.id]} data-mid={overlay.mids[e.id]} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
               {props.describeEdge(e)}
             </li>
           ))}

@@ -10,8 +10,8 @@
   - social determinant
   short: The conditions in which people are born, grow, live, work and age — and their access to power, money and resources.
   definition: WHO defines the social determinants of health as the conditions in which people are born, grow, live, work and
-    age, and people's access to power, money and resources [59]. Healthy People 2030 adds learning, playing and worshipping,
-    and groups them into five domains [60].
+    age, and people's access to power, money and resources [61]. Healthy People 2030 adds learning, playing and worshipping,
+    and groups them into five domains [62].
   concept: what-are-sdoh
   see:
   - structural-determinants
@@ -73,7 +73,7 @@
   short: WHO's International Classification of Diseases, 11th revision; its Chapter 24 codes social circumstances (QD50–QE9Z).
   definition: ICD-11 for Mortality and Morbidity Statistics is WHO's classification. Its Chapter 24 section 'Factors influencing
     health status' has blocks QD50–QE9Z for problems associated with finances, housing and environment, employment, education,
-    the social environment, justice, relationships, loss, family, trauma and upbringing [62].
+    the social environment, justice, relationships, loss, family, trauma and upbringing [64].
   concept: icd11-chapter24
   see:
   - z-codes
@@ -87,7 +87,7 @@
   short: The ICD-10-CM categories Z55–Z65 used in the US to record social determinants in health records.
   definition: In ICD-10-CM, categories Z55–Z65 record problems related to education, employment, occupational exposure, physical
     environment, housing and economic circumstances, social environment, upbringing, primary support group and psychosocial
-    circumstances [61].
+    circumstances [63].
   concept: icd11-chapter24
   see:
   - icd11
@@ -101,14 +101,14 @@
   - causal loop
   short: A map of variables joined by signed arrows (+ or −) that shows the feedback loops in a system.
   definition: A diagram of variables joined by arrows marked + or −. System dynamics uses such feedback maps to study public-health
-    problems [54].
+    problems [56].
   concept: reading-clds
   see:
   - link-polarity
   - reinforcing-loop
   - balancing-loop
   further_refs:
-  - 50
+  - 52
 - id: link-polarity
   term: Link polarity
   kind: methods
@@ -120,7 +120,7 @@
   definition: 'In this app: + means the effect moves the same way as the cause, all else equal; − means the opposite way.'
   concept: reading-clds
   further_refs:
-  - 50
+  - 52
 - id: reinforcing-loop
   term: Reinforcing loop
   kind: methods
@@ -135,7 +135,7 @@
   see:
   - balancing-loop
   further_refs:
-  - 51
+  - 53
 - id: balancing-loop
   term: Balancing loop
   kind: methods
@@ -149,7 +149,7 @@
   see:
   - reinforcing-loop
   further_refs:
-  - 51
+  - 53
 - id: elementary-circuit
   term: Elementary circuit
   kind: methods
@@ -157,7 +157,7 @@
   - elementary circuits
   short: A path that returns to its start without visiting any node twice — what the app lists as a loop.
   definition: An elementary circuit of a directed graph is a closed path with no repeated vertex; Johnson's algorithm finds
-    all of them in time proportional to the graph's size times the number of circuits [52].
+    all of them in time proportional to the graph's size times the number of circuits [54].
   concept: reading-clds
 - id: scc
   term: Feedback cluster
@@ -168,7 +168,7 @@
   - SCC
   short: A group of nodes that all reach each other through arrows — the parts of a map that sit inside shared feedback.
   definition: Graph partitions that contain all of a model's feedback loops can be found and decomposed with graph theory,
-    giving a granular view of feedback complexity [53].
+    giving a granular view of feedback complexity [55].
   concept: reading-clds
 - id: edge-weight
   term: Link weight
@@ -182,8 +182,8 @@
     size.'
   concept: weights-fcm
   further_refs:
-  - 56
-  - 57
+  - 58
+  - 59
 - id: leverage-hint
   term: Leverage hint
   kind: methods
@@ -193,7 +193,7 @@
   - leverage points
   short: A node that network measures flag as central — a prompt for discussion, not proof of where to act.
   definition: Network-analytic measures applied to a causal loop diagram can flag central variables as candidate leverage
-    points [55].
+    points [57].
   concept: reading-clds
 - id: aces
   term: Adverse childhood experiences
