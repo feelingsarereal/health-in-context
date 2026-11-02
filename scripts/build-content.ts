@@ -63,7 +63,8 @@ const codes = s
         source_url: i.source_url,
         verified_on: i.verified_on,
         crosswalk: i.crosswalk ?? null,
-        residual: null as null | string,
+        // K5: a residual promoted to an item (QD71.Z) keeps its kind, so it sorts after the block's specific codes
+        residual: (i.residual ? (i.code.endsWith('Y') ? 'other' : 'unspecified') : null) as null | string,
       })),
       ...s.residuals.map((r) => {
         const g = groupOf(r.parent);
@@ -105,6 +106,7 @@ if (s) {
     groups: s.groups,
     codes,
     picker_order: order,
+    search_aliases: s.search_aliases,
     known_gaps: s.known_gaps,
   });
 }

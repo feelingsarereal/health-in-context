@@ -41,9 +41,9 @@ test('D5: the override tooltip closes once the pointer leaves the edge, even whi
 
 test('D6: an evidence link in the Links panel cites with the same reference fold-out as everywhere else', async ({ page }) => {
   await start(page, 'D6');
-  await addNode(page, { code: 'QD71.1', search: 'inadequate housing' });
+  await addNode(page, { code: 'QD71.Z', search: 'evict' });
   await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
+  await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
   await panel(page, 'links');
   const item = page.getByTestId('links-item').first();
   await expect(item).toContainText('L03');
@@ -55,9 +55,9 @@ test('D6: an evidence link in the Links panel cites with the same reference fold
 
 test('D7: the Paths summary pluralises', async ({ page }) => {
   await start(page, 'D7');
-  await addNode(page, { code: 'QD71.1', search: 'inadequate housing' });
+  await addNode(page, { code: 'QD71.Z', search: 'evict' });
   await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
+  await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
   await panel(page, 'paths');
   await page.getByTestId('paths-find').click();
   await expect(page.getByTestId('paths-count')).toHaveText('1 path');
@@ -72,9 +72,9 @@ test('D8: the Leverage panel shows one heuristic label', async ({ page }) => {
 
 test('D3 and D12: the menu names the tier basis once, and an empty section says which way', async ({ page }) => {
   await start(page, 'D12');
-  // QD80 has evidence links arriving (L03, L12, L20) and none leaving
-  await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await selectNodeByName(page, 'Problem associated with unemployment');
+  // QD71.0 has evidence links arriving (L15, L28) and none leaving (K5: QD80 now leads to L01 and L26)
+  await addNode(page, { code: 'QD71.0', search: 'homeless' });
+  await selectNodeByName(page, 'Homelessness');
   await page.getByTestId('open-assoc').click();
   const menu = page.getByTestId('assoc-menu');
   await expect(menu.getByTestId('comes-from').getByTestId('assoc-entry').first()).toBeVisible();
@@ -111,8 +111,8 @@ test('D10: on a desktop the hint keeps the double-click and N, and every tool is
 
 test('D10: the ⋯ and link handles scale with zoom and hide below the 44 px floor', async ({ page }) => {
   await start(page, 'D10 zoom');
-  await addNode(page, { code: 'QD71.1', search: 'inadequate housing' });
-  await selectNodeByName(page, 'Inadequate housing');
+  await addNode(page, { code: 'QD71.Z', search: 'evict' });
+  await selectNodeByName(page, 'Problems associated with housing, unspecified');
   const more = page.getByTestId('node-more');
   const handle = page.getByTestId('connect-handle');
   await expect(more).toBeVisible();

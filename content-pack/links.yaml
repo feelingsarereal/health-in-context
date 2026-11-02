@@ -5,6 +5,42 @@ grades:
   F: Framework or conceptual source
 framing: 'Problem framing: each node is the severity of a circumstance; + means more of A tends to come with more of B.'
 links:
+- id: L01
+  from: QD80-QD8Z
+  to: QD50-QD5Z
+  polarity: +
+  grade: F
+  mechanism: Job displacement is associated with subsequent unemployment and long-term earnings losses (reduced income), in
+    a narrative review. [45]
+  refs:
+  - 45
+  suggest:
+  - QD51
+  codes:
+    from:
+    - QD80
+    to:
+    - QD51
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
+    (T-EVID-01).
+- id: L02
+  from: QD50-QD5Z
+  to: QD71
+  polarity: +
+  grade: M
+  mechanism: 'Among tenants with an eviction case filed, earnings decline before the case is heard in housing court (a descriptive
+    pre-trend: an association, not shown to be causal). [47]'
+  refs:
+  - 47
+  suggest:
+  - QD71.Z
+  codes:
+    from:
+    - QD51
+    to:
+    - QD71.Z
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
+    (T-EVID-01).
 - id: L03
   from: QD71
   to: QD80-QD8Z
@@ -17,8 +53,7 @@ links:
   - QD80
   codes:
     from:
-    - QD71.0
-    - QD71.1
+    - QD71.Z
     to:
     - QD80
   codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
@@ -117,14 +152,14 @@ links:
   refs:
   - 43
   suggest:
-  - QD71.1
+  - QD71.Z
   - QD71.0
   codes:
     from:
     - QE51.1
     to:
     - QD71.0
-    - QD71.1
+    - QD71.Z
   codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
 - id: L17
   from: QE50-QE5Z
@@ -221,37 +256,63 @@ links:
     to:
     - QD50
   codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24.
-counter_links: []
-withheld_links:
-- id: L01
+- id: L26
   from: QD80-QD8Z
-  to: QD50-QD5Z
-  polarity: +
-  grade: S
-  mechanism: Job loss or precarious work reduces income and pushes households toward poverty. [27] [10]
-  refs:
-  - 27
-  - 10
-  suggest:
-  - QD51
-  - QD50
-  withheld_because:
-  - 'Withheld 2026-10-23 after independent check: the cited studies cover unemployment and mortality, and employment grade
-    and illness, not job loss leading to income loss. Needs a source on earnings losses after job loss (todo T-EVID-01).'
-- id: L02
-  from: QD50-QD5Z
   to: QD71
   polarity: +
   grade: M
-  mechanism: Low income raises rent burden and eviction risk, leading to inadequate housing or homelessness. [22]
+  mechanism: Job loss is a robust predictor of eviction, net of missed rental payments (a predictive association); among tenants
+    with an eviction case filed, employment declines before housing court. [46] [47]
   refs:
-  - 22
+  - 46
+  - 47
   suggest:
-  - QD71.1
+  - QD71.Z
+  codes:
+    from:
+    - QD80
+    to:
+    - QD71.Z
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
+    (T-EVID-01).
+- id: L27
+  from: QD71
+  to: QD50-QD5Z
+  polarity: +
+  grade: M
+  mechanism: In a design using random assignment to judges, an eviction order reduces tenants' earnings in the first two years,
+    with effects concentrated among female and Black tenants. [47]
+  refs:
+  - 47
+  suggest:
+  - QD51
+  codes:
+    from:
+    - QD71.Z
+    to:
+    - QD51
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
+    (T-EVID-01).
+- id: L28
+  from: QD71
+  to: QD71
+  polarity: +
+  grade: M
+  mechanism: In a design using random assignment to judges, an eviction order increases homelessness in the first two years,
+    with effects concentrated among female and Black tenants. [47]
+  refs:
+  - 47
+  suggest:
   - QD71.0
-  withheld_because:
-  - 'Withheld 2026-10-23 after independent check: the cited study examines what follows eviction, not low income leading to
-    eviction. Needs a source on income, rent burden and eviction risk (T-EVID-01).'
+  codes:
+    from:
+    - QD71.Z
+    to:
+    - QD71.0
+  codes_note: Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-11-01
+    (T-EVID-01).
+counter_links: []
+withheld_links:
 - id: L05
   from: QD50-QD5Z
   to: QE00-QE0Z

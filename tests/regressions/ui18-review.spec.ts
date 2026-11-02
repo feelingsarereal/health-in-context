@@ -6,9 +6,9 @@ test('recode QD80 → QE01 on an L03 link: needs-review, listed, then confirmed 
   await page.goto('/');
   await dismissFirstRun(page);
   await newMap(page, 'Review');
-  await addNode(page, { code: 'QD71.1', search: 'inadequate housing' });
+  await addNode(page, { code: 'QD71.Z', search: 'evict' });
   await addNode(page, { code: 'QD80', search: 'unemployment' });
-  await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
+  await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
   const edge = page.getByTestId('canvas-outline').locator('li[data-edge]').first();
   await expect(edge).toHaveAttribute('data-basis', 'evidence');
   await selectNodeByName(page, 'Problem associated with unemployment');
@@ -17,7 +17,7 @@ test('recode QD80 → QE01 on an L03 link: needs-review, listed, then confirmed 
   await insp.getByTestId('change-code').click();
   await insp.getByTestId('code-search').fill('stress');
   await insp.locator('[data-code="QE01"]').click();
-  // QE01 sits in QE00-QE0Z; QD71.1 → QE00-QE0Z has no shipped link
+  // QE01 sits in QE00-QE0Z; QD71.Z → QE00-QE0Z has no shipped link
   await expect(edge).toHaveAttribute('data-basis', 'needs-review');
   await expect(edge).toHaveAttribute('data-check', 'no-link');
   await expect(page.getByTestId('link-counts')).toHaveText('1 link: 0 evidence · 1 override (1 to review)');

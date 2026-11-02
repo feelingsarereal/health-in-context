@@ -34,7 +34,7 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   await expect(insp.getByRole('textbox', { name: 'Describe the circumstance', exact: true })).toHaveText('Mom was laid off');
 
   // 3 — the ⋯ button (the touch alternative to right-click / long-press) opens the association menu; under
-  //     'Comes from' choose L03 and the code QD71.1: a linked node is added upstream, with L03's citation on the edge
+  //     'Comes from' choose L03 and the code QD71.Z (eviction, K5): a linked node is added upstream, with L03's citation on the edge
   const more = page.getByTestId('node-more');
   await expect(more).toBeVisible();
   const box = (await more.boundingBox())!;
@@ -46,11 +46,11 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   const l03 = menu.getByTestId('comes-from').locator('[data-link="L03"]');
   await expect(l03).toBeVisible();
   await l03.getByTestId('assoc-follow').tap();
-  await fillNodeDialog(page, { code: 'QD71.1' });
+  await fillNodeDialog(page, { code: 'QD71.Z' });
   await expect(outline.locator('li[data-node]')).toHaveCount(2);
   const edge = outline.locator('li[data-edge]');
   await expect(edge).toHaveCount(1);
-  await expect(edge).toContainText('Inadequate housing to Problem associated with unemployment');
+  await expect(edge).toContainText('Problems associated with housing, unspecified to Problem associated with unemployment');
   await expect(edge).toContainText('cites [23]');
 
   // 4 — list view: both nodes and the edge; edit the second node's description; saved

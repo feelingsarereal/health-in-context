@@ -10,46 +10,46 @@
  },
  "modules": {
   "situations": {
-   "codes": 125,
-   "sdoh_codes": 113,
+   "codes": 126,
+   "sdoh_codes": 114,
    "functioning_codes": 12,
-   "residuals": 50,
+   "residuals": 49,
    "groups": 16,
    "definitions_present": 37,
-   "definitions_null": 88,
+   "definitions_null": 89,
    "definition_check": {
-    "none": 88,
+    "none": 89,
     "quoted_direct": 2,
     "assembled_from_verbatim_fragments_then_diff_verified": 1,
     "diff_verified": 31,
     "diff_corrected_not_reconfirmed": 3
    },
-   "crosswalk_proposed": 113
+   "crosswalk_proposed": 114
   },
   "links": {
-   "offered": 12,
+   "offered": 17,
    "by_grade": {
-    "M": 8,
-    "F": 3,
+    "F": 4,
+    "M": 12,
     "S": 1
    },
-   "withheld": 15
+   "withheld": 13
   },
   "actions": 0,
   "gates": 0,
   "resources": null
  },
  "references": {
-  "total": 59,
+  "total": 62,
   "by_tier": {
    "seminal": 9,
-   "current": 26,
+   "current": 29,
    "classic": 11,
    "background": 13
   },
-  "verified": 52,
+  "verified": 55,
   "unverified": 7,
-  "abstracts_present": 46
+  "abstracts_present": 49
  },
  "glossary": 21,
  "concepts": 5,
@@ -79,8 +79,8 @@
  "stale": 0,
  "build_errors": 0,
  "safety_tests": {
-  "date": "2026-10-31",
-  "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-10-31)",
+  "date": "2026-11-01",
+  "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-11-01)",
   "safety": {
    "passed": 14,
    "failed": 0,

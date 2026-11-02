@@ -25,7 +25,7 @@
   "passed": 4,
   "failed": 0,
   "tests": [
-   "✓ w1: one evidence link, two deliberate overrides, and the evidence-only toggle",
+   "✓ w1: a loop built through the association menu closes on evidence, then one deliberate override",
    "✓ w2: evidence link between existing nodes, overrides, analyses, export and re-import",
    "✓ w3: a relative's situation on a phone, no codes needed",
    "✓ w3: long-press on a node opens the association menu (touch alternative to right-click)"

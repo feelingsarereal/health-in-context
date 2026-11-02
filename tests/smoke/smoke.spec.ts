@@ -41,9 +41,9 @@ test.describe('375 px', () => {
     await page.goto('/');
     await dismissFirstRun(page);
     await newMap(page, 'Phone list');
-    await addNode(page, { code: 'QD71.1', search: 'inadequate housing', circumstance: 'Behind on rent; landlord filed for eviction' });
+    await addNode(page, { code: 'QD71.Z', search: 'evict', circumstance: 'Behind on rent; landlord filed for eviction' });
     await addNode(page, { code: 'QD80', search: 'unemployment' });
-    await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
+    await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
     await page.getByTestId('switch-view').click();
     await expect(page.getByTestId('edges-table').locator('tbody tr')).toHaveCount(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(376);
@@ -60,19 +60,19 @@ test('keyboard-only path through the main surface (p-navigator)', async ({ page 
   await page.keyboard.press('n');
   await expect(page.getByTestId('node-dialog')).toBeVisible();
   await expect(page.getByTestId('code-search')).toBeFocused();
-  await page.keyboard.type('low income');
+  await page.keyboard.type('unemployment');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter'); // the first code row
   await page.getByTestId('node-submit').focus();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('node-dialog')).toBeHidden();
   await page.keyboard.press('n');
-  await page.keyboard.type('unemployment');
+  await page.keyboard.type('low income');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
   await page.getByTestId('node-submit').focus();
   await page.keyboard.press('Enter');
-  // E → new link dialog; submit with the defaults (from the selection to the other node)
+  // E → new link dialog; submit with the defaults (from the selection, QD51, to QD80: no shipped link, so an override)
   await page.getByTestId('canvas').focus();
   await page.keyboard.press('e');
   const ed = page.getByTestId('edge-dialog');
@@ -171,11 +171,11 @@ test.describe('axe (WCAG 2.1 AA)', () => {
       await dismissFirstRun(page);
       if (theme === 'dark') await page.getByTestId('theme-toggle').click();
       await newMap(page, 'Axe', 'A.');
-      await addNode(page, { code: 'QD71.1', search: 'inadequate housing', circumstance: 'x' });
+      await addNode(page, { code: 'QD71.Z', search: 'evict', circumstance: 'x' });
       await addNode(page, { code: 'QD80', search: 'unemployment' });
       await addNode(page, { status: 'undetermined', label: 'Q' });
-      await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
-      await addEdge(page, 'Problem associated with unemployment', 'Inadequate housing', { polarity: '−', override: 'x' });
+      await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
+      await addEdge(page, 'Problem associated with unemployment', 'Problems associated with housing, unspecified', { polarity: '−', override: 'x' });
       // a needs-review link: recode the unemployment node so the L03 link loses its evidence
       await selectNodeByName(page, 'Problem associated with unemployment');
       await panel(page, 'inspect');

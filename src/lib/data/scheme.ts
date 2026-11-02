@@ -17,6 +17,8 @@ export interface Link {
   /** the codes the cited evidence names on each end; a code also backs its descendants (ACTION-PACK 0.1.1, option B) */
   codes: { from: string[]; to: string[] };
 }
+/** K5: a builder search alias — words with no ICD-11 index term, filed under one code (eviction → QD71.Z) */
+export interface SearchAlias { term: string; also: string[]; code: string; note: string }
 export interface NotOffered { id: string; from: string; to: string; polarity: string; grade: string; refs: number[]; reason: string[]; kind: 'withheld' | 'unverified' }
 
 const SJ = situationsJson as any;
@@ -27,6 +29,7 @@ export const groups = SJ.groups as Group[];
 export const codes = SJ.codes as Code[];
 export const pickerOrder = SJ.picker_order as string[];
 export const knownGaps = SJ.known_gaps as string[];
+export const searchAliases = (SJ.search_aliases ?? []) as SearchAlias[];
 const LJ = linksJson as any;
 export const grades = LJ.grades as Record<string, string>;
 export const linkFraming = LJ.framing as string | null;
@@ -107,6 +110,21 @@ export function associations(code: string | string[]) {
   const leadsTo = links.filter((l) => on(l.codes.from)).sort((a, b) => cmp(rank(a, a.to), rank(b, b.to)));
   const comesFrom = links.filter((l) => on(l.codes.to)).sort((a, b) => cmp(rank(a, a.from), rank(b, b.from)));
   return { leadsTo, comesFrom };
+}
+
+/**
+ * K5: the aliases a picker query hits. A query hits when it contains an alias term ('evicted' → 'evict'), or when it is
+ * the start of one, at least 4 letters and not a finished word ('evic', 'behind on r'; 'housing' alone does not).
+ */
+export function aliasHits(q: string): SearchAlias[] {
+  const t = q.trim().toLowerCase().replace(/\s+/g, ' ');
+  if (!t) return [];
+  return searchAliases.filter((a) =>
+    [a.term, ...a.also].some((w) => {
+      const term = w.toLowerCase();
+      return t.includes(term) || (t.length >= 4 && term.startsWith(t) && term[t.length] !== ' ');
+    }),
+  );
 }
 
 /** Code picker search over code, title and index_terms. */

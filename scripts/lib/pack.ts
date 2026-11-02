@@ -101,8 +101,11 @@ const SituationItemSchema = z
     exclusions: z.array(z.union([z.string(), ItemRefSchema])),
     coded_elsewhere: z.array(z.union([z.string(), ItemRefSchema])),
     index_terms: z.array(z.string()),
-    uri: z.string(),
+    /** null when the code has no foundation id (QD71.Z); the pop-out then links to the WHO browser root */
+    uri: z.string().nullable(),
     who_browser: z.string(),
+    /** a residual (other specified / unspecified) code promoted to a linkable item (K5) */
+    residual: z.boolean().optional(),
     source_url: z.string().min(1, 'source_url required'),
     verified_on: dateLike,
     crosswalk: z
@@ -129,6 +132,8 @@ const GroupSchema = z
     note: z.string().optional(),
   })
   .passthrough();
+/** K5: builder search aliases — words people use that ICD-11 has no index term for (eviction → QD71.Z) */
+const SearchAliasSchema = z.object({ term: z.string().min(1), also: z.array(z.string().min(1)).default([]), code: z.string(), note: z.string().min(1) });
 const ResidualSchema = z.object({ code: z.string(), title: z.string(), parent: z.string(), parent_title: z.string().nullable(), kind: z.string(), source_url: z.string(), release: z.string() }).passthrough();
 export const SituationsSchema = z
   .object({
@@ -146,6 +151,7 @@ export const SituationsSchema = z
     groups: z.array(GroupSchema),
     items: z.array(SituationItemSchema),
     residuals: z.array(ResidualSchema).default([]),
+    search_aliases: z.array(SearchAliasSchema).default([]),
     known_gaps: z.array(z.string()).default([]),
   })
   .passthrough();
@@ -513,6 +519,7 @@ export function validatePack(pack: RawPack): ValidationResult {
         if (!items.has(r.parent) && !groups.has(r.parent) && !resolveRangeGroup(r.parent, [...groups.keys()]))
           E(`situations/residuals/${r.code}: parent ${r.parent} resolves to no code or group`);
       }
+      for (const a of s.search_aliases) if (!items.has(a.code)) E(`situations/search_aliases/${a.term}: code ${a.code} is not a linkable item`);
     }
   }
   const endpoints = new Set([...groups.keys(), ...items.keys()]);

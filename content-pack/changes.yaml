@@ -58,3 +58,30 @@
   - concepts/reading-clds
   source: Daniel, 2026-10-24
   by: cowork
+- date: '2026-11-01'
+  what: 'T-EVID-01 sweep: L01 (job loss → low income, Brand 2015) and L02 (low income → eviction, Collinson 2024) re-evidenced
+    and shipped; new L26 (job loss → eviction, Desmond & Gershenson 2017 + Collinson), L27 (eviction → low income) and L28
+    (eviction → homelessness, Collinson); three references added (Jacobson 1993 DOI did not resolve and is dropped). For the
+    first time, loops can close on evidence alone'
+  why: 'Daniel: ''get it done'' on the evidence search'
+  records:
+  - links/L01
+  - links/L02
+  - links/L26
+  - links/L27
+  - links/L28
+  - references
+  source: OpenAlex/Europe PMC harvest 2026-11-01
+  by: cowork
+- date: '2026-11-01'
+  what: Eviction/housing instability recoded from QD71.1 to QD71.Z with a builder search alias ('evict', 'forced move', 'housing
+    instability', 'behind on rent'); QD71.Z promoted to a linkable code; L03, L15, L02, L26, L27, L28 re-scoped; independent-check
+    wording fixes (association not cause; subgroup concentration; reduced income); w1 and w3 updated
+  why: 'Independent check: QD71.1 ''Inadequate housing'' means poor conditions; Daniel chose QD71.Z'
+  records:
+  - situations
+  - links
+  - scenarios/w1
+  - scenarios/w3
+  source: Daniel, 2026-11-01
+  by: cowork

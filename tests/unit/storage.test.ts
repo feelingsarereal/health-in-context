@@ -8,6 +8,7 @@ import { docFromText, plainText, sanitizeRich } from '../../src/lib/model/rich';
 import { exportCSV, exportJSON, importCSV, importJSON, loopReportMD } from '../../src/lib/model/interchange';
 import { findLoops } from '../../src/lib/analysis';
 import { toGraph } from '../../src/lib/model/map';
+import { QD71_1_EVICTION_CASE } from '../../src/lib/model/__fixtures__/evidence-golden';
 
 class MemStorage implements Storage {
   private m = new Map<string, string>();
@@ -21,20 +22,21 @@ class MemStorage implements Storage {
 
 function w1Map() {
   let m = newMap('Client R.', 'R.');
-  const h = newNode({ code_status: 'sdoh', code: 'QD71.1', circumstance: docFromText('Behind on rent; landlord filed for eviction') });
+  const h = newNode({ code_status: 'sdoh', code: 'QD71.Z', circumstance: docFromText('Behind on rent; landlord filed for eviction') });
   const u = newNode({ code_status: 'sdoh', code: 'QD80', circumstance: docFromText('Missed shifts during the move; let go') });
   const i = newNode({ code_status: 'sdoh', code: 'QD51', circumstance: docFromText('No paycheck since March') });
   const o = newNode({ code_status: 'other', type: 'outcome', label: docFromText('Self-rated health'), ref: 'user ref' });
   const q = newNode({ code_status: 'undetermined', label: docFromText('Support from sister') });
   for (const n of [h, u, i, o, q]) m = addNode(m, n);
   const why = (t: string) => ({ basis: 'override' as const, override_reason: docFromText(t) });
-  m = addEdge(m, newEdge({ from: h.id, to: u.id, polarity: '+', evidence: [23], link: 'L03' }));
-  m = addEdge(m, newEdge({ from: u.id, to: i.id, polarity: '+', ...why("Lost wages; worker's own account") }));
-  m = addEdge(m, newEdge({ from: i.id, to: h.id, polarity: '+', weight: 0.75, ...why("Can't make rent"), description: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: "Can't make rent", marks: [{ type: 'bold' }] }] }] } }));
+  // K5: the w1 loop closes on evidence (L03, L01, L02); the sister's support is an override (an uncoded end)
+  m = addEdge(m, newEdge({ from: h.id, to: u.id, polarity: '+', basis: 'evidence' }));
+  m = addEdge(m, newEdge({ from: u.id, to: i.id, polarity: '+', basis: 'evidence' }));
+  m = addEdge(m, newEdge({ from: i.id, to: h.id, polarity: '+', weight: 0.75, basis: 'evidence', description: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: "Can't make rent", marks: [{ type: 'bold' }] }] }] } }));
   m = addEdge(m, newEdge({ from: q.id, to: i.id, polarity: '−', weight: -0.5, delay: true, confidence: 'low', ...why('Sister helps with bills') }));
   return { m, h, u, i, o, q };
 }
-const titles: Record<string, string> = { 'QD71.1': 'Inadequate housing', QD80: 'Problem associated with unemployment', QD51: 'Low income' };
+const titles: Record<string, string> = { 'QD71.Z': 'Problems associated with housing, unspecified', QD80: 'Problem associated with unemployment', QD51: 'Low income' };
 const titleOf = (c: string) => titles[c];
 
 describe('storage adapters', () => {
@@ -50,6 +52,17 @@ describe('storage adapters', () => {
         await store.save(m);
         expect(await store.list()).toEqual([{ id: m.id, name: 'Client R.', updated: m.updated, nodes: 5, edges: 4 }]);
         expect(await store.load(m.id)).toEqual(m);
+      });
+      it('K5: opening a map saved with eviction coded QD71.1 re-checks it, and its L03 edge needs review', async () => {
+        const c = QD71_1_EVICTION_CASE;
+        let m = newMap('Old eviction');
+        const x = newNode({ code_status: 'sdoh', code: c.from });
+        const y = newNode({ code_status: 'sdoh', code: c.to });
+        m = addNode(addNode(m, x), y);
+        // saved under K3, when L03 named QD71.1: written straight to storage, as the old app would have
+        await store.save({ ...m, edges: [{ ...newEdge({ from: x.id, to: y.id, polarity: '+', basis: 'override', override_reason: docFromText('placeholder') }), basis: 'evidence', check: 'match', link: c.link, evidence: [23], override_reason: null, override_at: null }] });
+        const e = (await store.load(m.id))!.edges[0];
+        expect([e.basis, e.check, e.link]).toEqual([c.basis, c.check, c.link]);
       });
       it('removes one map and clears all', async () => {
         const a = newMap('A');
@@ -118,7 +131,7 @@ describe('export / import round-trip', () => {
     const { m } = w1Map();
     const back = importJSON(exportJSON(m));
     expect(back.edges.map((e) => [e.basis, e.check, e.link, plainText(e.override_reason), e.override_at])).toEqual(m.edges.map((e) => [e.basis, e.check, e.link, plainText(e.override_reason), e.override_at]));
-    expect(m.edges.map((e) => e.basis)).toEqual(['evidence', 'override', 'override', 'override']);
+    expect(m.edges.map((e) => e.basis)).toEqual(['evidence', 'evidence', 'evidence', 'override']);
   });
   it('CSV carries code_status and type, and re-imports to the same graph', () => {
     const { m } = w1Map();
@@ -136,8 +149,8 @@ describe('export / import round-trip', () => {
   it('the loop report lists the loop with its heuristic label', () => {
     const { m } = w1Map();
     const md = loopReportMD(m, titleOf, { strengthLabel: 'Loop strength — structural heuristic, not loop dominance', reinforcing: 'Reinforcing', balancing: 'Balancing', truncated: 'Truncated', none: 'No loops', notice: 'notice' });
-    expect(md).toContain('| R1 | Reinforcing | 3 | 2 |');
-    expect(md).toContain("⚑ withheld:L02 — Can't make rent");
+    expect(md).toContain('| R1 | Reinforcing | 3 | 0 |'); // K5: the loop closes on evidence
+    expect(md).toContain('⚑ uncoded-end — Sister helps with bills');
     expect(md).toContain('structural heuristic');
   });
   // K4 D9: the evening of 1 Nov in Chicago is already 2 Nov in UTC; the report carries the date the person sees

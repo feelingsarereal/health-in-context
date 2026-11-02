@@ -161,6 +161,8 @@ app:
     inBlock: Or choose any code in this block
     none: No evidence-graded links in this pack start or end here.
     hideSecond: Hide 2nd-degree
+    noneOut: None start here.
+    noneIn: None end here.
   panels:
     inspect: Selected
     loops: Loops
@@ -219,6 +221,7 @@ app:
     fit: Fit
     listView: List view
     canvasView: Canvas view
+    moreTools: More
     keys: Keyboard
     more: More actions for the selected circumstance
     print: Print / greyscale
@@ -226,6 +229,7 @@ app:
     label: Map canvas. Use the arrow keys to move between circumstances, Enter to edit, A for associations, N for a new circumstance,
       and ? for every key.
     empty: Double-click the canvas or press N to add the first circumstance.
+    emptyTouch: Tap New circumstance to add the first circumstance.
     outline: Everything on the canvas
   exportI:
     title: Export

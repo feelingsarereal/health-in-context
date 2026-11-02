@@ -23,7 +23,8 @@ items:
   what: Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside
     Z55–Z65.
 - id: T-EVID-01
-  priority: high — with UI-18, no loop can close on evidence alone until L01 (job loss → income) or another withheld hinge
+  status: partly done 2026-11-01 — L01 and L02 shipped, L26–L28 added; loops now close on evidence. Still open below.
+  priority: medium — with UI-18, no loop can close on evidence alone until L01 (job loss → income) or another withheld hinge
     is supported; L01, L02 and L22 close the classic poverty–housing–work loops
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
@@ -33,14 +34,14 @@ items:
 - id: T-REF-paul_moser2009
   what: 'references/26 (paul_moser2009): summary pending abstract'
 - id: T-REF-richardson1986
-  what: 'references/47 (richardson1986): source not read beyond metadata'
+  what: 'references/50 (richardson1986): source not read beyond metadata'
 - id: T-REF-richardson1995
-  what: 'references/48 (richardson1995): source not read beyond metadata'
+  what: 'references/51 (richardson1995): source not read beyond metadata'
 - id: T-REF-kosko1986
-  what: 'references/53 (kosko1986): source not read beyond metadata'
+  what: 'references/56 (kosko1986): source not read beyond metadata'
 - id: T-REF-ozesmi2004
-  what: 'references/54 (ozesmi2004): source not read beyond metadata'
+  what: 'references/57 (ozesmi2004): source not read beyond metadata'
 - id: T-REF-hovmand2014
-  what: 'references/55 (hovmand2014): source not read beyond metadata'
+  what: 'references/58 (hovmand2014): source not read beyond metadata'
 - id: T-LINKS
-  what: 'Links blocked by unverified references: L01, L02, L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02'
+  what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02'

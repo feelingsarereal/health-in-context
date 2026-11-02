@@ -323,6 +323,34 @@
  },
  "changes": [
   {
+   "date": "2026-11-01",
+   "what": "Eviction/housing instability recoded from QD71.1 to QD71.Z with a builder search alias ('evict', 'forced move', 'housing instability', 'behind on rent'); QD71.Z promoted to a linkable code; L03, L15, L02, L26, L27, L28 re-scoped; independent-check wording fixes (association not cause; subgroup concentration; reduced income); w1 and w3 updated",
+   "why": "Independent check: QD71.1 'Inadequate housing' means poor conditions; Daniel chose QD71.Z",
+   "records": [
+    "situations",
+    "links",
+    "scenarios/w1",
+    "scenarios/w3"
+   ],
+   "source": "Daniel, 2026-11-01",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-11-01",
+   "what": "T-EVID-01 sweep: L01 (job loss → low income, Brand 2015) and L02 (low income → eviction, Collinson 2024) re-evidenced and shipped; new L26 (job loss → eviction, Desmond & Gershenson 2017 + Collinson), L27 (eviction → low income) and L28 (eviction → homelessness, Collinson); three references added (Jacobson 1993 DOI did not resolve and is dropped). For the first time, loops can close on evidence alone",
+   "why": "Daniel: 'get it done' on the evidence search",
+   "records": [
+    "links/L01",
+    "links/L02",
+    "links/L26",
+    "links/L27",
+    "links/L28",
+    "references"
+   ],
+   "source": "OpenAlex/Europe PMC harvest 2026-11-01",
+   "by": "cowork"
+  },
+  {
    "date": "2026-10-24",
    "what": "Code-level evidence scope (option B): links gain codes.from/codes.to; ACE links L18–L20 re-pointed to QE82.x (maltreatment) and L15 to QE51.1 (partner violence); new L25 (ACEs → household poverty, Metzler); L06, L09, L21 and C02 withheld; app-methods §2 and UI-18 match at code level with an outside-codes check; w2 and w3 updated; reading-clds primer explains protective factors as resource nodes",
    "why": "Daniel's decision with Claude Code, 261024 (K3)",
@@ -577,34 +605,34 @@
   },
   {
    "id": "T-REF-richardson1986",
-   "what": "references/47 (richardson1986): source not read beyond metadata"
+   "what": "references/50 (richardson1986): source not read beyond metadata"
   },
   {
    "id": "T-REF-richardson1995",
-   "what": "references/48 (richardson1995): source not read beyond metadata"
+   "what": "references/51 (richardson1995): source not read beyond metadata"
   },
   {
    "id": "T-REF-kosko1986",
-   "what": "references/53 (kosko1986): source not read beyond metadata"
+   "what": "references/56 (kosko1986): source not read beyond metadata"
   },
   {
    "id": "T-REF-ozesmi2004",
-   "what": "references/54 (ozesmi2004): source not read beyond metadata"
+   "what": "references/57 (ozesmi2004): source not read beyond metadata"
   },
   {
    "id": "T-REF-hovmand2014",
-   "what": "references/55 (hovmand2014): source not read beyond metadata"
+   "what": "references/58 (hovmand2014): source not read beyond metadata"
   },
   {
    "id": "T-LINKS",
-   "what": "Links blocked by unverified references: L01, L02, L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02"
+   "what": "Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02"
   }
  ],
  "scenarios": [
   {
    "id": "w1",
    "persona": "p-navigator",
-   "title": "Map a client's housing–work loop: one evidence link, two deliberate overrides"
+   "title": "Map a client's housing–work–income loop that closes on evidence, plus one deliberate override"
   },
   {
    "id": "w2",

@@ -16,7 +16,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   for (const r of ['/evidence', '/references', '/glossary', '/concepts', '/concepts/reading-clds', '/help', '/methods', '/about']) await page.goto(r);
 
   await newMap(page, `Map ${SENTINEL}`, `S ${SENTINEL}`);
-  await addNode(page, { code: 'QD71.1', search: 'inadequate housing', label: `L ${SENTINEL}`, circumstance: `C ${SENTINEL}` });
+  await addNode(page, { code: 'QD71.Z', search: 'evict', label: `L ${SENTINEL}`, circumstance: `C ${SENTINEL}` });
   await addNode(page, { code: 'QD80', search: 'unemployment', circumstance: `C2 ${SENTINEL}` });
   await addNode(page, { status: 'other', type: 'policy', label: `O ${SENTINEL}` });
   await addEdge(page, `L ${SENTINEL}`, 'Problem associated with unemployment', { description: `D ${SENTINEL}` });

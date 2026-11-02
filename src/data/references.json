@@ -220,9 +220,7 @@
   "role_note": null,
   "verified": true,
   "verified_on": "2026-10-23",
-  "used_by": [
-   "links/L01"
-  ]
+  "used_by": []
  },
  {
   "n": 11,
@@ -492,8 +490,7 @@
   "verified": true,
   "verified_on": "2026-10-23",
   "used_by": [
-   "glossary/eviction",
-   "links/L02"
+   "glossary/eviction"
   ]
  },
  {
@@ -608,9 +605,7 @@
   "role_note": null,
   "verified": true,
   "verified_on": "2026-10-23",
-  "used_by": [
-   "links/L01"
-  ]
+  "used_by": []
  },
  {
   "n": 28,
@@ -1013,6 +1008,78 @@
  },
  {
   "n": 45,
+  "key": "brand2015",
+  "tier": "current",
+  "citation": "Brand JE. The far-reaching impact of job loss and unemployment. Annual Review of Sociology. 2015;41:359-375.",
+  "year": 2015,
+  "doi": "10.1146/annurev-soc-071913-043237",
+  "url": "https://doi.org/10.1146/annurev-soc-071913-043237",
+  "isbn": null,
+  "abstract": "Job loss is an involuntary disruptive life event with a far-reaching impact on workers' life trajectories. Its incidence among growing segments of the workforce, alongside the recent era of severe economic upheaval, has increased attention to the effects of job loss and unemployment. As a relatively exogenous labor market shock, the study of displacement enables robust estimates of associations between socioeconomic circumstances and life outcomes. Research suggests that displacement is associated with subsequent unemployment, long-term earnings losses, and lower job quality; declines in psychological and physical well-being; loss of psychosocial assets; social withdrawal; family disruption; and lower levels of children's attainment and well-being. While reemployment mitigates some of the negative effects of job loss, it does not eliminate them. Contexts of widespread unemployment, although associated with larger economic losses, lessen the social-psychological impact of job loss. Future research should attend more fully to how the economic and social-psychological effects of displacement intersect and extend beyond displaced workers themselves.",
+  "abstract_source": "openalex",
+  "abstract_note": null,
+  "harvested_on": "2026-11-01",
+  "summary": "A review of research on job displacement, a relatively exogenous labour-market shock, reporting that displacement is associated with subsequent unemployment, long-term earnings losses and lower job quality; declines in psychological and physical well-being; loss of psychosocial assets; social withdrawal; family disruption; and lower attainment and well-being among children. Re-employment mitigates but does not eliminate these effects.",
+  "why_it_mattered": null,
+  "role_here": "support",
+  "role_note": null,
+  "verified": true,
+  "verified_on": "2026-10-23",
+  "used_by": [
+   "links/L01"
+  ]
+ },
+ {
+  "n": 46,
+  "key": "desmond_gershenson2017",
+  "tier": "current",
+  "citation": "Desmond M, Gershenson C. Who gets evicted? Assessing individual, neighborhood, and network factors. Social Science Research. 2017;62:362-377.",
+  "year": 2017,
+  "doi": "10.1016/j.ssresearch.2016.08.017",
+  "url": "https://doi.org/10.1016/j.ssresearch.2016.08.017",
+  "isbn": null,
+  "abstract": "The prevalence and consequences of eviction have transformed the lived experience of urban poverty in America, yet little is known about why some families avoid eviction while others do not. Applying discrete hazard models to a unique dataset of renters, this study empirically evaluates individual, neighborhood, and social network characteristics that explain disparities in displacement from housing. Family size, job loss, neighborhood crime and eviction rates, and network disadvantage are identified as significant and robust predictors of eviction, net of missed rental payments and other relevant factors. This study advances urban sociology and inequality research and informs policy interventions designed to prevent eviction and stem its consequences.",
+  "abstract_source": "europepmc",
+  "abstract_note": null,
+  "harvested_on": "2026-11-01",
+  "summary": "Applying discrete hazard models to a dataset of renters, the study finds family size, job loss, neighbourhood crime and eviction rates, and network disadvantage to be significant and robust predictors of eviction, net of missed rental payments and other relevant factors.",
+  "why_it_mattered": null,
+  "role_here": "support",
+  "role_note": null,
+  "verified": true,
+  "verified_on": "2026-10-23",
+  "used_by": [
+   "links/L26"
+  ]
+ },
+ {
+  "n": 47,
+  "key": "collinson2024",
+  "tier": "current",
+  "citation": "Collinson R, Humphries JE, Mader N, Reed D, Tannenbaum D, van Dijk W. Eviction and poverty in American cities. Quarterly Journal of Economics. 2024;139(1):57-120.",
+  "year": 2024,
+  "doi": "10.1093/qje/qjad042",
+  "url": "https://doi.org/10.1093/qje/qjad042",
+  "isbn": null,
+  "abstract": "More than two million U.S. households have an eviction case filed against them each year. Policy makers at the federal, state, and local levels are increasingly pursuing policies to reduce the number of evictions, citing harm to tenants and high public expenditures related to homelessness. We study the consequences of eviction for tenants using newly linked administrative data from two major urban areas: Cook County (which includes Chicago) and New York City. We document that before housing court, tenants experience declines in earnings and employment and increases in financial distress and hospital visits. These pre trends pose a challenge for disentangling correlation and causation. To address this problem, we use an instrumental variables approach based on cases randomly assigned to judges of varying leniency. We find that an eviction order increases homelessness and hospital visits and reduces earnings, durable goods consumption, and access to credit in the first two years. Effects on housing and labor market outcomes are driven by effects for female and Black tenants. In the longer run, eviction increases indebtedness and reduces credit scores.",
+  "abstract_source": "openalex",
+  "abstract_note": null,
+  "harvested_on": "2026-11-01",
+  "summary": "Using linked administrative data from Cook County and New York City, the study documents that tenants' earnings and employment decline, and financial distress and hospital visits rise, before housing court. Using cases randomly assigned to judges of varying leniency, it finds that an eviction order increases homelessness and hospital visits and reduces earnings, durable goods consumption and access to credit in the first two years, and in the longer run increases indebtedness and lowers credit scores.",
+  "why_it_mattered": null,
+  "role_here": "support",
+  "role_note": null,
+  "verified": true,
+  "verified_on": "2026-10-23",
+  "used_by": [
+   "links/L02",
+   "links/L26",
+   "links/L27",
+   "links/L28"
+  ]
+ },
+ {
+  "n": 48,
   "key": "lund2018",
   "tier": "current",
   "citation": "Lund C, Brooke-Sumner C, Baingana F, et al. Social determinants of mental disorders and the Sustainable Development Goals: a systematic review of reviews. Lancet Psychiatry. 2018.",
@@ -1033,7 +1100,7 @@
   "used_by": []
  },
  {
-  "n": 46,
+  "n": 49,
   "key": "allen2014",
   "tier": "current",
   "citation": "Allen J, Balfour R, Bell R, Marmot M. Social determinants of mental health. International Review of Psychiatry. 2014.",
@@ -1054,7 +1121,7 @@
   "used_by": []
  },
  {
-  "n": 47,
+  "n": 50,
   "key": "richardson1986",
   "tier": "background",
   "citation": "Richardson GP. Problems with causal-loop diagrams. System Dynamics Review. 1986.",
@@ -1075,7 +1142,7 @@
   "used_by": []
  },
  {
-  "n": 48,
+  "n": 51,
   "key": "richardson1995",
   "tier": "background",
   "citation": "Richardson GP. Loop polarity, loop dominance, and the concept of dominant polarity. System Dynamics Review. 1995;11(1):67-88.",
@@ -1096,7 +1163,7 @@
   "used_by": []
  },
  {
-  "n": 49,
+  "n": 52,
   "key": "johnson1975",
   "tier": "background",
   "citation": "Johnson DB. Finding all the elementary circuits of a directed graph. SIAM Journal on Computing. 1975.",
@@ -1120,7 +1187,7 @@
   ]
  },
  {
-  "n": 50,
+  "n": 53,
   "key": "oliva2004",
   "tier": "background",
   "citation": "Oliva R. Model structure analysis through graph theory: partition heuristics and feedback structure decomposition. System Dynamics Review. 2004;20(4):313-336.",
@@ -1144,7 +1211,7 @@
   ]
  },
  {
-  "n": 51,
+  "n": 54,
   "key": "homer_hirsch2006",
   "tier": "background",
   "citation": "Homer JB, Hirsch GB. System dynamics modeling for public health: background and opportunities. American Journal of Public Health. 2006;96(3):452-458.",
@@ -1168,7 +1235,7 @@
   ]
  },
  {
-  "n": 52,
+  "n": 55,
   "key": "mcglashan2016",
   "tier": "background",
   "citation": "McGlashan J, Johnstone M, Creighton D, de la Haye K, Allender S. Quantifying a systems map: network analysis of a childhood obesity causal loop diagram. PLOS ONE. 2016.",
@@ -1192,7 +1259,7 @@
   ]
  },
  {
-  "n": 53,
+  "n": 56,
   "key": "kosko1986",
   "tier": "background",
   "citation": "Kosko B. Fuzzy cognitive maps. International Journal of Man-Machine Studies. 1986;24(1):65-75.",
@@ -1213,7 +1280,7 @@
   "used_by": []
  },
  {
-  "n": 54,
+  "n": 57,
   "key": "ozesmi2004",
   "tier": "background",
   "citation": "Özesmi U, Özesmi SL. Ecological models based on people's knowledge: a multi-step fuzzy cognitive mapping approach. Ecological Modelling. 2004.",
@@ -1234,7 +1301,7 @@
   "used_by": []
  },
  {
-  "n": 55,
+  "n": 58,
   "key": "hovmand2014",
   "tier": "background",
   "citation": "Hovmand PS. Community Based System Dynamics. New York: Springer; 2014.",
@@ -1255,7 +1322,7 @@
   "used_by": []
  },
  {
-  "n": 56,
+  "n": 59,
   "key": "who_sdoh_page",
   "tier": "background",
   "citation": "World Health Organization. Social determinants of health [health topic page]. Accessed 2026-10-23.",
@@ -1279,7 +1346,7 @@
   ]
  },
  {
-  "n": 57,
+  "n": 60,
   "key": "hp2030_page",
   "tier": "background",
   "citation": "Office of Disease Prevention and Health Promotion. Healthy People 2030: Social Determinants of Health. Accessed 2026-10-23.",
@@ -1303,7 +1370,7 @@
   ]
  },
  {
-  "n": 58,
+  "n": 61,
   "key": "cms_zcodes",
   "tier": "background",
   "citation": "Centers for Medicare & Medicaid Services, Office of Minority Health. Using Z Codes: The Social Determinants of Health (SDOH) Data Journey to Better Outcomes [infographic]. Revised June 2023.",
@@ -1327,7 +1394,7 @@
   ]
  },
  {
-  "n": 59,
+  "n": 62,
   "key": "icd11_mms",
   "tier": "background",
   "citation": "World Health Organization. ICD-11 for Mortality and Morbidity Statistics (MMS), release 2026-01. Chapter 24, Factors influencing health status or contact with health services. Text read via the findacode.com mirror, 2026-10-23.",

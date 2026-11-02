@@ -32,20 +32,20 @@ for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 812 }]) {
     await page.goto('/');
     await dismissFirstRun(page);
     await newMap(page, 'D2');
-    await addNode(page, { code: 'QD71.1', search: 'inadequate housing', circumstance: 'Behind on rent; landlord filed for eviction' });
+    await addNode(page, { code: 'QD71.Z', search: 'evict', circumstance: 'Behind on rent; landlord filed for eviction' });
     await addNode(page, { code: 'QD80', search: 'unemployment' });
     await addNode(page, { code: 'QD82', search: 'job' });
-    await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
-    await addEdge(page, 'Inadequate housing', 'Problem associated with threat of job loss', { override: 'Hours cut after the move' }); // outside L03's codes (K3)
+    await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
+    await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with threat of job loss', { override: 'Hours cut after the move' }); // outside L03's codes (K3)
     if (vp.width < 640) await page.getByTestId('toolbar-more').click(); // K4 D10: phone tools sit behind More
     await page.getByTestId('arrange').click();
     await page.waitForTimeout(900);
-    await selectNodeByName(page, 'Inadequate housing');
+    await selectNodeByName(page, 'Problems associated with housing, unspecified');
     // K4 D10: fitted to a phone the nodes are small, so the buttons hide below the 44 px floor until you zoom in
     for (let i = 0; i < 6 && !(await page.getByTestId('node-more').isVisible()); i++) await page.getByRole('button', { name: 'Zoom in' }).click();
     await expect(page.getByTestId('node-more')).toBeVisible();
     await expect(page.getByTestId('connect-handle')).toBeVisible();
-    const g = await geometry(page, 'Inadequate housing');
+    const g = await geometry(page, 'Problems associated with housing, unspecified');
     for (const [id, r] of [['node-more', g.more], ['connect-handle', g.handle]] as const) {
       expect(r.width, id).toBeGreaterThanOrEqual(44);
       expect(r.height, id).toBeGreaterThanOrEqual(44);

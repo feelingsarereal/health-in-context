@@ -1,31 +1,33 @@
 - id: w1
   persona: p-navigator
-  title: 'Map a client''s housing–work loop: one evidence link, two deliberate overrides'
+  title: Map a client's housing–work–income loop that closes on evidence, plus one deliberate override
   starts_with: empty
   steps:
   - do: Create a new map named 'Client R.' and set its subject to the label 'R.'
     expect: The de-identification nudge shows beside the subject field
-  - do: Add a node, choose code QD71.1 Inadequate housing, and describe 'Behind on rent; landlord filed for eviction'
-    expect: The node shows the QD71 block colour and its code; the code pop-out shows the ICD-11 title, the 'no definition in ICD-11'
-      state with the WHO link, and the interim-source note
+  - do: Add a node, search the code picker for 'evict', choose QD71.Z Problems associated with housing, unspecified, and describe 'Behind
+      on rent; landlord filed for eviction'
+    expect: The picker shows QD71.Z for 'evict' with the note that ICD-11 has no eviction code; the node shows the QD71 block colour;
+      the code pop-out shows the ICD-11 title, the 'no definition in ICD-11' state with the WHO link, and the interim-source note
   - do: Open the association menu on that node (right-click, or select it and press A)
-    expect: '''Leads to'' and ''Comes from'' entries appear with polarity, grade and citation; ''Leads to'' includes problems associated
-      with employment or unemployment (L03); no withheld link is offered'
+    expect: '''Leads to'' lists L03 (problems associated with employment or unemployment), L27 (low income) and L28 (homelessness),
+      each with polarity, grade and citation; no withheld link is offered'
   - do: Choose L03, pick QD80 Problem associated with unemployment, describe 'Missed shifts during the move; let go'
-    expect: 'A new node appears with a + edge carrying L03''s citation; the edge has no ⚑ flag (basis: evidence)'
-  - do: Add a node coded QD51 Low income, describe 'No paycheck since March'. Drag from the unemployment node's connector handle onto
+    expect: A new node appears with a + edge carrying L03's citation and no ⚑ flag
+  - do: Open the association menu on the unemployment node, choose L01 and add QD51 Low income, described 'No paycheck since March'
+    expect: A new node appears with a + edge carrying L01's citation (grade F) and no ⚑ flag
+  - do: Open the association menu on the low-income node; under 'Leads to', L02 offers 'Link to' the existing housing node — choose
       it
-    expect: 'The link form opens pre-filled From/To and says the link is not supported: ''Evidence link L01 is withheld'' with its reason;
-      it cannot be saved until an override is confirmed'
-  - do: Confirm the override with the reason 'Lost wages; worker's own account' and save with polarity +
-    expect: 'The edge shows a mid-edge ⚑ flag; its tooltip shows the reason; the map header counts ''2 links: 1 evidence · 1 override'''
-  - do: Select the low-income node, use its 'Link to…' button, choose the housing node, polarity +, weight 0.75, and confirm the override
-      with reason 'Can't make rent'
-    expect: A second ⚑ edge appears (L02 is withheld); its line is thicker than the 0.5 default
+    expect: 'An evidence edge (L02, no ⚑) joins the two existing nodes; the map header reads ''3 links: 3 evidence · 0 override'''
   - do: Open the Loops panel
-    expect: 'Exactly one loop: R1, reinforcing, 3 links, ''2 overrides''; clicking it highlights the loop and dims the rest'
+    expect: 'Exactly one loop: R1, reinforcing, 3 links, 0 overrides; clicking it highlights the loop and dims the rest'
   - do: Turn on 'Evidence-backed links only'
-    expect: The loop list is empty and says no loop is closed by evidence alone; turning the toggle off restores R1
+    expect: R1 is still listed — the loop closes on evidence alone; no 'none can be' message appears
+  - do: Add a node coded QE01 Stress ('Worried all the time') and drag from the low-income node's connector handle onto it
+    expect: The link form says the link is not supported ('Evidence link L05 is withheld') and cannot be saved until an override is
+      confirmed with a reason
+  - do: Confirm the override with the reason 'Client describes constant money worry' and save with polarity +
+    expect: 'The edge shows a mid-edge ⚑ flag with the reason in its tooltip; the header reads ''4 links: 3 evidence · 1 override'''
   must_not:
   - any wording that diagnoses the client or recommends a clinical action
   - any network request carrying text typed into the map
@@ -43,9 +45,9 @@
     expect: The 'other' node has a neutral fill and dashed outline; no association menu is offered on it
   - do: Link QD80 → QD51 (+), QD51 → QE01 (+), QE01 → QD80 (+) and QE01 → Self-rated health (−), confirming an override with a reason
       for each
-    expect: Each of the four links asks for an override and shows ⚑ (L01 and L05 are withheld; QE01 → QD80 is outside L12's codes, which
-      cover only QE04 → QD80, and the form says so; Self-rated health is not an SDOH code); loop R1 (3 links, 3 overrides) is detected;
-      the link inventory lists four + links and one − link
+    expect: Three of the four links ask for an override and show ⚑ (L05 is withheld; QE01 → QD80 is outside L12's codes, which cover
+      only QE04 → QD80, and the form says so; Self-rated health is not an SDOH code); QD80 → QD51 is backed by L01 with no ⚑; loop R1
+      (3 links, 2 overrides) is detected; the link inventory lists four + links and one − link
   - do: Add an 'undetermined' node labelled 'Support from sister', link it → QE01 with polarity − weight −0.5 and QE01 → it with polarity
       − weight −0.25, confirming the overrides
     expect: A second loop is detected and labelled R (two − links multiply to +); the undetermined node shows a '?' badge and is listed
@@ -73,7 +75,7 @@
   - do: Use the code picker's search for 'unemploy' on that node and choose QD80 Problem associated with unemployment
     expect: The node recodes and keeps its description
   - do: Long-press the node (or tap its ⋯ button) to open the association menu, and under 'Comes from' choose the housing link (L03)
-      and the code QD71.1 Inadequate housing
+      and the code QD71.Z Problems associated with housing, unspecified
     expect: The menu opens on touch, and a linked node is added upstream with L03's citation on the edge
   - do: Switch to the list view and edit the second node's description
     expect: The list view shows both nodes and the edge, and the edit is saved

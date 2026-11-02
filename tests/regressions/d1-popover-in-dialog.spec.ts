@@ -41,8 +41,8 @@ for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 812 }]) {
       await page.goto('/');
       await dismissFirstRun(page);
       await newMap(page, 'D1 cite');
-      await addNode(page, { code: 'QD71.1', search: 'inadequate housing' });
-      await selectNodeByName(page, 'Inadequate housing');
+      await addNode(page, { code: 'QD71.Z', search: 'evict' });
+      await selectNodeByName(page, 'Problems associated with housing, unspecified');
       await page.keyboard.press('a');
       const dialog = page.locator('dialog[open][data-testid="assoc-dialog"]');
       await expect(dialog).toBeVisible();

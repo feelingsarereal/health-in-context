@@ -7,6 +7,8 @@ import { linksCanCycle, readPack, validatePack, type RawPack } from '../../scrip
 const { pack: REAL, loadErrors } = readPack(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../content-pack'));
 const clone = (): RawPack => structuredClone(REAL);
 type Any = any; // fixtures poke into untyped YAML
+/** the link these rules poke at, by id (K5 shipped L01 and L02 ahead of it) */
+const L03 = (p: Any) => p.links.links.find((l: Any) => l.id === 'L03');
 
 describe('the shipped pack', () => {
   it('validates with 0 errors (same rules as tools/validate_pack.py)', () => {
@@ -38,16 +40,17 @@ const RULES: [string, (p: Any) => void, RegExp][] = [
   ['duplicate code', (p) => (p.situations.items[1].code = p.situations.items[0].code), /situations: duplicate code QD50/],
   ['item group exists', (p) => (p.situations.items[0].group = 'QX00-QX0Z'), /situations\/QD50: group 'QX00-QX0Z' not found/],
   ['item parent exists', (p) => (p.situations.items[0].parent = 'QX01'), /situations\/QD50: parent QX01 not found/],
-  ['link endpoint exists', (p) => (p.links.links[0].from = 'QX00'), /links\/L03: from 'QX00' not a group or code/],
-  ['link grade known', (p) => (p.links.links[0].grade = 'Z'), /links\/L03: grade 'Z' not in/],
-  ['link mechanism cites', (p) => (p.links.links[0].mechanism = 'A forced move.'), /links\/L03\.mechanism: must carry at least one \[n\]/],
-  ['link mechanism refs listed', (p) => (p.links.links[0].mechanism += ' [24]'), /links\/L03: mechanism cites \[24\] not listed in refs/],
-  ['link refs verified', (p) => { p.links.links[0].refs = [23, 8]; p.links.links[0].mechanism += ' [8]'; }, /links\/L03: ref 8 is not verified — the link may not ship/],
-  ['suggest is a code', (p) => (p.links.links[0].suggest = ['QX99']), /links\/L03: suggest QX99 not a code/],
-  ['suggest inside target', (p) => (p.links.links[0].suggest = ['QD51']), /links\/L03: suggest QD51 is not inside QD80-QD8Z/],
-  ['codes are codes', (p) => (p.links.links[0].codes.from = ['QX99']), /links\/L03: codes\.from QX99 not a code/],
-  ['codes inside the endpoint', (p) => (p.links.links[0].codes.to = ['QD51']), /links\/L03: codes\.to QD51 is not inside QD80-QD8Z/],
-  ['suggest inside codes.to', (p) => (p.links.links[0].suggest = ['QD82']), /links\/L03: suggest QD82 is outside codes\.to/],
+  ['search alias names a linkable code', (p) => (p.situations.search_aliases[0].code = 'QX99'), /situations\/search_aliases\/eviction: code QX99 is not a linkable item/],
+  ['link endpoint exists', (p) => (L03(p).from = 'QX00'), /links\/L03: from 'QX00' not a group or code/],
+  ['link grade known', (p) => (L03(p).grade = 'Z'), /links\/L03: grade 'Z' not in/],
+  ['link mechanism cites', (p) => (L03(p).mechanism = 'A forced move.'), /links\/L03\.mechanism: must carry at least one \[n\]/],
+  ['link mechanism refs listed', (p) => (L03(p).mechanism += ' [24]'), /links\/L03: mechanism cites \[24\] not listed in refs/],
+  ['link refs verified', (p) => { L03(p).refs = [23, 8]; L03(p).mechanism += ' [8]'; }, /links\/L03: ref 8 is not verified — the link may not ship/],
+  ['suggest is a code', (p) => (L03(p).suggest = ['QX99']), /links\/L03: suggest QX99 not a code/],
+  ['suggest inside target', (p) => (L03(p).suggest = ['QD51']), /links\/L03: suggest QD51 is not inside QD80-QD8Z/],
+  ['codes are codes', (p) => (L03(p).codes.from = ['QX99']), /links\/L03: codes\.from QX99 not a code/],
+  ['codes inside the endpoint', (p) => (L03(p).codes.to = ['QD51']), /links\/L03: codes\.to QD51 is not inside QD80-QD8Z/],
+  ['suggest inside codes.to', (p) => (L03(p).suggest = ['QD82']), /links\/L03: suggest QD82 is outside codes\.to/],
   ['safety profile matches', (p) => (p.safety.profile = 'general'), /safety: profile 'general' does not match manifest 'health'/],
   ['notice required (H5)', (p) => delete p.safety.notice, /safety: notice required \(H5\)/],
   ['deidentify required (H3)', (p) => delete p.safety.deidentify, /deidentify\.fields required when a persona acts for others \(H3\)/],

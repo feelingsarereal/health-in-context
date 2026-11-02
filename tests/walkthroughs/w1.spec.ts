@@ -1,14 +1,21 @@
-/** w1 · p-navigator · "Map a client's housing–work loop: one evidence link, two deliberate overrides" (scenarios.yaml, rewritten K2). */
+/** w1 · p-navigator · "Map a client's housing–work–income loop that closes on evidence, plus one deliberate override" (scenarios.yaml, rewritten K5). */
 import { test, expect, type Page } from '@playwright/test';
 import { addNode, dismissFirstRun, fillLinkForm, fillNodeDialog, offOrigin, panel, recordRequests, selectNodeByName, typeRich } from '../helpers';
 import { h1Violations } from '../lint';
 
-const TYPED = ['Behind on rent; landlord filed for eviction', 'Missed shifts during the move; let go', 'No paycheck since March', "Lost wages; worker's own account", "Can't make rent", 'Client R.'];
+const TYPED = ['Behind on rent; landlord filed for eviction', 'Missed shifts during the move; let go', 'No paycheck since March', 'Worried all the time', 'Client describes constant money worry', 'Client R.'];
 
 /** Drag from the selected node's connector handle onto another node (UI-17). */
 async function dragConnect(page: Page, toName: string) {
   const handle = page.getByTestId('connect-handle');
-  const hb = (await handle.boundingBox())!;
+  // the handle moves to a newly selected node on the next frame: wait until two reads agree
+  let hb = (await handle.boundingBox())!;
+  for (let i = 0; i < 20; i++) {
+    await page.waitForTimeout(50);
+    const next = (await handle.boundingBox())!;
+    if (next.x === hb.x && next.y === hb.y) break;
+    hb = next;
+  }
   const canvas = (await page.getByTestId('canvas').boundingBox())!;
   const target = page.getByTestId('canvas-outline').locator('li[data-node]', { hasText: toName }).first();
   const x = canvas.x + Number(await target.getAttribute('data-rx'));
@@ -20,7 +27,7 @@ async function dragConnect(page: Page, toName: string) {
   await page.mouse.up();
 }
 
-test("w1: one evidence link, two deliberate overrides, and the evidence-only toggle", async ({ page, baseURL }) => {
+test('w1: a loop built through the association menu closes on evidence, then one deliberate override', async ({ page, baseURL }) => {
   const reqs = recordRequests(page);
   await page.goto('/');
   await dismissFirstRun(page);
@@ -34,36 +41,52 @@ test("w1: one evidence link, two deliberate overrides, and the evidence-only tog
   await page.getByTestId('create-map').click();
   await expect(page.getByTestId('map-name')).toHaveText('Client R.');
 
-  // 2 — QD71.1, described; block colour + code; the pop-out (title, no definition + WHO link, interim note, crosswalk)
+  // 2 — 'evict' in the picker: QD71.Z at the top with the builder-alias note; choose it, describe; block colour + code;
+  //     the pop-out (title, no definition + the WHO browser root, interim note)
   await page.getByTestId('add-node').click();
-  await fillNodeDialog(page, { code: 'QD71.1', search: 'inadequate housing', circumstance: TYPED[0] });
+  const nd = page.getByTestId('node-dialog');
+  await nd.getByTestId('code-search').fill('evict');
+  const alias = nd.getByTestId('alias-hit');
+  await expect(alias).toHaveCount(1);
+  await expect(alias.locator('[data-code]')).toHaveAttribute('data-code', 'QD71.Z');
+  await expect(alias.getByTestId('alias-note')).toContainText('ICD-11 has no code for eviction');
+  await expect(alias.getByTestId('alias-note')).toContainText('Builder alias — not an ICD-11 index term');
+  await expect(nd.locator('[data-code]').first()).toHaveAttribute('data-code', 'QD71.Z');
+  await alias.locator('[data-code="QD71.Z"]').click();
+  await expect(nd.getByTestId('chosen-code')).toContainText('QD71.Z');
+  await typeRich(page, nd, 'Describe the circumstance', TYPED[0]);
+  await nd.getByTestId('node-submit').click();
+  await expect(nd).toBeHidden();
   const outline = page.getByTestId('canvas-outline');
   const housing = outline.locator('li[data-node]').first();
-  await expect(housing).toContainText('code QD71.1');
+  await expect(housing).toContainText('code QD71.Z');
   await expect(housing).toHaveAttribute('data-group', 'QD71');
   const pop = page.getByTestId('inspector').getByTestId('code-popout');
-  await expect(pop.getByTestId('code-title')).toHaveText('Inadequate housing');
+  await expect(pop.getByTestId('code-title')).toHaveText('Problems associated with housing, unspecified');
   await expect(pop.getByTestId('no-definition')).toHaveText('No definition in ICD-11 for this code.');
-  await expect(pop.getByTestId('who-link')).toHaveAttribute('href', /icd\.who\.int\/browse\/2026-01\/mms\/en#/);
+  await expect(pop.getByTestId('who-link')).toHaveAttribute('href', 'https://icd.who.int/browse/2026-01/mms/en');
   await expect(pop.getByTestId('interim-note')).toBeVisible();
-  await expect(pop.getByTestId('proposed-chip')).toHaveText('Proposed mapping');
-  await expect(pop.getByTestId('xwalk-hp2030')).toHaveText(['Healthy People 2030: Neighborhood and Built Environment (nbe)', 'Healthy People 2030: Economic Stability (econ)']);
-  await expect(pop.getByTestId('xwalk-icd10cm')).toHaveText(['ICD-10-CM Z58: Problems related to physical environment', 'ICD-10-CM Z59: Problems related to housing and economic circumstances']);
 
-  // 3 — association menu by keyboard: Leads to / Comes from with polarity, grade, citation; L03; nothing withheld
-  await selectNodeByName(page, 'Inadequate housing');
+  // 3 — association menu by keyboard: Leads to lists L03, L27 and L28 with polarity, grade and citation; nothing withheld
+  const HOUSING = 'Problems associated with housing, unspecified';
+  await selectNodeByName(page, HOUSING);
   await page.keyboard.press('a');
   const menu = page.getByTestId('assoc-menu');
-  await expect(menu.getByTestId('leads-to')).toBeVisible();
-  await expect(menu.getByTestId('comes-from')).toBeVisible();
-  const l03 = menu.locator('[data-link="L03"]');
-  await expect(l03).toContainText('Problems associated with employment or unemployment');
-  await expect(l03.locator('[data-grade="M"]')).toBeVisible();
-  await expect(l03.getByRole('button', { name: 'Reference 23' })).toBeVisible();
-  for (const w of ['L01', 'L02', 'L05', 'L07', 'L08', 'L14', 'L16', 'L22', 'L23', 'L24', 'C01']) await expect(menu.locator(`[data-link="${w}"]`)).toHaveCount(0);
+  const leads = menu.getByTestId('leads-to').getByTestId('assoc-entry');
+  await expect(leads).toHaveCount(3);
+  expect((await leads.evaluateAll((els) => els.map((e) => e.getAttribute('data-link')))).sort()).toEqual(['L03', 'L27', 'L28']);
+  for (const id of ['L03', 'L27', 'L28']) {
+    const e = menu.getByTestId('leads-to').locator(`[data-link="${id}"]`);
+    await expect(e.locator('[data-grade]')).toBeVisible();
+    await expect(e.locator('button.bx-cite').first()).toBeVisible();
+    await expect(e).toContainText('+');
+  }
+  await expect(menu.locator('[data-link="L03"]')).toContainText('Problems associated with employment or unemployment');
+  await expect(menu.locator('[data-link="L03"]').getByRole('button', { name: 'Reference 23' })).toBeVisible();
+  for (const w of ['L05', 'L06', 'L07', 'L08', 'L14', 'L16', 'L22', 'L23', 'L24', 'C01']) await expect(menu.locator(`[data-link="${w}"]`)).toHaveCount(0);
 
-  // 4 — L03 → QD80: a + edge with L03's citation, basis evidence (no ⚑)
-  await l03.getByTestId('assoc-follow').click();
+  // 4 — L03 → QD80: a + edge with L03's citation and no ⚑
+  await menu.locator('[data-link="L03"]').getByTestId('assoc-follow').click();
   await fillNodeDialog(page, { code: 'QD80', circumstance: TYPED[1] });
   const edges = outline.locator('li[data-edge]');
   await expect(edges).toHaveCount(1);
@@ -71,61 +94,72 @@ test("w1: one evidence link, two deliberate overrides, and the evidence-only tog
   await expect(edges.first()).toHaveAttribute('data-pol', '+');
   await expect(edges.first()).toContainText('evidence L03, cites [23]');
 
-  // 5 — QD51; drag from the unemployment node's connector handle onto it: the form opens pre-filled and refuses to save
-  await page.getByTestId('add-node').click();
-  await fillNodeDialog(page, { code: 'QD51', search: 'low income', circumstance: TYPED[2] });
+  // 5 — the unemployment node's menu: L01 → Add new QD51 Low income; a + edge with L01's citation (grade F), no ⚑
   await selectNodeByName(page, 'Problem associated with unemployment');
-  await dragConnect(page, 'Low income');
-  const form = page.getByTestId('edge-dialog');
-  await expect(form).toBeVisible();
-  const fromId = await outline.locator('li[data-node]', { hasText: 'Problem associated with unemployment' }).getAttribute('data-node');
-  const toId = await outline.locator('li[data-node]', { hasText: 'Low income' }).getAttribute('data-node');
-  await expect(form.getByTestId('edge-from')).toHaveValue(fromId!);
-  await expect(form.locator(`[data-testid="link-target"][data-node="${toId}"]`)).toBeChecked();
-  await expect(form.getByTestId('check-message')).toContainText('Evidence link L01 is withheld:');
-  await expect(form.getByTestId('check-message')).toContainText('Withheld 2026-10-23 after independent check');
-  await expect(form.getByTestId('edge-submit')).toBeDisabled();
-  await expect(form.getByTestId('override-needed')).toBeVisible();
-
-  // 6 — confirm the override with a reason, +: a ⚑ edge whose tooltip shows the reason; the header counts
-  await fillLinkForm(page, null, { override: TYPED[3] });
+  await page.keyboard.press('a');
+  const l01 = menu.getByTestId('leads-to').locator('[data-link="L01"]');
+  await expect(l01.locator('[data-grade="F"]')).toBeVisible();
+  await l01.getByTestId('assoc-follow').click();
+  await fillNodeDialog(page, { code: 'QD51', circumstance: TYPED[2] });
   await expect(edges).toHaveCount(2);
-  await expect(edges.nth(1)).toHaveAttribute('data-basis', 'override');
-  await expect(edges.nth(1)).toHaveAttribute('data-check', 'withheld:L01');
-  await expect(page.getByTestId('edge-tooltip')).toContainText(TYPED[3]);
-  await expect(page.getByTestId('link-counts')).toHaveText('2 links: 1 evidence · 1 override');
+  await expect(edges.nth(1)).toHaveAttribute('data-basis', 'evidence');
+  await expect(edges.nth(1)).toHaveAttribute('data-check', 'match');
+  await expect(edges.nth(1)).toContainText('evidence L01, cites [45]');
 
-  // 7 — select low income, its 'Link to…' button, the housing node, +, 0.75, override 'Can't make rent' (L02 is withheld)
+  // 6 — the low-income node's menu: L02 offers 'Link to' the housing node; an evidence edge joins them; 3 evidence · 0 override
   await selectNodeByName(page, 'Low income');
-  await page.getByTestId('panel-inspect').click();
-  await page.getByTestId('inspector-link-to').click();
-  await fillLinkForm(page, 'Inadequate housing', { weight: 0.75, override: TYPED[4] });
+  await page.keyboard.press('a');
+  const l02 = menu.getByTestId('leads-to').locator('[data-link="L02"]');
+  await l02.getByTestId('assoc-link-existing').filter({ hasText: HOUSING }).click();
   await expect(edges).toHaveCount(3);
-  await expect(edges.nth(2)).toHaveAttribute('data-basis', 'override');
-  await expect(edges.nth(2)).toHaveAttribute('data-check', 'withheld:L02');
-  expect(Number(await edges.nth(2).getAttribute('data-width'))).toBeGreaterThan(Number(await edges.nth(1).getAttribute('data-width')));
+  await expect(edges.nth(2)).toHaveAttribute('data-basis', 'evidence');
+  await expect(edges.nth(2)).toContainText('evidence L02');
+  await expect(page.getByTestId('link-counts')).toHaveText('3 links: 3 evidence · 0 override');
+  await expect(outline.locator('li[data-edge][data-basis="override"]')).toHaveCount(0);
 
-  // 8 — Loops: exactly one, R1, reinforcing, 3 links, 2 overrides; clicking it highlights it and dims the rest
+  // 7 — Loops: exactly one, R1, reinforcing, 3 links, no overrides; clicking it highlights it and dims the rest
+  if (await menu.isVisible()) await page.keyboard.press('Escape');
   await panel(page, 'loops');
   const items = page.getByTestId('loop-item');
   await expect(items).toHaveCount(1);
   await expect(items.first().getByTestId('loop-name')).toHaveText('R1');
   await expect(items.first()).toHaveAttribute('data-kind', 'R');
   await expect(items.first().getByTestId('loop-length')).toHaveText('3');
-  await expect(items.first().getByTestId('loop-overrides')).toHaveText('2 overrides ⚑');
+  await expect(items.first().getByTestId('loop-overrides')).toHaveText('no overrides');
   await items.first().getByTestId('loop-pick').click();
   await expect(outline.locator('li[data-state="highlighted"]')).toHaveCount(6);
   await expect(page.getByTestId('live')).toContainText('Highlighting loop R1');
 
-  // 9 — evidence-backed links only: the loop list empties and says why; off again restores R1
+  // 8 — evidence-backed links only: R1 is still listed (it closes on evidence alone); no 'none can be' message
   await page.getByTestId('evidence-toggle').check();
-  await expect(page.getByTestId('loop-item')).toHaveCount(0);
-  await expect(page.getByTestId('loops-empty')).toContainText('No loop is closed by evidence alone');
-  // K3 item 6: the shipped links' code graph has no cycle (links.json can_cycle, computed at build time), so it says none can be
-  await expect(page.getByTestId('loops-empty')).toContainText('With the links in this app, none can be');
-  await page.getByTestId('evidence-toggle').uncheck();
   await expect(page.getByTestId('loop-item')).toHaveCount(1);
   await expect(page.getByTestId('loop-name')).toHaveText('R1');
+  await expect(page.getByTestId('loops-empty')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText('none can be');
+  await page.getByTestId('evidence-toggle').uncheck();
+
+  // 9 — QE01 Stress; drag from the low-income node's connector handle onto it: L05 is withheld, and it cannot be saved yet
+  await page.getByTestId('add-node').click();
+  await fillNodeDialog(page, { code: 'QE01', search: 'stress', circumstance: TYPED[3] });
+  await selectNodeByName(page, 'Low income');
+  await dragConnect(page, 'Stress, not elsewhere classified');
+  const form = page.getByTestId('edge-dialog');
+  await expect(form).toBeVisible();
+  const fromId = await outline.locator('li[data-node]', { hasText: 'Low income' }).getAttribute('data-node');
+  const toId = await outline.locator('li[data-node]', { hasText: 'Stress, not elsewhere classified' }).getAttribute('data-node');
+  await expect(form.getByTestId('edge-from')).toHaveValue(fromId!);
+  await expect(form.locator(`[data-testid="link-target"][data-node="${toId}"]`)).toBeChecked();
+  await expect(form.getByTestId('check-message')).toContainText('Evidence link L05 is withheld:');
+  await expect(form.getByTestId('edge-submit')).toBeDisabled();
+  await expect(form.getByTestId('override-needed')).toBeVisible();
+
+  // 10 — confirm the override with a reason, +: a ⚑ edge whose tooltip shows the reason; 3 evidence · 1 override
+  await fillLinkForm(page, null, { override: TYPED[4] });
+  await expect(edges).toHaveCount(4);
+  await expect(edges.nth(3)).toHaveAttribute('data-basis', 'override');
+  await expect(edges.nth(3)).toHaveAttribute('data-check', 'withheld:L05');
+  await expect(page.getByTestId('edge-tooltip')).toContainText(TYPED[4]);
+  await expect(page.getByTestId('link-counts')).toHaveText('4 links: 3 evidence · 1 override');
 
   expect(h1Violations(await page.locator('body').innerText(), 'w1 /map')).toEqual([]);
   for (const r of reqs) for (const t of TYPED) {
@@ -134,5 +168,4 @@ test("w1: one evidence link, two deliberate overrides, and the evidence-only tog
   }
   expect(offOrigin(reqs, baseURL!)).toEqual([]);
   void addNode;
-  void typeRich;
 });
