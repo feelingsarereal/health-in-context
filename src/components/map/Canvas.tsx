@@ -110,6 +110,9 @@ function elements(map: SdohMap, dark: boolean): ElementDefinition[] {
         pol: e.polarity,
         // the mid-edge mark: ‖ for a delay (UI-13) and ⚑ for an override (UI-18), kept apart from line style and colour
         mid: [e.delay ? '‖' : '', e.basis === 'override' ? '⚑' : e.basis === 'needs-review' ? '⚑?' : ''].filter(Boolean).join(' '),
+        // what is painted: K8 folds the polarity into the mid badge on a short edge (see fitMarks)
+        midShown: [e.delay ? '‖' : '', e.basis === 'override' ? '⚑' : e.basis === 'needs-review' ? '⚑?' : ''].filter(Boolean).join(' '),
+        polShown: e.polarity,
         width: map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * w : 2.5,
         color: e.style.color ?? (e.polarity === '+' ? (dark ? '#8fb4ea' : '#2f5d9a') : dark ? '#f2a0ae' : '#a3243b'),
         line: e.style.line ?? 'solid',
@@ -166,15 +169,15 @@ function stylesheet(dark: boolean, print: boolean): any[] {
         'target-arrow-shape': 'triangle',
         'target-arrow-color': print ? '#1f1b16' : 'data(color)',
         'arrow-scale': 1.1,
-        'target-label': 'data(pol)',
-        'target-text-offset': 26,
+        'target-label': 'data(polShown)',
+        'target-text-offset': POL_OFFSET,
         'font-weight': 700,
         color: ink,
         'text-background-color': bg,
         'text-background-opacity': 1,
         'text-background-padding': '2px',
         'text-background-shape': 'round-rectangle',
-        label: 'data(mid)',
+        label: 'data(midShown)',
         'font-size': 16,
         'text-rotation': 'autorotate',
       },
@@ -253,6 +256,35 @@ function fitCapped(cy: Core, eles = cy.nodes(), pad = 50) {
  * group, side by side, 26 px apart. Straight-routed links are left alone, and so is a group with nothing in its way
  * (Cytoscape spreads parallel links itself). The bend is kept in scratch for the outline (data-bend).
  */
+/** the +/− label sits this many model px back from the arrowhead */
+const POL_OFFSET = 26;
+
+/**
+ * K8: on a short edge the +/− label would be drawn over the mid-edge badge and hide its ⚑ (UI-18 needs every override
+ * visible). There one combined badge ("+ ⚑", "− ‖ ⚑") replaces both. Worked in model units, which the labels, the offset
+ * and the edge all share, so zooming never changes the outcome; rerun after routing, on every sync.
+ */
+function fitMarks(cy: Core) {
+  cy.edges().forEach((e) => {
+    const mid: string = e.data('mid');
+    const pol: string = e.data('pol');
+    let short = false;
+    if (mid) {
+      const big = e.hasClass('override') || e.hasClass('review');
+      const s = e.sourceEndpoint();
+      const t = e.targetEndpoint();
+      const m = e.midpoint();
+      const len = Math.hypot(m.x - s.x, m.y - s.y) + Math.hypot(t.x - m.x, t.y - m.y);
+      // half the badge: about 0.6 em a character plus 0.4 em for the wide ⚑, with its padding and border
+      const halfMid = ((mid.length * 0.6 + 0.4) * (big ? 22 : 16)) / 2 + (big ? 6 : 2);
+      short = len / 2 - POL_OFFSET < halfMid + 7 + 4; // 7: half the +/− label; 4: a gap
+    }
+    const midShown = short ? `${pol} ${mid}` : mid;
+    const polShown = short ? '' : pol;
+    if (e.data('midShown') !== midShown || e.data('polShown') !== polShown) e.data({ midShown, polShown });
+  });
+}
+
 function routeEdges(cy: Core) {
   const SPREAD = 26;
   const groups = new Map<string, EdgeCollection>();
@@ -326,8 +358,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     ends: Record<string, string>;
     /** rendered midpoint x,y and the K6 bend, per edge (outline only) */
     mids: Record<string, string>;
+    shown: Record<string, { mid: string; pol: string }>;
     zoom: number;
-  }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {}, mids: {}, zoom: 1 });
+  }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {}, mids: {}, shown: {}, zoom: 1 });
   const coarse = useCoarsePointer();
   const hover = useRef<string | null>(null);
   /** K4 D5: the selected edge whose tooltip the pointer has moved away from; it stays hidden until the selection changes */
@@ -353,10 +386,12 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       cy.edges().forEach((e) => {
         const r = e as unknown as RenderedEdge;
         const m = r.renderedMidpoint();
-        if (e.data('mid')) marks.push({ ...m, r: (e.hasClass('override') || e.hasClass('review') ? 18 : 12) * z });
+        const shown: string = e.data('midShown');
+        if (shown) marks.push({ ...m, r: (e.hasClass('override') || e.hasClass('review') ? 18 : 12) * z * (shown.length > 2 ? 1.3 : 1) });
+        if (!e.data('polShown')) return; // K8: folded into the mid badge
         const t = r.renderedTargetEndpoint();
         const len = Math.hypot(m.x - t.x, m.y - t.y) || 1;
-        const off = Math.min(26 * z, len);
+        const off = Math.min(POL_OFFSET * z, len);
         marks.push({ x: t.x + ((m.x - t.x) / len) * off, y: t.y + ((m.y - t.y) / len) * off, r: 11 * z });
       });
     }
@@ -452,6 +487,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     });
     const endsMap: Record<string, string> = {};
     const midMap: Record<string, string> = {};
+    const shownMap: Record<string, { mid: string; pol: string }> = {};
     cy.edges().forEach((e) => {
       const r = e as unknown as RenderedEdge;
       const a = r.renderedSourceEndpoint();
@@ -459,6 +495,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const m = r.renderedMidpoint();
       endsMap[e.id()] = [a.x, a.y, b.x, b.y].map(Math.round).join(',');
       midMap[e.id()] = `${Math.round(m.x)},${Math.round(m.y)},${e.scratch('bend') ?? 0}`;
+      shownMap[e.id()] = { mid: e.data('midShown') ?? '', pol: e.data('polShown') ?? '' };
     });
     const hulls = (p.hulls ?? []).map((ids) => {
       const pts: [number, number][] = [];
@@ -471,7 +508,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       }
       return hull(pts).map((q) => q.join(',')).join(' ');
     });
-    setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap, mids: midMap, zoom: cy.zoom() });
+    setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap, mids: midMap, shown: shownMap, zoom: cy.zoom() });
   }, []);
 
   // mount
@@ -587,6 +624,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       if (outside) fitCapped(cy);
     }
     routeEdges(cy);
+    fitMarks(cy);
     recompute();
   }, [props.map, props.dark, recompute]);
 
@@ -827,7 +865,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
             </li>
           ))}
           {props.map.edges.map((e) => (
-            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-basis={e.basis} data-check={e.check}  data-ends={overlay.ends[e.id]} data-mid={overlay.mids[e.id]} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
+            <li key={e.id} data-edge={e.id} data-pol={e.polarity} data-basis={e.basis} data-check={e.check}  data-ends={overlay.ends[e.id]} data-mid={overlay.mids[e.id]} data-mark={overlay.shown[e.id]?.mid} data-pol-label={overlay.shown[e.id]?.pol} data-width={props.map.layout.thickness && e.style.widthByWeight !== false ? 1 + 5 * Math.abs(e.weight) : 2.5} data-state={props.highlight ? (props.highlight.edges.has(e.id) ? 'highlighted' : 'dimmed') : 'normal'}>
               {props.describeEdge(e)}
             </li>
           ))}
