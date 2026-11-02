@@ -27,7 +27,7 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
   const [draft, setDraft] = useState('');
   const nm = nameOf(map);
   const id = useId();
-  const shown = strongestLoops(result).filter((l) => (kind === 'all' || l.kind === kind) && (!through || l.nodes.includes(through)));
+  const shown = strongestLoops(result, names).filter((l) => (kind === 'all' || l.kind === kind) && (!through || l.nodes.includes(through)));
   const counts = { R: result.loops.filter((l) => l.kind === 'R').length, B: result.loops.filter((l) => l.kind === 'B').length };
   return (
     <div data-testid="loops-panel">

@@ -200,7 +200,7 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
   else {
     out.push(`Strength = ${L.strengthLabel}.`, '', '| Loop | Kind | Length | Overrides | Strength (heuristic) | Members |', '|---|---|---|---|---|---|');
     const basisOf = new Map(m.edges.map((e) => [e.id, e.basis]));
-    for (const l of strongestLoops(r)) {
+    for (const l of strongestLoops(r, names)) {
       const ov = l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
       out.push(`| ${names.get(l.key)} | ${l.kind === 'R' ? L.reinforcing : L.balancing} | ${l.length} | ${ov} | ${l.strength.toFixed(4)} | ${l.nodes.map(desc).join(' → ')} → ↺ |`);
     }

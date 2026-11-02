@@ -71,7 +71,7 @@
   /* Actualizer canvas (DESIGN-SYSTEM §3) */
   .ax-canvas      { @apply relative bg-[color:var(--bx-bg)]; background-image: radial-gradient(circle, rgb(31 27 22 / 0.06) 1px, transparent 1.2px); background-size: 24px 24px; }
   .dark .ax-canvas { background-image: radial-gradient(circle, rgb(239 234 226 / 0.06) 1px, transparent 1.2px); }
-  .ax-loop-r, .ax-loop-b { @apply absolute flex items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-[11px] font-bold leading-none shadow-sm; width: 30px; height: 30px; transform: translate(-50%, -50%); }
+  .ax-loop-r, .ax-loop-b { @apply absolute flex items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-[11px] font-bold leading-none shadow-sm whitespace-nowrap; min-width: 30px; height: 30px; padding: 0 8px; transform: translate(-50%, -50%); }
   .ax-loop-r      { border-color: var(--ax-pos); color: var(--ax-pos); }
   .ax-loop-b      { border-color: var(--ax-neg); color: var(--ax-neg); }
   .ax-pin         { @apply text-[11px]; }

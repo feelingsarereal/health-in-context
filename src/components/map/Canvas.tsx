@@ -225,6 +225,14 @@ type RenderedEdge = { renderedSourceEndpoint(): { x: number; y: number }; render
 /** The ⋯ and connector buttons are this big at zoom 1 and scale with zoom between the 44 px touch-target floor and
  *  72 px. They never hide (K6 D1: hiding them below 44 px made drag-to-link vanish after Fit on four or more nodes). */
 const HANDLE_PX = 52;
+/** K7: the canvas glyph shows the loop's name, cut to 8 characters (the full name is in the tooltip) */
+export function glyphLabel(name: string) {
+  return name.length > 8 ? `${name.slice(0, 7)}…` : name;
+}
+/** half the glyph's rendered width: 11 px bold runs about 7 px a character, plus the ↻ and 8 px padding each side */
+function glyphHalfWidth(label: string) {
+  return Math.max(15, ((label.length + 1) * 7 + 16) / 2);
+}
 const handleSize = (zoom: number) => Math.max(44, Math.min(72, Math.round(HANDLE_PX * zoom)));
 /** K6 D10: a link whose straight line would run through another circumstance bends around it, by this much clearance */
 const BEND_CLEAR = 18;
@@ -307,7 +315,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   P.current = props;
   const syncing = useRef(false);
   const [overlay, setOverlay] = useState<{
-    loops: { key: string; x: number; y: number; kind: string }[];
+    loops: { key: string; x: number; y: number; kind: string; label: string }[];
     more: { x: number; y: number } | null;
     handle: { x: number; y: number } | null;
     /** rendered size of the ⋯ and connector buttons (px) */
@@ -334,10 +342,26 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     const loops = shownLoops.flatMap((l) => {
       const ps = l.nodes.map((id) => cy.getElementById(id)).filter((n) => n.nonempty()).map((n) => n.renderedPosition());
       if (!ps.length) return [];
-      return [{ key: l.key, kind: l.kind, x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
+      const label = glyphLabel(p.loopNames.get(l.key) ?? l.kind);
+      return [{ key: l.key, kind: l.kind, label, hw: glyphHalfWidth(label), x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
     });
+    // K7: every edge's marks, as circles in rendered px: the mid-edge badge (⚑, ‖) and the +/− polarity label, which sits
+    // 26 model px back from the arrowhead along the edge (approximated toward the midpoint on a bent edge)
+    const marks: { x: number; y: number; r: number }[] = [];
+    {
+      const z = cy.zoom();
+      cy.edges().forEach((e) => {
+        const r = e as unknown as RenderedEdge;
+        const m = r.renderedMidpoint();
+        if (e.data('mid')) marks.push({ ...m, r: (e.hasClass('override') || e.hasClass('review') ? 18 : 12) * z });
+        const t = r.renderedTargetEndpoint();
+        const len = Math.hypot(m.x - t.x, m.y - t.y) || 1;
+        const off = Math.min(26 * z, len);
+        marks.push({ x: t.x + ((m.x - t.x) / len) * off, y: t.y + ((m.y - t.y) / len) * off, r: 11 * z });
+      });
+    }
     // D2: the ⋯ button and the connector handle sit outside the node's box, at the candidate spots farthest from the
-    // node's own edge endpoints, other nodes and the canvas edge, so they never cover the label or an edge.
+    // node's own edge endpoints, other nodes and the canvas edge, so they never cover the label or an edge (K7: nor a mark).
     let more = null;
     let handle = null;
     const size = handleSize(cy.zoom());
@@ -349,10 +373,14 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         const g = size / 2 + 8;
         const cx = (bb.x1 + bb.x2) / 2;
         const cyy = (bb.y1 + bb.y2) / 2;
-        const cands = [
+        const ring = (g: number) => [
           { x: bb.x2 + g, y: bb.y1 }, { x: bb.x2 + g, y: bb.y2 }, { x: bb.x1 - g, y: bb.y1 }, { x: bb.x1 - g, y: bb.y2 },
           { x: cx, y: bb.y1 - g }, { x: cx, y: bb.y2 + g }, { x: bb.x2 + g, y: cyy }, { x: bb.x1 - g, y: cyy },
+          // K7: above and below the box's corners too
+          { x: bb.x1 + size / 2, y: bb.y1 - g }, { x: bb.x2 - size / 2, y: bb.y1 - g }, { x: bb.x1 + size / 2, y: bb.y2 + g }, { x: bb.x2 - size / 2, y: bb.y2 + g },
         ];
+        // K7: a second ring one button (and a 6 px gap) further out, used only when the near spots are covered (it costs 15 points)
+        const cands = [...ring(g), ...ring(g + size + 6).map((c) => ({ ...c, far: true }))];
         const ends: { x: number; y: number }[] = [];
         n.connectedEdges().forEach((e) => {
           const r = e as unknown as RenderedEdge;
@@ -361,41 +389,44 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         const boxes = cy.nodes().filter((o) => o.id() !== n.id()).map((o) => o.renderedBoundingBox({}));
         const W = cy.width();
         const H = cy.height();
-        const score = (c: { x: number; y: number }) => {
-          let d = Math.min(60, ...ends.map((q) => Math.hypot(q.x - c.x, q.y - c.y)));
+        const score = (c: { x: number; y: number; far?: boolean }) => {
+          let d = Math.min(60, ...ends.map((q) => Math.hypot(q.x - c.x, q.y - c.y))) - (c.far ? 15 : 0);
           for (const b of boxes) if (c.x > b.x1 - size / 2 && c.x < b.x2 + size / 2 && c.y > b.y1 - size / 2 && c.y < b.y2 + size / 2) d -= 100;
+          // the button is a square: the nearest point of the square to the mark's centre must be clear of its circle
+          for (const q of marks) if (Math.hypot(Math.max(Math.abs(c.x - q.x) - size / 2, 0), Math.max(Math.abs(c.y - q.y) - size / 2, 0)) < q.r) d -= 80;
           if (c.x < size / 2 + 2 || c.y < size / 2 + 2 || c.x > W - size / 2 - 2 || c.y > H - size / 2 - 2) d -= 50;
           return d;
         };
         const ranked = cands.map((c, i) => ({ c, s: score(c) - i * 0.01 })).sort((a, b) => b.s - a.s);
         more = ranked[0].c;
-        handle = ranked[1].c;
+        // the two buttons never overlap each other
+        handle = (ranked.find((r) => Math.abs(r.c.x - more!.x) >= size + 4 || Math.abs(r.c.y - more!.y) >= size + 4) ?? ranked[1]).c;
       }
     }
     // K6 D7: a loop glyph (30 px) starts at its loop's centre and is nudged to the nearest spot clear of every node box,
     // every edge's mid-edge mark (⚑, ‖), the ⋯ and connector buttons and the glyphs already placed, scored like the handles
     {
-      const G = 15 + 4;
+      // K7: a glyph is a pill, hw wide either side of its centre and 15 px up and down; 4 px clearance all round
+      const C = 4;
       const nodeBoxes = cy.nodes().map((n) => n.renderedBoundingBox({}));
-      const marks = cy.edges().map((e) => (e as unknown as RenderedEdge).renderedMidpoint());
-      const taken: { x: number; y: number; r: number }[] = [...[more, handle].filter((c): c is { x: number; y: number } => !!c).map((c) => ({ ...c, r: size / 2 }))];
+      const taken: { x: number; y: number; hw: number; hh: number }[] = [...[more, handle].filter((c): c is { x: number; y: number } => !!c).map((c) => ({ ...c, hw: size / 2, hh: size / 2 }))];
       const W = cy.width();
       const H = cy.height();
       for (const g of loops) {
         const cands = [{ x: g.x, y: g.y }];
-        for (const r of [36, 60, 90, 130]) for (let i = 0; i < 12; i++) cands.push({ x: g.x + r * Math.cos((i * Math.PI) / 6), y: g.y + r * Math.sin((i * Math.PI) / 6) });
+        for (const r of [36, 60, 90, 130]) for (let i = 0; i < 12; i++) cands.push({ x: g.x + (r + g.hw - 15) * Math.cos((i * Math.PI) / 6), y: g.y + r * Math.sin((i * Math.PI) / 6) });
         const score = (c: { x: number; y: number }) => {
           let d = -Math.hypot(c.x - g.x, c.y - g.y);
-          for (const b of nodeBoxes) if (c.x > b.x1 - G && c.x < b.x2 + G && c.y > b.y1 - G && c.y < b.y2 + G) d -= 1000;
-          for (const o of taken) if (Math.hypot(c.x - o.x, c.y - o.y) < o.r + G) d -= 500;
-          for (const q of marks) if (Math.hypot(c.x - q.x, c.y - q.y) < G + 16) d -= 300;
-          if (c.x < G || c.y < G || c.x > W - G || c.y > H - G) d -= 50;
+          for (const b of nodeBoxes) if (c.x + g.hw + C > b.x1 && c.x - g.hw - C < b.x2 && c.y + 15 + C > b.y1 && c.y - 15 - C < b.y2) d -= 1000;
+          for (const o of taken) if (Math.abs(c.x - o.x) < g.hw + o.hw + C && Math.abs(c.y - o.y) < 15 + o.hh + C) d -= 500;
+          for (const q of marks) if (Math.abs(c.x - q.x) < g.hw + q.r + C && Math.abs(c.y - q.y) < 15 + q.r + C) d -= 300;
+          if (c.x < g.hw + C || c.y < 15 + C || c.x > W - g.hw - C || c.y > H - 15 - C) d -= 50;
           return d;
         };
         const best = cands.reduce((a, c) => (score(c) > score(a) ? c : a), cands[0]);
         g.x = best.x;
         g.y = best.y;
-        taken.push({ ...best, r: 15 });
+        taken.push({ ...best, hw: g.hw, hh: 15 });
       }
     }
     // UI-18 tooltip: the hovered (or the single selected) override edge shows its reason
@@ -601,7 +632,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
 
   useEffect(() => {
     recompute();
-  }, [props.loops, props.activeLoop, props.hulls, recompute]);
+  }, [props.loops, props.loopNames, props.activeLoop, props.hulls, recompute]);
 
   useImperativeHandle(ref, () => ({
     layout(scope, engine) {
@@ -710,10 +741,12 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           onClick={() => props.onLoop(l.key)}
           aria-label={`Loop ${props.loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}`}
           aria-pressed={props.activeLoop === l.key}
+          title={props.loopNames.get(l.key)}
           data-testid="loop-glyph"
+          data-label={l.label}
         >
-          {l.kind === 'R' ? '↻' : '↺'}
-          {l.kind}
+          <span aria-hidden="true">{l.kind === 'R' ? '↻' : '↺'}</span>
+          {l.label}
         </button>
       ))}
       {overlay.more && (

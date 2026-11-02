@@ -99,3 +99,11 @@
   - scenarios/w2
   source: OpenAlex harvest 2026-11-01; independent reviewer
   by: cowork
+- date: '2026-11-02'
+  what: 'Scenario w2 wording matched to the app: step 3 (the association dialog shows only the ''Assign an SDOH code'' note)
+    and step 5 (L25''s message names QE82 → QD50)'
+  why: Claude Code's w2 walk, finding 6
+  records:
+  - scenarios/w2
+  source: w2 walk 2026-11-02
+  by: cowork

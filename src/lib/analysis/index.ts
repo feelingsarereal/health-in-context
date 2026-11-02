@@ -253,9 +253,13 @@ export function loopCounts(r: LoopResult) {
   return { total: r.loops.length, R: r.loops.filter((l) => l.kind === 'R').length, B: r.loops.filter((l) => l.kind === 'B').length };
 }
 
-/** A4: loops ranked by the strength heuristic (ties by length, then key). */
-export function strongestLoops(r: LoopResult): Loop[] {
-  return [...r.loops].sort((a, b) => b.strength - a.strength || a.length - b.length || a.key.localeCompare(b.key));
+/**
+ * A4: loops ranked by the strength heuristic. Ties (within 1e-9, so 0.5 × 0.25 ties 0.5³) go by name when names are given
+ * (K7: R1 before R2, R2 before R10), otherwise by length; then by key.
+ */
+export function strongestLoops(r: LoopResult, names?: Map<string, string>): Loop[] {
+  const byName = (a: Loop, b: Loop) => (names ? (names.get(a.key) ?? '').localeCompare(names.get(b.key) ?? '', undefined, { numeric: true }) : 0);
+  return [...r.loops].sort((a, b) => (Math.abs(b.strength - a.strength) > 1e-9 ? b.strength - a.strength : 0) || byName(a, b) || a.length - b.length || a.key.localeCompare(b.key));
 }
 
 // ───────────────────────── A5 strongly connected components

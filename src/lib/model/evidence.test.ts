@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { checkLink, evidenceCanCloseALoop } from './evidence';
 import { aliasHits, associations } from '@/lib/data/scheme';
 import { EVIDENCE_CASES, QD71_1_EVICTION_CASE, RECODE_CASE, V2_BLOCK_LEVEL_CASE, W1_LOOP } from './__fixtures__/evidence-golden';
-import { findLoops } from '@/lib/analysis';
+import { findLoops, strongestLoops } from '@/lib/analysis';
 import { assignLoopNames } from './interchange';
 import { addEdge, addNode, migrate, newEdge, newMap, newNode, toGraph, updateEdge, updateNode, ModelError } from './map';
 import { docFromText } from './rich';
@@ -171,5 +171,29 @@ describe('K6: loop names are stable for the life of the map', () => {
     const n = assignLoopNames([{ id: l1.key, name: 'Rent spiral', members: l1.nodes }, { id: 'gone', name: 'R1', members: [] }], r).names;
     expect(n.get(l1.key)).toBe('Rent spiral');
     expect(n.get(l2.key)).toBe('R2');
+  });
+});
+
+describe('K7: loops that tie on strength are listed by name', () => {
+  // the w2 shape: R1 = QD80 → QD51 → QE01 (0.5³) and the sister loop (−0.5 × −0.25), both 0.125
+  const g = { nodes: ['A', 'B', 'C', 'S'].map((id) => ({ id })), edges: [
+    { id: 'ab', from: 'A', to: 'B', polarity: '+' as const, weight: 0.5 }, { id: 'bc', from: 'B', to: 'C', polarity: '+' as const, weight: 0.5 },
+    { id: 'ca', from: 'C', to: 'A', polarity: '+' as const, weight: 0.5 }, { id: 'sc', from: 'S', to: 'C', polarity: '−' as const, weight: -0.5 },
+    { id: 'cs', from: 'C', to: 'S', polarity: '−' as const, weight: -0.25 },
+  ] };
+  const r = findLoops(g);
+  const triangle = r.loops.find((l) => l.length === 3)!;
+  const pair = r.loops.find((l) => l.length === 2)!;
+  it('R1 comes before R2 when they tie, though R2 is shorter', () => {
+    expect(triangle.strength).toBeCloseTo(pair.strength, 12);
+    expect(strongestLoops(r).map((l) => l.key)).toEqual([pair.key, triangle.key]); // no names: the shorter first, as before
+    const names = new Map([[triangle.key, 'R1'], [pair.key, 'R2']]);
+    expect(strongestLoops(r, names).map((l) => names.get(l.key))).toEqual(['R1', 'R2']);
+  });
+  it('numbers sort as numbers (R2 before R10), and strength still comes first', () => {
+    expect(strongestLoops(r, new Map([[triangle.key, 'R10'], [pair.key, 'R2']])).map((l) => l.key)).toEqual([pair.key, triangle.key]);
+    const stronger = findLoops({ ...g, edges: g.edges.map((e) => (e.id === 'cs' ? { ...e, weight: -1 } : e)) });
+    const n = new Map(stronger.loops.map((l) => [l.key, l.length === 3 ? 'R1' : 'R2']));
+    expect(strongestLoops(stronger, n).map((l) => n.get(l.key))).toEqual(['R2', 'R1']);
   });
 });

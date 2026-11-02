@@ -42,14 +42,14 @@
   - do: Choose 'Link to' the existing QD80 node
     expect: An evidence edge (no ⚑) with L20's citation joins the two existing nodes; no new node is created
   - do: Add nodes coded QD51 (low income) and QE01 (stress), and one 'other' node of type outcome labelled 'Self-rated health'
-    expect: The 'other' node has a neutral fill and dashed outline; no association menu is offered on it
+    expect: The 'other' node has a neutral fill and dashed outline; its association dialog offers no associations, only the note 'Assign an SDOH code to see associations'
   - do: Link QD80 → QD51 (+), QD51 → QE01 (+), QE01 → QD80 (+) and QE01 → Self-rated health (−), confirming an override with a reason
       wherever the form asks for one
     expect: Two of the four links ask for an override and show ⚑ (L05 is withheld; Self-rated health is not an SDOH code); QD80 → QD51
       is backed by L01 and QE01 → QD80 by L29, both with no ⚑; loop R1 (3 links, 1 override) is detected; the link inventory lists
       four + links and one − link
   - do: Link QE82.0 → QD51 (+)
-    expect: The form says the link is outside L25's codes, which cover QE82.0 → QD50 (poverty) only, and asks for an override; once
+    expect: The form says L25 connects these blocks but its evidence covers QE82 → QD50 only, and asks for an override; once
       confirmed with a reason the edge shows ⚑ and no new loop appears
   - do: Add an 'undetermined' node labelled 'Support from sister', link it → QE01 with polarity − weight −0.5 and QE01 → it with polarity
       − weight −0.25, confirming the overrides
