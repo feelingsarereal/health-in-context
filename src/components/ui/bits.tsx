@@ -7,8 +7,9 @@ export function AsOf() {
 export function Todo({ children }: { children: ReactNode }) {
   return <span className="bx-todo" data-todo>TODO(author): {children}</span>;
 }
+/** A heuristic's label; the "heuristic ·" prefix only when the label does not already say so (K4 D8). */
 export function Heuristic({ label }: { label: string }) {
-  return <span className="ax-heuristic" data-heuristic>heuristic · {label}</span>;
+  return <span className="ax-heuristic" data-heuristic>{/heuristic/i.test(label) ? label : `heuristic · ${label}`}</span>;
 }
 export function Notice({ compact }: { compact?: boolean }) {
   return (

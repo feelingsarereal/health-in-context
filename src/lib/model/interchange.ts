@@ -3,7 +3,7 @@
  * PNG/SVG come from the canvas (src/components/map/Canvas.tsx); everything here is pure text.
  */
 import { findLoops, strongestLoops, type LoopResult } from '../analysis';
-import { migrate, newEdge, newMap, newNode, toGraph, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType } from './map';
+import { migrate, newEdge, newMap, newNode, toGraph, today, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType } from './map';
 import { docFromText, plainText } from './rich';
 
 export type TitleOf = (code: string) => string | undefined;
@@ -183,7 +183,7 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
   const out = [
     `# Loop report — ${m.name}`,
     '',
-    `Subject: ${m.subject || '—'} · ${m.icd11_release} · exported ${new Date().toISOString().slice(0, 10)} from SDOH Loops (schema ${m.schema_version}).`,
+    `Subject: ${m.subject || '—'} · ${m.icd11_release} · exported ${today()} from SDOH Loops (schema ${m.schema_version}).`,
     '',
     `> ${L.notice}`,
     '',

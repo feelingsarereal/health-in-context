@@ -1,6 +1,6 @@
 /** Storage adapter (save, load, migrate, clear) and export/import round-trip. */
 import 'fake-indexeddb/auto';
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { createStore } from 'idb-keyval';
 import { idbStore, localStore } from '../../src/lib/storage';
 import { addEdge, addNode, migrate, newEdge, newMap, newNode, ImportError, SCHEMA_VERSION, updateNode, deleteNodes } from '../../src/lib/model/map';
@@ -139,5 +139,21 @@ describe('export / import round-trip', () => {
     expect(md).toContain('| R1 | Reinforcing | 3 | 2 |');
     expect(md).toContain("⚑ withheld:L02 — Can't make rent");
     expect(md).toContain('structural heuristic');
+  });
+  // K4 D9: the evening of 1 Nov in Chicago is already 2 Nov in UTC; the report carries the date the person sees
+  it('the loop report is dated in local time, not UTC', () => {
+    const tz = process.env.TZ;
+    process.env.TZ = 'America/Chicago';
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-02T02:30:00Z'));
+    try {
+      const { m } = w1Map();
+      const md = loopReportMD(m, titleOf, { strengthLabel: 'x', reinforcing: 'R', balancing: 'B', truncated: 'T', none: 'N', notice: 'n' });
+      expect(md).toContain('exported 2026-11-01 from');
+    } finally {
+      vi.useRealTimers();
+      if (tz === undefined) delete process.env.TZ;
+      else process.env.TZ = tz;
+    }
   });
 });

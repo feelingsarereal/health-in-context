@@ -30,8 +30,8 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
         <div className="flex flex-wrap gap-1.5" role="radiogroup">
           {CODE_STATUSES.map((st) => (
             <label key={st} className={`bx-btn ax-tap cursor-pointer has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[color:var(--bx-accent)] ${draft.code_status === st ? 'bx-btn-on' : ''}`}>
-              <input type="radio" className="sr-only" name={`${id}-status`} value={st} checked={draft.code_status === st} onChange={() => onChange({ code_status: st })} data-testid={`status-${st}`} />
-              {S.codes.status[st]}
+              <input type="radio" className="sr-only" name={`${id}-status`} value={st} checked={draft.code_status === st} onChange={() => onChange({ code_status: st })} data-testid={`status-${st}`} aria-labelledby={`${id}-st-${st}`} />
+              <span id={`${id}-st-${st}`}>{S.codes.status[st]}</span>
             </label>
           ))}
         </div>
@@ -120,7 +120,7 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
               </select>
             </Field>
             <label className="mb-3 inline-flex items-center gap-2 text-sm ax-tap">
-              <input type="checkbox" checked={draft.pinned} onChange={(e) => onChange({ pinned: e.target.checked })} /> {C.node.pinned}
+              <input type="checkbox" checked={draft.pinned} onChange={(e) => onChange({ pinned: e.target.checked })} aria-labelledby={`${id}-pin`} /> <span id={`${id}-pin`}>{C.node.pinned}</span>
             </label>
           </div>
         </>
@@ -145,8 +145,8 @@ export function EdgeFields({ draft, onChange }: { draft: EdgeDraft; onChange: (p
         <div className="flex flex-wrap gap-1.5">
           {(['+', '−'] as const).map((p) => (
             <label key={p} className={`bx-btn ax-tap cursor-pointer has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[color:var(--bx-accent)] ${draft.polarity === p ? 'bx-btn-on' : ''}`}>
-              <input type="radio" className="sr-only" name={`${id}-pol`} checked={draft.polarity === p} onChange={() => onChange({ polarity: p, weight: (p === '+' ? 1 : -1) * mag })} data-testid={`polarity-${p === '+' ? 'plus' : 'minus'}`} />
-              {p === '+' ? S.edges.polarity_plus : S.edges.polarity_minus}
+              <input type="radio" className="sr-only" name={`${id}-pol`} checked={draft.polarity === p} onChange={() => onChange({ polarity: p, weight: (p === '+' ? 1 : -1) * mag })} data-testid={`polarity-${p === '+' ? 'plus' : 'minus'}`} aria-labelledby={`${id}-pol-${p === '+' ? 'plus' : 'minus'}`} />
+              <span id={`${id}-pol-${p === '+' ? 'plus' : 'minus'}`}>{p === '+' ? S.edges.polarity_plus : S.edges.polarity_minus}</span>
             </label>
           ))}
         </div>
@@ -182,7 +182,7 @@ export function EdgeFields({ draft, onChange }: { draft: EdgeDraft; onChange: (p
       </fieldset>
       <div className="mb-3 flex flex-wrap items-end gap-3">
         <label className="inline-flex items-center gap-2 text-sm ax-tap">
-          <input type="checkbox" checked={draft.delay} onChange={(e) => onChange({ delay: e.target.checked })} data-testid="edge-delay" /> {C.edge.delay}
+          <input type="checkbox" checked={draft.delay} onChange={(e) => onChange({ delay: e.target.checked })} data-testid="edge-delay" aria-labelledby={`${id}-delay`} /> <span id={`${id}-delay`}>{C.edge.delay}</span>
         </label>
         <label className="text-sm">
           <span className="mb-1 block font-semibold">{C.edge.confidence}</span>
@@ -215,7 +215,7 @@ export function EdgeFields({ draft, onChange }: { draft: EdgeDraft; onChange: (p
           </select>
         </label>
         <label className="mb-1 inline-flex items-center gap-2 text-sm ax-tap">
-          <input type="checkbox" checked={draft.style.widthByWeight !== false} onChange={(e) => onChange({ style: { ...draft.style, widthByWeight: e.target.checked } })} /> {C.edge.thickness}
+          <input type="checkbox" checked={draft.style.widthByWeight !== false} onChange={(e) => onChange({ style: { ...draft.style, widthByWeight: e.target.checked } })} aria-labelledby={`${id}-width`} /> <span id={`${id}-width`}>{C.edge.thickness}</span>
         </label>
       </div>
     </div>

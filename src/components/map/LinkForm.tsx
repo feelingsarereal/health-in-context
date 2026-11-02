@@ -47,8 +47,8 @@ export function OverrideConfirm({ confirmed, reason, onConfirmed, onReason }: { 
     <fieldset className="mb-3 rounded-md border border-[color:var(--bx-line)] p-3" data-testid="override-confirm">
       <legend className="px-1 text-sm font-semibold">{C.evidence.overrideTitle}</legend>
       <label className="inline-flex items-start gap-2 text-sm ax-tap">
-        <input type="checkbox" checked={confirmed} onChange={(e) => onConfirmed(e.target.checked)} data-testid="override-checkbox" className="mt-1" />
-        <span>{C.evidence.overrideConfirm}</span>
+        <input type="checkbox" checked={confirmed} onChange={(e) => onConfirmed(e.target.checked)} data-testid="override-checkbox" className="mt-1" aria-labelledby={`${id}-ok`} />
+        <span id={`${id}-ok`}>{C.evidence.overrideConfirm}</span>
       </label>
       <div className="mt-2">
         <label htmlFor={`${id}-why`} className="mb-1 block text-sm font-semibold">{C.evidence.overrideReason}</label>
@@ -109,8 +109,8 @@ export function LinkForm({ map, nm, from, to, onCancel, onCreate }: { map: SdohM
         <div className="mt-1 max-h-40 overflow-y-auto rounded-md border border-[color:var(--bx-line)] p-1" role="radiogroup" aria-label={C.edge.to} tabIndex={-1}>
           {others.map((n) => (
             <label key={n.id} className={`ax-tap flex cursor-pointer items-center gap-2 rounded px-2 text-sm ${b === n.id ? 'bx-btn-on' : 'hover:bg-paper-2 dark:hover:bg-night'}`}>
-              <input type="radio" name={`${id}-to`} checked={b === n.id} onChange={() => setB(n.id)} data-testid="link-target" data-node={n.id} />
-              <span>{nm(n.id)}{n.code ? <span className="font-mono text-xs"> · {n.code}</span> : null}</span>
+              <input type="radio" name={`${id}-to`} checked={b === n.id} onChange={() => setB(n.id)} data-testid="link-target" data-node={n.id} aria-labelledby={`${id}-to-${n.id}`} />
+              <span id={`${id}-to-${n.id}`}>{nm(n.id)}{n.code ? <span className="font-mono text-xs"> · {n.code}</span> : null}</span>
             </label>
           ))}
           {!others.length && <p className="p-2 text-sm bx-muted">{C.list.none}</p>}

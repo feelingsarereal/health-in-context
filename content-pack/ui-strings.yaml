@@ -26,7 +26,7 @@ associations:
     S: "Strong: systematic review or large cohort"
     M: "Moderate: one strong study"
     F: "Framework: conceptual source"
-  tiers_note: "Ordered from structural to intermediary determinants (the builder's reading of the WHO framework)."
+  tiers_note: "Ordered from structural to intermediary determinants."
   counter: "Protective link"
   second_degree: "Show 2nd-degree"
 edges:

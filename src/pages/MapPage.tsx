@@ -5,6 +5,7 @@ import { codeMap, codesUnder, type Link as PackLink } from '@/lib/data/scheme';
 import { C } from '@/lib/copy';
 import { USER_COLOURS } from '@/lib/palette';
 import { useTheme } from '@/lib/theme';
+import { useCoarsePointer } from '@/lib/pointer';
 import { getStore, pref } from '@/lib/storage';
 import { useMapDoc } from '@/components/map/useMapDoc';
 import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap } from '@/lib/model/map';
@@ -107,6 +108,10 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const counts = { all: map.edges.length, evidence: map.edges.filter((e) => e.basis === 'evidence').length, review: map.edges.filter((e) => e.basis === 'needs-review').length };
   const [assocFor, setAssocFor] = useState<string | null>(null);
   const [keysOpen, setKeysOpen] = useState(false);
+  const coarse = useCoarsePointer();
+  /** K4 D10: on a phone the secondary tools sit behind "More" (always shown from the sm breakpoint up) */
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const sec = toolsOpen ? '' : 'max-sm:hidden';
   const [engine, setEngine] = useState<'fcose' | 'elk-stress'>(map.layout.engine);
   const [live, setLive] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -368,13 +373,13 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
       <button type="button" className="bx-btn-primary ax-tap" onClick={() => setNewNodeReq({})} data-testid="add-node" aria-keyshortcuts="N">{C.toolbar.addNode}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => openLink(selected.nodes[0] ?? null)} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc()} disabled={!selNode || selNode.kind === 'note'} data-testid="open-assoc" aria-keyshortcuts="A">{C.toolbar.assoc}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
+      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
       {view === 'canvas' && (
         <>
-          <button type="button" className="bx-btn ax-tap" onClick={() => arrange('unpinned')} disabled={!map.nodes.length} data-testid="arrange" aria-keyshortcuts="R">{C.toolbar.arrange}</button>
-          <button type="button" className="bx-btn ax-tap" onClick={() => arrange('all')} disabled={!map.nodes.length}>{C.toolbar.arrangeAll}</button>
-          <button type="button" className="bx-btn ax-tap" onClick={() => arrange('selection')} disabled={selected.nodes.length < 2}>{C.toolbar.arrangeSel}</button>
-          <label className="inline-flex items-center gap-1 text-sm">
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('unpinned')} disabled={!map.nodes.length} data-testid="arrange" aria-keyshortcuts="R">{C.toolbar.arrange}</button>
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('all')} disabled={!map.nodes.length}>{C.toolbar.arrangeAll}</button>
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('selection')} disabled={selected.nodes.length < 2}>{C.toolbar.arrangeSel}</button>
+          <label className={`inline-flex items-center gap-1 text-sm ${sec}`}>
             <span className="sr-only">{C.toolbar.engine}</span>
             <select className="bx-input ax-tap w-auto" value={engine} onChange={(e) => { const v = e.target.value as 'fcose'; setEngine(v); apply((m) => ({ ...m, layout: { ...m.layout, engine: v } })); }} aria-label={C.toolbar.engine}>
               <option value="fcose">fCoSE (default)</option>
@@ -384,19 +389,20 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
         </>
       )}
       <button type="button" className="bx-btn ax-tap" onClick={doc.undo} disabled={!doc.canUndo} aria-keyshortcuts="Meta+Z" data-testid="undo">{C.toolbar.undo}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={doc.redo} disabled={!doc.canRedo} aria-keyshortcuts="Meta+Shift+Z">{C.toolbar.redo}</button>
-      <button type="button" className={`bx-btn ax-tap ${hood?.hops === 1 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 1} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 1 ? null : { id: selNode!.id, hops: 1 }); }} aria-keyshortcuts="1">{C.toolbar.hood1}</button>
-      <button type="button" className={`bx-btn ax-tap ${hood?.hops === 2 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 2} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 2 ? null : { id: selNode!.id, hops: 2 }); }} aria-keyshortcuts="2">{C.toolbar.hood2}</button>
+      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={doc.redo} disabled={!doc.canRedo} aria-keyshortcuts="Meta+Shift+Z">{C.toolbar.redo}</button>
+      <button type="button" className={`bx-btn ax-tap ${sec} ${hood?.hops === 1 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 1} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 1 ? null : { id: selNode!.id, hops: 1 }); }} aria-keyshortcuts="1">{C.toolbar.hood1}</button>
+      <button type="button" className={`bx-btn ax-tap ${sec} ${hood?.hops === 2 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 2} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 2 ? null : { id: selNode!.id, hops: 2 }); }} aria-keyshortcuts="2">{C.toolbar.hood2}</button>
       {view === 'canvas' && (
         <>
-          <button type="button" className="bx-btn ax-tap" onClick={() => canvas.current?.fit()}>{C.toolbar.fit}</button>
-          <button type="button" className="bx-btn ax-tap" onClick={() => canvas.current?.zoom(1.25)} aria-label="Zoom in">＋</button>
-          <button type="button" className="bx-btn ax-tap" onClick={() => canvas.current?.zoom(0.8)} aria-label="Zoom out">－</button>
-          <button type="button" className={`bx-btn ax-tap ${map.layout.theme === 'print' ? 'bx-btn-on' : ''}`} aria-pressed={map.layout.theme === 'print'} onClick={() => apply((m) => ({ ...m, layout: { ...m.layout, theme: m.layout.theme === 'print' ? 'auto' : 'print' } }))}>{C.toolbar.print}</button>
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.fit()}>{C.toolbar.fit}</button>
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(1.25)} aria-label="Zoom in">＋</button>
+          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(0.8)} aria-label="Zoom out">－</button>
+          <button type="button" className={`bx-btn ax-tap ${sec} ${map.layout.theme === 'print' ? 'bx-btn-on' : ''}`} aria-pressed={map.layout.theme === 'print'} onClick={() => apply((m) => ({ ...m, layout: { ...m.layout, theme: m.layout.theme === 'print' ? 'auto' : 'print' } }))}>{C.toolbar.print}</button>
         </>
       )}
       <Link className="bx-btn ax-tap" to={`${view === 'canvas' ? '/map/list' : '/map'}?id=${map.id}`} data-testid="switch-view">{view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView}</Link>
-      <button type="button" className="bx-btn ax-tap" onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
+      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
+      <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
     </div>
   );
 
@@ -430,7 +436,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
               <button type="button" className="bx-btn ax-tap mt-2" onClick={removeSelection}>Delete selection</button>
             </div>
           ) : (
-            <p>Select a circumstance or a link to edit it. {C.canvas.empty}</p>
+            <p>Select a circumstance or a link to edit it. {coarse ? C.canvas.emptyTouch : C.canvas.empty}</p>
           )}
         </div>
       )}
@@ -505,8 +511,8 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
   const side = (
     <aside className="bx-card flex min-h-0 flex-col p-0" aria-label="Map panels">
       <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
-        <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" />
-        {C.evidence.toggle}
+        <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
+        <span id="evidence-toggle-label">{C.evidence.toggle}</span>
       </label>
       <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
         {PANELS.map((p) => (
@@ -530,7 +536,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
       <div className="sr-only" role="status" aria-live="polite" data-testid="live">{live}</div>
       {toolbar}
       {view === 'canvas' ? (
-        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
           <div className="relative h-[60vh] min-h-[22rem] lg:h-[calc(100vh-11rem)] rounded-xl border border-[color:var(--bx-line)] overflow-hidden">
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
@@ -566,7 +572,7 @@ function MapWorkspace({ doc, view }: { doc: ReturnType<typeof useMapDoc>; view: 
           <div className="lg:h-[calc(100vh-11rem)] min-h-0 flex">{side}</div>
         </div>
       ) : (
-        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
           <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
           <div className="min-h-0 flex">{side}</div>
         </div>

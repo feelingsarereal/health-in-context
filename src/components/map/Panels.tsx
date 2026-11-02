@@ -7,6 +7,7 @@ import { inventory, leverage, paths, pulse, feedbackClusters, ambiguities, stron
 import { nodeName } from '@/lib/model/interchange';
 import type { SdohMap } from '@/lib/model/map';
 import { Heuristic } from '@/components/ui/bits';
+import { CitedText } from '@/components/evidence/CitedText';
 
 const titleOf = (c: string) => codeMap.get(c)?.title;
 export const nameOf = (map: SdohMap) => {
@@ -102,11 +103,12 @@ export function LinksPanel({ map, graph, onPick, basisOf }: { map: SdohMap; grap
       <h3 className="font-semibold">{title} ({es.length})</h3>
       <ul className="mt-1 space-y-1 text-sm" data-testid={testId}>
         {es.map((e) => (
-          <li key={e.id}>
-            <button type="button" className="ax-tap w-full rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(e.id)}>
+          <li key={e.id} data-testid="links-item">
+            <button type="button" className="ax-tap rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(e.id)}>
               {nm(e.from)} → {nm(e.to)} <span className="font-mono">{e.weight > 0 ? '+' : ''}{e.weight}</span>
-              {basisOf.get(e.id) === 'evidence' ? <span className="bx-muted"> · {by.get(e.id)!.link} {by.get(e.id)!.evidence.map((n) => `[${n}]`).join('')}</span> : <span className="ax-edge-neg"> · ⚑ {basisOf.get(e.id) === 'needs-review' ? 'needs review' : 'override'}</span>}
             </button>
+            {/* the citations sit beside the pick button, not inside it: each opens the same reference fold-out as everywhere else (K4 D6) */}
+            {basisOf.get(e.id) === 'evidence' ? <CitedText as="span" className="bx-muted" text={`· ${by.get(e.id)!.link} ${by.get(e.id)!.evidence.map((n) => `[${n}]`).join('')}`} /> : <span className="ax-edge-neg">· ⚑ {basisOf.get(e.id) === 'needs-review' ? 'needs review' : 'override'}</span>}
           </li>
         ))}
       </ul>
@@ -142,7 +144,7 @@ export function PathsPanel({ map, graph, onPick, announce }: { map: SdohMap; gra
           e.preventDefault();
           const r = paths(graph, from, to);
           setRes(r);
-          announce(`${r.paths.length} paths from ${nm(from)} to ${nm(to)}; net effect ${r.summary}.`);
+          announce(`${r.paths.length} ${r.paths.length === 1 ? 'path' : 'paths'} from ${nm(from)} to ${nm(to)}; net effect ${r.summary}.`);
         }}
       >
         <label className="text-sm" htmlFor={`${id}-f`}>{C.paths.from}</label>
@@ -159,7 +161,7 @@ export function PathsPanel({ map, graph, onPick, announce }: { map: SdohMap; gra
         <div className="mt-3" data-testid="paths-result">
           {res.paths.length === 0 ? <p className="text-sm bx-muted">{C.paths.none}</p> : (
             <>
-              <p className="text-sm"><span className="font-semibold">{C.paths.summary}:</span> <span data-testid="paths-summary">{res.summary}</span> ({res.paths.length} paths{res.truncated ? ', capped at 200' : ''})</p>
+              <p className="text-sm"><span className="font-semibold">{C.paths.summary}:</span> <span data-testid="paths-summary">{res.summary}</span> (<span data-testid="paths-count">{res.paths.length} {res.paths.length === 1 ? 'path' : 'paths'}</span>{res.truncated ? ', capped at 200' : ''})</p>
               <ul className="mt-2 space-y-1 text-sm">
                 {res.paths.map((p, i) => (
                   <li key={i}>
@@ -300,12 +302,13 @@ export function ToCodePanel({ map, onPick, onPickEdge, nm: nmE }: { map: SdohMap
   );
 }
 export function ClustersPanel({ map, graph, show, onShow, onPick }: { map: SdohMap; graph: AGraph; show: boolean; onShow: (b: boolean) => void; onPick: (ids: string[]) => void }) {
+  const id = useId();
   const cl = feedbackClusters(graph);
   const nm = nameOf(map);
   return (
     <div data-testid="clusters-panel">
       <p className="text-sm">{C.clusters.lead}</p>
-      <label className="mt-2 inline-flex items-center gap-2 text-sm ax-tap"><input type="checkbox" checked={show} onChange={(e) => onShow(e.target.checked)} /> {C.clusters.hulls}</label>
+      <label className="mt-2 inline-flex items-center gap-2 text-sm ax-tap"><input type="checkbox" checked={show} onChange={(e) => onShow(e.target.checked)} aria-labelledby={`${id}-hulls`} /> <span id={`${id}-hulls`}>{C.clusters.hulls}</span></label>
       {!cl.length ? <p className="mt-2 text-sm bx-muted">{C.clusters.none}</p> : (
         <ul className="mt-2 space-y-1 text-sm">
           {cl.map((c, i) => <li key={i}><button type="button" className="ax-tap w-full rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(c)}>Cluster {i + 1} ({c.length}): {c.map(nm).join(', ')}</button></li>)}

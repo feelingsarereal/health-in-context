@@ -102,17 +102,17 @@ export function AssociationMenu({ node, onFollow, map, nameOf }: { node: MapNode
       <p className="text-sm">
         <span className="font-mono">{node.code}</span> {c?.title}
       </p>
-      <p className="mt-1 text-xs bx-muted">{S.associations.tiers_note} {tierBasis}</p>
+      {tierBasis && <CitedText text={tierBasis} className="mt-1 text-xs bx-muted" />}
       <button type="button" className={`bx-btn ax-tap mt-2 ${second ? 'bx-btn-on' : ''}`} aria-pressed={second} onClick={() => setSecond((s) => !s)} data-testid="second-degree-toggle">
         {second ? C.assoc.hideSecond : S.associations.second_degree}
       </button>
       <section className="mt-3" aria-labelledby="assoc-leads">
         <h3 id="assoc-leads" className="text-lg font-semibold">{S.associations.leads_to} ({leadsTo.length})</h3>
-        {leadsTo.length ? <ul className="mt-2 space-y-2" data-testid="leads-to">{leadsTo.map((l) => <Entry key={l.id} l={l} dir="out" onFollow={onFollow} second={second} existing={existing} />)}</ul> : <p className="text-sm bx-muted">{C.assoc.none}</p>}
+        {leadsTo.length ? <ul className="mt-2 space-y-2" data-testid="leads-to">{leadsTo.map((l) => <Entry key={l.id} l={l} dir="out" onFollow={onFollow} second={second} existing={existing} />)}</ul> : <p className="text-sm bx-muted" data-testid="leads-to-none">{comesFrom.length ? C.assoc.noneOut : C.assoc.none}</p>}
       </section>
       <section className="mt-4" aria-labelledby="assoc-comes">
         <h3 id="assoc-comes" className="text-lg font-semibold">{S.associations.comes_from} ({comesFrom.length})</h3>
-        {comesFrom.length ? <ul className="mt-2 space-y-2" data-testid="comes-from">{comesFrom.map((l) => <Entry key={l.id} l={l} dir="in" onFollow={onFollow} second={second} existing={existing} />)}</ul> : <p className="text-sm bx-muted">{C.assoc.none}</p>}
+        {comesFrom.length ? <ul className="mt-2 space-y-2" data-testid="comes-from">{comesFrom.map((l) => <Entry key={l.id} l={l} dir="in" onFollow={onFollow} second={second} existing={existing} />)}</ul> : <p className="text-sm bx-muted" data-testid="comes-from-none">{leadsTo.length ? C.assoc.noneIn : C.assoc.none}</p>}
       </section>
       <button type="button" className="bx-btn ax-tap mt-4" onClick={() => onFollow({ link: null, direction: 'out' })} data-testid="assoc-own">
         {C.assoc.yourOwn}

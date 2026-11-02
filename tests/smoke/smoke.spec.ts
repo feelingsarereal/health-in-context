@@ -36,6 +36,19 @@ test.describe('375 px', () => {
       expect(await page.evaluate(() => document.documentElement.scrollWidth), r).toBeLessThanOrEqual(376);
     }
   });
+  // K4 D11: the tables scroll inside their own wrappers; the page itself never does
+  test('no horizontal page scroll on /map/list with two circumstances and one link', async ({ page }) => {
+    await page.goto('/');
+    await dismissFirstRun(page);
+    await newMap(page, 'Phone list');
+    await addNode(page, { code: 'QD71.1', search: 'inadequate housing', circumstance: 'Behind on rent; landlord filed for eviction' });
+    await addNode(page, { code: 'QD80', search: 'unemployment' });
+    await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
+    await page.getByTestId('switch-view').click();
+    await expect(page.getByTestId('edges-table').locator('tbody tr')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(376);
+    await expect(page.getByTestId('list-view').locator('p').first()).toBeInViewport({ ratio: 1 });
+  });
 });
 
 test('keyboard-only path through the main surface (p-navigator)', async ({ page }) => {

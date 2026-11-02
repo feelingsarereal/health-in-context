@@ -40,7 +40,7 @@ export function MapDetails({ map, apply, download, canvas }: { map: SdohMap; app
         <RichField id={`${id}-notes`} label="Map notes" value={map.notes} onChange={(d) => apply((m) => ({ ...m, notes: d }), 'map:notes')} describedBy={`${id}-notes-n`} />
       </Field>
       <label className="mb-3 inline-flex items-center gap-2 text-sm ax-tap">
-        <input type="checkbox" checked={map.layout.thickness} onChange={(e) => apply((m) => ({ ...m, layout: { ...m.layout, thickness: e.target.checked } }))} /> {C.edge.thickness}
+        <input type="checkbox" checked={map.layout.thickness} onChange={(e) => apply((m) => ({ ...m, layout: { ...m.layout, thickness: e.target.checked } }))} aria-labelledby={`${id}-thick`} /> <span id={`${id}-thick`}>{C.edge.thickness}</span>
       </label>
       <p className="mb-3 text-xs bx-muted">{S.privacy.saved_here}</p>
 

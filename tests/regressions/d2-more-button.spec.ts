@@ -37,9 +37,12 @@ for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 812 }]) {
     await addNode(page, { code: 'QD82', search: 'job' });
     await addEdge(page, 'Inadequate housing', 'Problem associated with unemployment');
     await addEdge(page, 'Inadequate housing', 'Problem associated with threat of job loss', { override: 'Hours cut after the move' }); // outside L03's codes (K3)
+    if (vp.width < 640) await page.getByTestId('toolbar-more').click(); // K4 D10: phone tools sit behind More
     await page.getByTestId('arrange').click();
     await page.waitForTimeout(900);
     await selectNodeByName(page, 'Inadequate housing');
+    // K4 D10: fitted to a phone the nodes are small, so the buttons hide below the 44 px floor until you zoom in
+    for (let i = 0; i < 6 && !(await page.getByTestId('node-more').isVisible()); i++) await page.getByRole('button', { name: 'Zoom in' }).click();
     await expect(page.getByTestId('node-more')).toBeVisible();
     await expect(page.getByTestId('connect-handle')).toBeVisible();
     const g = await geometry(page, 'Inadequate housing');

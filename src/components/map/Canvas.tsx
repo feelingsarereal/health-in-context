@@ -6,6 +6,7 @@ import { codeMap, colourGroup } from '@/lib/data/scheme';
 import { GROUP_STYLE, NEUTRAL, borderFor, fillFor } from '@/lib/palette';
 import { dominantStyle, plainText } from '@/lib/model/rich';
 import { nodeName } from '@/lib/model/interchange';
+import { useCoarsePointer } from '@/lib/pointer';
 import type { SdohMap, MapNode, MapEdge } from '@/lib/model/map';
 import type { Loop } from '@/lib/analysis';
 import { S } from '@/lib/data/core';
@@ -219,6 +220,11 @@ function hull(pts: [number, number][]): [number, number][] {
 /** Rendered-coordinate edge methods Cytoscape has but its typings omit. */
 type RenderedEdge = { renderedSourceEndpoint(): { x: number; y: number }; renderedTargetEndpoint(): { x: number; y: number }; renderedMidpoint(): { x: number; y: number } };
 
+/** K4 D10: the ⋯ and connector buttons are this big at zoom 1 and scale with zoom, never past 72 px; below the 44 px
+ *  touch-target floor they are hidden rather than drawn larger than the node (the context menu and keys still work). */
+const HANDLE_PX = 52;
+const handleSize = (zoom: number) => Math.min(72, Math.round(HANDLE_PX * zoom));
+
 function fitCapped(cy: Core) {
   if (!cy.nodes().length) return;
   cy.fit(cy.nodes(), 50);
@@ -238,12 +244,17 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     loops: { key: string; x: number; y: number; kind: string }[];
     more: { x: number; y: number } | null;
     handle: { x: number; y: number } | null;
+    /** rendered size of the ⋯ and connector buttons (px) */
+    size: number;
     tip: { x: number; y: number; text: string } | null;
     hulls: string[];
     pos: Record<string, { x: number; y: number; bb: string }>;
     ends: Record<string, string>;
-  }>({ loops: [], more: null, handle: null, tip: null, hulls: [], pos: {}, ends: {} });
+  }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {} });
+  const coarse = useCoarsePointer();
   const hover = useRef<string | null>(null);
+  /** K4 D5: the selected edge whose tooltip the pointer has moved away from; it stays hidden until the selection changes */
+  const tipGone = useRef<string | null>(null);
   const [drag, setDrag] = useState<{ from: string; x0: number; y0: number; x: number; y: number } | null>(null);
 
   const recompute = useCallback(() => {
@@ -260,12 +271,13 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     // node's own edge endpoints, other nodes and the canvas edge, so they never cover the label or an edge.
     let more = null;
     let handle = null;
-    if (p.selected.nodes.length === 1 && !p.selected.edges.length) {
+    const size = handleSize(cy.zoom());
+    if (size >= 44 && p.selected.nodes.length === 1 && !p.selected.edges.length) {
       const n = cy.getElementById(p.selected.nodes[0]);
       if (n.nonempty()) {
-        // the whole 44 px button (half = 22) stays clear of the node's box, selection overlay included, by 8 px
+        // the whole button stays clear of the node's box, selection overlay included, by 8 px
         const bb = n.renderedBoundingBox({});
-        const g = 22 + 8;
+        const g = size / 2 + 8;
         const cx = (bb.x1 + bb.x2) / 2;
         const cyy = (bb.y1 + bb.y2) / 2;
         const cands = [
@@ -282,8 +294,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         const H = cy.height();
         const score = (c: { x: number; y: number }) => {
           let d = Math.min(60, ...ends.map((q) => Math.hypot(q.x - c.x, q.y - c.y)));
-          for (const b of boxes) if (c.x > b.x1 - 22 && c.x < b.x2 + 22 && c.y > b.y1 - 22 && c.y < b.y2 + 22) d -= 100;
-          if (c.x < 24 || c.y < 24 || c.x > W - 24 || c.y > H - 24) d -= 50;
+          for (const b of boxes) if (c.x > b.x1 - size / 2 && c.x < b.x2 + size / 2 && c.y > b.y1 - size / 2 && c.y < b.y2 + size / 2) d -= 100;
+          if (c.x < size / 2 + 2 || c.y < size / 2 + 2 || c.x > W - size / 2 - 2 || c.y > H - size / 2 - 2) d -= 50;
           return d;
         };
         const ranked = cands.map((c, i) => ({ c, s: score(c) - i * 0.01 })).sort((a, b) => b.s - a.s);
@@ -293,7 +305,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     }
     // UI-18 tooltip: the hovered (or the single selected) override edge shows its reason
     let tip = null;
-    const tipId = hover.current ?? (p.selected.edges.length === 1 && !p.selected.nodes.length ? p.selected.edges[0] : null);
+    const sel = p.selected.edges.length === 1 && !p.selected.nodes.length ? p.selected.edges[0] : null;
+    if (tipGone.current && sel !== tipGone.current) tipGone.current = null; // the selection changed
+    const tipId = hover.current ?? (sel !== tipGone.current ? sel : null);
     if (tipId) {
       const e = cy.getElementById(tipId);
       const me = p.map.edges.find((x) => x.id === tipId);
@@ -328,7 +342,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       }
       return hull(pts).map((q) => q.join(',')).join(' ');
     });
-    setOverlay({ loops, more, handle, tip, hulls, pos, ends: endsMap });
+    setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap });
   }, []);
 
   // mount
@@ -370,10 +384,23 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       hover.current = e.target.id();
       schedule();
     });
-    cy.on('mouseout', 'edge', () => {
+    // the pointer leaving an edge closes its tooltip, and so does pointer movement anywhere else on the canvas: that
+    // also hides the selected edge's tooltip (a new link is selected), which otherwise sat over the nodes (K4 D5)
+    const away = () => {
+      const s = P.current.selected;
       hover.current = null;
+      tipGone.current = s.edges.length === 1 && !s.nodes.length ? s.edges[0] : null;
       schedule();
+    };
+    cy.on('mouseout', 'edge', away);
+    cy.on('mousemove', (e) => {
+      if (e.target === cy || e.target.isNode?.()) {
+        const s = P.current.selected;
+        if (hover.current || (s.edges.length === 1 && !s.nodes.length && tipGone.current !== s.edges[0])) away();
+      }
     });
+    const container = box.current!;
+    container.addEventListener('mouseleave', away);
     cy.on('dragfree', 'node', (e) => {
       const moved = cy.$('node:selected').union(e.target);
       const pos: Record<string, { x: number; y: number }> = {};
@@ -385,6 +412,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     schedule();
     return () => {
       cancelAnimationFrame(raf);
+      container.removeEventListener('mouseleave', away);
       cy.destroy();
       cyRef.current = null;
     };
@@ -584,8 +612,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       {overlay.more && (
         <button
           type="button"
-          className="bx-btn ax-tap absolute justify-center px-2 py-0 text-lg"
-          style={{ left: overlay.more.x, top: overlay.more.y, transform: 'translate(-50%, -50%)' }}
+          className="bx-btn ax-tap absolute justify-center px-2 py-0"
+          style={{ left: overlay.more.x, top: overlay.more.y, width: overlay.size, height: overlay.size, fontSize: overlay.size * 0.4, transform: 'translate(-50%, -50%)' }}
           onClick={() => props.onContext(props.selected.nodes[0])}
           aria-label={C.toolbar.more}
           data-testid="node-more"
@@ -596,8 +624,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       {overlay.handle && !drag && (
         <button
           type="button"
-          className="bx-btn ax-tap absolute cursor-crosshair touch-none justify-center rounded-full px-2 py-0 text-lg"
-          style={{ left: overlay.handle.x, top: overlay.handle.y, transform: 'translate(-50%, -50%)' }}
+          className="bx-btn ax-tap absolute cursor-crosshair touch-none justify-center rounded-full px-2 py-0"
+          style={{ left: overlay.handle.x, top: overlay.handle.y, width: overlay.size, height: overlay.size, fontSize: overlay.size * 0.4, transform: 'translate(-50%, -50%)' }}
           aria-label={C.evidence.connect}
           title={C.evidence.connect}
           data-testid="connect-handle"
@@ -645,7 +673,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           {overlay.tip.text}
         </div>
       )}
-      {!props.map.nodes.length && <p className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-4 text-center bx-muted">{C.canvas.empty}</p>}
+      {!props.map.nodes.length && <p className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-4 text-center bx-muted"><span data-testid="canvas-empty">{coarse ? C.canvas.emptyTouch : C.canvas.empty}</span></p>}
       <div className="sr-only">
         <h2 id="canvas-outline-h">{C.canvas.outline}</h2>
         <ul data-testid="canvas-outline">
