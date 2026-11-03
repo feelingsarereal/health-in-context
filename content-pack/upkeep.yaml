@@ -1,6 +1,6 @@
 # upkeep.yaml — SUSTAIN v0.1. Written 2026-10-23.
 classes:
-  - { id: scheme,     what: "ICD-11 MMS codes, titles and verbatim definitions", recheck_days: 365, how: "Compare with the next ICD-11 MMS release; swap the interim mirror for the WHO ICD-API (todo T-ICD-01)" }
+  - { id: scheme,     what: "ICD-11 MMS codes, titles and verbatim definitions", recheck_days: 365, how: "Compare with the next ICD-11 MMS release; re-run tools/pull_icd11_api.py against the new release (WHO container or hosted API) and rebuild" }
   - { id: reference,  what: "DOI metadata and abstracts", recheck_days: 365, how: "tools/harvest_openalex.py" }
   - { id: link,       what: "Evidence-graded associations", recheck_days: 730, how: "Re-sweep each link pair for new systematic reviews" }
   - { id: help,       what: "Help entries on /help", recheck_days: 90, how: "Re-read each source page" }

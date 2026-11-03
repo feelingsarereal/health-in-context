@@ -1,13 +1,5 @@
 # todo.yaml — nothing here is rendered as fact
 items:
-- id: T-ICD-01
-  what: Re-pull all 125 ICD-11 codes from the WHO ICD-API (release 2026-01) and replace the findacode-mirror text; confirm
-    foundation IDs, definitions (37 present / 88 null), inclusions, exclusions, "code also" notes.
-  blocks: any release beyond the pilot (Daniel chose the interim mirror for the pilot, 2026-10-23)
-  status: done 2026-11-02 — all 189 entries pulled verbatim from the WHO ICD-API (local container, ICD-11 MMS 2026-01) by
-    tools/pull_icd11_api.py v0.1.3 into source/icd11_who_api.json; build_pack.py overlays WHO's text on every code, group
-    and residual. Two mirror errors corrected (QD85, QE11.6). App work (show WHO as the source and the licence citation; drop
-    the 'Interim copy' tag) is K9.
 - id: T-ICD-02
   what: Re-check the missing QE50.Z / QE61.Z / QE70.Y / QD6Y against WHO's child lists, and pull the QE10–QE1Z sub-block description.
     (QE03, QE94, QE96 and the QE41 title were confirmed against the WHO ICD-API on 2026-11-02.)
@@ -24,15 +16,12 @@ items:
     now; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic
     tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement
     from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice.'
-- id: T-BIB-03
-  what: Abstract for Link & Phelan 1995 — not in OpenAlex, Europe PMC or Crossref (re-checked 2026-11-02); needs the UAH library
-    copy (source/research/library/README.md). Paul & Moser 2009 done 2026-11-02 from Daniel's library PDF; L22 now ships on
-    it.
 - id: T-BIB-04
-  status: '2026-11-02: Crossref''s ''abstract'' for both Richardson papers is the same series blurb OpenAlex had (BAD_ABSTRACT);
-    Kosko and Özesmi have none. All five are on the library list in source/research/library/README.md.'
-  what: Read Richardson 1986 and 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (UAH library) so the methods references
-    can be marked verified; until then the glossary and 101s that cite them show "not verified".
+  status: '2026-11-02: Richardson 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 read and summarised from Daniel''s
+    UAH library copies (Kosko from the publisher page; Hovmand chapter 1); independent check passed with wording fixes. Only
+    Richardson 1986 remains: UAH does not subscribe.'
+  what: Get Richardson 1986 'Problems with causal-loop diagrams' (System Dynamics Review 2(2):158–170) by interlibrary loan
+    or purchase, so the last methods reference can be marked verified. It is further reading only; no claim rests on it.
 - id: T-BIB-02
   what: Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010
     verified 2026-10-23 against the WHO PDF.
@@ -46,17 +35,7 @@ items:
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
-- id: T-REF-link_phelan1995
-  what: 'references/8 (link_phelan1995): summary pending abstract'
 - id: T-REF-richardson1986
   what: 'references/52 (richardson1986): source not read beyond metadata'
-- id: T-REF-richardson1995
-  what: 'references/53 (richardson1995): source not read beyond metadata'
-- id: T-REF-kosko1986
-  what: 'references/58 (kosko1986): source not read beyond metadata'
-- id: T-REF-ozesmi2004
-  what: 'references/59 (ozesmi2004): source not read beyond metadata'
-- id: T-REF-hovmand2014
-  what: 'references/60 (hovmand2014): source not read beyond metadata'
 - id: T-LINKS
   what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02'

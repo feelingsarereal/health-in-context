@@ -45,7 +45,7 @@ const RULES: [string, (p: Any) => void, RegExp][] = [
   ['link grade known', (p) => (L03(p).grade = 'Z'), /links\/L03: grade 'Z' not in/],
   ['link mechanism cites', (p) => (L03(p).mechanism = 'A forced move.'), /links\/L03\.mechanism: must carry at least one \[n\]/],
   ['link mechanism refs listed', (p) => (L03(p).mechanism += ' [24]'), /links\/L03: mechanism cites \[24\] not listed in refs/],
-  ['link refs verified', (p) => { L03(p).refs = [23, 8]; L03(p).mechanism += ' [8]'; }, /links\/L03: ref 8 is not verified — the link may not ship/],
+  ['link refs verified', (p) => { L03(p).refs = [23, 52]; L03(p).mechanism += ' [52]'; }, /links\/L03: ref 52 is not verified — the link may not ship/],
   ['suggest is a code', (p) => (L03(p).suggest = ['QX99']), /links\/L03: suggest QX99 not a code/],
   ['suggest inside target', (p) => (L03(p).suggest = ['QD51']), /links\/L03: suggest QD51 is not inside QD80-QD8Z/],
   ['codes are codes', (p) => (L03(p).codes.from = ['QX99']), /links\/L03: codes\.from QX99 not a code/],

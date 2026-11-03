@@ -273,7 +273,7 @@
     "id": "scheme",
     "what": "ICD-11 MMS codes, titles and verbatim definitions",
     "recheck_days": 365,
-    "how": "Compare with the next ICD-11 MMS release; swap the interim mirror for the WHO ICD-API (todo T-ICD-01)"
+    "how": "Compare with the next ICD-11 MMS release; re-run tools/pull_icd11_api.py against the new release (WHO container or hosted API) and rebuild"
    },
    {
     "id": "reference",
@@ -322,6 +322,20 @@
   ]
  },
  "changes": [
+  {
+   "date": "2026-11-02",
+   "what": "Library references verified: Link & Phelan 1995, Richardson 1995 (editor's introduction as abstract), Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (chapter 1 abstract) summarised from Daniel's UAH library copies; abstracts verbatim; 63 of 64 references verified (Richardson 1986 remains). Abstracts read from the paper itself are kept even where OpenAlex's text was rejected. Done todo items (status starting 'done') now leave the pack; the scheme upkeep step now says to re-run the WHO ICD-API pull",
+   "why": "T-BIB-03/04; independent check passed with wording fixes",
+   "records": [
+    "references/link_phelan1995",
+    "references/richardson1995",
+    "references/kosko1986",
+    "references/ozesmi2004",
+    "references/hovmand2014"
+   ],
+   "source": "publisher PDFs and pages via UAH library; independent reviewer",
+   "by": "cowork"
+  },
   {
    "date": "2026-11-02",
    "what": "L22 (QD80 unemployment → QE01 stress, +, S) now ships on Paul & Moser 2009, summarised from Daniel's UAH library PDF (abstract verbatim); Kivimäki 2012 (job strain → heart disease) removed from L22 as off-target; with L29 the QD80 ⇄ QE01 loop closes on evidence. Lawes 2022 note updated",
@@ -437,17 +451,6 @@
     "safety"
    ],
    "source": "K2",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-10-23",
-   "what": "Scenario w3 step 3 now uses L03 (Comes from) instead of the withheld L01; crosswalk gains HP2030 domain titles and ICD-10-CM category titles with sources",
-   "why": "K1 build report",
-   "records": [
-    "scenarios/w3",
-    "situations.items[].crosswalk"
-   ],
-   "source": "K1 scrum note 261023",
    "by": "cowork"
   }
  ],
@@ -592,12 +595,6 @@
  },
  "todo": [
   {
-   "id": "T-ICD-01",
-   "what": "Re-pull all 125 ICD-11 codes from the WHO ICD-API (release 2026-01) and replace the findacode-mirror text; confirm foundation IDs, definitions (37 present / 88 null), inclusions, exclusions, \"code also\" notes.",
-   "blocks": "any release beyond the pilot (Daniel chose the interim mirror for the pilot, 2026-10-23)",
-   "status": "done 2026-11-02 — all 189 entries pulled verbatim from the WHO ICD-API (local container, ICD-11 MMS 2026-01) by tools/pull_icd11_api.py v0.1.3 into source/icd11_who_api.json; build_pack.py overlays WHO's text on every code, group and residual. Two mirror errors corrected (QD85, QE11.6). App work (show WHO as the source and the licence citation; drop the 'Interim copy' tag) is K9."
-  },
-  {
    "id": "T-ICD-02",
    "what": "Re-check the missing QE50.Z / QE61.Z / QE70.Y / QD6Y against WHO's child lists, and pull the QE10–QE1Z sub-block description. (QE03, QE94, QE96 and the QE41 title were confirmed against the WHO ICD-API on 2026-11-02.)"
   },
@@ -607,13 +604,9 @@
    "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3) — not yet shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). Plan: ask WHO for a written agreement now; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice."
   },
   {
-   "id": "T-BIB-03",
-   "what": "Abstract for Link & Phelan 1995 — not in OpenAlex, Europe PMC or Crossref (re-checked 2026-11-02); needs the UAH library copy (source/research/library/README.md). Paul & Moser 2009 done 2026-11-02 from Daniel's library PDF; L22 now ships on it."
-  },
-  {
    "id": "T-BIB-04",
-   "what": "Read Richardson 1986 and 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (UAH library) so the methods references can be marked verified; until then the glossary and 101s that cite them show \"not verified\".",
-   "status": "2026-11-02: Crossref's 'abstract' for both Richardson papers is the same series blurb OpenAlex had (BAD_ABSTRACT); Kosko and Özesmi have none. All five are on the library list in source/research/library/README.md."
+   "what": "Get Richardson 1986 'Problems with causal-loop diagrams' (System Dynamics Review 2(2):158–170) by interlibrary loan or purchase, so the last methods reference can be marked verified. It is further reading only; no claim rests on it.",
+   "status": "2026-11-02: Richardson 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 read and summarised from Daniel's UAH library copies (Kosko from the publisher page; Hovmand chapter 1); independent check passed with wording fixes. Only Richardson 1986 remains: UAH does not subscribe."
   },
   {
    "id": "T-BIB-02",
@@ -629,28 +622,8 @@
    "status": "partly done 2026-11-01 — L01 and L02 shipped, L26–L28 added; loops now close on evidence. Still open below."
   },
   {
-   "id": "T-REF-link_phelan1995",
-   "what": "references/8 (link_phelan1995): summary pending abstract"
-  },
-  {
    "id": "T-REF-richardson1986",
    "what": "references/52 (richardson1986): source not read beyond metadata"
-  },
-  {
-   "id": "T-REF-richardson1995",
-   "what": "references/53 (richardson1995): source not read beyond metadata"
-  },
-  {
-   "id": "T-REF-kosko1986",
-   "what": "references/58 (kosko1986): source not read beyond metadata"
-  },
-  {
-   "id": "T-REF-ozesmi2004",
-   "what": "references/59 (ozesmi2004): source not read beyond metadata"
-  },
-  {
-   "id": "T-REF-hovmand2014",
-   "what": "references/60 (hovmand2014): source not read beyond metadata"
   },
   {
    "id": "T-LINKS",

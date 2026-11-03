@@ -46,13 +46,13 @@
    "classic": 11,
    "background": 13
   },
-  "verified": 58,
-  "unverified": 6,
-  "abstracts_present": 52
+  "verified": 63,
+  "unverified": 1,
+  "abstracts_present": 57
  },
  "glossary": 21,
  "concepts": 5,
- "todo": 15,
+ "todo": 8,
  "heuristics": [
   {
    "id": "A4",
@@ -96,7 +96,7 @@
     "✓ H4: clear my data empties storage on this device",
     "✓ H5: the not-advice notice on first run, on / and on /about",
     "✓ H6: help lists every pack entry with source and date; no inputs, no branching",
-    "✓ G3: as_of is visible on /, /about and /methods; the interim source is named",
+    "✓ G3: as_of is visible on /, /about and /methods; the source of the ICD-11 text is named (K9: WHO's own)",
     "✓ G4: every heuristic result carries its label where it renders"
    ]
   },

@@ -133,3 +133,18 @@
   - references/lawes2022
   source: Paul & Moser 2009 (publisher PDF via UAH library); independent reviewer
   by: cowork
+- date: '2026-11-02'
+  what: 'Library references verified: Link & Phelan 1995, Richardson 1995 (editor''s introduction as abstract), Kosko 1986,
+    Özesmi & Özesmi 2004 and Hovmand 2014 (chapter 1 abstract) summarised from Daniel''s UAH library copies; abstracts verbatim;
+    63 of 64 references verified (Richardson 1986 remains). Abstracts read from the paper itself are kept even where OpenAlex''s
+    text was rejected. Done todo items (status starting ''done'') now leave the pack; the scheme upkeep step now says to re-run
+    the WHO ICD-API pull'
+  why: T-BIB-03/04; independent check passed with wording fixes
+  records:
+  - references/link_phelan1995
+  - references/richardson1995
+  - references/kosko1986
+  - references/ozesmi2004
+  - references/hovmand2014
+  source: publisher PDFs and pages via UAH library; independent reviewer
+  by: cowork

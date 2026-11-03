@@ -5,7 +5,7 @@
    "id": "scheme",
    "what": "ICD-11 MMS codes, titles and verbatim definitions",
    "recheck_days": 365,
-   "how": "Compare with the next ICD-11 MMS release; swap the interim mirror for the WHO ICD-API (todo T-ICD-01)"
+   "how": "Compare with the next ICD-11 MMS release; re-run tools/pull_icd11_api.py against the new release (WHO container or hosted API) and rebuild"
   },
   {
    "id": "reference",
@@ -38,7 +38,7 @@
    "oldest": "2026-10-23"
   },
   "reference": {
-   "count": 58,
+   "count": 63,
    "oldest": "2026-10-23"
   },
   "help": {
