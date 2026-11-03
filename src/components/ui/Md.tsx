@@ -3,8 +3,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import { Popover } from './Popover';
-import { RefCard } from '@/components/evidence/RefCard';
+import { Popover, RefCard } from '@feelingsarereal/sdoh-loops-core';
 
 /** Markdown for the 101s and glossary definitions; [n] becomes a citation popover, maths renders with KaTeX. */
 export default function Md({ text, className }: { text: string; className?: string }) {

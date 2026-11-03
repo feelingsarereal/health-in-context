@@ -1,11 +1,13 @@
 /**
- * npm run build:content — validate content-pack/, resolve every cross-reference, emit src/data/*.json,
- * public/provenance.json and public/staleness.json (KICKOFF §3).
+ * npm run build:content — validate content-pack/, resolve every cross-reference, and emit the pack asset into
+ * packages/sdoh-loops-pack (data/*.json and pin.json, K13), plus this app's own build facts in src/data/
+ * (provenance, staleness, build errors) and public/provenance.json, public/staleness.json (KICKOFF §3).
  *
  * Fails loudly: every error goes to content-pack/BUILD-ERRORS.md and src/data/build-errors.json (shown on /methods),
  * and the rest still builds. The pack is never "fixed" here. Idempotent: the same pack gives byte-identical output
  * (the build date is the pack's as_of unless SDOH_BUILD_DATE is set, so re-runs do not churn the files).
  */
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +17,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACK = path.join(ROOT, 'content-pack');
 const OUT = path.join(ROOT, 'src', 'data');
 const PUB = path.join(ROOT, 'public');
+const PACK_PKG = path.join(ROOT, 'packages', 'sdoh-loops-pack');
+const PACK_OUT = path.join(PACK_PKG, 'data');
 
 const { pack, loadErrors } = readPack(PACK);
 const res = validatePack(pack);
@@ -26,8 +30,9 @@ const BUILD_DATE = process.env.SDOH_BUILD_DATE ?? asOf;
 const dayDiff = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
 
 fs.mkdirSync(OUT, { recursive: true });
+fs.mkdirSync(PACK_OUT, { recursive: true });
 const written: [string, number][] = [];
-function emit(file: string, value: unknown, dir = OUT) {
+function emit(file: string, dir: string, value: unknown) {
   const p = path.join(dir, file);
   const json = JSON.stringify(value, null, 1) + '\n';
   if (!fs.existsSync(p) || fs.readFileSync(p, 'utf8') !== json) fs.writeFileSync(p, json);
@@ -100,7 +105,7 @@ const order = codes
   .sort((a, b) => (gOrder.get(a.c.group)! - gOrder.get(b.c.group)!) || (+!!a.c.residual - +!!b.c.residual) || a.i - b.i)
   .map((x) => x.c.code);
 if (s) {
-  emit('situations.json', {
+  emit('situations.json', PACK_OUT, {
     scheme: s.scheme,
     tiers: s.tiers,
     tier_basis: s.tier_basis ?? null,
@@ -121,7 +126,7 @@ if (L) {
   // Belt and braces (KICKOFF §1): a shipped link resting on an unverified reference is not offered.
   const offered = ship.filter((l) => !l.refs.some((n) => unverifiedRefs.has(n)));
   const blocked = ship.filter((l) => l.refs.some((n) => unverifiedRefs.has(n)));
-  emit('links.json', {
+  emit('links.json', PACK_OUT, {
     grades: L.grades,
     framing: L.framing ?? null,
     links: offered,
@@ -142,6 +147,7 @@ for (const g of d.glossary ?? []) for (const n of cites(g.definition)) usedBy.ge
 for (const c of d.concepts ?? []) for (const n of cites(c.body)) usedBy.get(n)?.add(`concepts/${c.front.id}`);
 emit(
   'references.json',
+  PACK_OUT,
   (d.references ?? []).map((r) => ({
     n: r.n,
     key: r.key,
@@ -166,9 +172,10 @@ emit(
 );
 
 // ───────────────────────── glossary, concepts, strings
-emit('glossary.json', d.glossary ?? []);
+emit('glossary.json', PACK_OUT, d.glossary ?? []);
 emit(
   'concepts.json',
+  PACK_OUT,
   (d.concepts ?? []).map((c) => ({ ...c.front, body: c.body.replace(/<!-- framing -->\n?/g, ''), cites: [...cites(c.body)].sort((a, b) => a - b) })),
 );
 const ui = (pack.uiStrings ?? {}) as Record<string, any>;
@@ -180,10 +187,10 @@ if (strings.codes?.citation_from === 'situations.scheme.licence') {
   strings.codes.citation = s?.scheme.licence ?? null;
   if (!strings.codes.citation) errors.push('ui-strings/codes.citation_from: situations.scheme.licence is not set');
 }
-emit('strings.json', strings);
+emit('strings.json', PACK_OUT, strings);
 
 // ───────────────────────── manifest bundle (identity, audience, safety, scope, upkeep, ledger, todo)
-emit('manifest.json', {
+emit('manifest.json', PACK_OUT, {
   manifest: d.manifest,
   audience: d.audience,
   safety: d.safety ? { ...d.safety } : null,
@@ -228,8 +235,8 @@ for (const [fn, cls, obj] of FILE_CLASS) {
   visit(obj, '');
 }
 const staleness = { as_of: BUILD_DATE, classes: d.upkeep?.classes ?? [], dated, stale, sweeps: d.upkeep?.sweeps ?? [] };
-emit('staleness.json', staleness, PUB);
-emit('staleness.json', staleness);
+emit('staleness.json', PUB, staleness);
+emit('staleness.json', OUT, staleness);
 
 // ───────────────────────── provenance (ACTION-SPEC §6.6)
 const refs = d.references ?? [];
@@ -289,11 +296,17 @@ const provenance = {
   build_errors: errors.length,
   safety_tests: safetyRun ?? { note: 'Safety suite not yet recorded — run npm run test:e2e' },
 };
-emit('provenance.json', provenance, PUB);
-emit('provenance.json', provenance);
+emit('provenance.json', PUB, provenance);
+emit('provenance.json', OUT, provenance);
 
 // ───────────────────────── build errors
-emit('build-errors.json', { errors, warnings: res.warnings });
+emit('build-errors.json', OUT, { errors, warnings: res.warnings });
+
+// ───────────────────────── K13: the pack's pin — its version and a SHA-256 over data/*.json, in name order
+const packVersion = JSON.parse(fs.readFileSync(path.join(PACK_PKG, 'package.json'), 'utf8')).version as string;
+const hash = crypto.createHash('sha256');
+for (const f of fs.readdirSync(PACK_OUT).filter((f) => f.endsWith('.json')).sort()) hash.update(`${f}\n`).update(fs.readFileSync(path.join(PACK_OUT, f)));
+emit('pin.json', PACK_PKG, { pack: d.manifest?.slug ?? 'sdoh-loops', version: packVersion, as_of: asOf, sha256: hash.digest('hex') });
 const be = ['# BUILD-ERRORS — content build', '', `Built ${BUILD_DATE} by scripts/build-content.ts.`, ''];
 be.push(errors.length ? `## ${errors.length} error(s)\n\n${errors.map((e) => `- ${e}`).join('\n')}` : '0 errors.');
 if (res.warnings.length) be.push('', `## ${res.warnings.length} warning(s)`, '', ...res.warnings.map((w) => `- ${w}`));

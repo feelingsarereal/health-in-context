@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { glossary, termMap, conceptMap } from '@/lib/data/refs';
+import { glossary, termMap, conceptMap, PageHead } from '@feelingsarereal/sdoh-loops-core';
 import Md from '@/components/ui/Md';
-import { PageHead } from '@/components/ui/bits';
 
 export default function Glossary() {
   const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term));

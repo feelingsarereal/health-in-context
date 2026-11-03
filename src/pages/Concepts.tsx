@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { concepts } from '@/lib/data/refs';
-import { PageHead } from '@/components/ui/bits';
+import { concepts, PageHead } from '@feelingsarereal/sdoh-loops-core';
 
 export default function Concepts() {
   return (

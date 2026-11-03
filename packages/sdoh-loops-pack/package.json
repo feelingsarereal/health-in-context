@@ -1,0 +1,22 @@
+{
+  "name": "@feelingsarereal/sdoh-loops-pack",
+  "version": "0.1.0",
+  "description": "The SDOH Loops content pack (ICD-11 codes, evidence-graded links, references, glossary, primers, interface strings), built from content-pack/ by scripts/build-content.ts. Pinned by sdoh-loops-core consumers.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feelingsarereal/sdoh-loops.git",
+    "directory": "packages/sdoh-loops-pack"
+  },
+  "exports": {
+    "./pin.json": "./pin.json",
+    "./data/*": "./data/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "data",
+    "pin.json",
+    "README.md",
+    "CHANGELOG.md"
+  ]
+}

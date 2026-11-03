@@ -1,0 +1,60 @@
+{
+  "name": "@feelingsarereal/sdoh-loops-core",
+  "version": "0.1.0",
+  "description": "The SDOH Loops map as a React component — canvas, list view, evidence gate, analyses A1–A8, exports — for the standalone SDOH Loops app and every SDOH Interrogator app. On-device only.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feelingsarereal/sdoh-loops.git",
+    "directory": "packages/sdoh-loops-core"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./analysis": "./src/lib/analysis/index.ts",
+    "./styles.css": "./src/styles.css",
+    "./tailwind-preset": {
+      "types": "./tailwind.preset.d.ts",
+      "default": "./tailwind.preset.js"
+    },
+    "./vite": {
+      "types": "./vite.d.ts",
+      "default": "./vite.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "tailwind.preset.d.ts",
+    "!src/**/__fixtures__",
+    "vite.d.ts",
+    "tailwind.preset.js",
+    "vite.js",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "peerDependencies": {
+    "@feelingsarereal/sdoh-loops-pack": "0.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@floating-ui/react": "0.27.2",
+    "@tiptap/core": "2.27.3",
+    "@tiptap/extension-color": "2.27.3",
+    "@tiptap/extension-text-style": "2.27.3",
+    "@tiptap/extension-underline": "2.27.3",
+    "@tiptap/pm": "2.27.3",
+    "@tiptap/react": "2.27.3",
+    "@tiptap/starter-kit": "2.27.3",
+    "cytoscape": "3.30.4",
+    "cytoscape-elk": "2.2.0",
+    "cytoscape-fcose": "2.2.0",
+    "cytoscape-svg": "0.4.0",
+    "idb-keyval": "6.2.1"
+  }
+}

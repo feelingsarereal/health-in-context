@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { manifest, provenance, S } from '@/lib/data/core';
-import { scheme } from '@/lib/data/scheme';
-import { AsOf, Notice, PageHead } from '@/components/ui/bits';
+import { manifest, S, scheme, AsOf, Notice, PageHead } from '@feelingsarereal/sdoh-loops-core';
+import { provenance } from '@/lib/build-info';
 
 export default function About() {
   return (

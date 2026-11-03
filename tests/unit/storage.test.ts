@@ -2,14 +2,14 @@
 import 'fake-indexeddb/auto';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { createStore } from 'idb-keyval';
-import { idbStore, localStore } from '../../src/lib/storage';
-import { addEdge, addNode, migrate, newEdge, newMap, newNode, ImportError, SCHEMA_VERSION, updateNode, deleteNodes } from '../../src/lib/model/map';
-import { docFromText, plainText, sanitizeRich } from '../../src/lib/model/rich';
-import { exportCSV, exportJSON, importCSV, importJSON, loopReportMD } from '../../src/lib/model/interchange';
-import { findLoops } from '../../src/lib/analysis';
-import { toGraph } from '../../src/lib/model/map';
-import { QD71_1_EVICTION_CASE } from '../../src/lib/model/__fixtures__/evidence-golden';
-import strings from '../../src/data/strings.json';
+import { idbStore, localStore } from '../../packages/sdoh-loops-core/src/lib/storage';
+import { addEdge, addNode, migrate, newEdge, newMap, newNode, ImportError, SCHEMA_VERSION, updateNode, deleteNodes } from '../../packages/sdoh-loops-core/src/lib/model/map';
+import { docFromText, plainText, sanitizeRich } from '../../packages/sdoh-loops-core/src/lib/model/rich';
+import { exportCSV, exportJSON, importCSV, importJSON, loopReportMD } from '../../packages/sdoh-loops-core/src/lib/model/interchange';
+import { findLoops } from '../../packages/sdoh-loops-core/src/lib/analysis';
+import { toGraph } from '../../packages/sdoh-loops-core/src/lib/model/map';
+import { QD71_1_EVICTION_CASE } from '../../packages/sdoh-loops-core/src/lib/model/__fixtures__/evidence-golden';
+import strings from '../../packages/sdoh-loops-pack/data/strings.json';
 
 class MemStorage implements Storage {
   private m = new Map<string, string>();

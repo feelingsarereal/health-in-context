@@ -1,8 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { useTheme } from '@/lib/theme';
-import { manifest, S } from '@/lib/data/core';
-import { C } from '@/lib/copy';
+import { useTheme, manifest, S, C } from '@feelingsarereal/sdoh-loops-core';
 import { ClearData } from './ui/ClearData';
 import { FirstRun } from './ui/FirstRun';
 

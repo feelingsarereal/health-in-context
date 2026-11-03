@@ -1,0 +1,756 @@
+{
+ "schema_version": 2,
+ "pack_version": "0.1",
+ "icd11_release": "ICD-11 MMS 2026-01",
+ "id": "map-example-collinson2024",
+ "name": "Worked example — eviction and poverty (Collinson et al. 2024)",
+ "subject": "Research model — no person",
+ "created": "2026-11-03T12:00:00.000Z",
+ "updated": "2026-11-03T12:00:00.000Z",
+ "layout": {
+  "engine": "fcose",
+  "theme": "auto",
+  "thickness": true
+ },
+ "notes": {
+  "type": "doc",
+  "content": [
+   {
+    "type": "paragraph",
+    "content": [
+     {
+      "type": "text",
+      "text": "A worked example built from Collinson et al. (2024), 'Eviction and Poverty in American Cities', Quarterly Journal of Economics 139(1):57–120, with three links that also draw on other studies in this app (Brand 2015; Desmond & Gershenson 2016, 2017)."
+     }
+    ]
+   },
+   {
+    "type": "paragraph",
+    "content": [
+     {
+      "type": "text",
+      "text": "Weights are the builder's judgement of relative strength, not measured effects: 0.75 = large and statistically clear; 0.5 = moderate (about 10–30%) or a robust association; 0.25 = small or not statistically significant, and also used for hypotheses no study has estimated. The sign follows the link's polarity."
+     }
+    ]
+   }
+  ]
+ },
+ "nodes": [
+  {
+   "id": "n1-job",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD80",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Work lost or cut"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Falling earnings and weaker attachment to work in the two years before the eviction case (Collinson et al. 2024)."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": -320,
+   "y": -140,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n2-income",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD51",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Earnings falling"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Evicted tenants' quarterly earnings drop by about $337 on average in the year leading up to case filing."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": -300,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n3-eviction",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD71.Z",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Eviction order"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "An eviction case is filed and the court orders eviction. ICD-11 has no eviction code; this app files it under QD71.Z."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": 0,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n4-shelter",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD71.0",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Emergency shelter"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Staying in an emergency shelter in the year after the case."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 320,
+   "y": -140,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n5-hospital",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "outcome",
+   "ref": "Collinson et al. 2024 [47]",
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Hospital visits"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "More hospital visits in the year after filing, including visits for mental health–related conditions."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 360,
+   "y": 160,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n6-credit",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "outcome",
+   "ref": "Collinson et al. 2024 [47]",
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Debt up, credit score down"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Debt rises and credit scores fall, for years after the case."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": 320,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  },
+  {
+   "id": "n7-policy",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "policy",
+   "ref": "Collinson et al. 2024 [47], conclusion",
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Eviction-prevention policy"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Policies the paper names as ways to reduce evictions: legal aid for tenants, emergency rental assistance and just-cause eviction laws. Their effect is not estimated in this study."
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": -360,
+   "y": 160,
+   "created": "2026-11-03T12:00:00.000Z",
+   "updated": "2026-11-03T12:00:00.000Z"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e01",
+   "from": "n1-job",
+   "to": "n2-income",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Losing work cuts earnings (Brand 2015, a narrative review)."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e02",
+   "from": "n2-income",
+   "to": "n3-eviction",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Earnings fall before the case is heard, in both evicted and non-evicted tenants and more so in those evicted — a descriptive pre-trend, so an association, not shown to be causal."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e03",
+   "from": "n1-job",
+   "to": "n3-eviction",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Job loss predicts eviction, net of missed rent (Desmond & Gershenson 2017); employment falls before housing court (Collinson et al.)."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e04",
+   "from": "n3-eviction",
+   "to": "n2-income",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "high",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "An eviction order reduces earnings: about $323 per quarter (8%) in year 1 and $613 (14%) in year 2, larger for female and Black tenants."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e05",
+   "from": "n3-eviction",
+   "to": "n4-shelter",
+   "polarity": "+",
+   "weight": 0.75,
+   "delay": false,
+   "confidence": "high",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "An eviction order raises emergency-shelter use by 3.4 percentage points in year 1, more than 300% of the 0.9% rate among tenants not evicted; the effect is driven by female and Black tenants."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e06",
+   "from": "n3-eviction",
+   "to": "n1-job",
+   "polarity": "+",
+   "weight": 0.25,
+   "delay": false,
+   "confidence": "low",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "A forced move was followed by higher odds of lay-off (Desmond & Gershenson 2016). Collinson et al. find a smaller effect on employment — a 1.5-percentage-point drop in the share of quarters employed — that is not statistically significant."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "evidence",
+   "check": "",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e07",
+   "from": "n3-eviction",
+   "to": "n5-hospital",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "high",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "An eviction order adds about 0.19 hospital visits (29%) in year 1, and 0.05 mental health–related visits (133%)."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    47
+   ],
+   "link": null,
+   "basis": "override",
+   "check": "",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Collinson et al. 2024 (judge-assignment IV) find this effect; hospital visits are a health outcome with no SDOH code, so no evidence link in the app can back it."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-03T12:00:00.000Z",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e08",
+   "from": "n3-eviction",
+   "to": "n6-credit",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": true,
+   "confidence": "high",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "An eviction order worsens a financial-health index by about 0.1 SD in years 1–2 and 0.26 SD in years 5–6, driven by more debt and lower credit scores (16.5 points lower in year 2)."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    47
+   ],
+   "link": null,
+   "basis": "override",
+   "check": "",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Collinson et al. 2024 find this longer-run effect; ICD-11 has no code for debt or credit access in this app, so it is an outcome node."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-03T12:00:00.000Z",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e09",
+   "from": "n7-policy",
+   "to": "n3-eviction",
+   "polarity": "−",
+   "weight": -0.25,
+   "delay": false,
+   "confidence": "low",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Hypothesis: these policies aim to avert eviction orders. Not estimated in this paper."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "A policy lever named in the paper's conclusion, drawn as a hypothesis for discussion; no study in this app estimates its effect."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-03T12:00:00.000Z",
+   "style": {
+    "line": "dashed",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  }
+ ],
+ "loops": []
+}

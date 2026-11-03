@@ -1,11 +1,8 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { links, grades, groups, groupMap, codeMap, endpointTitle, linkFraming, notOffered, tierBasis } from '@/lib/data/scheme';
+import { links, grades, groups, groupMap, codeMap, endpointTitle, linkFraming, notOffered, tierBasis, CitedText, scopeOf, GradeChip, PageHead, PolarityChip } from '@feelingsarereal/sdoh-loops-core';
 
 const inGroup = (endpoint: string, g: string) => endpoint === g || groupMap.get(endpoint)?.subgroup_of === g || codeMap.get(endpoint)?.group === g;
-import { CitedText } from '@/components/evidence/CitedText';
-import { scopeOf } from '@/lib/model/evidence';
-import { GradeChip, PageHead, PolarityChip } from '@/components/ui/bits';
 
 /** ACTION-SPEC §2 /evidence under evidence.body: records — every graded link, filterable by grade and group. */
 export default function Evidence() {

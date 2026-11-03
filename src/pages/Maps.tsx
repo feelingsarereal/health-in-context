@@ -1,14 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { S } from '@/lib/data/core';
-import { C } from '@/lib/copy';
-import { getStore, type MapSummary } from '@/lib/storage';
-import { newMap, newId } from '@/lib/model/map';
-import { Field, PageHead } from '@/components/ui/bits';
+import { S, C, getStore, type MapSummary, newMap, newId, Field, PageHead, Dialog, importFile, count } from '@feelingsarereal/sdoh-loops-core';
 import { ClearData } from '@/components/ui/ClearData';
-import { Dialog } from '@/components/ui/Dialog';
-import { importFile } from '@/lib/model/importFile';
-import { count } from '@/lib/plural';
 
 /** The workspace index (/maps): several named maps per device; duplicate, rename, delete (ACTION-SPEC §4). */
 export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?: (id: string) => void }) {
@@ -138,7 +131,7 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
             const f = e.target.files?.[0];
             if (!f) return;
             try {
-              const m = await importFile(f);
+              const m = await importFile(f, await getStore());
               open(m.id);
             } catch (err) {
               setMsg((err as Error).message);

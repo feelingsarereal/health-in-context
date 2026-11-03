@@ -1,7 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { conceptMap, termMap } from '@/lib/data/refs';
+import { conceptMap, termMap, Popover } from '@feelingsarereal/sdoh-loops-core';
 import Md from '@/components/ui/Md';
-import { Popover } from '@/components/ui/Popover';
 import NotFound from './NotFound';
 
 export default function Concept() {

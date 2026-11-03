@@ -1,7 +1,4 @@
-import { references, TIERS } from '@/lib/data/refs';
-import { C } from '@/lib/copy';
-import { RefCard } from '@/components/evidence/RefCard';
-import { PageHead } from '@/components/ui/bits';
+import { references, TIERS, C, RefCard, PageHead } from '@feelingsarereal/sdoh-loops-core';
 
 /** Tiered as MI topic mode: seminal oldest first, current newest first; each with its verbatim abstract folded. */
 export default function References() {

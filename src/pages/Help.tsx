@@ -1,5 +1,4 @@
-import { ageDays, safety } from '@/lib/data/core';
-import { PageHead } from '@/components/ui/bits';
+import { ageDays, safety, PageHead } from '@feelingsarereal/sdoh-loops-core';
 
 /** SAFETY H6: a static list of the pack's help entries. No triage logic, no branches on user input. */
 export default function Help() {

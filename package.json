@@ -3,32 +3,23 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "SDOH Loops \u2014 map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place. On-device only.",
+  "description": "SDOH Loops — map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place. On-device only.",
   "scripts": {
     "dev": "vite",
     "build:content": "tsx scripts/build-content.ts",
-    "build": "npm run build:content && tsc -b && vite build",
+    "build": "npm run build:content && tsc -b && vite build && npm run build:consumer",
     "preview": "vite preview",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "validate:pack": "python3 tools/validate_pack.py content-pack",
     "lint": "tsc --noEmit",
     "record:tests": "tsx scripts/record-test-run.ts",
-    "check": "npm run validate:pack && npm run test && npm run build && npm run test:e2e && npm run record:tests"
+    "check": "npm run validate:pack && npm run test && npm run build && npm run test:e2e && npm run record:tests",
+    "build:consumer": "vite build --config packages/sdoh-loops-core/fixtures/consumer/vite.config.ts"
   },
   "dependencies": {
-    "@floating-ui/react": "0.27.2",
-    "@tiptap/core": "2.27.3",
-    "@tiptap/extension-color": "2.27.3",
-    "@tiptap/extension-text-style": "2.27.3",
-    "@tiptap/extension-underline": "2.27.3",
-    "@tiptap/pm": "2.27.3",
-    "@tiptap/react": "2.27.3",
-    "@tiptap/starter-kit": "2.27.3",
-    "cytoscape": "3.30.4",
-    "cytoscape-elk": "2.2.0",
-    "cytoscape-fcose": "2.2.0",
-    "cytoscape-svg": "0.4.0",
+    "@feelingsarereal/sdoh-loops-core": "0.1.0",
+    "@feelingsarereal/sdoh-loops-pack": "0.1.0",
     "idb-keyval": "6.2.1",
     "js-yaml": "4.1.0",
     "katex": "0.16.11",
@@ -60,5 +51,8 @@
     "typescript": "5.6.3",
     "vite": "5.4.11",
     "vitest": "2.1.8"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

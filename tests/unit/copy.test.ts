@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { overlay } from '../../src/lib/copy';
+import { overlay } from '../../packages/sdoh-loops-core/src/lib/copy';
 
 describe('ui-strings overlay (K2 item 3)', () => {
   const base = { nav: { map: 'Map', maps: 'My maps' }, keys: [['N', 'new']] as [string, string][], loops: { rename: 'Rename' } };

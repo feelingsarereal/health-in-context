@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { manifest, S } from '@/lib/data/core';
-import { AsOf, Notice } from '@/components/ui/bits';
+import { manifest, S, AsOf, Notice } from '@feelingsarereal/sdoh-loops-core';
 
 export default function Home() {
   return (

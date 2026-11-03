@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { S } from '@/lib/data/core';
-import { getStore, resetStore } from '@/lib/storage';
-import { Dialog } from './Dialog';
+import { S, getStore, resetStore, Dialog } from '@feelingsarereal/sdoh-loops-core';
 
 /** SAFETY H4: one visible control that deletes everything the app stored on this device, after a confirm. */
 export function ClearData({ className = 'bx-btn' }: { className?: string }) {

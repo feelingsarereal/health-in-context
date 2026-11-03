@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { S, safety } from '@/lib/data/core';
-import { pref, setPref } from '@/lib/storage';
+import { S, safety, pref, setPref } from '@feelingsarereal/sdoh-loops-core';
 
 /** SAFETY H5: the first-run panel, in the pack's own words. Dismissal is a per-device preference. */
 export function FirstRun() {

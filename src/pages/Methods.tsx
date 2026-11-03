@@ -1,9 +1,5 @@
-import { bundle, buildErrors, provenance, staleness, S } from '@/lib/data/core';
-import { scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes, links, CHECKED_DEFINITIONS } from '@/lib/data/scheme';
-import { references } from '@/lib/data/refs';
-import { evidenceCanCloseALoop } from '@/lib/model/evidence';
-import { AsOf, PageHead, Todo } from '@/components/ui/bits';
-import { CitedText } from '@/components/evidence/CitedText';
+import { bundle, S, scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes, links, CHECKED_DEFINITIONS, references, evidenceCanCloseALoop, AsOf, PageHead, Todo, CitedText } from '@feelingsarereal/sdoh-loops-core';
+import { buildErrors, provenance, staleness } from '@/lib/build-info';
 
 const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
   <section id={id} className="mt-10 scroll-mt-20" aria-labelledby={`${id}-h`}>

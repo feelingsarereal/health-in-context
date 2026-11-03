@@ -11,7 +11,7 @@ import { h1Violations, PHRASES, ALLOWED_PHRASES } from '../lint';
 import { lintText } from '../../scripts/lib/lint';
 
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../dist');
-const concepts = JSON.parse(fs.readFileSync(path.resolve(DIST, '../src/data/concepts.json'), 'utf8')) as { id: string }[];
+const concepts = JSON.parse(fs.readFileSync(path.resolve(DIST, '../packages/sdoh-loops-pack/data/concepts.json'), 'utf8')) as { id: string }[];
 const ROUTES = ['/', '/maps', '/evidence', '/references', '/glossary', '/concepts', ...concepts.map((c) => `/concepts/${c.id}`), '/help', '/methods', '/about', '/nope'];
 
 test('H1: rendered text of every route', async ({ page }) => {
@@ -59,6 +59,6 @@ test('H1: static dist files (HTML, JSON)', () => {
 });
 
 test('H1: builder copy (src/lib/copy.ts) is clean', () => {
-  const src = fs.readFileSync(path.resolve(DIST, '../src/lib/copy.ts'), 'utf8');
+  const src = fs.readFileSync(path.resolve(DIST, '../packages/sdoh-loops-core/src/lib/copy.ts'), 'utf8');
   expect(lintText('copy.ts', src.replace(/^\s*\/?\*.*$/gm, ''), PHRASES, ALLOWED_PHRASES)).toEqual([]);
 });
