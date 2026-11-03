@@ -9,6 +9,7 @@ import { exportCSV, exportJSON, importCSV, importJSON, loopReportMD } from '../.
 import { findLoops } from '../../src/lib/analysis';
 import { toGraph } from '../../src/lib/model/map';
 import { QD71_1_EVICTION_CASE } from '../../src/lib/model/__fixtures__/evidence-golden';
+import strings from '../../src/data/strings.json';
 
 class MemStorage implements Storage {
   private m = new Map<string, string>();
@@ -142,6 +143,21 @@ describe('export / import round-trip', () => {
     expect(back.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence, e.basis, e.check])).toEqual(m.edges.map((e) => [e.polarity, e.weight, e.delay, e.confidence, e.basis, e.check]));
     expect(findLoops(toGraph(back)).loops.map((l) => l.kind)).toEqual(['R']);
     expect(back.nodes.map((n) => n.code_status).sort()).toEqual(['sdoh', 'sdoh', 'sdoh', 'undetermined']);
+  });
+  it('K9: every export carries the ICD-11 licence citation verbatim, and each still re-imports', () => {
+    const { m } = w1Map();
+    const cite = strings.codes.citation as string;
+    expect(cite).toMatch(/^International Classification of Diseases, Eleventh Revision \(ICD-11\), World Health Organization \(WHO\) 2019 https:\/\/icd\.who\.int\/browse11\. Licensed under .*CC BY-ND 3\.0 IGO/);
+    const json = exportJSON(m, cite);
+    expect(JSON.parse(json).meta).toEqual({ icd11_citation: cite });
+    expect(importJSON(json)).toEqual(m); // the meta is written fresh on export, not stored
+    const csv = exportCSV(m, titleOf, cite);
+    expect(csv.split('\n')[0]).toBe(`# ${cite}`);
+    expect(csv.split('\n')[1]).toContain('from_code_status,from_type');
+    const back = importCSV(csv, 'from csv', (c) => c in titles || c === 'QD82');
+    expect(back.edges.map((e) => [e.polarity, e.basis])).toEqual(m.edges.map((e) => [e.polarity, e.basis]));
+    const md = loopReportMD(m, titleOf, { strengthLabel: 'x', reinforcing: 'R', balancing: 'B', truncated: 'T', none: 'N', notice: 'n', citation: cite });
+    expect(md.trimEnd().endsWith(`---\n\n${cite}`)).toBe(true);
   });
   it('CSV import refuses an unknown code', () => {
     expect(() => importCSV('from_label,from_code,to_label,polarity\nA,QX00,B,+\n', 'x', () => false)).toThrow(/not an ICD-11 code/);

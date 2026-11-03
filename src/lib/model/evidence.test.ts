@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { checkLink, evidenceCanCloseALoop } from './evidence';
 import { aliasHits, associations } from '@/lib/data/scheme';
-import { EVIDENCE_CASES, QD71_1_EVICTION_CASE, RECODE_CASE, V2_BLOCK_LEVEL_CASE, W1_LOOP } from './__fixtures__/evidence-golden';
+import { EVIDENCE_CASES, QD71_1_EVICTION_CASE, RECODE_CASE, V2_BLOCK_LEVEL_CASE, W1_LOOP, L22_LOOP } from './__fixtures__/evidence-golden';
 import { findLoops, strongestLoops } from '@/lib/analysis';
 import { assignLoopNames } from './interchange';
 import { addEdge, addNode, migrate, newEdge, newMap, newNode, toGraph, updateEdge, updateNode, ModelError } from './map';
@@ -95,19 +95,21 @@ describe('UI-18 in the model', () => {
   });
   it('a v1 import re-checks every edge: L03 → evidence, the rest → needs-review', () => {
     const { m, x, y } = twoNodes('QD71.Z', 'QD80');
-    const z = newNode({ code_status: 'sdoh', code: 'QE01' });
+    // K9: L22 (QD80 → QE01) ships now, so the withheld case is L23 (income → neighbourhood)
+    const w = newNode({ code_status: 'sdoh', code: 'QD51' });
+    const z = newNode({ code_status: 'sdoh', code: 'QD70.0' });
     const v1 = {
       ...m,
       schema_version: 1,
-      nodes: [...m.nodes, z],
+      nodes: [...m.nodes, w, z],
       edges: [
         { id: 'a', from: x.id, to: y.id, polarity: '+', weight: 0.5, evidence: [23], link: 'L03' },
-        { id: 'b', from: y.id, to: z.id, polarity: '+', weight: 0.5, evidence: [] },
+        { id: 'b', from: w.id, to: z.id, polarity: '+', weight: 0.5, evidence: [] },
       ],
     };
     const out = migrate(v1);
     expect(out.schema_version).toBe(2);
-    expect(out.edges.map((e) => [e.basis, e.check])).toEqual([['evidence', 'match'], ['needs-review', 'withheld:L22']]);
+    expect(out.edges.map((e) => [e.basis, e.check])).toEqual([['evidence', 'match'], ['needs-review', 'withheld:L23']]);
   });
   it('a v2 import with a block-level evidence edge now outside the codes becomes needs-review', () => {
     const c = V2_BLOCK_LEVEL_CASE;
@@ -125,21 +127,27 @@ describe('UI-18 in the model', () => {
   });
 });
 
-describe('K5: the w1 loop closes on evidence alone', () => {
-  it('eviction → unemployment → low income → eviction: three evidence links, 0 overrides, and it survives the toggle', () => {
-    let m = newMap('Client R.');
-    const ns = W1_LOOP.codes.map((code) => newNode({ code_status: 'sdoh', code }));
-    for (const n of ns) m = addNode(m, n);
-    for (let i = 0; i < ns.length; i++) m = addEdge(m, newEdge({ from: ns[i].id, to: ns[(i + 1) % ns.length].id, polarity: '+', basis: 'evidence' }));
-    expect(m.edges.map((e) => [e.basis, e.link])).toEqual(W1_LOOP.links.map((l) => ['evidence', l]));
-    const all = toGraph(m);
-    const evidenceOnly = { nodes: all.nodes, edges: all.edges.filter((e) => m.edges.find((x) => x.id === e.id)!.basis === 'evidence') };
-    for (const g of [all, evidenceOnly]) {
-      const r = findLoops(g);
-      expect(r.loops).toHaveLength(1);
-      expect(r.loops[0]).toMatchObject({ kind: 'R', length: 3 });
-    }
-  });
+describe('K5 and K9: loops that close on evidence alone', () => {
+  const cases = [
+    { name: 'K5: eviction → unemployment → low income → eviction', loop: W1_LOOP },
+    { name: 'K9: unemployment ⇄ stress (L22 out, L29 back)', loop: L22_LOOP },
+  ];
+  for (const { name, loop } of cases) {
+    it(`${name}: every link is evidence, 0 overrides, and it survives the toggle`, () => {
+      let m = newMap('Client R.');
+      const ns = loop.codes.map((code) => newNode({ code_status: 'sdoh', code }));
+      for (const n of ns) m = addNode(m, n);
+      for (let i = 0; i < ns.length; i++) m = addEdge(m, newEdge({ from: ns[i].id, to: ns[(i + 1) % ns.length].id, polarity: '+', basis: 'evidence' }));
+      expect(m.edges.map((e) => [e.basis, e.link])).toEqual(loop.links.map((l) => ['evidence', l]));
+      const all = toGraph(m);
+      const evidenceOnly = { nodes: all.nodes, edges: all.edges.filter((e) => m.edges.find((x) => x.id === e.id)!.basis === 'evidence') };
+      for (const g of [all, evidenceOnly]) {
+        const r = findLoops(g);
+        expect(r.loops).toHaveLength(1);
+        expect(r.loops[0]).toMatchObject({ kind: 'R', length: loop.codes.length });
+      }
+    });
+  }
 });
 
 describe('K5: builder search aliases', () => {

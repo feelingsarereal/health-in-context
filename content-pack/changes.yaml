@@ -107,3 +107,29 @@
   - scenarios/w2
   source: w2 walk 2026-11-02
   by: cowork
+- date: '2026-11-02'
+  what: 'ICD-11 text now WHO''s own: titles, definitions, inclusions, exclusions, coded-elsewhere notes, index terms and URIs
+    for all 126 codes, 16 groups and the residuals come verbatim from the WHO ICD-API (local container, release 2026-01) via
+    tools/pull_icd11_api.py v0.1.3; the findacode mirror is retired. QD85 and QE11.6 definitions corrected; QE51.1 and QD71.Z
+    index terms completed; residuals and QD71.Z gain URIs; scheme.text_source and scheme.licence (the CC BY-ND 3.0 IGO citation,
+    licence §1.3) replace scheme.interim_source'
+  why: T-ICD-01; ICD-11 licence §1.2.3 (code, title and URI) and §1.3 (citation)
+  records:
+  - situations.items
+  - situations.groups
+  - situations.residuals
+  - situations.scheme
+  - situations.known_gaps
+  source: WHO ICD-API container, ICD-11 MMS 2026-01, pulled 2026-11-02
+  by: cowork
+- date: '2026-11-02'
+  what: L22 (QD80 unemployment → QE01 stress, +, S) now ships on Paul & Moser 2009, summarised from Daniel's UAH library PDF
+    (abstract verbatim); Kivimäki 2012 (job strain → heart disease) removed from L22 as off-target; with L29 the QD80 ⇄ QE01
+    loop closes on evidence. Lawes 2022 note updated
+  why: T-BIB-03; independent check passed with wording fixes (hedged causal claim; QE01 as an approximate reading, not a diagnosis)
+  records:
+  - links/L22
+  - references/paul_moser2009
+  - references/lawes2022
+  source: Paul & Moser 2009 (publisher PDF via UAH library); independent reviewer
+  by: cowork

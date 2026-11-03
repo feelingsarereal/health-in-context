@@ -42,7 +42,7 @@ test('w1: a loop built through the association menu closes on evidence, then one
   await expect(page.getByTestId('map-name')).toHaveText('Client R.');
 
   // 2 — 'evict' in the picker: QD71.Z at the top with the builder-alias note; choose it, describe; block colour + code;
-  //     the pop-out (title, no definition + the WHO browser root, interim note)
+  //     the pop-out (title, no definition + QD71.Z's own WHO browser entry (K9), WHO as the source and the licence citation; K9)
   await page.getByTestId('add-node').click();
   const nd = page.getByTestId('node-dialog');
   await nd.getByTestId('code-search').fill('evict');
@@ -64,8 +64,9 @@ test('w1: a loop built through the association menu closes on evidence, then one
   const pop = page.getByTestId('inspector').getByTestId('code-popout');
   await expect(pop.getByTestId('code-title')).toHaveText('Problems associated with housing, unspecified');
   await expect(pop.getByTestId('no-definition')).toHaveText('No definition in ICD-11 for this code.');
-  await expect(pop.getByTestId('who-link')).toHaveAttribute('href', 'https://icd.who.int/browse/2026-01/mms/en');
-  await expect(pop.getByTestId('interim-note')).toBeVisible();
+  await expect(pop.getByTestId('who-link')).toHaveAttribute('href', 'https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified');
+  await expect(pop.getByTestId('code-source')).toHaveText("WHO's own text, ICD-11 MMS release 2026-01.");
+  await expect(pop.getByTestId('icd-citation')).toContainText('Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO');
 
   // 3 — association menu by keyboard: Leads to lists L03, L27 and L28 with polarity, grade and citation; nothing withheld
   const HOUSING = 'Problems associated with housing, unspecified';
@@ -83,7 +84,7 @@ test('w1: a loop built through the association menu closes on evidence, then one
   }
   await expect(menu.locator('[data-link="L03"]')).toContainText('Problems associated with employment or unemployment');
   await expect(menu.locator('[data-link="L03"]').getByRole('button', { name: 'Reference 23' })).toBeVisible();
-  for (const w of ['L05', 'L06', 'L07', 'L08', 'L14', 'L16', 'L22', 'L23', 'L24', 'C01']) await expect(menu.locator(`[data-link="${w}"]`)).toHaveCount(0);
+  for (const w of ['L05', 'L06', 'L07', 'L08', 'L14', 'L16', 'L23', 'L24', 'C01']) await expect(menu.locator(`[data-link="${w}"]`)).toHaveCount(0);
 
   // 4 — L03 → QD80: a + edge with L03's citation and no ⚑
   await menu.locator('[data-link="L03"]').getByTestId('assoc-follow').click();

@@ -22,7 +22,9 @@ export interface SearchAlias { term: string; also: string[]; code: string; note:
 export interface NotOffered { id: string; from: string; to: string; polarity: string; grade: string; refs: number[]; reason: string[]; kind: 'withheld' | 'unverified' }
 
 const SJ = situationsJson as any;
-export const scheme = SJ.scheme as { id: string; name: string; release: string; source: string; official_browser: string; verified_on: string; interim_source?: string };
+export const scheme = SJ.scheme as { id: string; name: string; release: string; source: string; official_browser: string; verified_on: string; text_source?: string; licence?: string };
+/** definition_check values that need no "check against WHO" note: WHO's own text (K9) or a verified copy */
+export const CHECKED_DEFINITIONS = ['who_api', 'diff_verified', 'quoted_direct'];
 export const tiers = SJ.tiers as Record<string, string>;
 export const tierBasis = SJ.tier_basis as string | null;
 export const groups = SJ.groups as Group[];

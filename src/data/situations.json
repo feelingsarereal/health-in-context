@@ -6,7 +6,8 @@
   "source": "World Health Organization",
   "official_browser": "https://icd.who.int/browse/2026-01/mms/en",
   "verified_on": "2026-10-23",
-  "interim_source": "Text read from the findacode.com mirror of ICD-11 MMS v2026-01 because the WHO browser could not be read from the research environment. Long definitions were checked by a model-run comparison, not a byte diff (definition_check). Every code links to its WHO entry. Re-pull from the WHO ICD-API before any release beyond the pilot (todo T-ICD-01)."
+  "text_source": "Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder additions — tiers, links, crosswalk, search aliases — are marked as not from WHO.",
+  "licence": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO)."
  },
  "tiers": {
   "structural": "Structural determinants",
@@ -22,113 +23,190 @@
    "title": "Problems associated with finances",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/824927288",
-   "source_url": "https://www.findacode.com/icd-11/block-824927288.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288"
   },
   {
    "id": "QD60-QD6Z",
    "title": "Problems associated with drinking water or nutrition",
    "tier": "intermediary_material",
    "uri": "http://id.who.int/icd/entity/76222516",
-   "source_url": "https://www.findacode.com/icd-11/block-76222516.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#76222516"
   },
   {
    "id": "QD70-QD7Z",
    "title": "Problems associated with the environment",
    "tier": "intermediary_material",
    "uri": "http://id.who.int/icd/entity/266601618",
-   "source_url": "https://www.findacode.com/icd-11/block-266601618.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618"
   },
   {
    "id": "QD80-QD8Z",
    "title": "Problems associated with employment or unemployment",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/1440218064",
-   "source_url": "https://www.findacode.com/icd-11/block-1440218064.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064",
+   "exclusions": [
+    {
+     "title": "problems related to housing and economic circumstances",
+     "code": "QD71"
+    }
+   ],
+   "coded_elsewhere": [
+    {
+     "title": "Problem associated with relationships with people at work",
+     "code": "QE50.2"
+    }
+   ]
   },
   {
    "id": "QD90-QD9Z",
    "title": "Problems associated with education",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/561687345",
-   "source_url": "https://www.findacode.com/icd-11/block-561687345.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345",
+   "exclusions": [
+    {
+     "title": "factors associated with psychological development",
+     "code": "Chapter 06"
+    }
+   ],
+   "coded_elsewhere": [
+    {
+     "title": "Relationships with teachers or classmates",
+     "code": "QE50.1"
+    }
+   ]
   },
   {
    "id": "QE00-QE0Z",
    "title": "Problems associated with social or cultural environment",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/462621464",
-   "source_url": "https://www.findacode.com/icd-11/block-462621464.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464",
+   "coded_elsewhere": [
+    {
+     "title": "Acute stress reaction",
+     "code": "QE84"
+    }
+   ]
   },
   {
    "id": "QE10-QE2Z",
    "title": "Problems associated with health behaviours",
    "tier": "intermediary_behavioural",
    "uri": "http://id.who.int/icd/entity/48322409",
-   "source_url": "https://www.findacode.com/icd-11/block-48322409.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409",
+   "exclusions": [
+    {
+     "title": "Difficulty or need for assistance with general life tasks or life management",
+     "code": "QF21"
+    }
+   ]
   },
   {
    "id": "QE30-QE3Z",
    "title": "Problems associated with social insurance or welfare",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/566804336",
-   "source_url": "https://www.findacode.com/icd-11/block-566804336.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336"
   },
   {
    "id": "QE40-QE4Z",
    "title": "Problems associated with the justice system",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/560926494",
-   "source_url": "https://www.findacode.com/icd-11/block-560926494.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494"
   },
   {
    "id": "QE50-QE5Z",
    "title": "Problems associated with relationships",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1509667156",
-   "source_url": "https://www.findacode.com/icd-11/block-1509667156.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156"
   },
   {
    "id": "QE60-QE6Z",
    "title": "Problems associated with absence, loss or death of others",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1399046120",
-   "source_url": "https://www.findacode.com/icd-11/block-1399046120.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120"
   },
   {
    "id": "QE70",
    "title": "Problems related to primary support group, including family circumstances",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/812634854",
-   "source_url": "https://www.findacode.com/icd-11/code-812634854.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854",
+   "exclusions": [
+    {
+     "title": "Problems associated with upbringing",
+     "code": "QE90-QE9Z"
+    },
+    {
+     "title": "Problems associated with harmful or traumatic events",
+     "code": "QE80-QE8Z"
+    }
+   ]
   },
   {
    "id": "QE80-QE8Z",
    "title": "Problems associated with harmful or traumatic events",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/675461815",
-   "source_url": "https://www.findacode.com/icd-11/block-675461815.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815",
+   "exclusions": [
+    {
+     "title": "Disorders specifically associated with stress",
+     "code": "6B40-6B4Z"
+    }
+   ],
+   "coded_elsewhere": [
+    {
+     "title": "Personal history of psychological trauma, not elsewhere classified",
+     "code": "QC4Y"
+    },
+    {
+     "title": "Personal history of physical trauma other than self-harm",
+     "code": "QC4Y"
+    }
+   ]
   },
   {
    "id": "QE90-QE9Z",
    "title": "Problems associated with upbringing",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1428430704",
-   "source_url": "https://www.findacode.com/icd-11/block-1428430704.html"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704"
   },
   {
    "id": "QF20-QF2Z",
    "title": "Difficulty or need for assistance with activities",
    "tier": "functioning",
    "uri": "http://id.who.int/icd/entity/340003177",
-   "source_url": "https://www.findacode.com/icd-11/block-340003177.html",
-   "functioning": true
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177",
+   "functioning": true,
+   "definition": "Identifies activities for which the person needs assistance or has such difficulty with, that it affects their need for health services or their treatment.",
+   "exclusions": [
+    {
+     "title": "Dependence on enabling machines or devices",
+     "code": "QB40-QB4Z"
+    }
+   ]
   },
   {
    "id": "QD71",
    "title": "Problems associated with housing",
    "tier": "intermediary_material",
+   "uri": "http://id.who.int/icd/entity/683601550",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550",
    "subgroup_of": "QD70-QD7Z",
-   "note": "A category, exposed as a link target"
+   "note": "A category, exposed as a link target",
+   "exclusions": [
+    {
+     "title": "Problems associated with inadequate drinking-water",
+     "code": "QD60"
+    }
+   ]
   }
  ],
  "codes": [
@@ -149,7 +227,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/755867815",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#755867815",
-   "source_url": "https://www.findacode.com/icd-11/code-755867815.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#755867815",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -192,7 +270,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1503719512",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1503719512",
-   "source_url": "https://www.findacode.com/icd-11/code-1503719512.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1503719512",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -238,7 +316,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1163409625",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1163409625",
-   "source_url": "https://www.findacode.com/icd-11/code-1163409625.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1163409625",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -295,7 +373,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1212575027",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1212575027",
-   "source_url": "https://www.findacode.com/icd-11/code-1212575027.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1212575027",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -346,7 +424,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/1307910936",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1307910936",
-   "source_url": "https://www.findacode.com/icd-11/code-1307910936.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1307910936",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -391,7 +469,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1409115865",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1409115865",
-   "source_url": "https://www.findacode.com/icd-11/code-1409115865.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1409115865",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -440,7 +518,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/917941069",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#917941069",
-   "source_url": "https://www.findacode.com/icd-11/code-917941069.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#917941069",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -488,7 +566,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1109130164",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1109130164",
-   "source_url": "https://www.findacode.com/icd-11/code-1109130164.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1109130164",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -531,7 +609,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/659568166",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#659568166",
-   "source_url": "https://www.findacode.com/icd-11/code-659568166.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#659568166",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -574,7 +652,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1421780402",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1421780402",
-   "source_url": "https://www.findacode.com/icd-11/code-1421780402.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1421780402",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -636,7 +714,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/538178893",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#538178893",
-   "source_url": "https://www.findacode.com/icd-11/code-538178893.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#538178893",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -670,7 +748,7 @@
    "parent": "QD70",
    "subgroup": null,
    "definition": "Inadequate power that may restrict healthy living.",
-   "definition_check": "quoted_direct",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -679,7 +757,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/201495283",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#201495283",
-   "source_url": "https://www.findacode.com/icd-11/code-201495283.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#201495283",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -725,7 +803,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/683601550",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#683601550",
-   "source_url": "https://www.findacode.com/icd-11/code-683601550.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -776,7 +854,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1325772378",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1325772378",
-   "source_url": "https://www.findacode.com/icd-11/code-1325772378.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1325772378",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -830,7 +908,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/709780428",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#709780428",
-   "source_url": "https://www.findacode.com/icd-11/code-709780428.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#709780428",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -880,7 +958,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1000930983",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1000930983",
-   "source_url": "https://www.findacode.com/icd-11/code-1000930983.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1000930983",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -925,7 +1003,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/25263588",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#25263588",
-   "source_url": "https://www.findacode.com/icd-11/code-25263588.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#25263588",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -967,7 +1045,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1691005042",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1691005042",
-   "source_url": "https://www.findacode.com/icd-11/code-1691005042.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1691005042",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1009,7 +1087,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/275243151",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#275243151",
-   "source_url": "https://www.findacode.com/icd-11/code-275243151.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#275243151",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1048,7 +1126,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/1756207334",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334",
-   "source_url": "https://www.findacode.com/icd-11/code-1756207334.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1090,7 +1168,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1669952283",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1669952283",
-   "source_url": "https://www.findacode.com/icd-11/code-1669952283.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1669952283",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1133,7 +1211,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1965829403",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1965829403",
-   "source_url": "https://www.findacode.com/icd-11/code-1965829403.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1965829403",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1172,7 +1250,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/815543898",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898",
-   "source_url": "https://www.findacode.com/icd-11/code-815543898.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1203,8 +1281,8 @@
    "group": "QD80-QD8Z",
    "parent": "QD84",
    "subgroup": null,
-   "definition": "Occupational exposure to dust is exposure to dust during work, at the work location, or from the work location. The primary route of exposure is inhalation. Dusts are technically defined as dry particle aerosols produced by mechanical processes such as breaking, grinding, and pulverizing. Dusts may be of biological or nonbiological origin.",
-   "definition_check": "assembled_from_verbatim_fragments_then_diff_verified",
+   "definition": "Occupational exposure to dust is exposure to dust during work, at the work location, or from the work location. The primary route of exposure is inhalation.\nDusts are technically defined as dry particle aerosols produced by mechanical processes such as breaking, grinding, and pulverizing. Dusts may be of biological or nonbiological origin.",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -1214,7 +1292,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/211757070",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#211757070",
-   "source_url": "https://www.findacode.com/icd-11/code-211757070.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#211757070",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1257,7 +1335,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/440038928",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#440038928",
-   "source_url": "https://www.findacode.com/icd-11/code-440038928.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#440038928",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1299,7 +1377,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2138160026",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2138160026",
-   "source_url": "https://www.findacode.com/icd-11/code-2138160026.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2138160026",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1340,7 +1418,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1855399665",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1855399665",
-   "source_url": "https://www.findacode.com/icd-11/code-1855399665.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1855399665",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1381,7 +1459,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/473240871",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#473240871",
-   "source_url": "https://www.findacode.com/icd-11/code-473240871.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#473240871",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1412,8 +1490,8 @@
    "group": "QD80-QD8Z",
    "parent": null,
    "subgroup": null,
-   "definition": "Burnout is a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully managed. It is characterised by three dimensions: 1) feelings of energy depletion or exhaustion; 2) increased mental distance from one’s job, or feelings of negativism or cynicism related to one’s job; and 3) a sense of ineffectiveness and lack of accomplishment. Burn-out refers specifically to phenomena in the occupational context and should not be applied to describe experiences in other areas of life.",
-   "definition_check": "diff_verified",
+   "definition": "Burnout is a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully managed. It is characterised by three dimensions: 1) feelings of energy depletion or exhaustion; 2) increased mental distance from one’s job, or feelings of negativism or cynicism related to one's job; and 3) a sense of ineffectiveness and lack of accomplishment. Burn-out refers specifically to phenomena in the occupational context and should not be applied to describe experiences in other areas of life.",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1439,7 +1517,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/129180281",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#129180281",
-   "source_url": "https://www.findacode.com/icd-11/code-129180281.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#129180281",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1484,7 +1562,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/450012",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#450012",
-   "source_url": "https://www.findacode.com/icd-11/code-450012.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#450012",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1525,7 +1603,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1699549262",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1699549262",
-   "source_url": "https://www.findacode.com/icd-11/code-1699549262.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1699549262",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1575,7 +1653,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/299909297",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#299909297",
-   "source_url": "https://www.findacode.com/icd-11/code-299909297.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#299909297",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1605,7 +1683,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Problems resulting from the inability to adjust to a different culture or environment.",
-   "definition_check": "quoted_direct",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1625,7 +1703,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1652814217",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1652814217",
-   "source_url": "https://www.findacode.com/icd-11/code-1652814217.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1652814217",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1671,7 +1749,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1931375240",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1931375240",
-   "source_url": "https://www.findacode.com/icd-11/code-1931375240.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1931375240",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1710,7 +1788,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1706765446",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1706765446",
-   "source_url": "https://www.findacode.com/icd-11/code-1706765446.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1706765446",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1740,7 +1818,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Exclusion and rejection on the basis of personal characteristics such as physical appearance, sexual orientation, gender identity and expression, illness or behaviour.",
-   "definition_check": "diff_corrected_not_reconfirmed",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1758,7 +1836,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/292381213",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#292381213",
-   "source_url": "https://www.findacode.com/icd-11/code-292381213.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#292381213",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1788,7 +1866,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Persecution or discrimination, perceived as reality by an individual or real, on the basis of membership in some group (such as defined by skin colour, religion, ethnic origin, sexual orientation, gender identity and expression, etc.) rather than personal characteristics",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1813,7 +1891,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1948692361",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1948692361",
-   "source_url": "https://www.findacode.com/icd-11/code-1948692361.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1948692361",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1843,7 +1921,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "A pattern of alcohol use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of alcohol use, from the amount used on a given occasion, or from risky behaviours associated with alcohol use or the context of use, or from a combination of these. The risk may be related to short-term effects of alcohol or to longer-term cumulative effects on physical or mental health or functioning. Hazardous alcohol use has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of alcohol use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1857,7 +1935,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/499098434",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#499098434",
-   "source_url": "https://www.findacode.com/icd-11/code-499098434.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#499098434",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1883,7 +1961,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "A pattern of use of psychoactive substance(s) other than nicotine or alcohol that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of substance use, from the amount used on a given occasion, from risky behaviours associated with substance use or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of the substance or to longer-term cumulative effects on physical or mental health or functioning. Hazardous drug use has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of drug use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1895,7 +1973,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/179140499",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499",
-   "source_url": "https://www.findacode.com/icd-11/code-179140499.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1921,7 +1999,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of opioid use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of opioid use, from the amount used on a given occasion, from risky behaviours associated with opioid use or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of opioids or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of opioids has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of opioid use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1942,7 +2020,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/603861372",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#603861372",
-   "source_url": "https://www.findacode.com/icd-11/code-603861372.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#603861372",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -1968,7 +2046,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of cannabis use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of cannabis use, from the amount used on a given occasion, from risky behaviours associated with cannabis use or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of cannabis or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of cannabis has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of cannabis use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -1984,7 +2062,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1389430127",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1389430127",
-   "source_url": "https://www.findacode.com/icd-11/code-1389430127.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1389430127",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2010,7 +2088,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of use of sedatives, hypnotics or anxiolytics that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of sedatives, hypnotics or anxiolytics, from the amount used on a given occasion, from risky behaviours associated with use of sedatives, hypnotics or anxiolytics or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of sedatives, hypnotics or anxiolytics or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of sedatives, hypnotics or anxiolytics has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use of sedatives, hypnotics or anxiolytics often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2030,7 +2108,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/756014816",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#756014816",
-   "source_url": "https://www.findacode.com/icd-11/code-756014816.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#756014816",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2056,7 +2134,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of cocaine use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of cocaine use, from the amount used on a given occasion, from risky behaviours associated with cocaine use or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of cocaine or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of cocaine has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of cocaine use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2074,7 +2152,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1385385359",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1385385359",
-   "source_url": "https://www.findacode.com/icd-11/code-1385385359.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1385385359",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2100,7 +2178,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of use of stimulants including amphetamines and methamphetamine that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of stimulants including amphetamines and methamphetamine, from the amount used on a given occasion, from risky behaviours associated with use of stimulants including amphetamines and methamphetamine or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of stimulants including amphetamines and methamphetamine or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of stimulants including amphetamines and methamphetamine has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use of stimulants including amphetamines and methamphetamine often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2114,7 +2192,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/154205648",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#154205648",
-   "source_url": "https://www.findacode.com/icd-11/code-154205648.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#154205648",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2140,7 +2218,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of caffeine use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of caffeine use, from the amount used on a given occasion, from risky behaviours associated with caffeine use or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of caffeine or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of caffeine has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of caffeine use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2154,7 +2232,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/656164398",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#656164398",
-   "source_url": "https://www.findacode.com/icd-11/code-656164398.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#656164398",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2179,8 +2257,8 @@
    "group": "QE10-QE2Z",
    "parent": "QE11",
    "subgroup": null,
-   "definition": "A pattern of use of MDMA or related drugs that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of MDMA or related drugs, from the amount used on a given occasion, from risky behaviours associated with use of MDMA or related drugs or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of MDMA or related drugs or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of MDMA or related drugs has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use of MDMA or related drugs often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition": "A pattern of use of MDMA (3,4-methylenedioxymethamphetamine) or related drugs that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of MDMA or related drugs, from the amount used on a given occasion, from risky behaviours associated with use of MDMA or related drugs or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of MDMA or related drugs or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of MDMA or related drugs has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use of MDMA or related drugs often persists in spite of awareness of increased risk of harm to the user or to others.",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2194,7 +2272,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/113982884",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#113982884",
-   "source_url": "https://www.findacode.com/icd-11/code-113982884.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#113982884",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2220,7 +2298,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of use of dissociative drugs including ketamine and PCP (phencyclidine) that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of dissociative drugs including ketamine and PCP, from the amount used on a given occasion, from risky behaviours associated with use of dissociative drugs including ketamine and PCP or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of dissociative drugs including ketamine and PCP or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of dissociative drugs including ketamine and PCP has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of use of dissociative drugs including ketamine and PCP often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2234,7 +2312,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1235812153",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1235812153",
-   "source_url": "https://www.findacode.com/icd-11/code-1235812153.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1235812153",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2260,7 +2338,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of use of other specified psychoactive substances that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of the substance, from the amount used on a given occasion, from risky behaviours associated with use of the substance or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of the specified substance or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of other specified psychoactive substances has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of substance use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2274,7 +2352,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/688207252",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#688207252",
-   "source_url": "https://www.findacode.com/icd-11/code-688207252.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#688207252",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2300,7 +2378,7 @@
    "parent": "QE11",
    "subgroup": null,
    "definition": "A pattern of use of unknown or unspecified psychoactive substances that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. The increased risk may be from the frequency of use of the substance, from the amount used on a given occasion, from risky behaviours associated with use of the substance or the context of use, from a harmful route of administration, or from a combination of these. The risk may be related to short-term effects of the unknown or unspecified substance or to longer-term cumulative effects on physical or mental health or functioning. Hazardous use of unknown or unspecified psychoactive substances has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of substance use often persists in spite of awareness of increased risk of harm to the user or to others.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2314,7 +2392,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1240119257",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1240119257",
-   "source_url": "https://www.findacode.com/icd-11/code-1240119257.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1240119257",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2340,7 +2418,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "A pattern of nicotine use that appreciably increases the risk of harmful physical or mental health consequences to the user or to others to an extent that warrants attention and advice from health professionals. Most often nicotine is consumed in the form of tobacco, but there are also other forms of nicotine delivery (e.g., nicotine vapour). Hazardous nicotine use has not yet reached the level of having caused harm to physical or mental health of the user or others around the user. The pattern of nicotine use often persists in spite of awareness of increased risk of harm to the user or to others. This category is not intended to include the use of nicotine replacement therapies under medical supervision when these are used as part of attempts to stop or reduce smoking.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2358,7 +2436,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/63012279",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#63012279",
-   "source_url": "https://www.findacode.com/icd-11/code-63012279.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#63012279",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2414,7 +2492,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/457960184",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#457960184",
-   "source_url": "https://www.findacode.com/icd-11/code-457960184.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#457960184",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2450,7 +2528,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1877391879",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1877391879",
-   "source_url": "https://www.findacode.com/icd-11/code-1877391879.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1877391879",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2476,7 +2554,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Hazardous gambling and betting refers to a pattern of gambling or betting that appreciably increases the risk of harmful physical or mental health consequences to the individual or to others around the individual. The increased risk may be from the frequency of gambling or betting, the amount of time spent on these activities, the context of gambling or betting, the neglect of other activities and priorities, risky behaviours associated with gambling or betting or its context, the adverse consequences of gambling or betting, or from the combination of these factors. The pattern of gambling or betting often persists in spite of awareness of increased risk of harm to the individual or to others. This category may be used when the pattern of gambling or betting warrants attention and advice from health professionals but does not meet the diagnostic requirements for Gambling Disorder.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2492,7 +2570,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/233747706",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#233747706",
-   "source_url": "https://www.findacode.com/icd-11/code-233747706.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#233747706",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2518,7 +2596,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Hazardous gaming refers to a pattern of gaming, either online or offline, that appreciably increases the risk of harmful physical or mental health consequences to the individual or to others around the individual. The increased risk may be from the frequency of gaming, the amount of time spent on these activities, the neglect of other activities and priorities, risky behaviours associated with gaming or its context, the adverse consequences of gaming, or from the combination of these factors. The pattern of gaming often persists in spite of awareness of increased risk of harm to the individual or to others. This category may be used when the pattern of gaming behaviour warrants attention and advice from health professionals but does not meet the diagnostic requirements for Gaming Disorder.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -2532,7 +2610,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1586542716",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1586542716",
-   "source_url": "https://www.findacode.com/icd-11/code-1586542716.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1586542716",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2583,7 +2661,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/470296979",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#470296979",
-   "source_url": "https://www.findacode.com/icd-11/code-470296979.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#470296979",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2619,7 +2697,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/515575378",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#515575378",
-   "source_url": "https://www.findacode.com/icd-11/code-515575378.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#515575378",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2655,7 +2733,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2064361961",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2064361961",
-   "source_url": "https://www.findacode.com/icd-11/code-2064361961.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2064361961",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2690,7 +2768,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1261978211",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1261978211",
-   "source_url": "https://www.findacode.com/icd-11/code-1261978211.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1261978211",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2725,7 +2803,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/453104436",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#453104436",
-   "source_url": "https://www.findacode.com/icd-11/code-453104436.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#453104436",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2760,7 +2838,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/86445206",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#86445206",
-   "source_url": "https://www.findacode.com/icd-11/code-86445206.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#86445206",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2793,7 +2871,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/1022049742",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1022049742",
-   "source_url": "https://www.findacode.com/icd-11/code-1022049742.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1022049742",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2836,7 +2914,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/707116764",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#707116764",
-   "source_url": "https://www.findacode.com/icd-11/code-707116764.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#707116764",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2879,7 +2957,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/549655480",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#549655480",
-   "source_url": "https://www.findacode.com/icd-11/code-549655480.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#549655480",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2922,7 +3000,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1435529051",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1435529051",
-   "source_url": "https://www.findacode.com/icd-11/code-1435529051.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1435529051",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -2965,7 +3043,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1895465705",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1895465705",
-   "source_url": "https://www.findacode.com/icd-11/code-1895465705.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1895465705",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3004,7 +3082,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/722188140",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#722188140",
-   "source_url": "https://www.findacode.com/icd-11/code-722188140.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#722188140",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3047,7 +3125,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/63010289",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#63010289",
-   "source_url": "https://www.findacode.com/icd-11/code-63010289.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#63010289",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3090,7 +3168,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/966443399",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#966443399",
-   "source_url": "https://www.findacode.com/icd-11/code-966443399.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#966443399",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3133,7 +3211,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1018097273",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1018097273",
-   "source_url": "https://www.findacode.com/icd-11/code-1018097273.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1018097273",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3176,7 +3254,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1495157188",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1495157188",
-   "source_url": "https://www.findacode.com/icd-11/code-1495157188.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1495157188",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3218,7 +3296,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/807975049",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#807975049",
-   "source_url": "https://www.findacode.com/icd-11/code-807975049.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#807975049",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3259,7 +3337,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1432581405",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1432581405",
-   "source_url": "https://www.findacode.com/icd-11/code-1432581405.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1432581405",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3299,7 +3377,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/567158242",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#567158242",
-   "source_url": "https://www.findacode.com/icd-11/code-567158242.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#567158242",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3339,7 +3417,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1765280656",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1765280656",
-   "source_url": "https://www.findacode.com/icd-11/code-1765280656.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1765280656",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3380,7 +3458,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/970113767",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#970113767",
-   "source_url": "https://www.findacode.com/icd-11/code-970113767.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#970113767",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3419,7 +3497,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/121970353",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353",
-   "source_url": "https://www.findacode.com/icd-11/code-121970353.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3461,7 +3539,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2088979863",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2088979863",
-   "source_url": "https://www.findacode.com/icd-11/code-2088979863.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2088979863",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3503,7 +3581,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/113426063",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#113426063",
-   "source_url": "https://www.findacode.com/icd-11/code-113426063.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#113426063",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3550,7 +3628,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1591948083",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1591948083",
-   "source_url": "https://www.findacode.com/icd-11/code-1591948083.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1591948083",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3609,7 +3687,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1927466204",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1927466204",
-   "source_url": "https://www.findacode.com/icd-11/code-1927466204.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1927466204",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3655,7 +3733,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/731100003",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#731100003",
-   "source_url": "https://www.findacode.com/icd-11/code-731100003.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#731100003",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3701,7 +3779,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/15786260",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#15786260",
-   "source_url": "https://www.findacode.com/icd-11/code-15786260.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#15786260",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3733,7 +3811,7 @@
    "parent": "QE50",
    "subgroup": null,
    "definition": "Personality difficulty refers to pronounced personality characteristics that may affect treatment or health services but do not rise to the level of severity to merit a diagnosis of Personality disorder. Personality difficulty is characterised by long-standing difficulties (e.g., at least 2 years), in the individual’s way of experiencing and thinking about the self, others and the world. In contrast to Personality disorders, these difficulties are manifested in cognitive and emotional experience and expression only intermittently (e.g., during times of stress) or at low intensity. The difficulties are associated with some problems in functioning but these are insufficiently severe to cause notable disruption in social, occupational, and interpersonal relationships and may be limited to specific relationships or situations.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -3747,7 +3825,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/853711607",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#853711607",
-   "source_url": "https://www.findacode.com/icd-11/code-853711607.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#853711607",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3786,7 +3864,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/396951882",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882",
-   "source_url": "https://www.findacode.com/icd-11/code-396951882.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3818,7 +3896,7 @@
    "parent": "QE51",
    "subgroup": null,
    "definition": "Substantial and sustained dissatisfaction with a spouse or intimate partner associated with significant disturbance in functioning.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -3839,7 +3917,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/848664338",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#848664338",
-   "source_url": "https://www.findacode.com/icd-11/code-848664338.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#848664338",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3871,7 +3949,7 @@
    "parent": "QE51",
    "subgroup": null,
    "definition": "Non-accidental acts of physical force, forced or coerced sexual acts, verbal or symbolic acts, or significant caregiving omissions that result in harm to a spouse or intimate partner or that have a reasonable potential for harm.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -3880,13 +3958,53 @@
     "partner violence",
     "spouse violence",
     "History of spouse or partner violence, physical",
+    "partner physical violence",
+    "spouse physical violence",
+    "Current spouse or partner violence, physical",
+    "current partner physical violence",
+    "current spouse physical violence",
+    "Current spouse or partner violence, physical, current occurrence",
+    "Current spouse or partner violence, physical, past occurrence",
+    "Former spouse or partner violence, physical",
+    "Former spouse or partner violence, physical, current occurrence",
+    "Former spouse or partner violence, physical, past occurrence",
     "History of spouse or partner violence, psychological",
+    "partner psychological violence",
+    "spouse psychological violence",
+    "Current spouse or partner violence, psychological",
+    "current partner psychological violence",
+    "current spouse psychological violence",
+    "Current spouse or partner violence, psychological, current occurrence",
+    "Current spouse or partner violence, psychological, past occurrence",
+    "Former spouse or partner violence, psychological",
+    "former partner psychological violence",
+    "former spouse psychological violence",
+    "Former spouse or partner violence, psychological, current occurrence",
+    "Former spouse or partner violence, psychological, past occurrence",
     "History of spouse or partner violence, sexual",
-    "History of spouse or partner violence, neglect"
+    "partner sexual violence",
+    "spouse sexual violence",
+    "Current spouse or partner violence, sexual",
+    "current partner sexual violence",
+    "current spouse sexual violence",
+    "Current spouse or partner violence, sexual, current occurrence",
+    "Current spouse or partner violence, sexual, past occurrence",
+    "Former spouse or partner violence, sexual",
+    "former partner sexual violence",
+    "former spouse sexual violence",
+    "Former spouse or partner violence, sexual, current occurrence",
+    "Former spouse or partner violence, sexual, past occurrence",
+    "History of spouse or partner violence, neglect",
+    "Current spouse or partner violence, neglect",
+    "Current spouse or partner violence, neglect, current occurrence",
+    "Current spouse or partner violence, neglect, past occurrence",
+    "Former spouse or partner violence, neglect",
+    "Former spouse or partner violence, neglect, current occurrence",
+    "Former spouse or partner violence, neglect, past occurrence"
    ],
    "uri": "http://id.who.int/icd/entity/1233531556",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1233531556",
-   "source_url": "https://www.findacode.com/icd-11/code-1233531556.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1233531556",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3925,7 +4043,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/901608346",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346",
-   "source_url": "https://www.findacode.com/icd-11/code-901608346.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -3957,7 +4075,7 @@
    "parent": "QE52",
    "subgroup": null,
    "definition": "Substantial and sustained dissatisfaction within a caregiver-child relationship, including a parental relationship, associated with significant disturbance in functioning.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -3969,7 +4087,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/547677013",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#547677013",
-   "source_url": "https://www.findacode.com/icd-11/code-547677013.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#547677013",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4001,7 +4119,7 @@
    "parent": "QE52",
    "subgroup": null,
    "definition": "Loss of an emotionally close relationship, such as of a parent, a sibling, a very special friend or a loved pet, by death or permanent departure or rejection.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -4013,7 +4131,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/181823991",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#181823991",
-   "source_url": "https://www.findacode.com/icd-11/code-181823991.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#181823991",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4054,7 +4172,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1661227447",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1661227447",
-   "source_url": "https://www.findacode.com/icd-11/code-1661227447.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1661227447",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4101,7 +4219,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/283820579",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#283820579",
-   "source_url": "https://www.findacode.com/icd-11/code-283820579.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#283820579",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4147,7 +4265,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/144715807",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#144715807",
-   "source_url": "https://www.findacode.com/icd-11/code-144715807.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#144715807",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4188,7 +4306,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2009949293",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2009949293",
-   "source_url": "https://www.findacode.com/icd-11/code-2009949293.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2009949293",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4234,7 +4352,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/812634854",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#812634854",
-   "source_url": "https://www.findacode.com/icd-11/code-812634854.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4274,7 +4392,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/105880611",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#105880611",
-   "source_url": "https://www.findacode.com/icd-11/code-105880611.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#105880611",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4319,7 +4437,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1973489591",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1973489591",
-   "source_url": "https://www.findacode.com/icd-11/code-1973489591.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1973489591",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4361,7 +4479,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/17588040",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#17588040",
-   "source_url": "https://www.findacode.com/icd-11/code-17588040.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#17588040",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4405,7 +4523,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/929790948",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#929790948",
-   "source_url": "https://www.findacode.com/icd-11/code-929790948.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#929790948",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4455,7 +4573,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1377875574",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1377875574",
-   "source_url": "https://www.findacode.com/icd-11/code-1377875574.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1377875574",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4487,7 +4605,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Personal history of non-accidental acts of physical force, forced or coerced sexual acts, verbal or symbolic acts, or significant caregiving omissions that result in harm or have a reasonable potential for harm. These categories are applied to the victim of the maltreatment, not the perpetrator.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -4499,7 +4617,7 @@
    "index_terms": [],
    "uri": "http://id.who.int/icd/entity/1703296220",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220",
-   "source_url": "https://www.findacode.com/icd-11/code-1703296220.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4531,7 +4649,7 @@
    "parent": "QE82",
    "subgroup": null,
    "definition": "Personal history of non-accidental acts of physical force that result, or have reasonable potential to result, in physical harm or that evoke significant fear. This category is applied to the victim of the maltreatment, not the perpetrator.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -4547,7 +4665,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/360494969",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#360494969",
-   "source_url": "https://www.findacode.com/icd-11/code-360494969.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#360494969",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4579,7 +4697,7 @@
    "parent": "QE82",
    "subgroup": null,
    "definition": "Personal history of forced or coerced sexual acts, sexual acts with someone who is unable to consent, or sexual acts involving a child that are intended to provide sexual gratification to an adult. This category is applied to the victim of the maltreatment, not the perpetrator.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -4594,7 +4712,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1206394097",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1206394097",
-   "source_url": "https://www.findacode.com/icd-11/code-1206394097.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1206394097",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4626,7 +4744,7 @@
    "parent": "QE82",
    "subgroup": null,
    "definition": "Personal history of non-accidental verbal or symbolic act that results in significant psychological harm. This category is applied to the victim of the maltreatment, not the perpetrator.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [
     {
@@ -4647,7 +4765,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1334495652",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1334495652",
-   "source_url": "https://www.findacode.com/icd-11/code-1334495652.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1334495652",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4679,7 +4797,7 @@
    "parent": "QE82",
    "subgroup": null,
    "definition": "Personal history of egregious acts or omissions by a caregiver that deprive a child of needed age-appropriate care or an adult who is incapable of self-care and that result, or have reasonable potential to result, in physical or psychological harm. This category is applied to the victim of the neglect, not the perpetrator.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -4689,7 +4807,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1172477528",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1172477528",
-   "source_url": "https://www.findacode.com/icd-11/code-1172477528.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1172477528",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4732,7 +4850,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2033777251",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2033777251",
-   "source_url": "https://www.findacode.com/icd-11/code-2033777251.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2033777251",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4764,7 +4882,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Acute stress reaction refers to the development of transient emotional, somatic, cognitive, or behavioural symptoms as a result of exposure to an event or situation (either short- or long-lasting) of an extremely threatening or horrific nature (e.g., natural or human-made disasters, combat, serious accidents, sexual violence, assault). Symptoms may include autonomic signs of anxiety (e.g., tachycardia, sweating, flushing), being in a daze, confusion, sadness, anxiety, anger, despair, overactivity, inactivity, social withdrawal, or stupor. The response to the stressor is considered to be normal given the severity of the stressor, and usually begins to subside within a few days after the event or following removal from the threatening situation.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [
     "acute crisis reaction",
     "acute reaction to stress"
@@ -4799,7 +4917,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/505909942",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#505909942",
-   "source_url": "https://www.findacode.com/icd-11/code-505909942.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#505909942",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4831,7 +4949,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Lack of parental knowledge of what the child is doing or where the child is; poor control; lack of concern, understanding or comprehension or lack of attempted intervention when the child is in risky situations.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -4843,7 +4961,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/189909449",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#189909449",
-   "source_url": "https://www.findacode.com/icd-11/code-189909449.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#189909449",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4885,7 +5003,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1847198813",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1847198813",
-   "source_url": "https://www.findacode.com/icd-11/code-1847198813.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1847198813",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4917,7 +5035,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Departure of a family member or arrival of a new person into a family resulting in adverse change in child's relationships. May include new relationship or marriage by a parent, death or illness of a parent, illness or birth of a sibling.",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -4930,7 +5048,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/456193180",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#456193180",
-   "source_url": "https://www.findacode.com/icd-11/code-456193180.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#456193180",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -4972,7 +5090,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1872602211",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1872602211",
-   "source_url": "https://www.findacode.com/icd-11/code-1872602211.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1872602211",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -5004,7 +5122,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Group foster care in which parenting responsibilities are largely taken over by some form of institution (such as residential nursery, orphanage, or children's home), or therapeutic care over a prolonged period in which the child is in a hospital, convalescent home or the like, without at least one parent living with the child.",
-   "definition_check": "diff_corrected_not_reconfirmed",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -5014,7 +5132,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/448222372",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#448222372",
-   "source_url": "https://www.findacode.com/icd-11/code-448222372.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#448222372",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -5046,7 +5164,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Parents forcing the child to be different from the local norm, either sex-inappropriate (e.g. dressing a boy in girl's clothes), age-inappropriate (e.g. forcing a child to take on responsibilities above her or his own age) or otherwise inappropriate (e.g. pressing the child to engage in unwanted or too difficult activities).",
-   "definition_check": "diff_verified",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -5056,7 +5174,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/502568905",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#502568905",
-   "source_url": "https://www.findacode.com/icd-11/code-502568905.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#502568905",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -5088,7 +5206,7 @@
    "parent": null,
    "subgroup": null,
    "definition": "Events resulting in a negative self-reappraisal by the child such as failure in tasks with high personal investment; disclosure or discovery of a shameful or stigmatizing personal or family event; or other humiliating experiences.",
-   "definition_check": "diff_corrected_not_reconfirmed",
+   "definition_check": "who_api",
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
@@ -5098,7 +5216,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2122004746",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2122004746",
-   "source_url": "https://www.findacode.com/icd-11/code-2122004746.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2122004746",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -5141,7 +5259,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1539042104",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1539042104",
-   "source_url": "https://www.findacode.com/icd-11/code-1539042104.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1539042104",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5169,7 +5287,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/2127627914",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2127627914",
-   "source_url": "https://www.findacode.com/icd-11/code-2127627914.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#2127627914",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5192,7 +5310,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1349734380",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1349734380",
-   "source_url": "https://www.findacode.com/icd-11/code-1349734380.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1349734380",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5228,7 +5346,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1019892537",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1019892537",
-   "source_url": "https://www.findacode.com/icd-11/code-1019892537.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1019892537",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5255,7 +5373,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1501666989",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1501666989",
-   "source_url": "https://www.findacode.com/icd-11/code-1501666989.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1501666989",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5281,7 +5399,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1079783118",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1079783118",
-   "source_url": "https://www.findacode.com/icd-11/code-1079783118.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1079783118",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5305,7 +5423,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/4906683",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#4906683",
-   "source_url": "https://www.findacode.com/icd-11/code-4906683.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#4906683",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5330,7 +5448,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/757911124",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#757911124",
-   "source_url": "https://www.findacode.com/icd-11/code-757911124.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#757911124",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5353,7 +5471,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/402200913",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#402200913",
-   "source_url": "https://www.findacode.com/icd-11/code-402200913.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#402200913",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5378,7 +5496,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/874042445",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#874042445",
-   "source_url": "https://www.findacode.com/icd-11/code-874042445.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#874042445",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5408,7 +5526,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1580775818",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1580775818",
-   "source_url": "https://www.findacode.com/icd-11/code-1580775818.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1580775818",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5434,7 +5552,7 @@
    ],
    "uri": "http://id.who.int/icd/entity/1214710726",
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1214710726",
-   "source_url": "https://www.findacode.com/icd-11/code-1214710726.html",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1214710726",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": null
@@ -5450,10 +5568,17 @@
    "inclusions": [],
    "exclusions": [],
    "coded_elsewhere": [],
-   "index_terms": [],
-   "uri": null,
-   "who_browser": "https://icd.who.int/browse/2026-01/mms/en",
-   "source_url": "https://www.findacode.com/icd-11/code-683601550/unspecified.html",
+   "index_terms": [
+    "Problems associated with housing, unspecified",
+    "Problems associated with housing",
+    "housing circumstance affecting care",
+    "problem with housing",
+    "Problems associated with isolated housing",
+    "isolated dwelling"
+   ],
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/683601550/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": {
     "icd10cm": [
@@ -5492,9 +5617,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-824927288/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/824927288/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#824927288/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5512,9 +5637,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-824927288/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/824927288/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#824927288/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5532,9 +5657,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-76222516/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/76222516/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#76222516/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#76222516/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5552,9 +5677,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1307910936/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1307910936/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1307910936/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1307910936/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5572,9 +5697,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-266601618/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/266601618/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#266601618/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5592,9 +5717,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-266601618/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/266601618/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#266601618/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5612,9 +5737,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1756207334/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1756207334/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5632,9 +5757,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1756207334/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1756207334/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5652,9 +5777,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-815543898/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/815543898/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5672,9 +5797,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-815543898/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/815543898/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5692,9 +5817,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1440218064/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1440218064/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1440218064/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5712,9 +5837,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1440218064/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1440218064/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1440218064/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5732,9 +5857,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-561687345/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/561687345/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#561687345/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5752,9 +5877,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-561687345/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/561687345/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#561687345/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5772,9 +5897,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-462621464/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/462621464/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#462621464/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5792,9 +5917,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-462621464/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/462621464/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#462621464/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5812,9 +5937,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-179140499/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/179140499/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5832,9 +5957,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-179140499/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/179140499/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5852,9 +5977,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1466350777/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1466350777/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1466350777/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1466350777/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5872,9 +5997,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1466350777/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1466350777/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1466350777/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1466350777/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5892,9 +6017,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-48322409/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/48322409/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#48322409/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5912,9 +6037,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-48322409/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/48322409/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#48322409/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5932,9 +6057,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1022049742/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1022049742/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1022049742/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1022049742/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5952,9 +6077,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-722188140/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/722188140/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#722188140/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#722188140/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -5972,9 +6097,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-566804336/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/566804336/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#566804336/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -5992,9 +6117,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-566804336/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/566804336/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#566804336/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6012,9 +6137,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-560926494/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/560926494/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#560926494/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6032,9 +6157,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-560926494/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/560926494/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#560926494/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6052,9 +6177,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-121970353/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/121970353/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6072,9 +6197,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-121970353/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/121970353/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6092,9 +6217,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1765280656/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1765280656/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1765280656/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1765280656/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6112,9 +6237,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-396951882/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/396951882/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6132,9 +6257,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-396951882/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/396951882/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6152,9 +6277,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-901608346/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/901608346/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6172,9 +6297,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-901608346/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/901608346/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6192,9 +6317,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1509667156/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1509667156/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1509667156/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6212,9 +6337,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1509667156/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1509667156/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1509667156/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6232,9 +6357,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-283820579/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/283820579/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#283820579/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#283820579/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6252,9 +6377,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1399046120/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1399046120/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1399046120/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6272,9 +6397,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1399046120/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1399046120/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1399046120/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6292,9 +6417,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-812634854/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/812634854/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#812634854/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6312,9 +6437,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1703296220/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1703296220/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6332,9 +6457,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1703296220/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1703296220/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6352,9 +6477,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-675461815/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/675461815/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#675461815/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6372,9 +6497,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-675461815/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/675461815/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#675461815/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6392,9 +6517,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1428430704/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1428430704/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1428430704/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6412,9 +6537,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-1428430704/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/1428430704/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1428430704/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6432,9 +6557,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-340003177/other.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/340003177/other",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#340003177/other",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177/other",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "other",
@@ -6452,9 +6577,9 @@
    "exclusions": [],
    "coded_elsewhere": [],
    "index_terms": [],
-   "uri": null,
-   "who_browser": null,
-   "source_url": "https://www.findacode.com/icd-11/code-340003177/unspecified.html",
+   "uri": "http://id.who.int/icd/release/11/2026-01/mms/340003177/unspecified",
+   "who_browser": "https://icd.who.int/browse/2026-01/mms/en#340003177/unspecified",
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177/unspecified",
    "verified_on": "2026-10-23",
    "crosswalk": null,
    "residual": "unspecified",
@@ -6653,20 +6778,11 @@
   }
  ],
  "known_gaps": [
-  "WHO ICD-11 browser (icd.who.int/browse/2025-01/mms/en) was NOT readable: WebFetch got only the landing page shell (a JavaScript app); the GetConcept endpoint returned a client error. All data comes from the findacode.com mirror, release v2026-01.",
-  "The full MMS PDF (familysupport.org.za) could not be fetched (proxy HTTP 504), so it was not used.",
-  "foundation_id: findacode does not print WHO URIs; IDs come from the numeric part of each findacode URL (block-<id>/code-<id>), which matches the WHO foundation entity ID as described in the task brief. Not checked against id.who.int (that API needs a token).",
-  "Residual Y/Z codes have no foundation_id (findacode serves them at code-<parent-id>/other.html or /unspecified.html); foundation_id is null for them.",
-  "Description text: the fetch tool will not quote more than about 125 characters. Long descriptions were rebuilt and then checked against the page with a model-run, character-by-character comparison ('diff_verified' = reported IDENTICAL; 'diff_corrected_not_reconfirmed' = small corrections taken from the comparison but not re-checked: QE03, QE94, QE96 and the QE10-QE1Z sub-block description). This was done by a language model, not a programmatic diff, so small typographic details (straight vs curly quotes, double spaces, dashes) may be wrong. Curly apostrophes were confirmed only in QD85 and QE50.7; QE92, QE94 and QE95 use straight apostrophes here and those were not confirmed.",
-  "Inclusions / exclusions / coded-elsewhere titles were read through the same summarising fetch tool. They are short and were asked for exactly, but no second fetch checked them character by character. Exclusion links (hrefs) were not kept; codes were.",
-  "index_terms are findacode's 'synonyms' list (WHO index terms). For QE51.1 only 7 of about 47 terms are kept.",
-  "Not captured: 'code also' / 'use additional code' notes, postcoordination axes, and coding notes. None were seen on the pages read, but the fetch prompts did not ask for them specifically.",
-  "Structure as findacode shows it: QE50 has no QE50.Z; QE61 has only QE61.0 and QE61.Y (no .Z); QE70 has no .Y; QD70 and QD71 have only .Z; QD6 has no QD6Y. These were not checked against WHO.",
-  "QE11.8 and QE11.9 have their own foundation entities, so they are listed as codes, not residuals.",
+  "Resolved 2026-11-02 by the WHO ICD-API pull: titles, definitions, inclusions, exclusions, coded-elsewhere notes, index terms and URIs are WHO's own text (the findacode mirror and its model-checked transcriptions are no longer used). Two mirror errors were corrected: QD85 (an apostrophe) and QE11.6 (the missing '(3,4-methylenedioxymethamphetamine)'); QE51.1 and QD71.Z gained WHO's full index-term lists.",
+  "Confirmed against WHO: no 'code also' notes or coding notes on any code in scope; QE62 Uncomplicated bereavement has no definition; the QD80-QD8Z block exclusion does read 'problems related to housing and economic circumstances (QD71)'; the QE41 title.",
+  "Still open (T-ICD-02): the child structure (QE50 has no QE50.Z; QE61 has only QE61.0 and QE61.Y; QE70 has no .Y; QD6 has no QD6Y) was not re-pulled, and the QE10–QE1Z sub-block description is not in the pull.",
+  "QE11.8 and QE11.9 have their own WHO entities, so they are listed as codes, not residuals.",
   "QE70 is a standalone category, not a block; it is listed as its own group with range 'QE70'.",
-  "Block-level descriptions exist only for QF20-QF2Z and the QE10-QE1Z sub-block; the other blocks show none on findacode.",
-  "Possible source oddity, recorded as found: the QD80-QD8Z block exclusion reads 'problems related to housing and economic circumstances (QD71)'.",
-  "QE62 Uncomplicated bereavement has no description on findacode v2026-01; recorded as null.",
-  "The section (QD50-QF2Z, findacode block-57624301) has no description; QF00-QF0Z and QF10 are out of scope and left out."
+  "The section QD50-QF2Z has no description; QF00-QF0Z and QF10 are out of scope and left out."
  ]
 }

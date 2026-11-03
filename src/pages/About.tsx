@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { manifest, provenance } from '@/lib/data/core';
+import { manifest, provenance, S } from '@/lib/data/core';
 import { scheme } from '@/lib/data/scheme';
 import { AsOf, Notice, PageHead } from '@/components/ui/bits';
 
@@ -26,8 +26,10 @@ export default function About() {
           {scheme.name} release {scheme.release}, {scheme.source}.{' '}
           <a className="underline" href={scheme.official_browser} target="_blank" rel="noreferrer">WHO ICD-11 browser</a>
         </dd>
-        <dt className="font-semibold">Interim source</dt>
-        <dd data-testid="interim-source">{scheme.interim_source}</dd>
+        <dt className="font-semibold">ICD-11 text</dt>
+        <dd data-testid="text-source">{scheme.text_source}</dd>
+        <dt className="font-semibold">ICD-11 citation</dt>
+        <dd data-testid="icd-citation">{S.codes.citation}</dd>
         <dt className="font-semibold">Licence and permissions</dt>
         <dd>
           Text: {manifest.permissions.text}. Figures: {manifest.permissions.figures}.

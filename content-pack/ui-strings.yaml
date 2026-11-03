@@ -12,7 +12,9 @@ codes:
   no_definition: "No definition in ICD-11 for this code."
   open_who: "Open in the WHO ICD-11 browser"
   interim: "Text from a copy of ICD-11 (release 2026-01). Check the WHO entry for the official wording."
-  proposed_xwalk: "Proposed mapping"
+  source: "WHO's own text, ICD-11 MMS release 2026-01."
+  citation_from: situations.scheme.licence
+  proposed_xwalk: "Proposed mapping — builder's reading, not from WHO"
   builder_alias: "Builder alias — not an ICD-11 index term"
   status:
     sdoh: "SDOH code"

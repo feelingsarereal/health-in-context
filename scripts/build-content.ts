@@ -81,8 +81,9 @@ const codes = s
           exclusions: [],
           coded_elsewhere: [],
           index_terms: [],
-          uri: null,
-          who_browser: null,
+          uri: (r.uri as string | undefined) ?? null,
+          // K9: a residual's source_url is its WHO browser entry now (the mirror is retired)
+          who_browser: r.source_url.startsWith('https://icd.who.int/') ? r.source_url : null,
           source_url: r.source_url,
           verified_on: s.scheme.verified_on,
           crosswalk: null,
@@ -174,6 +175,11 @@ const ui = (pack.uiStrings ?? {}) as Record<string, any>;
 const strings = JSON.parse(JSON.stringify(ui));
 if (strings.first_run?.body_from === 'safety.notice') strings.first_run.body = d.safety?.notice ?? null;
 strings.deidentify = d.safety?.deidentify?.nudge ?? null;
+// K9: the ICD-11 licence citation (§1.3), shown verbatim on /about, /methods, the pop-out and in every export
+if (strings.codes?.citation_from === 'situations.scheme.licence') {
+  strings.codes.citation = s?.scheme.licence ?? null;
+  if (!strings.codes.citation) errors.push('ui-strings/codes.citation_from: situations.scheme.licence is not set');
+}
 emit('strings.json', strings);
 
 // ───────────────────────── manifest bundle (identity, audience, safety, scope, upkeep, ledger, todo)
@@ -237,7 +243,7 @@ const provenance = {
   as_of: asOf,
   built: BUILD_DATE,
   pack_version: d.manifest?.builder?.version,
-  scheme: s ? { name: s.scheme.name, release: s.scheme.release, interim_source: s.scheme.interim_source ?? null } : null,
+  scheme: s ? { name: s.scheme.name, release: s.scheme.release, text_source: s.scheme.text_source ?? null, interim_source: s.scheme.interim_source ?? null, licence: s.scheme.licence ?? null } : null,
   modules: {
     situations: s
       ? {

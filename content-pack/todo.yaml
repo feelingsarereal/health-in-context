@@ -4,16 +4,33 @@ items:
   what: Re-pull all 125 ICD-11 codes from the WHO ICD-API (release 2026-01) and replace the findacode-mirror text; confirm
     foundation IDs, definitions (37 present / 88 null), inclusions, exclusions, "code also" notes.
   blocks: any release beyond the pilot (Daniel chose the interim mirror for the pilot, 2026-10-23)
+  status: done 2026-11-02 — all 189 entries pulled verbatim from the WHO ICD-API (local container, ICD-11 MMS 2026-01) by
+    tools/pull_icd11_api.py v0.1.3 into source/icd11_who_api.json; build_pack.py overlays WHO's text on every code, group
+    and residual. Two mirror errors corrected (QD85, QE11.6). App work (show WHO as the source and the licence citation; drop
+    the 'Interim copy' tag) is K9.
 - id: T-ICD-02
-  what: Re-check QE03, QE94, QE96 and the QE10–QE1Z sub-block description (corrected, not re-confirmed); the QE41 title wording;
-    the missing QE50.Z / QE61.Z / QE70.Y / QD6Y.
+  what: Re-check the missing QE50.Z / QE61.Z / QE70.Y / QD6Y against WHO's child lists, and pull the QE10–QE1Z sub-block description.
+    (QE03, QE94, QE96 and the QE41 title were confirmed against the WHO ICD-API on 2026-11-02.)
 - id: T-LIC-01
   what: Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before
     any delivery other than local.
+  status: 'checked 2026-11-02 against WHO''s ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf):
+    CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI,
+    QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder''s
+    tiers and links are labelled). Required: the citation ''International Classification of Diseases, Eleventh Revision (ICD-11),
+    World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO'' (§1.3) — not yet
+    shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the
+    app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). Plan: ask WHO for a written agreement
+    now; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic
+    tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement
+    from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice.'
 - id: T-BIB-03
-  what: Abstracts for Link & Phelan 1995 and Paul & Moser 2009 — neither is in OpenAlex or Europe PMC (checked 2026-10-23);
-    needs library access. L22 is withheld until Paul & Moser is summarised.
+  what: Abstract for Link & Phelan 1995 — not in OpenAlex, Europe PMC or Crossref (re-checked 2026-11-02); needs the UAH library
+    copy (source/research/library/README.md). Paul & Moser 2009 done 2026-11-02 from Daniel's library PDF; L22 now ships on
+    it.
 - id: T-BIB-04
+  status: '2026-11-02: Crossref''s ''abstract'' for both Richardson papers is the same series blurb OpenAlex had (BAD_ABSTRACT);
+    Kosko and Özesmi have none. All five are on the library list in source/research/library/README.md.'
   what: Read Richardson 1986 and 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (UAH library) so the methods references
     can be marked verified; until then the glossary and 101s that cite them show "not verified".
 - id: T-BIB-02
@@ -29,15 +46,8 @@ items:
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
-- id: T-EVID-04
-  what: 'L22 Unemployment → Stress stays withheld. The best direct test found (Lawes et al. 2022, hair cortisol, German jobseeker
-    panel, n=526) is mixed: no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment
-    with low re-employment expectations (abstract harvested 2026-11-01; independent check calls it mixed, not counter-evidence).
-    Shown on /methods when L22 is next reviewed. Paul & Moser 2009 still needs library access.'
 - id: T-REF-link_phelan1995
   what: 'references/8 (link_phelan1995): summary pending abstract'
-- id: T-REF-paul_moser2009
-  what: 'references/26 (paul_moser2009): summary pending abstract'
 - id: T-REF-richardson1986
   what: 'references/52 (richardson1986): source not read beyond metadata'
 - id: T-REF-richardson1995
@@ -49,4 +59,4 @@ items:
 - id: T-REF-hovmand2014
   what: 'references/60 (hovmand2014): source not read beyond metadata'
 - id: T-LINKS
-  what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L22, L23, L24, C01, C02'
+  what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02'

@@ -572,16 +572,16 @@
   "doi": "10.1016/j.jvb.2009.01.001",
   "url": "https://doi.org/10.1016/j.jvb.2009.01.001",
   "isbn": null,
-  "abstract": null,
-  "abstract_source": null,
-  "abstract_note": "Not available from OpenAlex or Europe PMC",
-  "harvested_on": null,
-  "summary": null,
+  "abstract": "The effect of unemployment on mental health was examined with meta-analytic methods across 237 cross-sectional and 87 longitudinal studies. The average overall effect size was d = 0.51 with unemployed persons showing more distress than employed persons. A significant difference was found for several indicator variables of mental health (mixed symptoms of distress, depression, anxiety, psychosomatic symptoms, subjective well-being, and self esteem). The average number of persons with psychological problems among the unemployed was 34%, compared to 16% among employed individuals. Moderator analyses demonstrated that men and people with blue-collar-jobs were more distressed by unemployment than women and people with white-collar jobs. Linear and curvilinear moderating effects of the duration of unemployment were also identified. Furthermore, the negative effect of unemployment on mental health was stronger in countries with a weak level of economic development, unequal income distributions, or weak unemployment protection systems compared to other countries. Meta-analyses of longitudinal studies and natural experiments endorsed the assumption that unemployment is not only correlated to distress but also causes it. Seemingly inconsistent longitudinal results of older meta-analyses can be explained by retest artifacts. We also identified mental-health related selection effects during job loss and job search, but they are weak. With an effect size of d = .35 intervention programs for unemployed people were found to be moderately effective in ameliorating unemployment-related distress among continuously unemployed persons.",
+  "abstract_source": "publisher PDF (UAH library copy); line-break hyphens rejoined and ligatures expanded, otherwise verbatim",
+  "abstract_note": null,
+  "harvested_on": "2026-11-02",
+  "summary": "Meta-analyses of 237 cross-sectional and 87 longitudinal studies found that unemployed people show more distress than employed people (average d = 0.51), across mixed distress, depression, anxiety, psychosomatic symptoms, subjective well-being and self-esteem; 34% of unemployed people had psychological problems compared with 16% of employed people. Longitudinal studies and natural experiments supported the conclusion that unemployment causes distress, not only correlates with it; selection effects (poorer mental health leading to job loss) were found but weak. Effects were larger for men, blue-collar workers, and in countries with weaker economic development, unequal incomes or weak unemployment protection, and varied with how long unemployment lasted; intervention programmes reduced distress moderately (d = .35).",
   "why_it_mattered": null,
   "role_here": "support",
   "role_note": null,
-  "verified": false,
-  "verified_on": null,
+  "verified": true,
+  "verified_on": "2026-10-23",
   "used_by": [
    "links/L22"
   ]
@@ -931,9 +931,7 @@
   "role_note": null,
   "verified": true,
   "verified_on": "2026-10-23",
-  "used_by": [
-   "links/L22"
-  ]
+  "used_by": []
  },
  {
   "n": 42,
@@ -1117,7 +1115,7 @@
   "summary": "In longitudinal data on initially employed German jobseekers, hair cortisol (a biomarker of chronic stress) was highest while employment was insecure and fell as people learned whether they would become unemployed. The average change in hair cortisol did not differ between people who entered unemployment and those who stayed employed; medium-term unemployment with low re-employment expectations was associated with a larger increase.",
   "why_it_mattered": null,
   "role_here": "prior-result",
-  "role_note": "Mixed, context-dependent evidence for the withheld link L22 (unemployment → stress): no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment with low re-employment expectations; it measures a biomarker, not perceived stress. Recorded on /methods, not used to back a link.",
+  "role_note": "Mixed, context-dependent evidence on L22 (unemployment → stress), which rests on Paul & Moser 2009: no average change in hair cortisol on entering unemployment, but an increase in medium-term unemployment with low re-employment expectations; it measures a biomarker, not perceived stress. Recorded on /methods, not used to back a link.",
   "verified": true,
   "verified_on": "2026-10-23",
   "used_by": []

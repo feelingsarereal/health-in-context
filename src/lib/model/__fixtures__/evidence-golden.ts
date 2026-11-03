@@ -12,6 +12,8 @@
  *   L27  QD71 → QD50-QD5Z (+)          shipped; codes QD71.Z → QD51
  *   L28  QD71 → QD71 (+)               shipped; codes QD71.Z → QD71.0
  *   L29  QE00-QE0Z → QD80-QD8Z (+)     shipped; codes QE01 → QD80 (K6)
+ *   L22  QD80-QD8Z → QE00-QE0Z (+)     shipped; codes QD80 → QE01 (K9: Paul & Moser 2009)
+ *   L23  QD50-QD5Z → QD70-QD7Z (+)     withheld
  *   L05  QD50-QD5Z → QE00-QE0Z (+)     withheld
  */
 import type { EndRef } from '../evidence';
@@ -31,6 +33,8 @@ export const EVIDENCE_CASES: { name: string; from: EndRef; to: EndRef; polarity:
   { name: 'an edge to an other node has an uncoded end', from: sdoh('QE01'), to: { code_status: 'other', code: null }, polarity: '−', basis: 'override', check: 'uncoded-end' },
   { name: 'an edge from an undetermined node has an uncoded end', from: { code_status: 'undetermined', code: null }, to: sdoh('QE01'), polarity: '−', basis: 'override', check: 'uncoded-end' },
   { name: 'QD51 → QD80 (+) has no link at all (L01 runs the other way)', from: sdoh('QD51'), to: sdoh('QD80'), polarity: '+', basis: 'override', check: 'no-link' },
+  { name: 'QD80 → QE01 (+) is evidence: L22 (K9)', from: sdoh('QD80'), to: sdoh('QE01'), polarity: '+', basis: 'evidence', check: 'match', link: 'L22' },
+  { name: 'QD51 → QD70.0 (+) has only the withheld L23', from: sdoh('QD51'), to: sdoh('QD70.0'), polarity: '+', basis: 'override', check: 'withheld:L23' },
   { name: 'QE01 → QD80 (+) is evidence: L29 (K6)', from: sdoh('QE01'), to: sdoh('QD80'), polarity: '+', basis: 'evidence', check: 'match', link: 'L29' },
   { name: 'QE82.0 → QD51 (+) is outside L25, whose evidence names QD50 only', from: sdoh('QE82.0'), to: sdoh('QD51'), polarity: '+', basis: 'override', check: 'outside-codes:L25' },
   { name: 'QE02 → QD80 (+) is outside the QE00-QE0Z → QD80 links (L12 names QE04, L29 QE01)', from: sdoh('QE02'), to: sdoh('QD80'), polarity: '+', basis: 'override', check: 'outside-codes:L12' },
@@ -41,6 +45,8 @@ export const EVIDENCE_CASES: { name: string; from: EndRef; to: EndRef; polarity:
 ];
 /** K5: the w1 loop, eviction → unemployment → low income → eviction, closes on evidence alone (L03, L01, L02). */
 export const W1_LOOP = { codes: ['QD71.Z', 'QD80', 'QD51'], links: ['L03', 'L01', 'L02'] };
+/** K9: with L22 shipped, unemployment ⇄ stress closes on evidence alone (L22 out, L29 back). */
+export const L22_LOOP = { codes: ['QD80', 'QE01'], links: ['L22', 'L29'] };
 /** K5: a map saved with eviction coded QD71.1 re-checks on import: its L03 edge is now outside L03's codes. */
 export const QD71_1_EVICTION_CASE = { from: 'QD71.1', to: 'QD80', link: 'L03', basis: 'needs-review', check: 'outside-codes:L03' };
 /** Recoding QD80 → QE01 at the target of an L03 evidence edge leaves it unsupported: needs-review, check no-link. */

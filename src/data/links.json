@@ -329,6 +329,29 @@
    "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24."
   },
   {
+   "id": "L22",
+   "from": "QD80-QD8Z",
+   "to": "QE00-QE0Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Unemployment likely increases psychological distress — job loss is followed by more distress and re-employment by less, and a smaller but still medium-sized difference remains in factory-closure studies; the authors read these meta-analyses of longitudinal studies and natural experiments as supporting a causal effect, and reverse (selection) effects were found but weak. [26]",
+   "refs": [
+    26
+   ],
+   "suggest": [
+    "QE01"
+   ],
+   "codes": {
+    "from": [
+     "QD80"
+    ],
+    "to": [
+     "QE01"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstract and results, 2026-11-02 (T-BIB-03) — the meta-analysis measured distress (mixed symptoms, depression, anxiety, psychosomatic symptoms, low well-being and self-esteem), read here as QE01 Stress, not elsewhere classified; job strain (Kivimäki 2012) no longer cited here. The paper does not use ICD categories; QE01 is an approximate reading of distress symptom scores — not a diagnosis, and not a coded condition."
+  },
+  {
    "id": "L25",
    "from": "QE80-QE8Z",
    "to": "QD50-QD5Z",
@@ -562,21 +585,6 @@
    ],
    "reason": [
     "Withheld 2026-10-24 under code-level matching (Daniel's option B): with code-level matching the abuse codes (QE82.x) are themselves the adverse childhood experiences, so the link is definitional, not causal."
-   ],
-   "kind": "withheld"
-  },
-  {
-   "id": "L22",
-   "from": "QD80-QD8Z",
-   "to": "QE00-QE0Z",
-   "polarity": "+",
-   "grade": "S",
-   "refs": [
-    26,
-    41
-   ],
-   "reason": [
-    "[26] not verified"
    ],
    "kind": "withheld"
   },

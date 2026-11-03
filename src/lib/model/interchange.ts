@@ -17,8 +17,9 @@ export function nodeName(n: MapNode, titleOf: TitleOf): string {
   return n.kind === 'note' ? 'Note' : 'Untitled circumstance';
 }
 
-export function exportJSON(m: SdohMap): string {
-  return JSON.stringify(m, null, 2) + '\n';
+/** K9: every export carries the ICD-11 licence citation (§1.3): JSON `meta`, a CSV comment line, a Markdown footer. */
+export function exportJSON(m: SdohMap, citation?: string): string {
+  return JSON.stringify(citation ? { ...m, meta: { icd11_citation: citation } } : m, null, 2) + '\n';
 }
 
 export function importJSON(text: string): SdohMap {
@@ -28,6 +29,8 @@ export function importJSON(text: string): SdohMap {
   } catch {
     throw new ImportError('This file is not valid JSON. Nothing was imported.');
   }
+  // the export's `meta` (the licence citation) is written fresh on every export, so it is not stored with the map
+  if (raw && typeof raw === 'object' && 'meta' in raw) delete (raw as Record<string, unknown>).meta;
   return migrate(raw);
 }
 
@@ -44,9 +47,9 @@ const q = (v: unknown) => {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
-export function exportCSV(m: SdohMap, titleOf: TitleOf): string {
+export function exportCSV(m: SdohMap, titleOf: TitleOf, citation?: string): string {
   const byId = new Map(m.nodes.map((n) => [n.id, n]));
-  const rows = [CSV_COLS.join(',')];
+  const rows = [...(citation ? [`# ${citation.replace(/[\r\n]+/g, ' ')}`] : []), CSV_COLS.join(',')];
   for (const e of m.edges) {
     const a = byId.get(e.from)!;
     const b = byId.get(e.to)!;
@@ -96,7 +99,8 @@ export function parseCSV(text: string): string[][] {
 
 /** A CSV edge list becomes a new map. Nodes are matched by id, else by label; codes must exist in the scheme. */
 export function importCSV(text: string, name: string, isCode: (c: string) => boolean): SdohMap {
-  const rows = parseCSV(text);
+  // leading `#` lines are comments (the licence citation that exportCSV writes)
+  const rows = parseCSV(text.replace(/^\uFEFF?(?:#[^\r\n]*(?:\r?\n|$))+/, ''));
   if (!rows.length) throw new ImportError('The CSV file is empty. Nothing was imported.');
   const head = rows[0].map((h) => h.trim().toLowerCase());
   const col = (k: string) => head.indexOf(k);
@@ -169,6 +173,8 @@ export interface ReportLabels {
   truncated: string;
   none: string;
   notice: string;
+  /** the ICD-11 licence citation, for the footer (K9) */
+  citation?: string;
 }
 export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, result?: LoopResult): string {
   const r = result ?? findLoops(toGraph(m));
@@ -212,6 +218,7 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
     const why = e.basis === 'evidence' ? `${e.link} ${e.evidence.map((n) => `[${n}]`).join(' ')}` : `⚑ ${e.check}${e.override_reason ? ` — ${plainText(e.override_reason).replace(/\|/g, '\\|')} (${e.override_at})` : ''}`;
     out.push(`| ${desc(e.from)} | ${desc(e.to)} | ${e.polarity} | ${e.weight} | ${e.delay ? '‖' : ''} | ${e.confidence} | ${e.basis} | ${why} |`);
   }
+  if (L.citation) out.push('', '---', '', L.citation);
   return out.join('\n') + '\n';
 }
 

@@ -1,5 +1,5 @@
 import { bundle, buildErrors, provenance, staleness, S } from '@/lib/data/core';
-import { scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes } from '@/lib/data/scheme';
+import { scheme, knownGaps, notOffered, endpointTitle, tierBasis, codes, links, CHECKED_DEFINITIONS } from '@/lib/data/scheme';
 import { references } from '@/lib/data/refs';
 import { evidenceCanCloseALoop } from '@/lib/model/evidence';
 import { AsOf, PageHead, Todo } from '@/components/ui/bits';
@@ -12,17 +12,18 @@ const Section = ({ id, title, children }: { id: string; title: string; children:
   </section>
 );
 
-/** ACTION-SPEC §2 /methods: provenance counts, every TODO(author), heuristics, interim sources, build errors, staleness. */
+/** ACTION-SPEC §2 /methods: provenance counts, every TODO(author), heuristics, sources of ICD-11 text, build errors, staleness. */
 export default function Methods() {
   const p = provenance;
   const sit = p.modules.situations;
-  const todo = bundle.todo as { id: string; what: string; blocks?: string }[];
+  const todo = bundle.todo as { id: string; what: string; blocks?: string; status?: string }[];
   const unverified = references.filter((r) => !r.verified);
   const noAbstract = references.filter((r) => !r.abstract);
   const noSummary = references.filter((r) => !r.summary);
-  const checkNotes = codes.filter((c) => c.definition_check && !['diff_verified', 'quoted_direct'].includes(c.definition_check));
+  const checkNotes = codes.filter((c) => c.definition_check && !CHECKED_DEFINITIONS.includes(c.definition_check));
+  const otherChecks = [...new Set(codes.map((c) => c.definition_check).filter((k): k is string => !!k && k !== 'who_api'))];
   const scope = bundle.scope;
-  /** K6: references that back no link but are recorded against one (role_note names it), e.g. Lawes 2022 on the withheld L22 */
+  /** K6: references that back no link but are recorded against one (role_note names it), e.g. Lawes 2022 on L22 */
   const recordedOn = (id: string) => references.filter((r) => !r.used_by.length && r.role_note && new RegExp(`\\b${id}\\b`).test(r.role_note));
   const missingXwalk = [
     ...new Set(
@@ -32,6 +33,7 @@ export default function Methods() {
       ]),
     ),
   ].sort();
+  const recordedShipped = links.filter((l) => recordedOn(l.id).length > 0);
   return (
     <div className="[overflow-wrap:anywhere]">
       <PageHead title="Methods and provenance" lead="Where every fact in this app comes from, what is missing, and what is a heuristic.">
@@ -50,8 +52,11 @@ export default function Methods() {
         <p className="text-sm bx-muted">Machine-readable: <a className="underline" href={`${import.meta.env.BASE_URL}provenance.json`}>provenance.json</a> · <a className="underline" href={`${import.meta.env.BASE_URL}staleness.json`}>staleness.json</a></p>
       </Section>
 
-      <Section id="interim" title="Interim sources">
-        <p data-testid="interim-source"><span className="font-semibold">{scheme.name} {scheme.release}: </span>{scheme.interim_source}</p>
+      <Section id="icd-text" title="Sources of ICD-11 text">
+        <p data-testid="text-source"><span className="font-semibold">{scheme.name} {scheme.release}: </span>{scheme.text_source}</p>
+        <p data-testid="other-checks">
+          Definition text not from WHO's own release: {otherChecks.length === 0 ? 'none.' : otherChecks.map((k) => `${k.replace(/_/g, ' ')} (${codes.filter((c) => c.definition_check === k).length})`).join(', ') + '.'}
+        </p>
         {checkNotes.length > 0 && <p>Codes whose definition text should be checked against WHO (shown with a note in the pop-out): {checkNotes.map((c) => `${c.code} (${c.definition_check})`).join(', ')}.</p>}
         <details>
           <summary className="cursor-pointer font-semibold">Known gaps in the code extraction ({knownGaps.length})</summary>
@@ -71,7 +76,7 @@ export default function Methods() {
         <p>Gaps render in amber where they occur and are all listed here. Nothing below is shown as fact.</p>
         <ul className="space-y-2" data-testid="todo-list">
           {todo.map((t) => (
-            <li key={t.id}><Todo>{t.id}</Todo> {t.what}{t.blocks ? ` — blocks: ${t.blocks}` : ''}</li>
+            <li key={t.id}><Todo>{t.id}</Todo> {t.what}{t.blocks ? ` — blocks: ${t.blocks}` : ''}{t.status ? <span data-testid="todo-status"> — status: {t.status}</span> : null}</li>
           ))}
           <li><Todo>references</Todo> {unverified.length} not verified (never cited as evidence): {unverified.map((r) => `[${r.n}] ${r.key}`).join(', ')}.</li>
           <li><Todo>abstracts</Todo> {noAbstract.length === 1 ? '1 reference has' : `${noAbstract.length} references have`} no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
@@ -82,6 +87,25 @@ export default function Methods() {
           <li><Todo>interface copy</Todo> Labels and instructions not yet in ui-strings.yaml live in src/lib/copy.ts for review.</li>
         </ul>
       </Section>
+
+      {recordedShipped.length > 0 && (
+        <Section id="recorded" title="Evidence recorded beside shipped links">
+          <p>These references back no link but are recorded against a link the app offers.</p>
+          <ul className="space-y-2" data-testid="recorded-list">
+            {recordedShipped.map((l) => (
+              <li key={l.id} className="bx-card p-3" data-shipped={l.id}>
+                <span className="font-mono text-xs">{l.id}</span> {l.from} {endpointTitle(l.from)} → {l.to} {endpointTitle(l.to)} ({l.polarity}, grade {l.grade}, refs {l.refs.join(', ')}). Shipped.
+                {recordedOn(l.id).map((r) => (
+                  <div key={r.n} className="mt-2 border-l-2 border-[color:var(--bx-line)] pl-3 text-sm" data-testid="recorded-ref" data-ref={r.n}>
+                    <CitedText text={`Also recorded (${r.role_here.replace(/-/g, ' ')}; backs no link): [${r.n}]`} className="font-semibold" />
+                    <p className="mt-1">{r.role_note}</p>
+                  </div>
+                ))}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       <Section id="withheld" title="Links withheld or not offered">
         <p>These links are never offered on the map or shown as evidence.</p>
@@ -166,6 +190,8 @@ export default function Methods() {
           <dl className="text-sm">{scope.interview.map((x: any) => <div key={x.q} className="mt-1"><dt className="font-semibold">{x.q}</dt><dd>{x.a} ({x.date})</dd></div>)}</dl>
         </Section>
       )}
+
+      <p className="mt-10 border-t border-[color:var(--bx-line)] pt-3 text-xs bx-muted" data-testid="icd-citation">{S.codes.citation}</p>
     </div>
   );
 }

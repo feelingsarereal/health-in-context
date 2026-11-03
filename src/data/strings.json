@@ -15,14 +15,17 @@
   "no_definition": "No definition in ICD-11 for this code.",
   "open_who": "Open in the WHO ICD-11 browser",
   "interim": "Text from a copy of ICD-11 (release 2026-01). Check the WHO entry for the official wording.",
-  "proposed_xwalk": "Proposed mapping",
+  "source": "WHO's own text, ICD-11 MMS release 2026-01.",
+  "citation_from": "situations.scheme.licence",
+  "proposed_xwalk": "Proposed mapping — builder's reading, not from WHO",
   "builder_alias": "Builder alias — not an ICD-11 index term",
   "status": {
    "sdoh": "SDOH code",
    "other": "Other (not an SDOH code)",
    "undetermined": "Not sure yet"
   },
-  "assign_for_associations": "Assign an SDOH code to see associations."
+  "assign_for_associations": "Assign an SDOH code to see associations.",
+  "citation": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO)."
  },
  "associations": {
   "title": "What the research links to this",

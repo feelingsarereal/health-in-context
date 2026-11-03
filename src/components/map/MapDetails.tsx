@@ -27,7 +27,7 @@ export function MapDetails({ map, apply, download, canvas }: { map: SdohMap; app
   const [msg, setMsg] = useState<string | null>(null);
   const base = slug(map.name);
   const report = () =>
-    loopReportMD(map, titleOf, { strengthLabel: S.loops.strength_label, reinforcing: S.loops.reinforcing, balancing: S.loops.balancing, truncated: S.loops.truncated, none: S.loops.none, notice: safety.notice });
+    loopReportMD(map, titleOf, { strengthLabel: S.loops.strength_label, reinforcing: S.loops.reinforcing, balancing: S.loops.balancing, truncated: S.loops.truncated, none: S.loops.none, notice: safety.notice, citation: S.codes.citation });
   return (
     <div data-testid="map-panel">
       <Field label={C.maps.name} htmlFor={`${id}-name`}>
@@ -46,8 +46,8 @@ export function MapDetails({ map, apply, download, canvas }: { map: SdohMap; app
 
       <h3 className="font-semibold">{C.exportI.title}</h3>
       <div className="mt-2 flex flex-wrap gap-1.5">
-        <button type="button" className="bx-btn ax-tap" data-testid="export-json" onClick={() => download(`${base}.sdohmap.json`, exportJSON(map), 'application/json')}>{C.exportI.json}</button>
-        <button type="button" className="bx-btn ax-tap" data-testid="export-csv" onClick={() => download(`${base}-edges.csv`, exportCSV(map, titleOf), 'text/csv')}>{C.exportI.csv}</button>
+        <button type="button" className="bx-btn ax-tap" data-testid="export-json" onClick={() => download(`${base}.sdohmap.json`, exportJSON(map, S.codes.citation), 'application/json')}>{C.exportI.json}</button>
+        <button type="button" className="bx-btn ax-tap" data-testid="export-csv" onClick={() => download(`${base}-edges.csv`, exportCSV(map, titleOf, S.codes.citation), 'text/csv')}>{C.exportI.csv}</button>
         <button type="button" className="bx-btn ax-tap" data-testid="export-md" onClick={() => download(`${base}-loops.md`, report(), 'text/markdown')}>{C.exportI.md}</button>
         {canvas && (
           <>

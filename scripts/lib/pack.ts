@@ -144,7 +144,11 @@ export const SituationsSchema = z
       source: z.string().min(1),
       official_browser: z.string().optional(),
       verified_on: dateLike,
+      /** retired 2026-11-02 (T-ICD-01): WHO's own text replaced the mirror; still read so an older pack builds */
       interim_source: z.string().optional(),
+      text_source: z.string().optional(),
+      /** the ICD-11 licence §1.3 citation, shown verbatim (K9) */
+      licence: z.string().optional(),
     }),
     tiers: z.record(z.string()),
     tier_basis: z.string().optional(),
@@ -225,7 +229,7 @@ export const UpkeepSchema = z.object({
   sweeps: z.array(z.object({ id: z.string(), every_days: z.number().int(), scope: z.string() })).default([]),
 });
 export const ChangesSchema = z.array(z.object({ date: dateLike, what: z.string(), why: z.string(), records: z.array(z.string()).optional(), source: z.string().optional(), by: z.string() }));
-export const TodoSchema = z.object({ items: z.array(z.object({ id: z.string(), what: z.string(), blocks: z.string().optional() })) });
+export const TodoSchema = z.object({ items: z.array(z.object({ id: z.string(), what: z.string(), blocks: z.string().optional(), status: z.string().optional() })) });
 export const ScopeSchema = z
   .object({
     interview: z.array(z.object({ q: z.string(), a: z.string(), date: dateLike })).default([]),

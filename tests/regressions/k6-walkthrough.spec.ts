@@ -198,13 +198,16 @@ test('D10: a link whose straight line would cross another circumstance bends aro
   expect(new Set(ys).size).toBe(1);
 });
 
-test('Lawes 2022 is recorded on /methods beside the withheld L22, and backs no link', async ({ page }) => {
+test('Lawes 2022 is recorded on /methods beside L22, a shipped link since K9, and backs no link', async ({ page }) => {
   await page.goto('/methods');
-  const l22 = page.locator('[data-withheld="L22"]');
+  await expect(page.locator('[data-withheld="L22"]')).toHaveCount(0);
+  const l22 = page.locator('[data-shipped="L22"]');
+  await expect(l22).toContainText('Shipped');
+  await expect(l22).toContainText('refs 26');
   const rec = l22.getByTestId('recorded-ref');
   await expect(rec).toHaveAttribute('data-ref', '49');
   await expect(rec).toContainText('prior result; backs no link');
-  await expect(rec).toContainText('Mixed, context-dependent evidence for the withheld link L22');
+  await expect(rec).toContainText('Mixed, context-dependent evidence on L22 (unemployment → stress), which rests on Paul & Moser 2009');
   await rec.getByRole('button', { name: 'Reference 49' }).click();
   await expect(rec.getByTestId('cite-foldout')).toContainText('Lawes');
   await expect(page.getByTestId('recorded-ref')).toHaveCount(1);

@@ -104,14 +104,15 @@ test('H6: help lists every pack entry with source and date; no inputs, no branch
   await expect(page.locator('main').locator('input, select, textarea')).toHaveCount(0);
 });
 
-test('G3: as_of is visible on /, /about and /methods; the interim source is named', async ({ page }) => {
+test('G3: as_of is visible on /, /about and /methods; the source of the ICD-11 text is named (K9: WHO\'s own)', async ({ page }) => {
   for (const r of ['/', '/about', '/methods']) {
     await page.goto(r);
     await expect(page.getByTestId('as-of')).toContainText('2026-10-23');
   }
-  await expect(page.getByTestId('interim-source')).toContainText('findacode.com');
+  await expect(page.getByTestId('text-source')).toContainText("WHO's own text");
+  await expect(page.getByTestId('text-source')).toContainText('WHO ICD-API');
   await page.goto('/about');
-  await expect(page.getByTestId('interim-source')).toContainText('findacode.com');
+  await expect(page.getByTestId('text-source')).toContainText("WHO's own text");
 });
 
 test('G4: every heuristic result carries its label where it renders', async ({ page }) => {

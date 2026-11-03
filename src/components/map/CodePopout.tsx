@@ -1,4 +1,4 @@
-import { codeMap, groupMap, scheme, tiers } from '@/lib/data/scheme';
+import { CHECKED_DEFINITIONS, codeMap, groupMap, scheme, tiers } from '@/lib/data/scheme';
 import { S } from '@/lib/data/core';
 import { Todo } from '@/components/ui/bits';
 import { CitedText } from '@/components/evidence/CitedText';
@@ -6,7 +6,7 @@ import type { XRef } from '@/lib/data/scheme';
 
 const xref = (x: string | XRef) => (typeof x === 'string' ? x : `${x.title}${x.code ? ` (${x.code})` : ''}`);
 
-/** UI-02: the code's verbatim ICD-11 text, its block, the proposed crosswalk, the interim-source note and the WHO link. */
+/** UI-02: the code's verbatim ICD-11 text, its block, the proposed crosswalk, the WHO link with its source line, and the licence citation (K9). */
 export function CodePopout({ code, headingLevel = 3 }: { code: string; headingLevel?: 2 | 3 | 4 }) {
   const c = codeMap.get(code);
   if (!c) return <Todo>code {code} is not in the pack</Todo>;
@@ -15,7 +15,7 @@ export function CodePopout({ code, headingLevel = 3 }: { code: string; headingLe
   const sub = c.subgroup ? groupMap.get(c.subgroup) : undefined;
   const parent = c.parent ? codeMap.get(c.parent) : undefined;
   const who = c.who_browser ?? scheme.official_browser;
-  const checkNote = c.definition_check && !['diff_verified', 'quoted_direct'].includes(c.definition_check);
+  const checkNote = c.definition_check && !CHECKED_DEFINITIONS.includes(c.definition_check);
   return (
     <div className="text-sm" data-testid="code-popout">
       <H className="font-display text-lg font-semibold">
@@ -67,11 +67,11 @@ export function CodePopout({ code, headingLevel = 3 }: { code: string; headingLe
         </div>
       )}
       {c.index_terms.length > 1 && <p className="mt-2 text-xs bx-muted">Index terms: {c.index_terms.join('; ')}</p>}
-      {scheme.interim_source && <p className="mt-2 text-xs bx-muted" data-testid="interim-note">{S.codes.interim}</p>}
-      <p className="mt-2 flex flex-wrap gap-3">
+      <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <a className="underline" href={who} target="_blank" rel="noreferrer" data-testid="who-link">{S.codes.open_who}</a>
-        <a className="underline bx-muted" href={c.source_url} target="_blank" rel="noreferrer">Interim copy</a>
+        <span className="text-xs bx-muted" data-testid="code-source">{S.codes.source}</span>
       </p>
+      <p className="mt-2 text-[11px] leading-4 bx-muted" data-testid="icd-citation">{S.codes.citation}</p>
     </div>
   );
 }

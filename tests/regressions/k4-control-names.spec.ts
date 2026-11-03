@@ -19,13 +19,13 @@ test('D4: every checkbox and radio on /map has a real accessible name', async ({
   await page.goto('/');
   await dismissFirstRun(page);
   await newMap(page, 'D4');
-  await addNode(page, { code: 'QE01', search: 'stress' });
+  await addNode(page, { code: 'QD85', search: 'burnout' });
   await addNode(page, { code: 'QD80', search: 'unemployment' });
   const seen: { where: string; role: string; name: string }[] = [];
   const scan = async (where: string) => seen.push(...(await controlNames(page)).map((c) => ({ where, ...c })));
 
   await scan('side panel');
-  await page.getByTestId('add-edge').click(); // QE01 → QD80 is outside L12's codes: the override block shows
+  await page.getByTestId('add-edge').click(); // QD80 → QD85 has no link (K9: QD80 → QE01 is evidence now, L22): the override block shows
   await expect(page.getByTestId('override-checkbox')).toBeVisible();
   await scan('link form');
   await page.keyboard.press('Escape');
@@ -47,5 +47,5 @@ test('D4: every checkbox and radio on /map has a real accessible name', async ({
   const names = seen.map((c) => c.name);
   expect(names).toContain('Evidence-backed links only');
   expect(names.some((n) => n.startsWith('I want this link on the map anyway'))).toBe(true);
-  expect(names).toContain('Stress, not elsewhere classified · QE01'); // a To-list radio (From is the selected QD80)
+  expect(names).toContain('Burnout · QD85'); // a To-list radio (From is the selected QD80)
 });

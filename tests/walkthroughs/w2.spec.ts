@@ -143,7 +143,9 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   const json = await dl('export-json');
   const csv = await dl('export-csv');
   const md = await dl('export-md');
-  expect(fs.readFileSync(csv, 'utf8').split('\n')[0]).toContain('basis,link,check,override_reason,override_at');
+  // K9: line 1 is the ICD-11 licence citation as a comment; the header follows
+  expect(fs.readFileSync(csv, 'utf8').split('\n')[0]).toMatch(/^# International Classification of Diseases, Eleventh Revision \(ICD-11\)/);
+  expect(fs.readFileSync(csv, 'utf8').split('\n')[1]).toContain('basis,link,check,override_reason,override_at');
   const report = fs.readFileSync(md, 'utf8');
   expect(report).toMatch(/\| R1 \| Reinforcing \| 3 \| 1 \|/);
   expect(report).toContain('⚑ withheld:L05 — Money worries');
