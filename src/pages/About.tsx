@@ -8,7 +8,7 @@ export default function About() {
       <PageHead title="About SDOH Loops" lead={manifest.title}>
         <div className="mt-3"><AsOf /></div>
       </PageHead>
-      <Notice />
+      <Notice plain />
       <dl className="mt-6 grid grid-cols-1 sm:grid-cols-[12rem_1fr] gap-x-4 gap-y-3 text-[15px]">
         <dt className="font-semibold">Built by</dt>
         <dd>{manifest.builder.name} builder v{manifest.builder.version} ({manifest.builder.date}) from a commissioned action pack; app version 0.1.0.</dd>

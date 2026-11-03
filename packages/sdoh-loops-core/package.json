@@ -1,6 +1,6 @@
 {
   "name": "@feelingsarereal/sdoh-loops-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The SDOH Loops map as a React component — canvas, list view, evidence gate, analyses A1–A8, exports — for the standalone SDOH Loops app and every SDOH Interrogator app. On-device only.",
   "type": "module",
   "license": "UNLICENSED",
@@ -41,7 +41,7 @@
     "CHANGELOG.md"
   ],
   "peerDependencies": {
-    "@feelingsarereal/sdoh-loops-pack": "0.1.0",
+    "@feelingsarereal/sdoh-loops-pack": "0.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

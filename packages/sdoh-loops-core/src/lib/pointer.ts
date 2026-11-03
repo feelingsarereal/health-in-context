@@ -14,3 +14,18 @@ export function useCoarsePointer(): boolean {
   }, []);
   return coarse;
 }
+
+const NARROW = '(max-width: 767px)';
+
+/** True under 768 px wide (a phone): the loop glyphs scale with the canvas zoom there, as the boxes do (K14). */
+export function useNarrowViewport(): boolean {
+  const [narrow, setNarrow] = useState<boolean>(() => typeof window !== 'undefined' && !!window.matchMedia?.(NARROW).matches);
+  useEffect(() => {
+    const mq = window.matchMedia?.(NARROW);
+    if (!mq) return;
+    const on = () => setNarrow(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return narrow;
+}

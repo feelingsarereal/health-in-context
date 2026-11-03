@@ -324,6 +324,43 @@
  },
  "changes": [
   {
+   "date": "2026-11-03",
+   "what": "Glossary, reading-clds primer and app-methods §2 reworded: link polarity uses Richardson's 'higher than it would otherwise have been' wording; reinforcing and balancing loops 'come back pushing the same way / against itself' instead of 'amplified / opposed', and the sign gives direction, not strength; the Homer & Hirsch sentence now says what the paper says (system dynamics suits the dynamic complexity of public-health problems)",
+   "why": "Independent check of the eviction tutorial against its sources; keeps the app's wording consistent with the tutorial",
+   "records": [
+    "glossary/cld",
+    "glossary/link-polarity",
+    "glossary/reinforcing-loop",
+    "glossary/balancing-loop",
+    "concepts/reading-clds",
+    "app-methods"
+   ],
+   "source": "Richardson 1986; Homer & Hirsch 2006",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-11-03",
+   "what": "Primers cite the now-verified methods papers (reading-clds: Richardson 1986, 1995; weights-fcm: Kosko 1986, Özesmi & Özesmi 2004) instead of 'not yet verified here'; app-methods corrected (variable framing no longer attributed to an 'event-labelled boxes' argument; loop dominance can shift as behaviour unfolds, not 'depends on behaviour over time')",
+   "why": "Read against the papers while writing the worked-example tutorial",
+   "records": [
+    "concepts/reading-clds",
+    "concepts/weights-fcm",
+    "app-methods"
+   ],
+   "source": "Richardson 1986, 1995; Kosko 1986; Özesmi & Özesmi 2004",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-11-02",
+   "what": "T-LINKS to-do reworded: the 12 held-back links are withheld after evidence review (no reference is unverified any more); a separate T-LINKS-REF appears only if a link waits on an unverified reference",
+   "why": "Claude Code's K11 note",
+   "records": [
+    "todo/T-LINKS"
+   ],
+   "source": "Claude Code scrum 261102",
+   "by": "cowork"
+  },
+  {
    "date": "2026-11-02",
    "what": "Richardson 1986 summarised from the MIT System Dynamics Group memo copy (D-3312-2) supplied by Daniel; its role note corrected (the paper does not discuss event-labelled diagrams); all 64 references verified",
    "why": "T-BIB-04; independent check passed with wording fixes",
@@ -407,49 +444,6 @@
     "scenarios/w2"
    ],
    "source": "OpenAlex harvest 2026-11-01; independent reviewer",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-01",
-   "what": "Eviction/housing instability recoded from QD71.1 to QD71.Z with a builder search alias ('evict', 'forced move', 'housing instability', 'behind on rent'); QD71.Z promoted to a linkable code; L03, L15, L02, L26, L27, L28 re-scoped; independent-check wording fixes (association not cause; subgroup concentration; reduced income); w1 and w3 updated",
-   "why": "Independent check: QD71.1 'Inadequate housing' means poor conditions; Daniel chose QD71.Z",
-   "records": [
-    "situations",
-    "links",
-    "scenarios/w1",
-    "scenarios/w3"
-   ],
-   "source": "Daniel, 2026-11-01",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-01",
-   "what": "T-EVID-01 sweep: L01 (job loss → low income, Brand 2015) and L02 (low income → eviction, Collinson 2024) re-evidenced and shipped; new L26 (job loss → eviction, Desmond & Gershenson 2017 + Collinson), L27 (eviction → low income) and L28 (eviction → homelessness, Collinson); three references added (Jacobson 1993 DOI did not resolve and is dropped). For the first time, loops can close on evidence alone",
-   "why": "Daniel: 'get it done' on the evidence search",
-   "records": [
-    "links/L01",
-    "links/L02",
-    "links/L26",
-    "links/L27",
-    "links/L28",
-    "references"
-   ],
-   "source": "OpenAlex/Europe PMC harvest 2026-11-01",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-10-24",
-   "what": "Code-level evidence scope (option B): links gain codes.from/codes.to; ACE links L18–L20 re-pointed to QE82.x (maltreatment) and L15 to QE51.1 (partner violence); new L25 (ACEs → household poverty, Metzler); L06, L09, L21 and C02 withheld; app-methods §2 and UI-18 match at code level with an outside-codes check; w2 and w3 updated; reading-clds primer explains protective factors as resource nodes",
-   "why": "Daniel's decision with Claude Code, 261024 (K3)",
-   "records": [
-    "links",
-    "app-methods",
-    "app-requirements",
-    "scenarios/w2",
-    "scenarios/w3",
-    "concepts/reading-clds"
-   ],
-   "source": "Daniel, 2026-10-24",
    "by": "cowork"
   }
  ],
@@ -617,7 +611,7 @@
   },
   {
    "id": "T-LINKS",
-   "what": "Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02"
+   "what": "Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02"
   }
  ],
  "scenarios": [

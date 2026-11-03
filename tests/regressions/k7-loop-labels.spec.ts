@@ -42,13 +42,13 @@ test('K7.1 and K7.2: glyphs show the loop name; tied loops list R1 before R2, in
   const r2 = page.getByRole('button', { name: 'Loop R2: Reinforcing', exact: true });
   await expect(r1).toHaveText('↻R1');
   await expect(r2).toHaveText('↻R2');
-  // a long rename is cut to 8 characters on the canvas, with the full name in the tooltip
+  // a rename shows on the canvas (K14: up to about 20 characters over two lines, not K7's 8), full name in the tooltip
   const first = page.getByTestId('loop-item').filter({ hasText: UNEMP });
   await first.getByRole('button', { name: 'Rename' }).click();
   await first.getByRole('textbox', { name: 'Loop name' }).fill('Rent and work spiral');
   await first.getByRole('button', { name: 'Save' }).click();
   const renamed = page.getByRole('button', { name: 'Loop Rent and work spiral: Reinforcing', exact: true });
-  await expect(renamed).toHaveText('↻Rent an…');
+  await expect(renamed).toHaveText('↻Rent and work spiral');
   await expect(renamed).toHaveAttribute('title', 'Rent and work spiral');
   await page.keyboard.press('Control+z');
   await expect(r1).toHaveText('↻R1');

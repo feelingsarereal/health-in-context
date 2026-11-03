@@ -31,4 +31,5 @@ items:
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
 - id: T-LINKS
-  what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02'
+  what: 'Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01,
+    C02'

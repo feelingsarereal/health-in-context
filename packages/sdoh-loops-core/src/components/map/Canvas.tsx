@@ -6,7 +6,7 @@ import { codeMap, colourGroup } from '../../lib/data/scheme';
 import { GROUP_STYLE, NEUTRAL, borderFor, fillFor } from '../../lib/palette';
 import { dominantStyle, plainText } from '../../lib/model/rich';
 import { nodeName } from '../../lib/model/interchange';
-import { useCoarsePointer } from '../../lib/pointer';
+import { useCoarsePointer, useNarrowViewport } from '../../lib/pointer';
 import type { SdohMap, MapNode, MapEdge } from '../../lib/model/map';
 import type { Loop } from '../../lib/analysis';
 import { S } from '../../lib/data/core';
@@ -228,14 +228,35 @@ type RenderedEdge = { renderedSourceEndpoint(): { x: number; y: number }; render
 /** The ⋯ and connector buttons are this big at zoom 1 and scale with zoom between the 44 px touch-target floor and
  *  72 px. They never hide (K6 D1: hiding them below 44 px made drag-to-link vanish after Fit on four or more nodes). */
 const HANDLE_PX = 52;
-/** K7: the canvas glyph shows the loop's name, cut to 8 characters (the full name is in the tooltip) */
+/** K14: a glyph shows up to this many characters of the loop's name over two lines (K7 cut it to 8); the full name is in the tooltip */
+const GLYPH_MAX = 24;
+/** K14: a label longer than this wraps onto a second line, at the space nearest its middle */
+const GLYPH_LINE = 12;
+/**
+ * The canvas glyph's label: the loop's name, cut at a word to GLYPH_MAX characters with "…" (a hard cut when one word is
+ * too long), on one line or, past GLYPH_LINE, two lines joined by "\n".
+ */
 export function glyphLabel(name: string) {
-  return name.length > 8 ? `${name.slice(0, 7)}…` : name;
+  let s = name.trim();
+  if (s.length > GLYPH_MAX) {
+    const sp = s.lastIndexOf(' ', GLYPH_MAX - 1);
+    s = `${(sp > GLYPH_MAX / 2 ? s.slice(0, sp) : s.slice(0, GLYPH_MAX - 1)).trimEnd()}…`;
+  }
+  if (s.length <= GLYPH_LINE) return s;
+  const mid = s.length / 2;
+  let at = -1;
+  for (let i = 0; i < s.length; i++) if (s[i] === ' ' && (at < 0 || Math.abs(i - mid) < Math.abs(at - mid))) at = i;
+  return at < 0 ? s : `${s.slice(0, at)}\n${s.slice(at + 1)}`;
 }
-/** half the glyph's rendered width: 11 px bold runs about 7 px a character, plus the ↻ and 8 px padding each side */
-function glyphHalfWidth(label: string) {
-  return Math.max(15, ((label.length + 1) * 7 + 16) / 2);
+/** half the glyph's size at scale 1: 11 px bold runs about 7 px a character (the ↻ on the first line), 8 px padding each
+ *  side; one line is 30 px tall, two are 38 */
+function glyphHalf(label: string) {
+  const lines = label.split('\n');
+  const chars = Math.max(lines[0].length + 1, ...lines.slice(1).map((l) => l.length));
+  return { hw: Math.max(15, (chars * 7 + 16) / 2), hh: lines.length > 1 ? 19 : 15 };
 }
+/** K14: under 768 px the glyphs scale with the canvas zoom, as the boxes do, within these bounds */
+const glyphScale = (narrow: boolean, zoom: number) => (narrow ? Math.max(0.3, Math.min(1.5, zoom)) : 1);
 const handleSize = (zoom: number) => Math.max(44, Math.min(72, Math.round(HANDLE_PX * zoom)));
 /** K6 D10: a link whose straight line would run through another circumstance bends around it, by this much clearance */
 const BEND_CLEAR = 18;
@@ -347,7 +368,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   P.current = props;
   const syncing = useRef(false);
   const [overlay, setOverlay] = useState<{
-    loops: { key: string; x: number; y: number; kind: string; label: string }[];
+    loops: { key: string; x: number; y: number; kind: string; label: string; scale: number }[];
     more: { x: number; y: number } | null;
     handle: { x: number; y: number } | null;
     /** rendered size of the ⋯ and connector buttons (px) */
@@ -362,6 +383,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     zoom: number;
   }>({ loops: [], more: null, handle: null, size: HANDLE_PX, tip: null, hulls: [], pos: {}, ends: {}, mids: {}, shown: {}, zoom: 1 });
   const coarse = useCoarsePointer();
+  const narrow = useNarrowViewport();
+  const narrowRef = useRef(narrow);
+  narrowRef.current = narrow;
   const hover = useRef<string | null>(null);
   /** K4 D5: the selected edge whose tooltip the pointer has moved away from; it stays hidden until the selection changes */
   const tipGone = useRef<string | null>(null);
@@ -376,7 +400,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const ps = l.nodes.map((id) => cy.getElementById(id)).filter((n) => n.nonempty()).map((n) => n.renderedPosition());
       if (!ps.length) return [];
       const label = glyphLabel(p.loopNames.get(l.key) ?? l.kind);
-      return [{ key: l.key, kind: l.kind, label, hw: glyphHalfWidth(label), x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
+      const k = glyphScale(narrowRef.current, cy.zoom());
+      const h = glyphHalf(label);
+      return [{ key: l.key, kind: l.kind, label, scale: k, hw: h.hw * k, hh: h.hh * k, x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
     });
     // K7: every edge's marks, as circles in rendered px: the mid-edge badge (⚑, ‖) and the +/− polarity label, which sits
     // 26 model px back from the arrowhead along the edge (approximated toward the midpoint on a bent edge)
@@ -438,10 +464,10 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         handle = (ranked.find((r) => Math.abs(r.c.x - more!.x) >= size + 4 || Math.abs(r.c.y - more!.y) >= size + 4) ?? ranked[1]).c;
       }
     }
-    // K6 D7: a loop glyph (30 px) starts at its loop's centre and is nudged to the nearest spot clear of every node box,
+    // K6 D7: a loop glyph (30 px; K14: two lines, and scaled on a phone) starts at its loop's centre and is nudged to the nearest spot clear of every node box,
     // every edge's mid-edge mark (⚑, ‖), the ⋯ and connector buttons and the glyphs already placed, scored like the handles
     {
-      // K7: a glyph is a pill, hw wide either side of its centre and 15 px up and down; 4 px clearance all round
+      // K7: a glyph is a pill, hw wide either side of its centre and hh up and down; 4 px clearance all round
       const C = 4;
       const nodeBoxes = cy.nodes().map((n) => n.renderedBoundingBox({}));
       const taken: { x: number; y: number; hw: number; hh: number }[] = [...[more, handle].filter((c): c is { x: number; y: number } => !!c).map((c) => ({ ...c, hw: size / 2, hh: size / 2 }))];
@@ -449,19 +475,19 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const H = cy.height();
       for (const g of loops) {
         const cands = [{ x: g.x, y: g.y }];
-        for (const r of [36, 60, 90, 130]) for (let i = 0; i < 12; i++) cands.push({ x: g.x + (r + g.hw - 15) * Math.cos((i * Math.PI) / 6), y: g.y + r * Math.sin((i * Math.PI) / 6) });
+        for (const r of [36, 60, 90, 130]) for (let i = 0; i < 12; i++) cands.push({ x: g.x + (r + g.hw - 15) * Math.cos((i * Math.PI) / 6), y: g.y + (r + g.hh - 15) * Math.sin((i * Math.PI) / 6) });
         const score = (c: { x: number; y: number }) => {
           let d = -Math.hypot(c.x - g.x, c.y - g.y);
-          for (const b of nodeBoxes) if (c.x + g.hw + C > b.x1 && c.x - g.hw - C < b.x2 && c.y + 15 + C > b.y1 && c.y - 15 - C < b.y2) d -= 1000;
-          for (const o of taken) if (Math.abs(c.x - o.x) < g.hw + o.hw + C && Math.abs(c.y - o.y) < 15 + o.hh + C) d -= 500;
-          for (const q of marks) if (Math.abs(c.x - q.x) < g.hw + q.r + C && Math.abs(c.y - q.y) < 15 + q.r + C) d -= 300;
-          if (c.x < g.hw + C || c.y < 15 + C || c.x > W - g.hw - C || c.y > H - 15 - C) d -= 50;
+          for (const b of nodeBoxes) if (c.x + g.hw + C > b.x1 && c.x - g.hw - C < b.x2 && c.y + g.hh + C > b.y1 && c.y - g.hh - C < b.y2) d -= 1000;
+          for (const o of taken) if (Math.abs(c.x - o.x) < g.hw + o.hw + C && Math.abs(c.y - o.y) < g.hh + o.hh + C) d -= 500;
+          for (const q of marks) if (Math.abs(c.x - q.x) < g.hw + q.r + C && Math.abs(c.y - q.y) < g.hh + q.r + C) d -= 300;
+          if (c.x < g.hw + C || c.y < g.hh + C || c.x > W - g.hw - C || c.y > H - g.hh - C) d -= 50;
           return d;
         };
         const best = cands.reduce((a, c) => (score(c) > score(a) ? c : a), cands[0]);
         g.x = best.x;
         g.y = best.y;
-        taken.push({ ...best, hw: g.hw, hh: 15 });
+        taken.push({ ...best, hw: g.hw, hh: g.hh });
       }
     }
     // UI-18 tooltip: the hovered (or the single selected) override edge shows its reason
@@ -631,6 +657,10 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   useEffect(() => {
     cyRef.current?.style(stylesheet(props.dark, props.print));
   }, [props.dark, props.print]);
+  // K14: crossing 768 px changes the glyphs' scale
+  useEffect(() => {
+    recompute();
+  }, [narrow, recompute]);
 
   // selection from outside
   useEffect(() => {
@@ -775,13 +805,14 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           key={l.key}
           type="button"
           className={`${l.kind === 'R' ? 'ax-loop-r' : 'ax-loop-b'} ${props.activeLoop === l.key ? 'ring-2 ring-[color:var(--bx-accent)]' : ''}`}
-          style={{ left: l.x, top: l.y }}
+          style={{ left: l.x, top: l.y, transform: `translate(-50%, -50%) scale(${l.scale})` }}
           onClick={() => props.onLoop(l.key)}
           aria-label={`Loop ${props.loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}`}
           aria-pressed={props.activeLoop === l.key}
           title={props.loopNames.get(l.key)}
           data-testid="loop-glyph"
           data-label={l.label}
+          data-scale={l.scale.toFixed(3)}
         >
           <span aria-hidden="true">{l.kind === 'R' ? '↻' : '↺'}</span>
           {l.label}

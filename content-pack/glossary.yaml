@@ -100,8 +100,9 @@
   - CLDs
   - causal loop
   short: A map of variables joined by signed arrows (+ or −) that shows the feedback loops in a system.
-  definition: A diagram of variables joined by arrows marked + or −. System dynamics uses such feedback maps to study public-health
-    problems [56].
+  definition: A diagram of variables joined by arrows marked + or −. Causal loop diagrams spread as a way to make system dynamics
+    accessible to more people [52], and system dynamics is well suited to the dynamic complexity of many public-health problems
+    [56].
   concept: reading-clds
   see:
   - link-polarity
@@ -116,8 +117,11 @@
   - polarity
   - positive link
   - negative link
-  short: + if the effect moves in the same direction as the cause (all else equal); − if it moves the opposite way.
-  definition: 'In this app: + means the effect moves the same way as the cause, all else equal; − means the opposite way.'
+  short: + if, all else equal, a rise in the cause leaves the effect higher than it would otherwise have been; − if it leaves
+    it lower.
+  definition: 'In this app: + means that, all else equal, a rise in the cause leaves the effect higher than it would otherwise
+    have been, and a fall leaves it lower; − means the reverse. This is Richardson''s wording, which also holds when the cause
+    is a flow into something that accumulates [52].'
   concept: reading-clds
   further_refs:
   - 52
@@ -129,8 +133,9 @@
   - R loop
   - vicious cycle
   - virtuous cycle
-  short: 'A loop with an even number of − links: a change travels round and comes back amplified.'
-  definition: 'In this app: a loop whose link signs multiply to + (an even number of − links), so a change returns amplified.'
+  short: 'A loop with an even number of − links: a change travels round and comes back pushing the same way.'
+  definition: 'In this app: a loop whose link signs multiply to + (an even number of − links), so a change comes back pushing
+    the same way [52]. The sign gives the direction only, not how strong the loop is.'
   concept: reading-clds
   see:
   - balancing-loop
@@ -143,8 +148,9 @@
   - balancing loops
   - B loop
   - goal-seeking loop
-  short: 'A loop with an odd number of − links: a change travels round and comes back opposed.'
-  definition: 'In this app: a loop whose link signs multiply to − (an odd number of − links), so a change returns opposed.'
+  short: 'A loop with an odd number of − links: a change travels round and comes back pushing against itself.'
+  definition: 'In this app: a loop whose link signs multiply to − (an odd number of − links), so a change comes back pushing
+    against itself [52]. The sign gives the direction only, not how strong the loop is.'
   concept: reading-clds
   see:
   - reinforcing-loop

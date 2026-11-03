@@ -1633,7 +1633,12 @@
     of a loop, such as its strength, as heuristics rather than certain predictions.
   verified: true
   verified_on: '2026-10-23'
-  used_by: []
+  used_by:
+  - concepts/reading-clds
+  - glossary/balancing-loop
+  - glossary/cld
+  - glossary/link-polarity
+  - glossary/reinforcing-loop
 - n: 53
   key: richardson1995
   tier: background
@@ -1668,7 +1673,8 @@
   role_note: Loop polarity as the product of link signs; loop dominance can shift as behaviour unfolds.
   verified: true
   verified_on: '2026-10-23'
-  used_by: []
+  used_by:
+  - concepts/reading-clds
 - n: 54
   key: johnson1975
   tier: background
@@ -1800,7 +1806,8 @@
   role_note: Fuzzy cognitive maps — graded causal edges and the what-if pulse (analysis A8).
   verified: true
   verified_on: '2026-10-23'
-  used_by: []
+  used_by:
+  - concepts/weights-fcm
 - n: 59
   key: ozesmi2004
   tier: background
@@ -1835,7 +1842,8 @@
   role_note: Participatory fuzzy cognitive mapping from people's own knowledge — the semantics of user-assigned weights.
   verified: true
   verified_on: '2026-10-23'
-  used_by: []
+  used_by:
+  - concepts/weights-fcm
 - n: 60
   key: hovmand2014
   tier: background

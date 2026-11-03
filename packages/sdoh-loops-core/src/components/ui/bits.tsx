@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { manifest, NUDGE, S, safety } from '../../lib/data/core';
+import { C } from '../../lib/copy';
 
 export function AsOf() {
   return <span className="bx-asof" data-testid="as-of">Research current as of {manifest.as_of}</span>;
@@ -11,7 +12,15 @@ export function Todo({ children }: { children: ReactNode }) {
 export function Heuristic({ label }: { label: string }) {
   return <span className="ax-heuristic" data-heuristic>{/heuristic/i.test(label) ? label : `heuristic · ${label}`}</span>;
 }
-export function Notice({ compact }: { compact?: boolean }) {
+export function Notice({ compact, plain }: { compact?: boolean; plain?: boolean }) {
+  // K14: `plain` is the same words as a page section, not the "Before you start" banner that the first-run panel dismisses
+  if (plain)
+    return (
+      <section className="mt-6" role="note" aria-labelledby="notice-plain-title" data-testid="notice">
+        <h2 id="notice-plain-title" className="font-display text-xl font-semibold">{C.notice.plainTitle}</h2>
+        <p className="mt-1">{safety.notice}</p>
+      </section>
+    );
   return (
     <div className={`bx-banner ${compact ? 'mb-0' : ''}`} role="note" data-testid="notice">
       <p className="font-semibold">{S.first_run.title}</p>

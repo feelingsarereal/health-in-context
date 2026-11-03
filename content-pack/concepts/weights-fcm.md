@@ -13,7 +13,7 @@ further_reading:
 ## What it is
 
 <!-- framing -->
-This app borrows the idea of signed, weighted causal links from fuzzy cognitive mapping, a method that has been used to model systems from the knowledge of the people who live in them. The two founding sources are under further reading (not yet verified here).
+This app borrows the idea of signed, weighted causal links from fuzzy cognitive mapping. A fuzzy cognitive map joins causal concepts with links of graded strength and propagates effects through them [58]; in its participatory form, people draw the links themselves and give each a strength between −1 and +1 [59].
 
 ## How this app uses it
 

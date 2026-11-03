@@ -11,6 +11,8 @@ const FALLBACK = {
   footer: 'SDOH Loops is a thinking tool. Maps stay in this browser.',
   skip: 'Skip to main content',
   theme: { dark: 'Dark mode', light: 'Light mode' },
+  /** K14: /about keeps the notice's words (SAFETY H5) as a plain section, so the dismissed first-run banner never comes back there */
+  notice: { plainTitle: 'What this tool is and is not' },
   maps: {
     title: 'My maps',
     lead: 'Each map is saved in this browser as you work.',

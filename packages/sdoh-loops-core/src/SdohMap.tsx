@@ -486,7 +486,10 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
               <button type="button" className="bx-btn ax-tap mt-2" onClick={removeSelection}>Delete selection</button>
             </div>
           ) : (
-            <p>Select a circumstance or a link to edit it. {coarse ? C.canvas.emptyTouch : C.canvas.empty}</p>
+            // K14: the add-the-first-circumstance hint only on an empty map
+            <p data-testid="inspector-empty">
+              {map.nodes.length ? 'Select a circumstance or a link to edit it.' : coarse ? C.canvas.emptyTouch : C.canvas.empty}
+            </p>
           )}
         </div>
       )}

@@ -9,6 +9,22 @@ version's entry — so any change to the pack's data needs a new version here fi
 - **Minor:** codes, links, references, terms or strings are added; nothing a consumer reads is taken away.
 - **Patch:** wording, corrections, re-verification dates.
 
+## [0.1.1] — 2026-11-03
+
+Wording only (K14): Cowork's deploys of 2026-11-02 and 2026-11-03, logged in `content-pack/changes.yaml`. No codes,
+links or references are added or removed.
+
+- sha256: `dbf7b5736e72f0bca88e2c0406454da91db58e8125fcfc4b475f2cf82b774e67`
+- The T-LINKS to-do reads "Links withheld after evidence review" (no reference is unverified any more).
+- The primers cite the verified methods papers: Richardson 1986 and 1995 (reading-clds), Kosko 1986 and Özesmi &
+  Özesmi 2004 (weights-fcm).
+- Glossary and reading-clds: link polarity uses Richardson's "higher than it would otherwise have been"; reinforcing and
+  balancing loops "come back pushing the same way / against itself"; the sign gives direction, not strength.
+- References: Richardson 1986 and 1995, Kosko 1986 and Özesmi & Özesmi 2004 now list the primers and glossary entries
+  that cite them (`used_by`).
+- `content-pack/app-methods.md` (the methods spec; not in `data/`): the Homer & Hirsch sentence now says what the paper
+  says, and loop dominance can shift as behaviour unfolds.
+
 ## [0.1.0] — 2026-11-03
 
 First release as its own asset (K13). The pack as built for K11 (all references verified): 7 data files (situations,

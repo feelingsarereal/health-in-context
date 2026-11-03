@@ -14,12 +14,12 @@ further_reading:
 ## What it is
 
 <!-- framing -->
-A causal loop diagram joins variables with arrows marked **+** or **−**. In this app a **+** arrow means that, all else equal, a change in the cause moves the effect in the same direction, and a **−** arrow means it moves it the opposite way. Each box is read as a quantity that can go up or down, not as an event.
+A causal loop diagram joins variables with arrows marked **+** or **−**. In this app a **+** arrow means that, all else equal, a rise in the cause leaves the effect higher than it would otherwise have been (and a fall leaves it lower); a **−** arrow means the reverse. That is Richardson's wording: the simpler "moves in the same direction" fails when the cause is a flow filling something that accumulates [52]. Each box is read as a quantity that can go up or down, not as an event.
 
-System dynamics uses feedback maps like this to study public-health problems shaped by accumulation and feedback [56].
+Causal loop diagrams spread as a way to make system dynamics accessible to more people [52]. System dynamics, which portrays processes of accumulation and feedback, is well suited to the dynamic complexity of many public-health problems [56].
 
 <!-- framing -->
-When arrows close into a loop, the loop's character is the product of its signs. An even number of − links makes it **reinforcing** (R): a change returns amplified, as in a vicious or virtuous cycle. An odd number makes it **balancing** (B): a change returns opposed. This app reads structure only; it does not simulate behaviour over time, so it cannot say which loop dominates. George Richardson's papers on causal-loop diagrams and loop polarity are listed under further reading (not yet verified here).
+When arrows close into a loop, the loop's character is the product of its signs. An even number of − links makes it **reinforcing** (R): a change comes back pushing the same way, as in a vicious or virtuous cycle. An odd number makes it **balancing** (B): a change comes back pushing against itself. The sign gives the direction only, not how strong the loop is. Richardson recommends defining a loop's polarity by the number of its − links, and warns against reading behaviour off a causal-loop diagram alone [52]; which loop dominates can shift as behaviour unfolds [53]. This app reads structure only and does not simulate behaviour over time, so it cannot say which loop dominates.
 
 ## The maths, gently
 

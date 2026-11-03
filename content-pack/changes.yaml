@@ -166,3 +166,37 @@
   - references/richardson1986
   source: MIT SD Group memo D-3312-2; independent reviewer
   by: cowork
+- date: '2026-11-02'
+  what: 'T-LINKS to-do reworded: the 12 held-back links are withheld after evidence review (no reference is unverified any
+    more); a separate T-LINKS-REF appears only if a link waits on an unverified reference'
+  why: Claude Code's K11 note
+  records:
+  - todo/T-LINKS
+  source: Claude Code scrum 261102
+  by: cowork
+- date: '2026-11-03'
+  what: 'Primers cite the now-verified methods papers (reading-clds: Richardson 1986, 1995; weights-fcm: Kosko 1986, Özesmi
+    & Özesmi 2004) instead of ''not yet verified here''; app-methods corrected (variable framing no longer attributed to an
+    ''event-labelled boxes'' argument; loop dominance can shift as behaviour unfolds, not ''depends on behaviour over time'')'
+  why: Read against the papers while writing the worked-example tutorial
+  records:
+  - concepts/reading-clds
+  - concepts/weights-fcm
+  - app-methods
+  source: Richardson 1986, 1995; Kosko 1986; Özesmi & Özesmi 2004
+  by: cowork
+- date: '2026-11-03'
+  what: 'Glossary, reading-clds primer and app-methods §2 reworded: link polarity uses Richardson''s ''higher than it would
+    otherwise have been'' wording; reinforcing and balancing loops ''come back pushing the same way / against itself'' instead
+    of ''amplified / opposed'', and the sign gives direction, not strength; the Homer & Hirsch sentence now says what the
+    paper says (system dynamics suits the dynamic complexity of public-health problems)'
+  why: Independent check of the eviction tutorial against its sources; keeps the app's wording consistent with the tutorial
+  records:
+  - glossary/cld
+  - glossary/link-polarity
+  - glossary/reinforcing-loop
+  - glossary/balancing-loop
+  - concepts/reading-clds
+  - app-methods
+  source: Richardson 1986; Homer & Hirsch 2006
+  by: cowork
