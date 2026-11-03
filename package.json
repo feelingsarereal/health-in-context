@@ -15,7 +15,8 @@
     "lint": "tsc --noEmit",
     "record:tests": "tsx scripts/record-test-run.ts",
     "check": "npm run validate:pack && npm run test && npm run build && npm run test:e2e && npm run record:tests",
-    "build:consumer": "vite build --config packages/sdoh-loops-core/fixtures/consumer/vite.config.ts"
+    "build:consumer": "vite build --config packages/sdoh-loops-core/fixtures/consumer/vite.config.ts",
+    "release:dry": "npm pack --dry-run -w @feelingsarereal/sdoh-loops-pack -w @feelingsarereal/sdoh-loops-core"
   },
   "dependencies": {
     "@feelingsarereal/sdoh-loops-core": "0.1.0",

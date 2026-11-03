@@ -29,6 +29,14 @@ describe('versions', () => {
     expect(app.dependencies['@feelingsarereal/sdoh-loops-core']).toBe(core.version);
     expect(app.dependencies['@feelingsarereal/sdoh-loops-pack']).toBe(pack.version);
   });
+  it('both packages publish to GitHub Packages under the feelingsarereal scope', () => {
+    for (const p of [core, pack]) {
+      expect(p.name.startsWith('@feelingsarereal/')).toBe(true);
+      expect(p.publishConfig).toEqual({ registry: 'https://npm.pkg.github.com' });
+      expect(p.repository.url).toBe('git+https://github.com/feelingsarereal/sdoh-loops.git');
+    }
+    expect(app.private).toBe(true);
+  });
   it('pin.json names the pack version', () => {
     expect(pin).toMatchObject({ pack: 'sdoh-loops', version: pack.version });
     expect(pin.sha256).toMatch(/^[0-9a-f]{64}$/);

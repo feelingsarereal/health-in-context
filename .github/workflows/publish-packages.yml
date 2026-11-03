@@ -1,0 +1,41 @@
+# K13: publish sdoh-loops-pack / sdoh-loops-core to GitHub Packages (npm.pkg.github.com, owner feelingsarereal).
+# Push a tag pack-vX.Y.Z or core-vX.Y.Z; the tag must equal that package's version. Uses the workflow's own
+# GITHUB_TOKEN (packages: write) — no token or secret is stored in the repo.
+name: Publish packages
+
+on:
+  push:
+    tags: ['pack-v*', 'core-v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@feelingsarereal'
+      - run: npm ci
+      - name: Which package
+        id: pkg
+        run: |
+          case "$GITHUB_REF_NAME" in
+            pack-v*) echo "name=@feelingsarereal/sdoh-loops-pack" >> "$GITHUB_OUTPUT"; echo "dir=packages/sdoh-loops-pack" >> "$GITHUB_OUTPUT"; echo "version=${GITHUB_REF_NAME#pack-v}" >> "$GITHUB_OUTPUT" ;;
+            core-v*) echo "name=@feelingsarereal/sdoh-loops-core" >> "$GITHUB_OUTPUT"; echo "dir=packages/sdoh-loops-core" >> "$GITHUB_OUTPUT"; echo "version=${GITHUB_REF_NAME#core-v}" >> "$GITHUB_OUTPUT" ;;
+          esac
+      - name: Tag matches package version
+        run: test "$(node -p "require('./${{ steps.pkg.outputs.dir }}/package.json').version")" = "${{ steps.pkg.outputs.version }}"
+      # the pack's data must be what content-pack/ builds to, and the versions and CHANGELOGs must agree (versions.test.ts)
+      - run: pip install pyyaml
+      - run: npm run validate:pack
+      - run: npm run build:content && git diff --exit-code -- packages/sdoh-loops-pack
+      - run: npm test
+      - run: npm publish -w ${{ steps.pkg.outputs.name }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

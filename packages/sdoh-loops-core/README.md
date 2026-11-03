@@ -20,8 +20,10 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install @feelingsarereal/sdoh-loops-core@0.1.0 @feelingsarereal/sdoh-loops-pack@0.1.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.1.0 @feelingsarereal/sdoh-loops-pack@0.1.0
 ```
+
+Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
 
 Pin both exactly. The core's `peerDependencies` names the one pack version it was tested with.
 
@@ -89,15 +91,41 @@ import { toGraph } from '@feelingsarereal/sdoh-loops-core'; // a map document â†
 the app pins both, that each current version has a CHANGELOG entry, and that the built pack data is the one its
 CHANGELOG entry records. Change the pack's data, and the pack needs a new version.
 
-## Publishing
+## Publishing (GitHub Packages)
 
-**Open, for Daniel to decide.** Both packages are ready for either method, and no token or secret is in the repo:
+Daniel chose GitHub Packages (2026-11-03). Both packages publish to `https://npm.pkg.github.com` under the
+`feelingsarereal` scope (`publishConfig` in each `package.json`). No token or secret is stored in the repo.
 
-1. **GitHub Packages** under `feelingsarereal`: add `"publishConfig": { "registry": "https://npm.pkg.github.com" }` to
-   both `package.json` files, then `npm publish -w @feelingsarereal/sdoh-loops-pack -w @feelingsarereal/sdoh-loops-core`
-   with a token from `gh auth token` held in the shell or in `~/.npmrc` (never in the repo). Consumers add
-   `@feelingsarereal:registry=https://npm.pkg.github.com` to their `.npmrc`.
-2. **A git tag consumed by URL**: tag a release (`git tag core-v0.1.0 && git tag pack-v0.1.0`), push it once the repo
-   is on GitHub, and consumers depend on it by URL. Because both packages live in one repo, a URL install needs each
-   package on its own path: either `npm pack` each into a release asset and depend on the tarball URL, or use a git
-   subdirectory install where the consumer's package manager supports it.
+**One-time setup**, once T-LIC-01 and T-ICD-01 allow the repo onto GitHub (app README, "Publishing this later"):
+
+1. Create and push the repo: `gh repo create feelingsarereal/sdoh-loops --private --source . --push`. A package
+   published from a private repo is private, and it is linked to the repo by each `package.json`'s `repository` field.
+2. Nothing else: `.github/workflows/publish-packages.yml` publishes with the workflow's own `GITHUB_TOKEN`.
+
+**A release:**
+
+```bash
+npm run release:dry                   # what each tarball will contain
+git tag pack-v0.1.0 && git tag core-v0.1.0
+git push origin pack-v0.1.0 core-v0.1.0
+```
+
+Tag the pack first when both change. The workflow checks that the tag matches the package version, that the pack data is
+what `content-pack/` builds to, and that the validator and `npm test` pass, and only then publishes. A version can be
+published once; the next change needs a new version (CHANGELOG).
+
+Publishing by hand instead needs a classic token with `write:packages`. The `feelingsarereal` token in `gh` has `repo`
+but not `write:packages`, so run `gh auth refresh -s write:packages` first, then
+`NODE_AUTH_TOKEN=$(gh auth token) npm publish -w @feelingsarereal/sdoh-loops-pack`, and the same for the core.
+
+**A consumer** (an SDOH Interrogator app) adds an `.npmrc` beside its `package.json`. The token comes from the
+environment, never from the file:
+
+```ini
+@feelingsarereal:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+Locally, `NODE_AUTH_TOKEN=$(gh auth token)` works after `gh auth refresh -s read:packages`. In the consumer's own GitHub
+Actions, its `GITHUB_TOKEN` can read the packages once each package's settings (Manage Actions access) grant that repo
+access.

@@ -25,3 +25,4 @@ First release (K13), extracted from the SDOH Loops app with no change in behavio
 - The pure analyses (`findLoops`, `scc`, `paths`, `leverage`, `pulse`, …) and the map model, also at
   `@feelingsarereal/sdoh-loops-core/analysis`.
 - `styles.css`, `tailwind-preset` and `vite` (the `web-worker` alias and Tailwind content globs) for consumers.
+- Published to GitHub Packages (`npm.pkg.github.com`, scope `@feelingsarereal`) by a `core-v*` tag.

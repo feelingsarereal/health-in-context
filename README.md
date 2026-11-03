@@ -37,7 +37,8 @@ The map lives in two workspace packages that this app consumes, so SDOH Interrog
 
 `/map` is `src/pages/MapPage.tsx`, a thin frame (URL, last map, the maps list) around `<SdohMap>`. The consumer fixture
 `packages/sdoh-loops-core/fixtures/consumer/` (`npm run build:consumer`, part of `npm run build`) embeds the core as
-another app would, and `tests/consumer/` checks it. How to publish the packages is still Daniel's call (core README).
+another app would, and `tests/consumer/` checks it. The packages publish to GitHub Packages on a `pack-v*` / `core-v*` tag
+(`.github/workflows/publish-packages.yml`); setup and release steps are in the core README.
 
 ## How it is built
 

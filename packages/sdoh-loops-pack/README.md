@@ -12,3 +12,5 @@ when the bundle resolved a different pack.
 To release new pack data: bump `version` here (see [CHANGELOG.md](CHANGELOG.md) for which part to bump), bump the
 core's exact `peerDependencies` pin and the app's dependency to match, run `npm run build:content`, and record the new
 `sha256` from `pin.json` in the CHANGELOG. `npm test` checks all of this.
+
+Published to GitHub Packages with a `pack-vX.Y.Z` tag; see the core README's "Publishing" section.

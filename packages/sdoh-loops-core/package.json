@@ -9,6 +9,9 @@
     "url": "git+https://github.com/feelingsarereal/sdoh-loops.git",
     "directory": "packages/sdoh-loops-core"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "sideEffects": [
     "*.css"
   ],
