@@ -12,16 +12,11 @@ items:
     tiers and links are labelled). Required: the citation ''International Classification of Diseases, Eleventh Revision (ICD-11),
     World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO'' (§1.3) — not yet
     shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the
-    app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). Plan: ask WHO for a written agreement
-    now; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic
-    tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement
-    from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice.'
-- id: T-BIB-04
-  status: '2026-11-02: Richardson 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 read and summarised from Daniel''s
-    UAH library copies (Kosko from the publisher page; Hovmand chapter 1); independent check passed with wording fixes. Only
-    Richardson 1986 remains: UAH does not subscribe.'
-  what: Get Richardson 1986 'Problems with causal-loop diagrams' (System Dynamics Review 2(2):158–170) by interlibrary loan
-    or purchase, so the last methods reference can be marked verified. It is further reading only; no claim rests on it.
+    app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted
+    2026-11-02 (request ID 202611431). Plan: wait for WHO''s written agreement; if none by about 2026-11-16, ship with the
+    ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag. Background: §1.2.4 says mapping or crosswalks
+    between ICD-11 and other classifications need a separate written agreement from WHO, and the app ships a proposed ICD-10-CM
+    / HP2030 crosswalk (114 codes). Not legal advice.'
 - id: T-BIB-02
   what: Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010
     verified 2026-10-23 against the WHO PDF.
@@ -35,7 +30,5 @@ items:
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
-- id: T-REF-richardson1986
-  what: 'references/52 (richardson1986): source not read beyond metadata'
 - id: T-LINKS
   what: 'Links blocked by unverified references: L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02'

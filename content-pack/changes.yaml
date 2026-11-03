@@ -148,3 +148,21 @@
   - references/hovmand2014
   source: publisher PDFs and pages via UAH library; independent reviewer
   by: cowork
+- date: '2026-11-02'
+  what: 'Mirror leftovers retired: the ICD-11 MMS reference (citation and verified_by) now names the WHO ICD-API pull; scope.search_strategy
+    records the mirror as superseded; unused ui-strings codes.interim removed'
+  why: Claude Code's K9/K10 notes
+  records:
+  - references/icd11_mms
+  - scope.search_strategy
+  - ui-strings.codes
+  source: Claude Code scrum 261102
+  by: cowork
+- date: '2026-11-02'
+  what: Richardson 1986 summarised from the MIT System Dynamics Group memo copy (D-3312-2) supplied by Daniel; its role note
+    corrected (the paper does not discuss event-labelled diagrams); all 64 references verified
+  why: T-BIB-04; independent check passed with wording fixes
+  records:
+  - references/richardson1986
+  source: MIT SD Group memo D-3312-2; independent reviewer
+  by: cowork

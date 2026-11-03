@@ -14,7 +14,6 @@
   "picker_placeholder": "Search codes — try 'rent', 'job', 'school'",
   "no_definition": "No definition in ICD-11 for this code.",
   "open_who": "Open in the WHO ICD-11 browser",
-  "interim": "Text from a copy of ICD-11 (release 2026-01). Check the WHO entry for the official wording.",
   "source": "WHO's own text, ICD-11 MMS release 2026-01.",
   "citation_from": "situations.scheme.licence",
   "proposed_xwalk": "Proposed mapping — builder's reading, not from WHO",

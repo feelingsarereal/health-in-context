@@ -29,9 +29,9 @@ search_strategy:
   approach: >-
     Seeded from the seminal SDOH literature known to the builder, then every DOI verified one at a time against OpenAlex and
     Crossref (sequential, paced) and abstracts harvested verbatim by tools/harvest_openalex.py on Daniel's machine, with Europe
-    PMC as the fallback. ICD-11 codes extracted block by block from the findacode.com mirror of release 2026-01. Framework pages
+    PMC as the fallback. ICD-11 codes first extracted block by block from the findacode.com mirror of release 2026-01, then replaced on 2026-11-02 by WHO's own text from the WHO ICD-API. Framework pages
     (WHO, ODPHP, CMS) read directly. This is a scope-bounded commissioned research pack, not a systematic review.
-  sources: [OpenAlex, Crossref, Europe PMC, findacode.com ICD-11 mirror, who.int, odphp.health.gov, cms.gov]
+  sources: [OpenAlex, Crossref, Europe PMC, WHO ICD-API, findacode.com ICD-11 mirror (superseded 2026-11-02), who.int, odphp.health.gov, cms.gov]
   date_closed: 2026-10-23
   known_gaps:
     - "No systematic search with hit counts; the corpus is curated, not exhaustive"

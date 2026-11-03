@@ -249,12 +249,13 @@
    ]
   },
   "search_strategy": {
-   "approach": "Seeded from the seminal SDOH literature known to the builder, then every DOI verified one at a time against OpenAlex and Crossref (sequential, paced) and abstracts harvested verbatim by tools/harvest_openalex.py on Daniel's machine, with Europe PMC as the fallback. ICD-11 codes extracted block by block from the findacode.com mirror of release 2026-01. Framework pages (WHO, ODPHP, CMS) read directly. This is a scope-bounded commissioned research pack, not a systematic review.",
+   "approach": "Seeded from the seminal SDOH literature known to the builder, then every DOI verified one at a time against OpenAlex and Crossref (sequential, paced) and abstracts harvested verbatim by tools/harvest_openalex.py on Daniel's machine, with Europe PMC as the fallback. ICD-11 codes first extracted block by block from the findacode.com mirror of release 2026-01, then replaced on 2026-11-02 by WHO's own text from the WHO ICD-API. Framework pages (WHO, ODPHP, CMS) read directly. This is a scope-bounded commissioned research pack, not a systematic review.",
    "sources": [
     "OpenAlex",
     "Crossref",
     "Europe PMC",
-    "findacode.com ICD-11 mirror",
+    "WHO ICD-API",
+    "findacode.com ICD-11 mirror (superseded 2026-11-02)",
     "who.int",
     "odphp.health.gov",
     "cms.gov"
@@ -322,6 +323,28 @@
   ]
  },
  "changes": [
+  {
+   "date": "2026-11-02",
+   "what": "Richardson 1986 summarised from the MIT System Dynamics Group memo copy (D-3312-2) supplied by Daniel; its role note corrected (the paper does not discuss event-labelled diagrams); all 64 references verified",
+   "why": "T-BIB-04; independent check passed with wording fixes",
+   "records": [
+    "references/richardson1986"
+   ],
+   "source": "MIT SD Group memo D-3312-2; independent reviewer",
+   "by": "cowork"
+  },
+  {
+   "date": "2026-11-02",
+   "what": "Mirror leftovers retired: the ICD-11 MMS reference (citation and verified_by) now names the WHO ICD-API pull; scope.search_strategy records the mirror as superseded; unused ui-strings codes.interim removed",
+   "why": "Claude Code's K9/K10 notes",
+   "records": [
+    "references/icd11_mms",
+    "scope.search_strategy",
+    "ui-strings.codes"
+   ],
+   "source": "Claude Code scrum 261102",
+   "by": "cowork"
+  },
   {
    "date": "2026-11-02",
    "what": "Library references verified: Link & Phelan 1995, Richardson 1995 (editor's introduction as abstract), Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (chapter 1 abstract) summarised from Daniel's UAH library copies; abstracts verbatim; 63 of 64 references verified (Richardson 1986 remains). Abstracts read from the paper itself are kept even where OpenAlex's text was rejected. Done todo items (status starting 'done') now leave the pack; the scheme upkeep step now says to re-run the WHO ICD-API pull",
@@ -427,30 +450,6 @@
     "concepts/reading-clds"
    ],
    "source": "Daniel, 2026-10-24",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-10-23",
-   "what": "UI-17 (link existing circumstances: drag-to-connect, 'Link to existing' in the association menu, 'Link to…' button) and UI-18 (evidence-checked links, deliberate overrides flagged ⚑ on the map, evidence-only toggle); app-methods edge basis and A0; planner schema_version 2; walkthroughs w1 and w2 rewritten",
-   "why": "Daniel's walkthrough: no visible way to link existing nodes, so no loops; no evidence constraint on hand-drawn links",
-   "records": [
-    "app-requirements",
-    "app-methods",
-    "planner",
-    "scenarios/w1",
-    "scenarios/w2"
-   ],
-   "source": "Daniel, 2026-10-23",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-10-23",
-   "what": "safety.yaml: allowed_phrases ['does not diagnose', 'not a diagnosis'] and allowed_contexts scope.boundary.out, references[].abstract (SAFETY 0.1.1)",
-   "why": "Daniel's H1 ruling: exact phrases only, no negation exemption",
-   "records": [
-    "safety"
-   ],
-   "source": "K2",
    "by": "cowork"
   }
  ],
@@ -601,12 +600,7 @@
   {
    "id": "T-LIC-01",
    "what": "Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before any delivery other than local.",
-   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3) — not yet shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). Plan: ask WHO for a written agreement now; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice."
-  },
-  {
-   "id": "T-BIB-04",
-   "what": "Get Richardson 1986 'Problems with causal-loop diagrams' (System Dynamics Review 2(2):158–170) by interlibrary loan or purchase, so the last methods reference can be marked verified. It is further reading only; no claim rests on it.",
-   "status": "2026-11-02: Richardson 1995, Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 read and summarised from Daniel's UAH library copies (Kosko from the publisher page; Hovmand chapter 1); independent check passed with wording fixes. Only Richardson 1986 remains: UAH does not subscribe."
+   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3) — not yet shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted 2026-11-02 (request ID 202611431). Plan: wait for WHO's written agreement; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice."
   },
   {
    "id": "T-BIB-02",
@@ -620,10 +614,6 @@
    "id": "T-EVID-01",
    "what": "Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps → financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.",
    "status": "partly done 2026-11-01 — L01 and L02 shipped, L26–L28 added; loops now close on evidence. Still open below."
-  },
-  {
-   "id": "T-REF-richardson1986",
-   "what": "references/52 (richardson1986): source not read beyond metadata"
   },
   {
    "id": "T-LINKS",

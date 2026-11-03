@@ -78,9 +78,15 @@ export default function Methods() {
           {todo.map((t) => (
             <li key={t.id}><Todo>{t.id}</Todo> {t.what}{t.blocks ? ` — blocks: ${t.blocks}` : ''}{t.status ? <span data-testid="todo-status"> — status: {t.status}</span> : null}</li>
           ))}
-          <li><Todo>references</Todo> {unverified.length} not verified (never cited as evidence): {unverified.map((r) => `[${r.n}] ${r.key}`).join(', ')}.</li>
-          <li><Todo>abstracts</Todo> {noAbstract.length === 1 ? '1 reference has' : `${noAbstract.length} references have`} no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
-          <li><Todo>summaries</Todo> {noSummary.length === 1 ? '1 reference has' : `${noSummary.length} references have`} no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
+          {unverified.length > 0 && (
+            <li data-testid="todo-unverified"><Todo>references</Todo> {unverified.length} not verified (never cited as evidence): {unverified.map((r) => `[${r.n}] ${r.key}`).join(', ')}.</li>
+          )}
+          {noAbstract.length > 0 && (
+            <li><Todo>abstracts</Todo> {noAbstract.length === 1 ? '1 reference has' : `${noAbstract.length} references have`} no harvested abstract: {noAbstract.map((r) => `[${r.n}]`).join(' ')}.</li>
+          )}
+          {noSummary.length > 0 && (
+            <li><Todo>summaries</Todo> {noSummary.length === 1 ? '1 reference has' : `${noSummary.length} references have`} no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
+          )}
           {missingXwalk.length > 0 && (
             <li><Todo>crosswalk titles</Todo> The pack gives no title for: {missingXwalk.join(', ')} (shown in amber in the pop-out).</li>
           )}
