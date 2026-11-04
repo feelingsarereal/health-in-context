@@ -241,7 +241,7 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
           </div>
         )}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto" data-testid="nb-scroll">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" data-testid="nb-scroll">
         {notes.length === 0 ? (
           <p className="p-3 text-sm bx-muted" data-testid="nb-empty">{C.notebook.empty}</p>
         ) : (
@@ -249,7 +249,7 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
             <nav aria-label={C.notebook.notes} className="border-b border-[color:var(--bx-line)] p-2" data-print-hide>
               <p id={`${uid}-hint`} className="sr-only">{C.notebook.reorderHint}</p>
               {shown.length === 0 && <p className="p-1 text-sm bx-muted">{C.notebook.noMatch}</p>}
-              <ul ref={listRef} className="max-h-48 space-y-0.5 overflow-y-auto" data-testid="nb-list">
+              <ul ref={listRef} className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain" data-testid="nb-list">
                 {shown.map((x) => {
                   const i = notes.indexOf(x);
                   const k = flagsByNote.get(x.id) ?? 0;

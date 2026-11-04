@@ -37,6 +37,18 @@ export function nodeTextParts(n: MapNode, mode: NodeText = 'title-code'): NodeTe
   };
 }
 
+/**
+ * SL30 point 5: the code line of the selection card (Read) and the peek — the box's code line, and for a coded
+ * circumstance WHO's title for the code from the pinned pack after it: "⚡ QE8Z · Harmful or traumatic events,
+ * unspecified". "Other" and "Not sure yet" show their type as the box does; a canvas note has none.
+ */
+export function codeLine(n: MapNode): string | null {
+  const head = nodeTextParts(n, 'title-code').head;
+  if (!head) return null;
+  const t = n.code_status === 'sdoh' && n.code ? titleOf(n.code) : undefined;
+  return t ? `${head} · ${t}` : head;
+}
+
 /** The flat text of a box (head, title, circumstance on their own lines): drawn by the canvas only in PNG and SVG exports. */
 export function nodeLines(n: MapNode, mode: NodeText = 'title-code'): string {
   const p = nodeTextParts(n, mode);

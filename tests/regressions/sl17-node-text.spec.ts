@@ -76,7 +76,7 @@ test('SL17: greyscale and dark mode keep the text readable; a label’s own colo
   const label = page.getByTestId('inspector').getByRole('textbox', { name: 'Short label (optional)', exact: true });
   await label.click();
   await page.keyboard.press('ControlOrMeta+a');
-  await page.getByTestId('inspector').getByRole('combobox', { name: 'Text colour' }).first().selectOption({ index: 2 });
+  await page.getByTestId('inspector').getByRole('combobox', { name: 'Text color' }).first().selectOption({ index: 2 });
   await expect.poll(() => title.evaluate((el) => (el as HTMLElement).style.color)).not.toBe('');
 });
 

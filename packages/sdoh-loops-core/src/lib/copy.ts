@@ -155,7 +155,7 @@ const FALLBACK = {
   },
   /** SL26: the case manager notebook (S7.1 slice 1) */
   notebook: {
-    toggle: 'Notebook', toggleTip: 'Show the notebook beside the map', tabs: 'Map or notebook', mapTab: 'Map',
+    toggle: 'Notebook', toggleTip: 'Show the notebook beside the map', autoFolded: 'The side dock is folded to make room; press ] to open it again.', tabs: 'Map or notebook', mapTab: 'Map',
     title: 'Notebook', lead: 'Notes about this case, saved inside this map. They stay on this device.',
     newFree: 'New note', newFromTemplate: 'New from a template…', untitled: 'Untitled note',
     noteTitle: 'Note title', tags: 'Tags (separate with commas)', body: 'Note text', notes: 'Notes',

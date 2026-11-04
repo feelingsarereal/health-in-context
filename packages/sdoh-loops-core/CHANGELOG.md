@@ -10,6 +10,32 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.5.1] — 2026-11-04
+
+Patch (SL30, review fixes from the 0.5.0 walkthrough). Pack: `0.2.0` (unchanged). No prop, export or map-file change.
+
+- **Identifier check: numeric dates before a period (privacy fix).** "on 03/14/2026." and "03/14/2026..." were not
+  flagged: the numeric date patterns refused any `.` next to the date, so a date at the end of a sentence, or before a
+  typed ellipsis, passed and stayed in the stored note. Now only a further digit, or a separator followed by a digit,
+  rules a match out, and one date uses one separator throughout. Covered and unit-tested, positive and negative:
+  `MM/DD/YYYY`, `M/D/YY`, `DD-MM-YYYY` (also `.`), `YYYY-MM-DD` (also `/`), `Month D, YYYY`, `D Month YYYY`, `Month D`
+  without a year; a bare year, "3/4 of the rent" and "1/2 cup" stay unflagged. The label stays `[date]`. Flags are
+  computed from the stored notebook each time a map loads (nothing is cached), so notes saved under 0.5.0 are flagged
+  on first open under 0.5.1.
+- **"Color", not "Colour", in the rich-text toolbar:** the menu reads **Color** (`aria-label` "Text color") and the
+  picker "Custom text color", in the notebook fields and the Add circumstance and Link to… dialogs; the dock's fill menu
+  reads "Block color". The US-spelling unit test now scans the strings written in every component as well as `copy.ts`.
+- **The workspace fills the viewport** from lg up on the canvas (see the README's "Workspace height"); the notebook and
+  the dock contain their own scrolling (`overscroll-behavior: contain`), so typing or scrolling in a note never scrolls
+  the page or pushes the toolbar out of view.
+- **The dock folds once for the notebook:** the first time the notebook opens on a screen under 1600 px, the dock folds
+  to its rail, remembered per viewer; unfolding it again sticks.
+- **The code line carries WHO's title:** in the selection card (Read) and the peek, the small line above the label reads
+  "⚡ QE8Z · Problems associated with harmful or traumatic events, unspecified" — the code, then WHO's title from the
+  pinned pack. One line, cut with an ellipsis; the full line is its tooltip and accessible name, and it wraps to show
+  all of it on keyboard focus. "Other" and "Not sure yet" show their type as before; the canvas box is unchanged. Links
+  have no code line in either place, so they are unchanged. Internal helper: `codeLine()` in `components/map/nodeText.ts`.
+
 ## [0.5.0] — 2026-11-04
 
 Minor (SL26, S7.1 slice 1): the case manager notebook, map schema 3, and the identifier check. Pack: `0.2.0`

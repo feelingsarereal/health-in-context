@@ -27,13 +27,15 @@ const PATTERNS: { category: IdentifierCategory; re: RegExp; group?: number; name
   { category: 'ssn', re: /(?<![\d-])\d{3}[- ]\d{2}[- ]\d{4}(?![\d-])/g },
   { category: 'zip', re: /(?<![\d-])\d{5}-\d{4}(?![\d-])/g },
   { category: 'phone', re: /(?<![\w-])(?:\+?1[ .-]?)?(?:\(\d{3}\)[ ]?|\d{3}[ .-])\d{3}[ .-]\d{4}(?![\w-])/g },
-  // full dates: 3/14/2024, 14.3.24, 2024-03-14, March 14, March 14th, 2024, 14 March 2024, the 14th of March, March 2024
+  // full dates: 03/14/2026, 3/4/26, 14-03-2026, 14.3.24, 2026-03-14, March 14, March 14th, 2026, 14 March 2026,
+  // the 14th of March, March 2026. SL30: a numeric date may end a sentence ("on 03/14/2026." or "03/14/2026...") —
+  // only a further digit, or a separator followed by a digit, rules it out; one separator throughout.
   {
     category: 'date',
     re: new RegExp(
       [
-        '(?<![\\d/.-])\\d{1,2}[/.-]\\d{1,2}[/.-](?:\\d{4}|\\d{2})(?![\\d/.-])',
-        '(?<![\\d-])\\d{4}-\\d{1,2}-\\d{1,2}(?![\\d-])',
+        '(?<!\\d|\\d[/.-])\\d{1,2}([/.-])\\d{1,2}\\1(?:\\d{4}|\\d{2})(?!\\d|[/.-]\\d)',
+        '(?<!\\d|\\d[/.-])\\d{4}([/.-])\\d{1,2}\\2\\d{1,2}(?!\\d|[/.-]\\d)',
         `\\b${MONTH}\\.?[ \\t]+\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?[ \\t]+\\d{4}\\b)?`,
         `\\b\\d{1,2}(?:st|nd|rd|th)?[ \\t]+(?:of[ \\t]+)?${MONTH}\\b\\.?(?:,?[ \\t]+\\d{4}\\b)?`,
         `\\b${MONTH}\\.?,?[ \\t]+\\d{4}\\b`,

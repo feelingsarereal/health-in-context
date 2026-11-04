@@ -9,7 +9,7 @@ import type { MapEdge, MapNode, NodeText, SdohMap } from '../../lib/model/map';
 import type { Loop } from '../../lib/analysis';
 import { GradeChip } from '../ui/bits';
 import { CitedText } from '../evidence/CitedText';
-import { nodeTextParts } from './nodeText';
+import { codeLine, nodeTextParts } from './nodeText';
 
 /** SL17: what a peek is about, as a host's renderPeek receives it */
 export type PeekTarget = { kind: 'node'; node: MapNode } | { kind: 'edge'; edge: MapEdge };
@@ -25,7 +25,8 @@ export function peekFacts(target: PeekTarget, map: SdohMap, nm: (id: string) => 
     const into = map.edges.filter((e) => e.to === n.id);
     return {
       kind: 'node' as const,
-      code: t.head,
+      // SL30 point 5: the code, then WHO's title for it
+      code: t.head ? codeLine(n) : null,
       // whole: the box cuts a long title at 42 characters
       title: nodeName(n, titleOf),
       label: plainText(n.label),
@@ -52,6 +53,18 @@ export function peekFacts(target: PeekTarget, map: SdohMap, nm: (id: string) => 
     reason: e.basis === 'override' ? plainText(e.override_reason) : e.basis === 'needs-review' ? (a && b ? checkLink(a, b, e.polarity).message : e.check) : null,
     description: plainText(e.description),
   };
+}
+
+/**
+ * SL30 point 5: the small, muted code line — one line, cut with an ellipsis when the space runs out; the whole line is
+ * its text (so its accessible name), its tooltip, and on keyboard focus it wraps to show all of it.
+ */
+export function CodeLine({ text, testId }: { text: string; testId: string }) {
+  return (
+    <p className="truncate rounded-sm text-xs font-semibold bx-muted focus:whitespace-normal focus-visible:outline focus-visible:outline-2" role="note" aria-label={text} title={text} tabIndex={0} data-testid={testId}>
+      {text}
+    </p>
+  );
 }
 
 function Row({ k, children }: { k: string; children: ReactNode }) {
@@ -127,7 +140,7 @@ export function Peek({ target, at, map, nm, loops, loopNames, renderPeek, keyboa
     >
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
-          {f.kind === 'node' && f.code && <p className="text-xs font-semibold bx-muted" data-testid="peek-code">{f.code}</p>}
+          {f.kind === 'node' && f.code && <CodeLine text={f.code} testId="peek-code" />}
           <p className="font-semibold leading-snug" data-testid="peek-title">
             {f.kind === 'node' ? f.title : <>{f.from} <span aria-hidden>→</span><span className="sr-only">leads to</span> {f.to}</>}
           </p>

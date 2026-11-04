@@ -45,6 +45,8 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('nb-search').fill(SENTINEL);
   await expect(page.getByTestId('nb-note')).toHaveCount(2);
   await page.getByTestId('notebook-toggle').click();
+  // SL30 point 4: the notebook's first opening at 1400 px folded the dock; unfold it for the panels
+  if (await page.getByTestId('dock-unfold').count()) await page.getByTestId('dock-unfold').click();
   await panel(page, 'loops');
   await page.getByTestId('loop-item').first().getByRole('button', { name: 'Rename' }).click();
   await page.getByLabel('Loop name').fill(`Loop ${SENTINEL}`);

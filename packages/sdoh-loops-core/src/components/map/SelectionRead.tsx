@@ -11,7 +11,7 @@ import { CitedText } from '../evidence/CitedText';
 import { RefCard } from '../evidence/RefCard';
 import { CodePopout } from './CodePopout';
 import { RichView } from './RichView';
-import { peekFacts } from './Peek';
+import { CodeLine, peekFacts } from './Peek';
 
 function Row({ k, children, testId }: { k: string; children: ReactNode; testId?: string }) {
   return (
@@ -58,7 +58,7 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
     const into = map.edges.filter((e) => e.to === node.id);
     return (
       <div data-testid="selection-read" data-kind="node" className="text-sm">
-        {f.code && <p className="text-xs font-semibold bx-muted" data-testid="read-code">{f.code}</p>}
+        {f.code && <CodeLine text={f.code} testId="read-code" />}
         <p className="font-display text-lg font-semibold leading-snug" data-testid="read-title">{f.title}</p>
         <dl className="mt-2 grid grid-cols-[7rem_1fr] gap-x-2 gap-y-1">
           {f.label && <Row k={C.peek.label}>{f.label}</Row>}

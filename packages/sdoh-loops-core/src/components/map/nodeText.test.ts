@@ -1,6 +1,6 @@
 /** SL17: the node-text modes, the peek's facts, and the Node text setting in the map file. */
 import { describe, expect, it } from 'vitest';
-import { nodeLines, nodeTextParts } from './nodeText';
+import { codeLine, nodeLines, nodeTextParts } from './nodeText';
 import { peekFacts } from './Peek';
 import { migrate, newEdge, newMap, newNode, type MapNode } from '../../lib/model/map';
 import { docFromText } from '../../lib/model/rich';
@@ -98,5 +98,28 @@ describe('peekFacts (SL17)', () => {
     expect(f.basis).toBe('override');
     expect(f.link).toBeNull();
     expect(f.reason).toBe('They said so');
+  });
+});
+
+describe('SL30 point 5: the code line of the selection card and the peek', () => {
+  it('a coded circumstance: the box\'s code line, " · ", then WHO\'s title from the pinned pack, byte for byte', () => {
+    for (const code of ['QD71.Z', 'QE8Z', 'QD80'].filter((c) => codeMap.has(c))) {
+      const n = coded({ code });
+      expect(codeLine(n)).toBe(`${nodeTextParts(n).head} · ${codeMap.get(code)!.title}`);
+      expect(codeLine(n)).toMatch(new RegExp(`^\\S+ ${code.replace('.', '\\.')} · `));
+    }
+  });
+  it('the peek and the Read view use it; the canvas box keeps the code alone', () => {
+    const n = coded();
+    const f = peekFacts({ kind: 'node', node: n }, { ...migrate(newMap('t')), nodes: [n] }, () => '', [], new Map());
+    expect(f.kind === 'node' && f.code).toBe(codeLine(n));
+    expect(nodeTextParts(n).head).toMatch(/QD71\.Z$/);
+  });
+  it('"Other" and "Not sure yet" show their type as the box does; a note has none', () => {
+    const u = newNode({ code_status: 'undetermined', label: docFromText('Unsure') });
+    expect(codeLine(u)).toBe(nodeTextParts(u).head);
+    const o = newNode({ code_status: 'other', label: docFromText('Other') });
+    expect(codeLine(o)).toBe(nodeTextParts(o).head);
+    expect(codeLine(newNode({ kind: 'note', code_status: 'other', notes: docFromText('A note') }))).toBeNull();
   });
 });

@@ -5,7 +5,7 @@ import { exportJSON, importJSON } from '../../packages/sdoh-loops-core/src/lib/m
 import { docFromText } from '../../packages/sdoh-loops-core/src/lib/model/rich';
 import { findIdentifiers, IDENTIFIER_CATEGORIES, type IdentifierCategory } from '../../packages/sdoh-loops-core/src/lib/model/identifiers';
 import {
-  addNote, CORE_TEMPLATES, dismissFlag, duplicateNote, labelAll, labelFlag, moveNote, newFreeNote, newStructuredNote, notebookFlags, noteDocText, sanitizeNote, searchNotes, updateNote, type Notebook,
+  addNote, CORE_TEMPLATES, dismissFlag, duplicateNote, labelAll, labelFlag, moveNote, newFreeNote, newStructuredNote, notebookFlags, noteDocText, sanitizeNote, sanitizeNotebook, searchNotes, updateNote, type Notebook,
 } from '../../packages/sdoh-loops-core/src/lib/model/notebook';
 
 const free = (title: string, text: string) => ({ ...newFreeNote(title), body: sanitizeNote(docFromText(text)) });
@@ -99,6 +99,54 @@ describe('SL26 identifier patterns: a positive and a negative fixture per catego
   }
   it('a bare year is never a date', () => {
     expect(findIdentifiers('2026')).toEqual([]);
+  });
+});
+
+describe('SL30 dates: each format the item names, positive and negative, at a sentence end too; labelled [date]', () => {
+  const POS: [string, string][] = [
+    // MM/DD/YYYY — the walkthrough's miss: a numeric date before a period
+    ['Spoke with Mrs. Jane Doe on 03/14/2026.', '03/14/2026'],
+    ['Spoke with Mrs. Jane Doe on 03/14/2026...', '03/14/2026'],
+    ['Spoke with Mrs. Jane Doe on 03/14/2026 … she called', '03/14/2026'],
+    ['seen 03/14/2026, then', '03/14/2026'],
+    // M/D/YY
+    ['moved out 3/4/26.', '3/4/26'],
+    ['moved out 3/4/26 and', '3/4/26'],
+    // DD-MM-YYYY
+    ['letter dated 14-03-2026.', '14-03-2026'],
+    ['letter dated 14.03.2026 from', '14.03.2026'],
+    // YYYY-MM-DD
+    ['notice 2026-03-14.', '2026-03-14'],
+    ['notice 2026/03/14 from', '2026/03/14'],
+    // Month D, YYYY
+    ['since March 14, 2026.', 'March 14, 2026'],
+    ['since Mar. 4, 2026 the', 'Mar. 4, 2026'],
+    // D Month YYYY
+    ['since 14 March 2026.', '14 March 2026'],
+    ['since 4 Sept 2026 the', '4 Sept 2026'],
+    // Month D without a year
+    ['court on March 14.', 'March 14'],
+    ['court on Dec 3rd, then', 'Dec 3rd'],
+  ];
+  const NEG = ['in 2026', 'In 2026.', '3/4 of the rent', '1/2 cup', 'about 1/2 cup of rice.', 'paid 3/4 of it in 2026.', 'may 5 people come', 'grade 10.5 reading level', 'version 1.2.'];
+  for (const [text, value] of POS)
+    it(`flags "${value}" in "${text}"`, () => {
+      expect(findIdentifiers(text).map((h) => [h.category, h.value])).toContainEqual(['date', value]);
+    });
+  for (const text of NEG)
+    it(`flags no date in "${text}"`, () => {
+      expect(findIdentifiers(text).filter((h) => h.category === 'date')).toEqual([]);
+    });
+  it('the walkthrough sentence: every category flagged, and Label them all leaves [date] where the date was', () => {
+    const nb = nbWith(free('Visit', 'Spoke with Mrs. Jane Doe on 03/14/2026. Call (256) 555-0142, jane.doe@example.com, 1420 Oak Street, MRN 00482913.'));
+    expect(notebookFlags(nb).map((f) => f.category)).toEqual(['person', 'date', 'phone', 'email', 'address', 'record']);
+    const out = labelAll(nb);
+    expect(noteDocText(out.notes[0].body)).toBe('Spoke with [Person A] on [date]. Call [phone], [email], [address], [record no.].');
+    expect(JSON.stringify(out)).not.toContain('03/14/2026');
+  });
+  it('a notebook saved before the fix is checked again when it loads: its dates are flagged', () => {
+    const saved = JSON.parse(JSON.stringify(nbWith(free('Old', 'Rent was due on 03/14/2026.'))));
+    expect(notebookFlags(sanitizeNotebook(saved)).map((f) => [f.category, f.value])).toEqual([['date', '03/14/2026']]);
   });
 });
 

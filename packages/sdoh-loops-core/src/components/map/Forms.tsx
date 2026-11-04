@@ -115,7 +115,7 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
           <div className="flex flex-wrap items-end gap-3">
             <Field label={C.node.fill} htmlFor={`${id}-fill`}>
               <select id={`${id}-fill`} className="bx-input ax-tap w-auto" value={draft.style.fill ?? ''} onChange={(e) => onChange({ style: { ...draft.style, fill: e.target.value || null } })}>
-                <option value="">Block colour</option>
+                <option value="">Block color</option>
                 {USER_COLOURS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </Field>

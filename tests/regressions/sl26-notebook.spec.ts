@@ -307,6 +307,8 @@ test('case summary: matches the list view row for row; updates live; a row click
   await sum.getByTestId('summary-table').getByRole('button', { name: 'Problem associated with unemployment' }).click();
   const id = await sum.getByTestId('summary-table').locator('tbody tr').filter({ has: page.locator('[data-cell=name]', { hasText: /^Problem associated with unemployment$/ }) }).getAttribute('data-node');
   await expect(page.getByTestId('canvas-outline').locator(`li[data-node="${id}"]`)).toHaveAttribute('data-selected', 'true');
+  // SL30 point 4: at 1400 px the notebook's first opening folded the dock to its rail; unfolded, it shows the selection
+  await page.getByTestId('dock-unfold').click();
   await expect(page.getByTestId('dock-card-selection')).toContainText('Selected circumstance');
   expect(await scan(page, 'summary')).toEqual([]);
 });

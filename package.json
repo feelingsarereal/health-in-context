@@ -19,7 +19,7 @@
     "release:dry": "npm pack --dry-run -w @feelingsarereal/sdoh-loops-pack -w @feelingsarereal/sdoh-loops-core"
   },
   "dependencies": {
-    "@feelingsarereal/sdoh-loops-core": "0.5.0",
+    "@feelingsarereal/sdoh-loops-core": "0.5.1",
     "@feelingsarereal/sdoh-loops-pack": "0.2.0",
     "idb-keyval": "6.2.1",
     "js-yaml": "4.1.0",

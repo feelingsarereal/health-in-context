@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { S } from './lib/data/core';
 import { codeMap, codesUnder, type Link as PackLink } from './lib/data/scheme';
 import { pinMismatch, type PackPin } from './lib/data/pack';
@@ -66,7 +66,15 @@ interface DockPref {
   /** SL26: the notebook is shown (beside the map from lg up, as the second tab below), and its width once resized */
   notebook?: boolean;
   nbWidth?: number;
+  /** SL30: the dock was folded once, the first time the notebook opened on a screen under 1600 px */
+  nbAutoFolded?: boolean;
 }
+/** SL30: under this width, the notebook's first opening folds the dock to its rail (once per viewer) */
+const NB_AUTOFOLD_BELOW = 1600;
+/** SL30: from lg up the workspace fills the viewport below where it starts, less this gap; when that leaves less than
+ * FIT_MIN (a map placed far down a host's page), it keeps the older height and the page scrolls to it */
+const FIT_GAP = 12;
+const FIT_MIN = 480;
 const DOCK_DEFAULT = 400;
 const DOCK_MIN = 280;
 const NB_DEFAULT = 420;
@@ -305,6 +313,26 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // ── SL17: the side dock — the core's editor card, then the host's cards; each collapses, and from lg up the whole dock
   // collapses to a rail. Per-viewer browser storage under the store's slug; never saved into the map.
   const wide = useWideViewport();
+  // SL30 point 3: the height that fills the viewport below the workspace's top (a sticky site header included), or null
+  const [fitH, setFitH] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    if (!wide || fs !== 'off') return setFitH(null);
+    const measure = () => {
+      const el = ws.current;
+      if (!el) return;
+      const room = Math.floor(window.innerHeight - (el.getBoundingClientRect().top + window.scrollY) - FIT_GAP);
+      setFitH(room >= FIT_MIN ? room : null);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    // what sits above the workspace can change height after the first paint (a host's banner, fonts, leaving full screen)
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    ro?.observe(document.body);
+    return () => {
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+    };
+  }, [wide, fs]);
   const dockId = `dock-${useId().replace(/:/g, '')}`;
   // SL17 review 4: the dock's width (set by its resize handle) is kept with the collapse state, only once changed
   const [dock, setDock] = useState<DockPref>(() => {
@@ -316,6 +344,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         if (v.mode === 'read' || v.mode === 'edit') d.mode = v.mode;
         if (typeof v.notebook === 'boolean') d.notebook = v.notebook;
         if (typeof v.nbWidth === 'number' && Number.isFinite(v.nbWidth)) d.nbWidth = Math.max(NB_MIN, Math.round(v.nbWidth));
+        if (v.nbAutoFolded === true) d.nbAutoFolded = true;
         return d;
       }
     } catch {
@@ -448,6 +477,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const nbEnabled = !!props.notebook;
   const nbOn = nbEnabled && dock.notebook === true;
   const setNbOn = (on: boolean) => {
+    // SL30 point 4: on a screen under 1600 px the first opening folds the dock to its rail, once; unfolding it again sticks
+    if (on && wide && !dock.nbAutoFolded && window.innerWidth < NB_AUTOFOLD_BELOW) {
+      const fold = dock.open;
+      saveDock({ ...dock, notebook: true, nbAutoFolded: true, open: false });
+      announce(`${C.notebook.title} shown.${fold ? ` ${C.notebook.autoFolded}` : ''}`);
+      return;
+    }
     saveDock({ ...dock, notebook: on });
     announce(on ? `${C.notebook.title} shown.` : `${C.notebook.title} hidden.`);
   };
@@ -1042,7 +1078,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         })}
       </div>
       {/* positioned, so sr-only (absolute) fields inside scroll with the panel and are clipped by it */}
-      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[panel]} data-testid={`panel-body-${panel}`}>
+      <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain p-3" tabIndex={0} role="region" aria-label={C.panels[panel]} data-testid={`panel-body-${panel}`}>
         <h3 className="sr-only">{C.panels[panel]}</h3>
         {panelBody[panel]}
       </div>
@@ -1058,7 +1094,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         : C.dock.selection.none;
   const selectionCard = (
     // positioned, so sr-only (absolute) fields inside scroll with the card and are clipped by it
-    <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={selTitle} data-testid="selection-body">
+    <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain p-3" tabIndex={0} role="region" aria-label={selTitle} data-testid="selection-body">
       {editing ? inspector : reader}
     </div>
   );
@@ -1108,7 +1144,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                   </button>
                 )}
               </div>
-              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.kind === 'host' ? 'overflow-y-auto' : ''} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
+              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.kind === 'host' ? 'overflow-y-auto overscroll-contain' : ''} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
                 {c.body}
               </div>
             </section>
@@ -1152,9 +1188,12 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     />
   );
   const fsOn = fs !== 'off';
-  const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${fsOn ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
+  // SL30 point 3: from lg up, on the canvas, the workspace (toolbar, canvas, notebook, dock) fills the viewport below
+  // where it starts, so the page does not scroll while you work; the notebook and the dock scroll inside themselves
+  const fitted = !fsOn && fitH !== null && view === 'canvas';
+  const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${fsOn || fitted ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
   // from lg up the dock column takes its stored width (review 4), or the rail's
-  const tall = fsOn ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
+  const tall = fsOn || fitted ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
   const gridStyle = wide ? { gridTemplateColumns: `minmax(0,1fr) ${nbOn ? `${nbWidth}px ` : ''}${dockOpen ? `${width}px` : '3rem'}` } : undefined;
   // SL26: below lg the notebook is a tab of its own: it takes the canvas's place, and the canvas stays mounted, hidden
   const nbTab = nbOn && !wide;
@@ -1207,7 +1246,9 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   return (
     <div
       ref={ws}
-      className={`${map.layout.theme === 'print' ? 'ax-print' : ''} ${printing ? 'nb-printing' : ''} ${fsOn ? 'flex flex-col overflow-auto bg-[color:var(--bx-bg)] p-2 text-[color:var(--bx-ink)] sm:p-3' : ''} ${fs === 'overlay' ? 'fixed inset-0 z-[60]' : ''} ${fs === 'api' ? 'h-full w-full' : ''}`}
+      style={fitted ? { height: fitH! } : undefined}
+      data-fit={fitted ? 'viewport' : undefined}
+      className={`${map.layout.theme === 'print' ? 'ax-print' : ''} ${printing ? 'nb-printing' : ''} ${fitted ? 'flex flex-col' : ''} ${fsOn ? 'flex flex-col overflow-auto bg-[color:var(--bx-bg)] p-2 text-[color:var(--bx-ink)] sm:p-3' : ''} ${fs === 'overlay' ? 'fixed inset-0 z-[60]' : ''} ${fs === 'api' ? 'h-full w-full' : ''}`}
       data-testid="map-workspace"
       data-fullscreen={fs}
     >

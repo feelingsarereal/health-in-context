@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { overlay } from '../../packages/sdoh-loops-core/src/lib/copy';
 
 describe('ui-strings overlay (K2 item 3)', () => {
@@ -42,6 +45,26 @@ describe('SL23 copy', () => {
     // "behaviour" would be allowed only where it quotes a WHO ICD-11 title, and C quotes none
     const british = /colour|analys(e|ed|ing)\b|organis|recognis|behaviour|greyscale|neighbour|\bcentre/i;
     expect(all.filter((s) => british.test(s.slice(s.indexOf(": ") + 2)))).toEqual([]);
+  });
+  it('SL30: the same denylist finds nothing in the strings written in components — the rich-text toolbar first', () => {
+    const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../packages/sdoh-loops-core/src');
+    const files = ['components/map/RichField.tsx', ...fs.readdirSync(dir, { recursive: true }).map(String).filter((f) => /\.tsx$/.test(f) && !f.includes('__fixtures__'))];
+    const british = /colour|analys(e|ed|ing)\b|organis|recognis|behaviour|greyscale|\bgrey(?!scale)|neighbour|\bcentre/i;
+    const hits: string[] = [];
+    for (const f of new Set(files)) {
+      // string literals and JSX text, with comments removed (identifiers such as USER_COLOURS are code, not copy)
+      const src = fs.readFileSync(path.join(dir, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`])\/\/.*$/gm, '$1').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+      const strings = [...src.matchAll(/'([^'\n]*)'|"([^"\n]*)"|`([^`]*)`|>([^<>{}]*[A-Za-z][^<>{}]*)</g)].map((m) => m[1] ?? m[2] ?? m[3] ?? m[4]);
+      for (const t of strings) if (british.test(t)) hits.push(`${f}: ${t.trim()}`);
+    }
+    expect(files).toContain('components/map/RichField.tsx');
+    expect(hits).toEqual([]);
+  });
+  it('SL30: the rich-text toolbar says Color and Custom text color', () => {
+    const src = fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../packages/sdoh-loops-core/src/components/map/RichField.tsx'), 'utf8');
+    expect(src).toContain('<option value="">Color</option>');
+    expect(src).toContain('aria-label="Custom text color"');
+    expect(src).toContain('aria-label="Text color"');
   });
   it('the dock and tab keys: dock.selection / read / edit / wholeMap; dock.analyse and panels.tocode are gone', async () => {
     const { C } = await import('../../packages/sdoh-loops-core/src/lib/copy');

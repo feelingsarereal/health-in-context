@@ -139,14 +139,14 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
               <option key={k} value={k}>{k}</option>
             ))}
           </select>
-          <select className="bx-input w-auto py-0.5" aria-label="Text colour" value="" onChange={(e) => (e.target.value === 'none' ? editor.chain().focus().unsetColor().run() : editor.chain().focus().setColor(e.target.value).run())}>
-            <option value="">Colour</option>
+          <select className="bx-input w-auto py-0.5" aria-label="Text color" value="" onChange={(e) => (e.target.value === 'none' ? editor.chain().focus().unsetColor().run() : editor.chain().focus().setColor(e.target.value).run())}>
+            <option value="">Color</option>
             <option value="none">Default</option>
             {USER_COLOURS.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
-          <input type="color" aria-label="Custom text colour" className="h-7 w-8 cursor-pointer rounded border border-[color:var(--bx-line)]" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
+          <input type="color" aria-label="Custom text color" className="h-7 w-8 cursor-pointer rounded border border-[color:var(--bx-line)]" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
         </div>
       )}
       <EditorContent editor={editor} />

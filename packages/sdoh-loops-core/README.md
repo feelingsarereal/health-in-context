@@ -21,7 +21,7 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.5.0 @feelingsarereal/sdoh-loops-pack@0.2.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.5.1 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
@@ -86,6 +86,15 @@ your Help page when you turn the notebook on.
 
 The notebook ends with a live, read-only **case summary** of the map as shown: tiles, the list view's circumstances table
 (sortable, filterable; a row click selects on the map), the loops, and the top 5 by leverage.
+
+### Workspace height (0.5.1, SL30)
+
+From lg up, on the canvas, the workspace (toolbar, canvas, notebook, dock) fills the viewport below where it starts, less
+12 px, and keeps that height as the window or the page above it changes size; the notebook and the dock scroll inside
+themselves, and the page does not scroll while someone works in the map. A sticky site header counts as "above". When
+that would leave under 480 px (a map placed far down a long page), the workspace keeps the older fixed height and the
+page scrolls to it. Below lg, and in the list view, nothing changed. The first time the notebook opens on a screen under
+1600 px, the dock folds to its rail, once per viewer (`nbAutoFolded` in `<slug>:view:dock`).
 
 ### The light entry: `/theme` (0.4.0, SL21)
 
