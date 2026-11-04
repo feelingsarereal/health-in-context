@@ -3,8 +3,10 @@
  * consumer; every SDOH Interrogator app embeds the same <SdohMap>. See README.md for the contract.
  */
 // the component, its storage adapters and the pack pin
-export { SdohMap, PANELS, type SdohMapProps, type Panel, type MapView, type Selection } from './SdohMap';
-export { browserStore, getStore, resetStore, withOriginals, idbStore, localStore, pref, setPref, ReadOnlyMapError, SLUG, DB_NAME, PREF_KEYS, type MapStore, type MapSummary } from './lib/storage';
+export { SdohMap, PANELS, type SdohMapProps, type Panel, type MapView, type Selection, type SideCard, type PeekTarget } from './SdohMap';
+export { browserStore, getStore, resetStore, withOriginals, idbStore, localStore, pref, setPref, viewPref, setViewPref, ReadOnlyMapError, SLUG, DB_NAME, PREF_KEYS, type MapStore, type MapSummary } from './lib/storage';
+export { nodeTextParts, nodeLines, type NodeTextParts } from './components/map/nodeText';
+export { peekFacts } from './components/map/Peek';
 export { loadedPack, pinMismatch, type PackPin } from './lib/data/pack';
 export { ThemeProvider, useTheme } from './lib/theme';
 

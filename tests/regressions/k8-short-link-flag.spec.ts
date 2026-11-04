@@ -17,13 +17,14 @@ async function shortLinkMap(page: Page) {
   await addNode(page, { status: 'other', type: 'outcome', label: SRH });
   await addEdge(page, LOWINC, STRESS, { override: 'Money worries' });
   await addEdge(page, STRESS, SRH, { override: 'Outcome node' });
-  // export, place the circumstances exactly, pin them, and import the result
+  // export, place the circumstances exactly, pin them, and import the result (SL17: the boxes take their text's
+  // measured size, so 230 apart keeps the link about 80 px long)
   await panel(page, 'map');
   const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId('export-json').click()]);
   const p = test.info().outputPath('k8.json');
   await d.saveAs(p);
   const m = JSON.parse(fs.readFileSync(p, 'utf8'));
-  for (const n of m.nodes) Object.assign(n, n.code === 'QD51' ? { x: 0, y: 0 } : n.code === 'QE01' ? { x: 200, y: 0 } : { x: 200, y: 500 }, { pinned: true });
+  for (const n of m.nodes) Object.assign(n, n.code === 'QD51' ? { x: 0, y: 0 } : n.code === 'QE01' ? { x: 230, y: 0 } : { x: 230, y: 500 }, { pinned: true });
   fs.writeFileSync(p, JSON.stringify(m));
   await page.getByTestId('import-file').setInputFiles(p);
   await expect(page.getByTestId('map-name')).toHaveText('K8 (imported)');

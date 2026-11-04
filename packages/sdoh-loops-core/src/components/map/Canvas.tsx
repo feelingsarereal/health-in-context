@@ -1,16 +1,17 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState, useCallback } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, useCallback, type CSSProperties } from 'react';
 import cytoscape, { type Core, type EdgeCollection, type EdgeSingular, type ElementDefinition } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 import cySvg from 'cytoscape-svg';
 import { codeMap, colourGroup } from '../../lib/data/scheme';
 import { GROUP_STYLE, NEUTRAL, borderFor, fillFor } from '../../lib/palette';
-import { dominantStyle, plainText } from '../../lib/model/rich';
+import { dominantStyle } from '../../lib/model/rich';
 import { nodeName } from '../../lib/model/interchange';
 import { useCoarsePointer, useNarrowViewport } from '../../lib/pointer';
-import type { SdohMap, MapNode, MapEdge } from '../../lib/model/map';
+import type { SdohMap, MapEdge, NodeText } from '../../lib/model/map';
 import type { Loop } from '../../lib/analysis';
 import { S } from '../../lib/data/core';
 import { C } from '../../lib/copy';
+import { nodeLines, nodeTextParts } from './nodeText';
 
 cytoscape.use(fcose);
 let elkReady: Promise<void> | null = null;
@@ -36,6 +37,19 @@ export interface CanvasHandle {
   zoom(f: number): void;
   png(): string;
   svg(): string;
+  /** SL16: bring these circumstances into view (centred, zoom kept) when any is outside it */
+  reveal(ids: string[]): void;
+  /** SL17: after the canvas changed size (full screen, the dock): resize and fit */
+  refit(): void;
+  /** SL17: where a circumstance or link is drawn, in px within the canvas (the keyboard peek opens there) */
+  where(id: string): { x: number; y: number } | null;
+}
+/** SL17: a right-click, Ctrl-click or long-press on a circumstance or a link, at x, y px within the canvas */
+export interface PeekRequest {
+  kind: 'node' | 'edge';
+  id: string;
+  x: number;
+  y: number;
 }
 interface Props {
   map: SdohMap;
@@ -50,7 +64,11 @@ interface Props {
   hulls: string[][] | null;
   onSelect(nodes: string[], edges: string[]): void;
   onAddAt(pos: { x: number; y: number }): void;
+  /** the ⋯ button: the association menu */
   onContext(nodeId: string): void;
+  /** SL17: right-click, Ctrl-click or long-press on a circumstance or a link: the read-only peek */
+  onPeek(req: PeekRequest): void;
+  nodeText: NodeText;
   onMove(pos: Record<string, { x: number; y: number }>, pin: boolean | undefined, origin: 'drag' | 'layout'): void;
   onLoop(key: string): void;
   /** UI-17 drag-to-connect: dropped the connector handle of `from` onto `to` */
@@ -61,21 +79,12 @@ interface Props {
 }
 
 const titleOf = (c: string) => codeMap.get(c)?.title;
-const trunc = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 const PIN = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="5" r="4" fill="#a3243b" stroke="#fff" stroke-width="1.2"/><path d="M7 9v5" stroke="#a3243b" stroke-width="1.6"/></svg>');
 
-export function nodeLines(n: MapNode): string {
-  if (n.kind === 'note') return trunc(plainText(n.notes) || C.node.note, 140);
-  const g = n.code ? GROUP_STYLE[colourGroup(n.code) ?? ''] : undefined;
-  const head =
-    n.code_status === 'sdoh' && n.code ? `${g?.glyph ?? ''} ${n.code}`.trim() : n.code_status === 'undetermined' ? `?  ${S.codes.status.undetermined}` : `${S.codes.status.other.split(' ')[0]}${n.type ? ` · ${n.type}` : ''}`;
-  const label = plainText(n.label);
-  const name = label || (n.code ? titleOf(n.code) ?? '' : '');
-  const circ = plainText(n.circumstance);
-  return [head, name && trunc(name, 42), circ && trunc(circ, 48)].filter(Boolean).join('\n');
-}
+/** before a box's text is measured, this size stands in */
+const EST = { w: 150, h: 56 };
 
-function elements(map: SdohMap, dark: boolean): ElementDefinition[] {
+function elements(map: SdohMap, dark: boolean, mode: NodeText, sizes: Map<string, { w: number; h: number }>): ElementDefinition[] {
   const out: ElementDefinition[] = [];
   for (const n of map.nodes) {
     const gid = n.code ? colourGroup(n.code) : undefined;
@@ -83,11 +92,14 @@ function elements(map: SdohMap, dark: boolean): ElementDefinition[] {
     const coded = n.code_status === 'sdoh' && !!n.code;
     const st = dominantStyle(n.label.content.some((p) => p.content?.length) ? n.label : n.circumstance);
     const fill = n.style.fill ? fillFor(n.style.fill, dark) : n.kind === 'note' ? (dark ? '#3a3320' : '#fdf3c4') : coded ? fillFor(hue, dark) : dark ? '#2a2620' : '#efebe4';
+    const sz = sizes.get(n.id) ?? EST;
     out.push({
       group: 'nodes',
       data: {
         id: n.id,
-        label: nodeLines(n),
+        label: nodeLines(n, mode),
+        w: sz.w,
+        h: sz.h,
         bg: fill,
         border: n.kind === 'note' ? (dark ? '#8a7a40' : '#c9b458') : coded ? borderFor(hue, dark) : dark ? '#b3aca1' : '#5d5750',
         fw: st.bold ? 700 : 500,
@@ -136,20 +148,24 @@ function stylesheet(dark: boolean, print: boolean): any[] {
         'background-color': print ? '#ffffff' : 'data(bg)',
         'border-color': print ? '#1f1b16' : 'data(border)',
         'border-width': 1.5,
+        // SL17: on screen the box's text is the HTML layer (title, code line, circumstance in their own weights); the
+        // canvas label is the same text flat, drawn only into PNG and SVG exports (see withLabels)
         label: 'data(label)',
+        'text-opacity': 0,
         'text-wrap': 'wrap',
-        'text-max-width': '170px',
+        'text-max-width': '150px',
         'text-valign': 'center',
         'text-halign': 'center',
         'font-family': '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif',
-        'font-size': 'data(size)',
+        'font-size': 11,
         'font-weight': 'data(fw)' as unknown as number,
         'font-style': 'data(fs)' as unknown as 'normal',
         color: print ? '#1f1b16' : 'data(tc)',
-        width: 'label',
-        height: 'label',
-        padding: '10px',
-        'line-height': 1.3,
+        // the size of the HTML text, measured
+        width: 'data(w)',
+        height: 'data(h)',
+        padding: '0px',
+        'line-height': 1.25,
       },
     },
     { selector: 'node.other, node.undetermined', style: { 'border-style': 'dashed', 'border-width': 2 } },
@@ -260,6 +276,16 @@ const glyphScale = (narrow: boolean, zoom: number) => (narrow ? Math.max(0.3, Ma
 const handleSize = (zoom: number) => Math.max(44, Math.min(72, Math.round(HANDLE_PX * zoom)));
 /** K6 D10: a link whose straight line would run through another circumstance bends around it, by this much clearance */
 const BEND_CLEAR = 18;
+
+/** SL17: the canvas draws the boxes' flat text only for an export; on screen the HTML layer draws it */
+function withLabels<T>(cy: Core, f: (cy: Core) => T): T {
+  cy.nodes().style('text-opacity', 1);
+  try {
+    return f(cy);
+  } finally {
+    cy.nodes().removeStyle('text-opacity');
+  }
+}
 
 function fitCapped(cy: Core, eles = cy.nodes(), pad = 50) {
   if (!eles.length) return;
@@ -375,7 +401,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     size: number;
     tip: { x: number; y: number; text: string } | null;
     hulls: string[];
-    pos: Record<string, { x: number; y: number; bb: string }>;
+    /** rounded rendered position and box (the outline); fx, fy unrounded (the HTML node text sits there) */
+    pos: Record<string, { x: number; y: number; bb: string; fx: number; fy: number }>;
     ends: Record<string, string>;
     /** rendered midpoint x,y and the K6 bend, per edge (outline only) */
     mids: Record<string, string>;
@@ -390,6 +417,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   /** K4 D5: the selected edge whose tooltip the pointer has moved away from; it stays hidden until the selection changes */
   const tipGone = useRef<string | null>(null);
   const [drag, setDrag] = useState<{ from: string; x0: number; y0: number; x: number; y: number } | null>(null);
+  /** SL17: each box's size is its HTML text's, measured at zoom 1 */
+  const sizes = useRef(new Map<string, { w: number; h: number }>());
+  const textLayer = useRef<HTMLDivElement>(null);
 
   const recompute = useCallback(() => {
     const cy = cyRef.current;
@@ -505,11 +535,11 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       }
     }
     // rendered geometry, mirrored on the outline for tests and assistive tech (no map text involved)
-    const pos: Record<string, { x: number; y: number; bb: string }> = {};
+    const pos: Record<string, { x: number; y: number; bb: string; fx: number; fy: number }> = {};
     cy.nodes().forEach((n) => {
       const q = n.renderedPosition();
       const b = n.renderedBoundingBox({});
-      pos[n.id()] = { x: Math.round(q.x), y: Math.round(q.y), bb: [b.x1, b.y1, b.x2, b.y2].map(Math.round).join(',') };
+      pos[n.id()] = { x: Math.round(q.x), y: Math.round(q.y), bb: [b.x1, b.y1, b.x2, b.y2].map(Math.round).join(','), fx: q.x, fy: q.y };
     });
     const endsMap: Record<string, string> = {};
     const midMap: Record<string, string> = {};
@@ -537,11 +567,41 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     setOverlay({ loops, more, handle, size, tip, hulls, pos, ends: endsMap, mids: midMap, shown: shownMap, zoom: cy.zoom() });
   }, []);
 
+  // SL17: measure each box's HTML text at zoom 1 (offsetWidth and offsetHeight ignore the zoom transform) and size the
+  // box to it; the mount and sync effects read the sizes as they build the elements
+  const measure = useCallback(() => {
+    const layer = textLayer.current;
+    let changed = false;
+    layer?.querySelectorAll<HTMLElement>('[data-node-text]').forEach((el) => {
+      const id = el.dataset.nodeText!;
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      if (!w || !h) return;
+      const cur = sizes.current.get(id);
+      if (!cur || cur.w !== w || cur.h !== h) {
+        sizes.current.set(id, { w, h });
+        changed = true;
+      }
+    });
+    const cy = cyRef.current;
+    if (!changed || !cy) return;
+    cy.batch(() => {
+      sizes.current.forEach((sz, id) => {
+        const n = cy.getElementById(id);
+        if (n.nonempty() && (n.data('w') !== sz.w || n.data('h') !== sz.h)) n.data(sz);
+      });
+    });
+    routeEdges(cy);
+    fitMarks(cy);
+    recompute();
+  }, [recompute]);
+  useLayoutEffect(measure, [props.map, props.nodeText, measure]);
+
   // mount
   useEffect(() => {
     const cy = cytoscape({
       container: box.current!,
-      elements: elements(P.current.map, P.current.dark),
+      elements: elements(P.current.map, P.current.dark, P.current.nodeText, sizes.current),
       style: stylesheet(P.current.dark, P.current.print),
       layout: { name: 'preset' },
       boxSelectionEnabled: true,
@@ -567,12 +627,20 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     cy.on('dbltap', (e) => {
       if (e.target === cy) P.current.onAddAt(e.position);
     });
-    cy.on('cxttap taphold', 'node', (e) => {
-      const n = e.target;
-      if (n.hasClass('note')) return;
-      cy.$(':selected').unselect();
-      n.select();
-      P.current.onContext(n.id());
+    // SL17: right-click, Ctrl-click and long-press open the read-only peek (Daniel, 2026-11-04: the association menu
+    // moves to the peek's Associations… button; A, the toolbar and the editor keep theirs). A Ctrl-click on a Mac also
+    // arrives as a right-click: the second report of the same browser event is the same gesture.
+    let last: Event | undefined;
+    const peek = (e: cytoscape.EventObject) => {
+      const t = e.target;
+      if (e.originalEvent && e.originalEvent === last) return;
+      last = e.originalEvent;
+      const p = e.renderedPosition ?? (t.isNode() ? t.renderedPosition() : (t as unknown as RenderedEdge).renderedMidpoint());
+      P.current.onPeek({ kind: t.isNode() ? 'node' : 'edge', id: t.id(), x: p.x, y: p.y });
+    };
+    cy.on('cxttap taphold', 'node, edge', peek);
+    cy.on('tap', 'node, edge', (e) => {
+      if ((e.originalEvent as MouseEvent | undefined)?.ctrlKey) peek(e);
     });
     cy.on('mouseover', 'edge', (e) => {
       hover.current = e.target.id();
@@ -595,6 +663,13 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     });
     const container = box.current!;
     container.addEventListener('mouseleave', away);
+    // SL17: full screen and the collapsible dock change the canvas's size without a window resize
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => {
+      cy.resize();
+      schedule();
+    }) : null;
+    ro?.observe(container);
+    document.fonts?.ready.then(() => cyRef.current === cy && measure());
     cy.on('dragfree', 'node', (e) => {
       const moved = cy.$('node:selected').union(e.target);
       const pos: Record<string, { x: number; y: number }> = {};
@@ -606,17 +681,18 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     schedule();
     return () => {
       cancelAnimationFrame(raf);
+      ro?.disconnect();
       container.removeEventListener('mouseleave', away);
       cy.destroy();
       cyRef.current = null;
     };
-  }, [recompute]);
+  }, [recompute]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // sync elements with the map
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy) return;
-    const els = elements(props.map, props.dark);
+    const els = elements(props.map, props.dark, props.nodeText, sizes.current);
     const want = new Set(els.map((e) => e.data.id as string));
     const added: string[] = [];
     cy.batch(() => {
@@ -652,7 +728,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
     routeEdges(cy);
     fitMarks(cy);
     recompute();
-  }, [props.map, props.dark, recompute]);
+  }, [props.map, props.dark, props.nodeText, recompute]);
 
   useEffect(() => {
     cyRef.current?.style(stylesheet(props.dark, props.print));
@@ -776,10 +852,33 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       cy.zoom({ level: cy.zoom() * f, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
     },
     png() {
-      return cyRef.current!.png({ full: true, scale: 2, bg: P.current.dark ? '#15130f' : '#faf8f4' });
+      return withLabels(cyRef.current!, (cy) => cy.png({ full: true, scale: 2, bg: P.current.dark ? '#15130f' : '#faf8f4' }));
     },
     svg() {
-      return (cyRef.current as unknown as { svg(o: object): string }).svg({ full: true, bg: P.current.dark ? '#15130f' : '#faf8f4' });
+      return withLabels(cyRef.current!, (cy) => (cy as unknown as { svg(o: object): string }).svg({ full: true, bg: P.current.dark ? '#15130f' : '#faf8f4' }));
+    },
+    reveal(ids) {
+      const cy = cyRef.current;
+      if (!cy) return;
+      const eles = cy.collection(ids.map((id) => cy.getElementById(id)).filter((n) => n.nonempty() && n.isNode()));
+      if (!eles.length) return;
+      const ext = cy.extent();
+      const bb = eles.boundingBox({});
+      if (bb.x1 >= ext.x1 && bb.x2 <= ext.x2 && bb.y1 >= ext.y1 && bb.y2 <= ext.y2) return;
+      if (bb.w > ext.w || bb.h > ext.h) fitCapped(cy, eles, 70);
+      else cy.center(eles);
+    },
+    refit() {
+      const cy = cyRef.current;
+      if (!cy) return;
+      cy.resize();
+      if (cy.nodes().length) fitCapped(cy);
+    },
+    where(id) {
+      const cy = cyRef.current;
+      const el = cy?.getElementById(id);
+      if (!cy || !el || el.empty()) return null;
+      return el.isNode() ? el.renderedPosition() : (el as unknown as RenderedEdge).renderedMidpoint();
     },
   }));
 
@@ -800,6 +899,32 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           <polygon key={i} points={pts} fill="var(--bx-accent)" fillOpacity={0.07} stroke="var(--bx-accent)" strokeDasharray="6 4" strokeWidth={1.5} />
         ))}
       </svg>
+      <div ref={textLayer} className="pointer-events-none absolute inset-0" aria-hidden data-testid="node-text-layer">
+        {props.map.nodes.map((n) => {
+          const t = nodeTextParts(n, props.nodeText);
+          const q = overlay.pos[n.id];
+          const st = dominantStyle(n.label.content.some((p) => p.content?.length) ? n.label : n.circumstance);
+          const dim = props.highlight && !(props.highlight.nodes.has(n.id) || props.highlight.out?.has(n.id) || props.highlight.in?.has(n.id));
+          const title: CSSProperties = {
+            fontStyle: st.italic ? 'italic' : undefined,
+            color: props.print ? undefined : st.color,
+            fontSize: st.fontSize ? parseInt(st.fontSize) : undefined,
+          };
+          return (
+            <div
+              key={n.id}
+              className={`ax-node-text ${n.kind === 'note' ? 'ax-nt-note' : ''}`}
+              data-node-text={n.id}
+              data-mode={props.nodeText}
+              style={{ left: q?.fx ?? -9999, top: q?.fy ?? -9999, transform: `translate(-50%, -50%) scale(${overlay.zoom})`, opacity: dim ? 0.15 : undefined }}
+            >
+              {t.head && <span className="ax-nt-code" data-part="code">{t.head}</span>}
+              <span className="ax-nt-title" data-part="title" style={title}>{t.title}</span>
+              {t.sub && <span className="ax-nt-sub" data-part="sub">{t.sub}</span>}
+            </div>
+          );
+        })}
+      </div>
       {overlay.loops.map((l) => (
         <button
           key={l.key}

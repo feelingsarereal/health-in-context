@@ -4,7 +4,7 @@ import { codeMap } from '../../lib/data/scheme';
 import { C } from '../../lib/copy';
 import { Field } from '../ui/bits';
 import { exportCSV, exportJSON, loopReportMD } from '../../lib/model/interchange';
-import type { SdohMap } from '../../lib/model/map';
+import { NODE_TEXTS, type NodeText, type SdohMap } from '../../lib/model/map';
 import type { MapStore } from '../../lib/storage';
 import { importFile } from '../../lib/model/importFile';
 import RichField from './RichField';
@@ -40,6 +40,13 @@ export function MapDetails({ map, apply, download, canvas, store, onOpenMap }: {
       </Field>
       <label className="mb-3 inline-flex items-center gap-2 text-sm ax-tap">
         <input type="checkbox" checked={map.layout.thickness} onChange={(e) => apply((m) => ({ ...m, layout: { ...m.layout, thickness: e.target.checked } }))} aria-labelledby={`${id}-thick`} /> <span id={`${id}-thick`}>{C.edge.thickness}</span>
+      </label>
+      {/* SL17: how much text each box shows, saved with the map; the circumstance text is always in the peek */}
+      <label className="mb-3 flex items-center gap-2 text-sm">
+        <span className="font-semibold">{C.nodeText.label}</span>
+        <select className="bx-input ax-tap w-auto" value={map.layout.nodeText ?? 'title-code'} onChange={(e) => apply((m) => ({ ...m, layout: { ...m.layout, nodeText: e.target.value as NodeText } }))} data-testid="node-text">
+          {NODE_TEXTS.map((t) => <option key={t} value={t}>{C.nodeText[t]}{t === 'title-code' ? ' (default)' : ''}</option>)}
+        </select>
       </label>
       <p className="mb-3 text-xs bx-muted">{S.privacy.saved_here}</p>
 

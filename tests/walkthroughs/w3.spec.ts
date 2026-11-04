@@ -91,7 +91,8 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   expect(offOrigin(reqs, baseURL!)).toEqual([]);
 });
 
-test('w3: long-press on a node opens the association menu (touch alternative to right-click)', async ({ page }) => {
+// SL17 (Daniel, 2026-11-04): a long-press, like a right-click, opens the read-only peek; its Associations… opens the menu
+test('w3: long-press on a node opens the peek, and its Associations… the association menu (touch alternative to right-click)', async ({ page }) => {
   await page.goto('/');
   await dismissFirstRun(page);
   await page.goto('/maps');
@@ -108,5 +109,7 @@ test('w3: long-press on a node opens the association menu (touch alternative to 
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
   await page.waitForTimeout(900);
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect(page.getByTestId('peek')).toHaveAttribute('data-kind', 'node');
+  await page.getByTestId('peek-assoc').tap();
   await expect(page.getByTestId('assoc-menu')).toBeVisible();
 });

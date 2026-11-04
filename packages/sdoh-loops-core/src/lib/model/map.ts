@@ -16,6 +16,9 @@ export type OtherType = 'outcome' | 'policy' | 'event' | 'resource' | 'personal'
 export const OTHER_TYPES: OtherType[] = ['outcome', 'policy', 'event', 'resource', 'personal', 'other'];
 export type Confidence = 'low' | 'medium' | 'high';
 export const CONFIDENCES: Confidence[] = ['low', 'medium', 'high'];
+/** SL17: a box's text — the title alone, the code line above it (the default), or both with the circumstance below */
+export type NodeText = 'title' | 'title-code' | 'full';
+export const NODE_TEXTS: NodeText[] = ['title', 'title-code', 'full'];
 export type LineType = 'solid' | 'dashed' | 'dotted';
 export type Route = 'curved' | 'straight';
 
@@ -82,7 +85,8 @@ export interface SdohMap {
   subject: string;
   created: string;
   updated: string;
-  layout: { engine: 'fcose' | 'elk-stress'; theme: 'auto' | 'print'; thickness: boolean };
+  /** SL17: `nodeText` is how much text a box shows; left out, it is 'title-code' (and is not written until changed) */
+  layout: { engine: 'fcose' | 'elk-stress'; theme: 'auto' | 'print'; thickness: boolean; nodeText?: NodeText };
   notes: RichDoc;
   nodes: MapNode[];
   edges: MapEdge[];
@@ -348,7 +352,12 @@ export function migrate(input: unknown): SdohMap {
     subject: typeof raw.subject === 'string' ? raw.subject : '',
     created: typeof raw.created === 'string' ? raw.created : now(),
     updated: typeof raw.updated === 'string' ? raw.updated : now(),
-    layout: { engine: layout.engine === 'elk-stress' ? 'elk-stress' : 'fcose', theme: layout.theme === 'print' ? 'print' : 'auto', thickness: layout.thickness !== false },
+    layout: {
+      engine: layout.engine === 'elk-stress' ? 'elk-stress' : 'fcose',
+      theme: layout.theme === 'print' ? 'print' : 'auto',
+      thickness: layout.thickness !== false,
+      ...(layout.nodeText && NODE_TEXTS.includes(layout.nodeText) ? { nodeText: layout.nodeText } : {}),
+    },
     notes: sanitizeRich(raw.notes),
     nodes,
     edges: checked,

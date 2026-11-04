@@ -75,6 +75,13 @@
   .ax-loop-r, .ax-loop-b { @apply absolute flex items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-center text-[11px] font-bold shadow-sm; white-space: pre-line; line-height: 13px; min-width: 30px; min-height: 30px; padding: 4px 8px; transform: translate(-50%, -50%); transform-origin: center; }
   .ax-loop-r      { border-color: var(--ax-pos); color: var(--ax-pos); }
   .ax-loop-b      { border-color: var(--ax-neg); color: var(--ax-neg); }
+  /* SL17: a box's text, drawn over the canvas and scaled with its zoom (inline transform); the box takes this size */
+  .ax-node-text   { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 2px; width: max-content; max-width: 190px; padding: 9px 11px; text-align: center; line-height: 1.25; color: var(--bx-ink); font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif; overflow-wrap: anywhere; transform-origin: center; }
+  .ax-nt-code     { font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+  .ax-nt-title    { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .ax-nt-sub      { font-size: 11px; font-weight: 400; opacity: 0.8; }
+  .ax-nt-note .ax-nt-title { font-size: 12px; font-weight: 500; }
+  .ax-print .ax-node-text { color: #1f1b16; }
   .ax-pin         { @apply text-[11px]; }
   .ax-heuristic   { @apply bx-chip border border-[color:var(--bx-line)] bx-muted; }
   .ax-rt          { }

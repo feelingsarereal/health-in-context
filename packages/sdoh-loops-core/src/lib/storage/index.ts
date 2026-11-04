@@ -30,6 +30,8 @@ export interface MapStore {
   remove(id: string): Promise<void>;
   clearAll(): Promise<void>;
   kind: 'indexeddb' | 'localstorage';
+  /** SL17: the slug this store keeps maps under; the map's per-viewer view state (the side dock) is stored under it too */
+  slug?: string;
   /** true for a read-only original; save() and remove() refuse it (K13) */
   readOnly?(id: string): boolean;
 }
@@ -46,6 +48,7 @@ export function idbStore(idb?: UseStore, slug = SLUG): MapStore {
   const store = idb ?? createStore(slug, 'maps');
   return {
     kind: 'indexeddb',
+    slug,
     async list() {
       const ks = (await keys(store)) as string[];
       const out: MapSummary[] = [];
@@ -83,6 +86,7 @@ export function localStore(ls: Storage = globalThis.localStorage, slug = SLUG): 
   const mapKeys = () => Array.from({ length: ls.length }, (_, i) => ls.key(i)!).filter((k) => k?.startsWith(prefix));
   return {
     kind: 'localstorage',
+    slug,
     async list() {
       return mapKeys()
         .map((k) => summarize(migrate(JSON.parse(ls.getItem(k)!))))
@@ -139,6 +143,7 @@ export function withOriginals(base: MapStore, originals: SdohMap[]): MapStore {
   };
   return {
     kind: base.kind,
+    slug: base.slug,
     async list() {
       const own = (await base.list()).filter((s) => !byId.has(s.id));
       return [...[...byId.values()].map((m) => ({ ...summarize(m), readOnly: true })), ...own].sort(byUpdated);
@@ -183,5 +188,24 @@ export function setPref(key: string, value: string) {
     localStorage.setItem(`${SLUG}:${key}`, value);
   } catch {
     /* ignore */
+  }
+}
+
+/**
+ * SL17: a per-viewer view setting of the map (the side dock's collapse state) under the store's slug, so the embedding
+ * app's "Clear my data" removes it with everything else. Never part of a map; null when storage is blocked or empty.
+ */
+export function viewPref(store: Pick<MapStore, 'slug'>, key: string): string | null {
+  try {
+    return localStorage.getItem(`${store.slug ?? SLUG}:view:${key}`);
+  } catch {
+    return null;
+  }
+}
+export function setViewPref(store: Pick<MapStore, 'slug'>, key: string, value: string) {
+  try {
+    localStorage.setItem(`${store.slug ?? SLUG}:view:${key}`, value);
+  } catch {
+    /* storage blocked: the setting lasts for this visit only */
   }
 }

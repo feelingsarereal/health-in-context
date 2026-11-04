@@ -7,7 +7,7 @@ import { useFloating, useClick, useDismiss, useRole, useInteractions, FloatingFo
  * Inside a modal <dialog> (showModal puts it in the browser's top layer and makes the rest of the page inert), the
  * popover portals into that dialog rather than into <body>, which no z-index can lift above the top layer
  * (K2 defect D1). `strategy: 'fixed'` keeps it placed against the viewport, so the dialog's own scroll neither offsets
- * nor clips it.
+ * nor clips it. In full screen (SL17) it portals into the full-screen element, for the same reason.
  */
 export function Popover({ trigger, children, label, className }: { trigger: ReactNode; children: ReactNode; label: string; className?: string }) {
   const [open, setOpen] = useState(false);
@@ -15,7 +15,8 @@ export function Popover({ trigger, children, label, className }: { trigger: Reac
   const { refs, floatingStyles, context } = useFloating({
     open,
     onOpenChange: (o) => {
-      if (o) setRoot(((refs.domReference.current as Element | null)?.closest('dialog') as HTMLElement | null) ?? undefined);
+      // SL17: in full screen only the full-screen element is drawn, so the popover portals into it
+      if (o) setRoot((((refs.domReference.current as Element | null)?.closest('dialog') ?? document.fullscreenElement) as HTMLElement | null) ?? undefined);
       setOpen(o);
     },
     strategy: 'fixed',

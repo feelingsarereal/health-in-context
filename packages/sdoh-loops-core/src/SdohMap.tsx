@@ -1,15 +1,15 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { S } from './lib/data/core';
 import { codeMap, codesUnder, type Link as PackLink } from './lib/data/scheme';
 import { pinMismatch, type PackPin } from './lib/data/pack';
 import { C } from './lib/copy';
 import { USER_COLOURS } from './lib/palette';
 import { useTheme } from './lib/theme';
-import { useCoarsePointer } from './lib/pointer';
+import { useCoarsePointer, useWideViewport } from './lib/pointer';
 import { count } from './lib/plural';
-import { withOriginals, type MapStore } from './lib/storage';
+import { setViewPref, viewPref, withOriginals, type MapStore } from './lib/storage';
 import { useMapDoc } from './components/map/useMapDoc';
-import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap as SdohMapDoc } from './lib/model/map';
+import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, toGraph, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap as SdohMapDoc } from './lib/model/map';
 import { emptyDoc, plainText } from './lib/model/rich';
 import { feedbackClusters, neighbourhood, findLoops, DEFAULT_WEIGHT, type Loop } from './lib/analysis';
 import { assignLoopNames } from './lib/model/interchange';
@@ -25,7 +25,8 @@ import { RefCard } from './components/evidence/RefCard';
 import { LoopsPanel, LinksPanel, PathsPanel, LeveragePanel, PulsePanel, ToCodePanel, ClustersPanel, LegendPanel, nameOf } from './components/map/Panels';
 import { MapDetails } from './components/map/MapDetails';
 import { ListView } from './components/map/ListView';
-import type { CanvasHandle, Highlight } from './components/map/Canvas';
+import type { CanvasHandle, Highlight, PeekRequest } from './components/map/Canvas';
+import { Peek, type PeekTarget } from './components/map/Peek';
 import { links as packLinks } from './lib/data/scheme';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
@@ -37,6 +38,15 @@ export interface Selection {
   nodes: string[];
   edges: string[];
 }
+export type { PeekTarget };
+/** SL17: a host's card in the side dock, below the core's editor; `render` gets the current selection */
+export interface SideCard {
+  id: string;
+  title: string;
+  render: (selection: Selection) => ReactNode;
+}
+const NO_SELECTION: Selection = { nodes: [], edges: [] };
+const sameSelection = (a: Selection, b: Selection) => a.nodes.join('\n') === b.nodes.join('\n') && a.edges.join('\n') === b.edges.join('\n');
 
 export interface NewNodeReq {
   pos?: { x: number; y: number };
@@ -51,7 +61,21 @@ export interface SdohMapProps {
   pack: PackPin;
   /** where maps live: browserStore(slug), optionally wrapped in withOriginals() */
   storage: MapStore;
+  /**
+   * SL16: the selection, controlled — the map shows it, and asks for changes through onSelectionChange; uncontrolled
+   * when left out. Ids that are not on the map (or are hidden by hideNode) are ignored.
+   */
+  selection?: Selection;
   onSelectionChange?: (selection: Selection) => void;
+  /**
+   * SL16: circumstances (and notes) this returns true for are left out of the canvas, the list view and every analysis,
+   * with their links; they stay in the map, its edits and its file exports. Change it to show or hide them.
+   */
+  hideNode?: (node: MapNode) => boolean;
+  /** SL17: the host's cards in the side dock, stacked below the core's editor */
+  sideCards?: SideCard[];
+  /** SL17: the host's own lines in the peek, below the core's */
+  renderPeek?: (target: PeekTarget) => ReactNode;
   /** after every change; `copiedFrom` is set when this change forked a copy of a read-only original */
   onMapChange?: (map: SdohMapDoc, info: { copiedFrom?: string }) => void;
   /** once the map has loaded (null when it is not in `storage`) */
@@ -103,8 +127,18 @@ export function SdohMap(props: SdohMapProps) {
 }
 
 function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnType<typeof useMapDoc> }) {
-  const map = doc.map!;
+  const full = doc.map!;
   const { apply } = doc;
+  // SL16: what the map shows — the document less the circumstances hideNode hides and their links. Edits still go to
+  // the whole document (apply), so a hidden circumstance is never lost. Keyed on the hidden ids, so a predicate the host
+  // writes inline does not rebuild the canvas on every render.
+  const hiddenIds = props.hideNode ? full.nodes.filter((n) => props.hideNode!(n)).map((n) => n.id) : [];
+  const hiddenKey = hiddenIds.join('\n');
+  const map = useMemo(() => {
+    if (!hiddenKey) return full;
+    const gone = new Set(hiddenKey.split('\n'));
+    return { ...full, nodes: full.nodes.filter((n) => !gone.has(n.id)), edges: full.edges.filter((e) => !gone.has(e.from) && !gone.has(e.to)) };
+  }, [full, hiddenKey]);
   const { theme, reducedMotion } = useTheme();
   const canvas = useRef<CanvasHandle>(null);
   const [ownView, setOwnView] = useState<MapView>('canvas');
@@ -122,15 +156,38 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     if (props.onPanelChange) props.onPanelChange(p);
     else setOwnPanel(p);
   };
-  const [selected, setSelected] = useState<Selection>({ nodes: [], edges: [] });
+  // SL16: the selection is the host's when it passes `selection`, else the workspace's own; either way a change is
+  // reported once through onSelectionChange, and never when nothing changed
+  const controlled = props.selection !== undefined;
+  const [ownSel, setOwnSel] = useState<Selection>(NO_SELECTION);
+  const rawSel = props.selection ?? ownSel;
+  const selected = useMemo(() => {
+    const ok = (ids: string[], has: (id: string) => boolean) => ids.every(has) ? ids : ids.filter(has);
+    const nodes = ok(rawSel.nodes, (id) => map.nodes.some((n) => n.id === id));
+    const edges = ok(rawSel.edges, (id) => map.edges.some((e) => e.id === id));
+    return nodes === rawSel.nodes && edges === rawSel.edges ? rawSel : { nodes, edges };
+  }, [rawSel, map]);
   const onSel = useRef(props.onSelectionChange);
   onSel.current = props.onSelectionChange;
-  const lastSel = useRef(selected);
+  const emitted = useRef<Selection>(selected);
+  // the canvas reports a click as one select and one unselect: the second report, before the host has re-rendered, is the same change
+  const unrendered = useRef<Selection | null>(null);
   useEffect(() => {
-    if (lastSel.current === selected) return;
-    lastSel.current = selected;
-    onSel.current?.(selected);
-  }, [selected]);
+    unrendered.current = null;
+  });
+  const setSelected = (s: Selection) => {
+    if (sameSelection(s, selected) || (unrendered.current && sameSelection(s, unrendered.current))) return;
+    unrendered.current = s;
+    emitted.current = s;
+    if (!controlled) setOwnSel(s);
+    onSel.current?.(s);
+  };
+  // a selection the host set (not one this map reported) is brought into view
+  useEffect(() => {
+    if (!controlled || sameSelection(selected, emitted.current)) return;
+    emitted.current = selected;
+    if (view === 'canvas' && selected.nodes.length) canvas.current?.reveal(selected.nodes);
+  }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
   const [activeLoop, setActiveLoop] = useState<string | null>(null);
   const [hood, setHood] = useState<{ id: string; hops: 1 | 2 } | null>(null);
   const [pathHl, setPathHl] = useState<{ nodes: string[]; edges: string[] } | null>(null);
@@ -143,15 +200,17 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const [evidenceOnly, setEvidenceOnly] = useState(false);
   // A0: the evidence filter — every analysis runs on evidence-backed links only when the toggle is on
   const basisOf = useMemo(() => new Map(map.edges.map((e) => [e.id, e.basis])), [map.edges]);
-  const graph = useMemo(() => (evidenceOnly ? { nodes: doc.graph.nodes, edges: doc.graph.edges.filter((e) => basisOf.get(e.id) === 'evidence') } : doc.graph), [evidenceOnly, doc.graph, basisOf]);
-  const loops = useMemo(() => (evidenceOnly ? findLoops(graph) : doc.loops), [evidenceOnly, graph, doc.loops]);
+  // SL16: with circumstances hidden, the analyses run on what is shown
+  const shownGraph = useMemo(() => (map === full ? doc.graph : toGraph(map)), [map, full, doc.graph]);
+  const graph = useMemo(() => (evidenceOnly ? { nodes: shownGraph.nodes, edges: shownGraph.edges.filter((e) => basisOf.get(e.id) === 'evidence') } : shownGraph), [evidenceOnly, shownGraph, basisOf]);
+  const loops = useMemo(() => (graph === doc.graph ? doc.loops : findLoops(graph)), [graph, doc.graph, doc.loops]);
   const loopNames = useMemo(() => {
-    if (!evidenceOnly) return doc.loopNames;
-    // the evidence-only loops are a subset, keyed the same way: their stored names carry over (K6 D4)
-    const d = assignLoopNames(map.loops, loops).names;
+    if (loops === doc.loops) return doc.loopNames;
+    // the evidence-only (or shown-only) loops are a subset, keyed the same way: their stored names carry over (K6 D4)
+    const d = assignLoopNames(full.loops, loops).names;
     for (const [k, v] of doc.loopNames) if (d.has(k)) d.set(k, v);
     return d;
-  }, [evidenceOnly, loops, doc.loopNames, map.loops]);
+  }, [loops, doc.loops, doc.loopNames, full.loops]);
   const overrides = (l: Loop) => l.edges.filter((id) => basisOf.get(id) !== 'evidence').length;
   const counts = { all: map.edges.length, evidence: map.edges.filter((e) => e.basis === 'evidence').length, review: map.edges.filter((e) => e.basis === 'needs-review').length };
   const [assocFor, setAssocFor] = useState<string | null>(null);
@@ -166,6 +225,90 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const announce = useCallback((s: string) => setLive((p) => (p === s ? s + ' ' : s)), []);
   const nm = useMemo(() => nameOf(map), [map]);
   const byId = useMemo(() => new Map(map.nodes.map((n) => [n.id, n])), [map.nodes]);
+
+  // ── SL17: full screen — the whole workspace (toolbar, canvas, dock) through the Fullscreen API, else a fixed overlay.
+  // A view state only: never saved into the map.
+  const ws = useRef<HTMLDivElement>(null);
+  const [fs, setFs] = useState<'off' | 'api' | 'overlay'>('off');
+  const fsWait = useRef(0);
+  const enterFs = () => {
+    const el = ws.current;
+    if (!el?.requestFullscreen || !document.fullscreenEnabled) return setFs('overlay');
+    // fullscreenchange says when it took; refused (an iframe, a policy) or no answer within 800 ms, the overlay instead
+    el.requestFullscreen().catch(() => setFs((f) => (f === 'api' ? f : 'overlay')));
+    clearTimeout(fsWait.current);
+    fsWait.current = window.setTimeout(() => setFs((f) => (f === 'off' && document.fullscreenElement !== el ? 'overlay' : f)), 800);
+  };
+  const exitFs = () => {
+    clearTimeout(fsWait.current);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined);
+    setFs('off');
+  };
+  const toggleFs = () => (fs === 'off' ? enterFs() : exitFs());
+  useEffect(() => {
+    // the Fullscreen API took, or the browser's own Esc (or F11) left it without us
+    const on = () => setFs((f) => (document.fullscreenElement && document.fullscreenElement === ws.current ? 'api' : f === 'api' ? 'off' : f));
+    document.addEventListener('fullscreenchange', on);
+    return () => {
+      clearTimeout(fsWait.current);
+      document.removeEventListener('fullscreenchange', on);
+      if (document.fullscreenElement && document.fullscreenElement === ws.current) document.exitFullscreen().catch(() => undefined);
+    };
+  }, []);
+  const fsFirst = useRef(true);
+  useEffect(() => {
+    if (fsFirst.current) {
+      fsFirst.current = false;
+      return;
+    }
+    // the canvas refits once the layout has settled at its new size
+    const t = setTimeout(() => canvas.current?.refit(), 80);
+    announce(fs === 'off' ? 'Left full screen.' : 'Full screen. Press Esc to leave.');
+    return () => clearTimeout(t);
+  }, [fs]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── SL17: the side dock — the core's editor card, then the host's cards; each collapses, and from lg up the whole dock
+  // collapses to a rail. Per-viewer browser storage under the store's slug; never saved into the map.
+  const wide = useWideViewport();
+  const dockId = `dock-${useId().replace(/:/g, '')}`;
+  const [dock, setDock] = useState<{ open: boolean; closed: string[] }>(() => {
+    try {
+      const v = JSON.parse(viewPref(storage, 'dock') ?? 'null');
+      if (v && typeof v.open === 'boolean' && Array.isArray(v.closed)) return { open: v.open, closed: v.closed.filter((x: unknown) => typeof x === 'string') };
+    } catch {
+      /* unreadable: the defaults */
+    }
+    return { open: true, closed: [] };
+  });
+  const saveDock = (d: typeof dock) => {
+    setDock(d);
+    setViewPref(storage, 'dock', JSON.stringify(d));
+  };
+  const dockOpen = dock.open || !wide;
+  const setDockOpen = (open: boolean) => {
+    saveDock({ ...dock, open });
+    announce(open ? 'Side panels shown.' : 'Side panels hidden; the canvas has the full width.');
+  };
+  const setCardOpen = (id: string, open: boolean, alsoDock = false) => saveDock({ open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] });
+  const cardOpen = (id: string) => !dock.closed.includes(id);
+
+  // ── SL17: the peek
+  const [peek, setPeek] = useState<(PeekRequest & { keyboard: boolean }) | null>(null);
+  const peekTarget: PeekTarget | null = peek
+    ? peek.kind === 'node'
+      ? byId.has(peek.id) ? { kind: 'node', node: byId.get(peek.id)! } : null
+      : (() => {
+          const e = map.edges.find((x) => x.id === peek.id);
+          return e ? { kind: 'edge' as const, edge: e } : null;
+        })()
+    : null;
+  const peekSelection = () => {
+    const one = selected.nodes.length + selected.edges.length === 1 ? selected.nodes[0] ?? selected.edges[0] : null;
+    const at = one ? canvas.current?.where(one) : null;
+    if (!one || !at) return false;
+    setPeek({ kind: selected.nodes.length ? 'node' : 'edge', id: one, ...at, keyboard: true });
+    return true;
+  };
 
   // analysis announcements (DESIGN-SYSTEM §2: live regions for analysis results)
   const loopCount = `${loops.loops.length}:${loops.loops.filter((l) => l.kind === 'R').length}`;
@@ -319,7 +462,20 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       }
       if (mod || e.altKey) return;
       const onCanvas = t.closest('[data-testid="canvas-wrap"]');
+      // SL17: the ContextMenu key or Shift+F10 on the canvas peeks at the selected circumstance or link
+      if (onCanvas && (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) {
+        if (peekSelection()) e.preventDefault();
+        return;
+      }
       switch (e.key) {
+        case 'f':
+        case 'F':
+          e.preventDefault();
+          toggleFs();
+          break;
+        case ']':
+          if (wide) setDockOpen(!dock.open);
+          break;
         case 'n':
         case 'N':
           e.preventDefault();
@@ -370,8 +526,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           setKeysOpen(true);
           break;
         case 'Escape':
-          setSelected({ nodes: [], edges: [] });
-          clearHighlights();
+          // SL17: Esc closes the peek first, then leaves full screen, then clears the selection
+          if (peek) setPeek(null);
+          else if (fs !== 'off') exitFs(); // the browser usually takes Esc itself under the Fullscreen API
+          else {
+            setSelected({ nodes: [], edges: [] });
+            clearHighlights();
+          }
           break;
         case 'Enter':
           if (onCanvas && selected.nodes.length) {
@@ -450,6 +611,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           <button type="button" className={`bx-btn ax-tap ${sec} ${map.layout.theme === 'print' ? 'bx-btn-on' : ''}`} aria-pressed={map.layout.theme === 'print'} onClick={() => apply((m) => ({ ...m, layout: { ...m.layout, theme: m.layout.theme === 'print' ? 'auto' : 'print' } }))}>{C.toolbar.print}</button>
         </>
       )}
+      <button type="button" className={`bx-btn ax-tap ${fs !== 'off' ? 'bx-btn-on' : ''}`} aria-pressed={fs !== 'off'} onClick={toggleFs} aria-keyshortcuts="F" data-testid="fullscreen">{fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen}</button>
+      {wide && <button type="button" className="bx-btn ax-tap" aria-expanded={dock.open} aria-controls={dockId} onClick={() => setDockOpen(!dock.open)} aria-keyshortcuts="]" data-testid="dock-toggle">{dock.open ? C.dock.collapse : C.dock.expand}</button>}
       <a className="bx-btn ax-tap" href={props.viewHref?.(otherView, map.id) ?? '#'} onClick={switchView} data-testid="switch-view">{view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView}</a>
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
       <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
@@ -557,12 +720,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     tocode: <ToCodePanel map={map} onPick={selectNode} onPickEdge={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} nm={nm} />,
     clusters: <ClustersPanel map={map} graph={graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} />,
     legend: <LegendPanel />,
-    map: <MapDetails map={map} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} />,
+    // the file exports are the whole document, hidden circumstances included (SL16); the pictures are what the canvas shows
+    map: <MapDetails map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} />,
   };
   const toCodeCount = map.nodes.filter((n) => n.kind !== 'note' && n.code_status === 'undetermined').length;
 
-  const side = (
-    <aside className="bx-card flex min-h-0 min-w-0 flex-1 flex-col p-0" aria-label="Map panels">
+  const editor = (
+    <>
       <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
         <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
         <span id="evidence-toggle-label">{C.evidence.toggle}</span>
@@ -576,21 +740,93 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           </button>
         ))}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[panel]}>
-        <h2 className="sr-only">{C.panels[panel]}</h2>
+      {/* positioned, so sr-only (absolute) fields inside scroll with the panel and are clipped by it */}
+      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[panel]}>
+        <h3 className="sr-only">{C.panels[panel]}</h3>
         {panelBody[panel]}
       </div>
+    </>
+  );
+  // SL17: the dock's cards, top to bottom: the core's editor, then the host's; each scrolls inside itself, so one card
+  // never pushes the others off screen
+  const cards: { id: string; title: string; body: ReactNode; editor?: boolean }[] = [
+    { id: 'editor', title: C.dock.editor, body: editor, editor: true },
+    ...(props.sideCards ?? []).map((c) => ({ id: `host:${c.id}`, title: c.title, body: <div className="p-3">{c.render(selected)}</div> })),
+  ];
+  const side = (
+    <aside id={dockId} className="flex min-h-0 min-w-0 flex-1 flex-col gap-2" aria-label="Map panels" data-testid="side-dock" data-open={dockOpen ? 'true' : 'false'}>
+      {dockOpen ? (
+        cards.map((c) => {
+          const open = cardOpen(c.id);
+          return (
+            <section
+              key={c.id}
+              className={`bx-card flex min-h-0 min-w-0 flex-col p-0 ${open ? (c.editor ? 'lg:flex-[3_1_0%]' : 'lg:flex-[2_1_0%]') : 'flex-none'}`}
+              aria-labelledby={`${dockId}-${c.id}-h`}
+              data-testid={`dock-card-${c.id}`}
+              data-open={open ? 'true' : 'false'}
+            >
+              <h2 id={`${dockId}-${c.id}-h`} className="m-0 border-b border-[color:var(--bx-line)] text-sm font-semibold">
+                <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-left ax-tap" aria-expanded={open} aria-controls={`${dockId}-${c.id}-b`} onClick={() => setCardOpen(c.id, !open)} data-testid={`dock-card-${c.id}-toggle`}>
+                  <span aria-hidden="true">{open ? '▾' : '▸'}</span>
+                  {c.title}
+                </button>
+              </h2>
+              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.editor ? '' : 'overflow-y-auto'} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
+                {c.body}
+              </div>
+            </section>
+          );
+        })
+      ) : (
+        <div className="bx-card flex h-full flex-col items-center gap-2 overflow-y-auto p-1" data-testid="dock-rail">
+          {cards.map((c) => (
+            <button key={c.id} type="button" className="ax-tap rounded px-1 py-2 text-sm font-semibold hover:bg-paper-2 dark:hover:bg-night [writing-mode:vertical-rl]" onClick={() => setCardOpen(c.id, true, true)} data-testid={`dock-rail-${c.id}`}>
+              {c.title}
+            </button>
+          ))}
+        </div>
+      )}
     </aside>
   );
+  const peekBox = peek && peekTarget && (
+    <Peek
+      key={`${peek.kind}:${peek.id}:${peek.x}:${peek.y}`}
+      target={peekTarget}
+      at={peek}
+      map={map}
+      nm={nm}
+      loops={loops.loops}
+      loopNames={loopNames}
+      renderPeek={props.renderPeek}
+      keyboard={peek.keyboard}
+      onClose={() => setPeek(null)}
+      onOpen={() => {
+        setPeek(null);
+        setSelected(peek.kind === 'node' ? { nodes: [peek.id], edges: [] } : { nodes: [], edges: [peek.id] });
+        setPanel('inspect');
+        if (!dockOpen || !cardOpen('editor')) saveDock({ open: true, closed: dock.closed.filter((x) => x !== 'editor') });
+      }}
+      onAssoc={peek.kind === 'node' && peekTarget.kind === 'node' && peekTarget.node.kind !== 'note' ? () => { setPeek(null); openAssoc(peek.id); } : undefined}
+    />
+  );
+  const fsOn = fs !== 'off';
+  const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${dockOpen ? 'lg:grid-cols-[minmax(0,1fr)_400px]' : 'lg:grid-cols-[minmax(0,1fr)_3rem]'} ${fsOn ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
+  const tall = fsOn ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
 
   return (
-    <div className={map.layout.theme === 'print' ? 'ax-print' : ''}>
+    <div
+      ref={ws}
+      className={`${map.layout.theme === 'print' ? 'ax-print' : ''} ${fsOn ? 'flex flex-col overflow-auto bg-[color:var(--bx-bg)] p-2 text-[color:var(--bx-ink)] sm:p-3' : ''} ${fs === 'overlay' ? 'fixed inset-0 z-[60]' : ''} ${fs === 'api' ? 'h-full w-full' : ''}`}
+      data-testid="map-workspace"
+      data-fullscreen={fs}
+    >
       <h1 className="sr-only">{view === 'canvas' ? 'Map' : C.list.title}: {map.name}</h1>
       <div className="sr-only" role="status" aria-live="polite" data-testid="live">{live}</div>
       {toolbar}
       {view === 'canvas' ? (
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
-          <div className="relative h-[60vh] min-h-[22rem] lg:h-[calc(100vh-11rem)] rounded-xl border border-[color:var(--bx-line)] overflow-hidden">
+        <div className={grid}>
+          <div className={`relative h-[60vh] min-h-[22rem] ${tall} rounded-xl border border-[color:var(--bx-line)] overflow-hidden`}>
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
                 ref={canvas}
@@ -613,6 +849,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                 }}
                 onAddAt={(pos) => setNewNodeReq({ pos })}
                 onContext={(id) => openAssoc(id)}
+                onPeek={(r) => setPeek({ ...r, keyboard: false })}
+                nodeText={map.layout.nodeText ?? 'title-code'}
                 onMove={(pos, pin, origin) => apply((m) => setPositions(m, pos, pin), origin === 'drag' ? undefined : 'layout')}
                 onLoop={(key) => {
                   const l = loops.loops.find((x) => x.key === key) ?? null;
@@ -621,11 +859,12 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                 }}
               />
             </Suspense>
+            {peekBox}
           </div>
-          <div className="lg:h-[calc(100vh-11rem)] min-h-0 min-w-0 flex">{side}</div>
+          <div className={`${tall} min-h-0 min-w-0 flex`}>{side}</div>
         </div>
       ) : (
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className={grid}>
           <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
           <div className="min-h-0 flex">{side}</div>
         </div>
@@ -662,11 +901,11 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       </Dialog>
       <Dialog open={keysOpen} onClose={() => setKeysOpen(false)} title="Keyboard" testId="keys-dialog">
         <dl className="grid grid-cols-[8rem_1fr] gap-y-1 text-sm">
-          {C.keys.map(([k, v]) => (
+          {[...C.keys, ...C.keysMore].map(([k, v]) => (
             <div key={k} className="contents"><dt><span className="bx-kbd">{k}</span></dt><dd>{v}</dd></div>
           ))}
         </dl>
-        <p className="mt-3 text-sm bx-muted">On a touch screen, long-press a circumstance or tap its ⋯ button for the association menu.</p>
+        <p className="mt-3 text-sm bx-muted">Right-click, Ctrl-click or long-press a circumstance or a link for a quick look. On a touch screen, tap a circumstance's ⋯ button for the association menu.</p>
       </Dialog>
     </div>
   );

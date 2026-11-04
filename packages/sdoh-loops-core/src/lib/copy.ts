@@ -119,6 +119,16 @@ const FALLBACK = {
   exportI: { title: 'Export', json: 'Map (.json)', csv: 'Edge list (.csv)', md: 'Loop report (.md)', png: 'Picture (.png)', svg: 'Picture (.svg)', importTitle: 'Import into a new map', imported: 'Imported into a new map.' },
   list: { title: 'List view', lead: 'Everything on the canvas, as tables. Every action here works by keyboard.', nodes: 'Circumstances', edges: 'Links', edit: 'Edit', delete: 'Delete', none: 'Nothing here yet.' },
   undoNone: 'Nothing to undo.',
+  /** SL17: the read-only peek (right-click, Ctrl-click or long-press on a circumstance or a link) */
+  peek: {
+    title: 'Quick look', close: 'Close', label: 'Label', circumstance: 'Circumstance', status: 'Code status', out: 'Links out', in: 'Links in',
+    loops: 'Loops', noLoops: 'In no loop', mechanism: 'Mechanism', description: 'Description', yes: 'Yes', no: 'No', open: 'Open in editor', assoc: 'Associations…',
+  },
+  /** SL17: the stacked side dock and full screen */
+  dock: { editor: 'Editor', collapse: 'Hide the side panels', expand: 'Show the side panels', card: 'Collapse or expand', fullscreen: 'Full screen', exitFullscreen: 'Exit full screen' },
+  nodeText: { label: 'Node text', title: 'Title', 'title-code': 'Title + code', full: 'Full' } as Record<string, string>,
+  /** SL17: keys added in this release; the pack's own list (keys) shows first */
+  keysMore: [['F', 'full screen (Esc leaves)'], [']', 'hide / show the side panels'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
   keys: [
     ['N', 'new circumstance'], ['E', 'new link from the selection'], ['A', 'association menu'], ['1 / 2', '1st / 2nd-degree neighbourhood'], ['L', 'loops panel'],
     ['R', 'auto-arrange'], ['P', 'pin / unpin'], ['Del', 'delete'], ['⌘Z / ⌘⇧Z', 'undo / redo'], ['⌘B / ⌘I / ⌘U', 'bold / italic / underline while editing text'],
