@@ -26,11 +26,11 @@
    "crosswalk_proposed": 114
   },
   "links": {
-   "offered": 19,
+   "offered": 23,
    "by_grade": {
     "F": 4,
     "M": 13,
-    "S": 2
+    "S": 6
    },
    "withheld": 12
   },
@@ -39,16 +39,16 @@
   "resources": null
  },
  "references": {
-  "total": 64,
+  "total": 69,
   "by_tier": {
    "seminal": 9,
-   "current": 31,
-   "classic": 11,
+   "current": 34,
+   "classic": 13,
    "background": 13
   },
-  "verified": 64,
+  "verified": 69,
   "unverified": 0,
-  "abstracts_present": 58
+  "abstracts_present": 63
  },
  "glossary": 21,
  "concepts": 5,

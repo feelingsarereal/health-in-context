@@ -185,6 +185,26 @@
   - app-methods
   source: Richardson 1986, 1995; Kosko 1986; Özesmi & Özesmi 2004
   by: cowork
+- date: '2026-11-04'
+  what: 'SL19: four new links from QE04 (perceived discrimination), all +, grade S, each with named target codes: L30 → QE10
+    hazardous alcohol use (Gates 2025, Gilbert & Zemore 2016, Ebrahimi 2024), L31 → QE11 hazardous drug use (Gates 2025, Ebrahimi
+    2024), L32 → QE13 tobacco use (Ebrahimi 2024, Gates 2025; varies by group), L33 → QE23 inappropriate diet or eating habits
+    (Rodrigues 2022). L14 stays withheld with an updated reason and gains Pascoe & Smart Richman 2009. Five references added
+    with verbatim abstracts and PMIDs'
+  why: Finding F02 of the S5.2 primer fact-check; Daniel's decision 2026-11-04 ('add all four')
+  records:
+  - links/L30
+  - links/L31
+  - links/L32
+  - links/L33
+  - links/L14
+  - references/gates2025
+  - references/ebrahimi2024
+  - references/gilbert_zemore2016
+  - references/rodrigues2022
+  - references/pascoe_smartrichman2009
+  source: source/research/sl19_pack_additions.yaml (Cowork); abstracts and PMIDs from Daniel's OpenAlex/PubMed fetch, 2026-11-04
+  by: cowork
 - date: '2026-11-03'
   what: 'Glossary, reading-clds primer and app-methods §2 reworded: link polarity uses Richardson''s ''higher than it would
     otherwise have been'' wording; reinforcing and balancing loops ''come back pushing the same way / against itself'' instead

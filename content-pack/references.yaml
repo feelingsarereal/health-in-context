@@ -1,10 +1,11 @@
-# references.yaml — 64 references · built 2026-10-23. Abstracts verbatim (abstract_source); summaries builder-written from them.
+# references.yaml — 69 references · built 2026-10-23. Abstracts verbatim (abstract_source); summaries builder-written from them.
 - n: 1
   key: csdh2008
   tier: seminal
   citation: 'Marmot M, Friel S, Bell R, Houweling TAJ, Taylor S. Closing the gap in a generation: health equity through action
     on the social determinants of health. The Lancet. 2008.'
   doi: 10.1016/S0140-6736(08)61690-6
+  pmid: '18994664'
   year: 2008
   openalex: https://openalex.org/W2128248134
   title_checked: 'Closing the gap in a generation: health equity through action on the social determinants of health'
@@ -167,6 +168,7 @@
   citation: 'Dahlgren G, Whitehead M. The Dahlgren-Whitehead model of health determinants: 30 years on and still chasing rainbows.
     Public Health. 2021.'
   doi: 10.1016/j.puhe.2021.08.009
+  pmid: '34534885'
   year: 2021
   openalex: https://openalex.org/W3200639555
   title_checked: 'The Dahlgren-Whitehead model of health determinants: 30 years on and still chasing rainbows'
@@ -229,6 +231,7 @@
   tier: seminal
   citation: Marmot M. Social determinants of health inequalities. The Lancet. 2005.
   doi: 10.1016/S0140-6736(05)71146-6
+  pmid: '15781105'
   year: 2005
   openalex: https://openalex.org/W2131854704
   title_checked: Social determinants of health inequalities
@@ -258,6 +261,7 @@
   citation: 'Marmot MG, Smith GD, Stansfeld S, et al. Health inequalities among British civil servants: the Whitehall II study.
     The Lancet. 1991.'
   doi: 10.1016/0140-6736(91)93068-K
+  pmid: '1674771'
   year: 1991
   openalex: https://openalex.org/W2104018747
   title_checked: 'Health inequalities among British civil servants: the Whitehall II study'
@@ -371,6 +375,7 @@
   citation: 'Hood CM, Gennuso KP, Swain GR, Catlin BB. County Health Rankings: relationships between determinant factors and
     health outcomes. American Journal of Preventive Medicine. 2016.'
   doi: 10.1016/j.amepre.2015.08.024
+  pmid: '26526164'
   year: 2016
   openalex: https://openalex.org/W1957062247
   title_checked: County Health Rankings
@@ -450,6 +455,7 @@
   tier: current
   citation: 'Pickett KE, Wilkinson RG. Income inequality and health: a causal review. Social Science & Medicine. 2015.'
   doi: 10.1016/j.socscimed.2014.12.031
+  pmid: '25577953'
   year: 2015
   openalex: https://openalex.org/W2109836277
   title_checked: 'Income inequality and health: A causal review'
@@ -545,6 +551,7 @@
     the leading causes of death in adults: the Adverse Childhood Experiences (ACE) Study. American Journal of Preventive Medicine.
     1998.'
   doi: 10.1016/S0749-3797(98)00017-8
+  pmid: '9635069'
   year: 1998
   openalex: https://openalex.org/W2116839388
   title_checked: Relationship of Childhood Abuse and Household Dysfunction to Many of the Leading Causes of Death in Adults
@@ -590,6 +597,7 @@
   citation: 'Williams DR, Mohammed SA. Discrimination and racial disparities in health: evidence and needed research. Journal
     of Behavioral Medicine. 2009.'
   doi: 10.1007/s10865-008-9185-0
+  pmid: '19030981'
   year: 2009
   openalex: https://openalex.org/W2157096064
   title_checked: 'Discrimination and racial disparities in health: evidence and needed research'
@@ -617,6 +625,7 @@
   citation: 'Bailey ZD, Krieger N, Agénor M, et al. Structural racism and health inequities in the USA: evidence and interventions.
     The Lancet. 2017.'
   doi: 10.1016/S0140-6736(17)30569-X
+  pmid: '28402827'
   year: 2017
   openalex: https://openalex.org/W2604748569
   title_checked: 'Structural racism and health inequities in the USA: evidence and interventions'
@@ -699,6 +708,7 @@
   citation: Seligman HK, Laraia BA, Kushel MB. Food insecurity is associated with chronic disease among low-income NHANES
     participants. Journal of Nutrition. 2010.
   doi: 10.3945/jn.109.112573
+  pmid: '20032485'
   year: 2010
   openalex: https://openalex.org/W2110106130
   title_checked: Food Insecurity Is Associated with Chronic Disease among Low-Income NHANES Participants
@@ -798,6 +808,7 @@
   citation: 'Roelfs DJ, Shor E, Davidson KW, Schwartz JE. Losing life and livelihood: a systematic review and meta-analysis
     of unemployment and all-cause mortality. Social Science & Medicine. 2011.'
   doi: 10.1016/j.socscimed.2011.01.005
+  pmid: '21330027'
   year: 2011
   openalex: https://openalex.org/W2022991434
   title_checked: 'Losing life and livelihood: A systematic review and meta-analysis of unemployment and all-cause mortality'
@@ -826,6 +837,7 @@
   citation: 'Fazel S, Geddes JR, Kushel M. The health of homeless people in high-income countries: descriptive epidemiology,
     health consequences, and clinical and policy recommendations. The Lancet. 2014.'
   doi: 10.1016/S0140-6736(14)61132-6
+  pmid: '25390578'
   year: 2014
   openalex: https://openalex.org/W2105368594
   title_checked: 'The health of homeless people in high-income countries: descriptive epidemiology, health consequences, and
@@ -855,6 +867,7 @@
   tier: current
   citation: Wildeman C, Wang EA. Mass incarceration, public health, and widening inequality in the USA. The Lancet. 2017.
   doi: 10.1016/S0140-6736(17)30259-3
+  pmid: '28402828'
   year: 2017
   openalex: https://openalex.org/W2604936718
   title_checked: Mass incarceration, public health, and widening inequality in the USA
@@ -975,6 +988,7 @@
   citation: Cutler DM, Lleras-Muney A. Understanding differences in health behaviors by education. Journal of Health Economics.
     2010.
   doi: 10.1016/j.jhealeco.2009.10.003
+  pmid: '19963292'
   year: 2010
   openalex: https://openalex.org/W2164662768
   title_checked: Understanding differences in health behaviors by education
@@ -1245,6 +1259,7 @@
   citation: 'Kivimäki M, Nyberg ST, Batty GD, et al. Job strain as a risk factor for coronary heart disease: a collaborative
     meta-analysis of individual participant data. The Lancet. 2012.'
   doi: 10.1016/S0140-6736(12)60994-5
+  pmid: '22981903'
   year: 2012
   openalex: https://openalex.org/W2155660257
   title_checked: 'Job strain as a risk factor for coronary heart disease: a collaborative meta-analysis of individual participant
@@ -1313,6 +1328,7 @@
   citation: Pavao J, Alvarez J, Baumrind N, Induni M, Kimerling R. Intimate partner violence and housing instability. American
     Journal of Preventive Medicine. 2007.
   doi: 10.1016/j.amepre.2006.10.008
+  pmid: '17234488'
   year: 2007
   openalex: https://openalex.org/W2020354888
   title_checked: Intimate Partner Violence and Housing Instability
@@ -1409,6 +1425,7 @@
   citation: Desmond M, Gershenson C. Who gets evicted? Assessing individual, neighborhood, and network factors. Social Science
     Research. 2017;62:362-377.
   doi: 10.1016/j.ssresearch.2016.08.017
+  pmid: '28126112'
   year: 2017
   openalex: https://openalex.org/W2516993698
   title_checked: Who gets evicted? Assessing individual, neighborhood, and network factors
@@ -1541,6 +1558,7 @@
   citation: 'Lund C, Brooke-Sumner C, Baingana F, et al. Social determinants of mental disorders and the Sustainable Development
     Goals: a systematic review of reviews. Lancet Psychiatry. 2018.'
   doi: 10.1016/S2215-0366(18)30060-9
+  pmid: '29580610'
   year: 2018
   openalex: https://openalex.org/W2792728788
   title_checked: 'Social determinants of mental disorders and the Sustainable Development Goals: a systematic review of reviews'
@@ -1945,3 +1963,192 @@
   used_by:
   - concepts/icd11-chapter24
   - glossary/icd11
+- n: 65
+  key: gates2025
+  tier: current
+  citation: Gates E, Cant M, Elliott R, Irizar P, Armitage CJ. A meta-analytic review of the relationship between racial discrimination
+    and alcohol and other drug use outcomes in minoritised racial/ethnic groups. Addiction. 2025.
+  doi: 10.1111/add.70131
+  pmid: '40667691'
+  year: 2025
+  openalex: https://openalex.org/W4412487394
+  title_checked: A meta‐analytic review of the relationship between racial discrimination and alcohol and other drug use outcomes
+    in minoritised racial/ethnic groups
+  abstract: Abstract Aims To measure the associations between racial discrimination and distinct alcohol and other drug use
+    outcomes in minoritised racial/ethnic groups and to explore the moderating roles of demographic and methodological characteristics.
+    Methods Quantitative studies including racial discrimination as an exposure (both binary and continuous), an alcohol and/or
+    other drug use outcome and a minoritised racial/ethnic sample were identified via database, citation and journal searching.
+    130 studies contributing 273 effect sizes, across seventeen distinct outcomes, were included in this analysis. Random‐effects
+    meta‐analytic models were implemented. Moderation effects were explored using subgroup analyses. Results Racial discrimination
+    was positively associated with sixteen alcohol and other drug use outcomes. The strongest associations were observed for
+    at‐risk/hazardous alcohol use [ r = 0.24, 95% confidence interval (CI) = 0.17–0.3, I 2 = 94.8%, m = 29, n = 9445], at‐risk/hazardous
+    cannabis use ( r = 0.24, 95% CI = 0.18–0.29, I 2 = 0%, m = 4, n = 462) and substance use disorder ( r = 0.25, 95% CI =
+    0.14–0.36, I 2 = 97.7%, m = 5, n = 21 051). Considerable heterogeneity was observed across fourteen outcomes (I 2 = 69.5%–97.7%).
+    Concerning tobacco use, Indigenous North Americans had the largest effect ( r = 0.27, 95% CI = 0.2–0.35, I 2 = 0%, m =
+    2, n = 529), followed by Black Americans ( r = 0.06, 95% CI = 0.01–0.12, I 2 = 81.7%, m = 7, n = 5409). Little evidence
+    for an association was found for Latinxs ( r = 0.06, 95% CI = –0.02 to 0.14, I 2 = 89.2%, m = 3, n = 5404) or Asian Americans
+    ( r = –0.18, 95% CI = –0.8 to 0.43, I 2 = 99%, m = 2, n = 572). Regarding composite substance use, Indigenous North Americans
+    had the strongest associations ( r = 0.29, 95% CI = 0.23–0.35, I 2 = 0%, m = 3, n = 778), followed by Black Americans
+    ( r = 0.13, 95% CI = 0.09–0.18, I 2 = 62.8%, m = 7, n = 5981) and then Latinxs ( r = 0.07, 95% CI = –0.17 to 0.31, I 2
+    = 91.3%, m = 4, n = 1646). Concerning alcohol use problems, younger samples produced stronger associations ( r = 0.28,
+    95% CI = 0.17–0.38, I 2 = 38.8%, m = 3, n = 483), while older samples showed larger effects in six other outcomes ( rs
+    = 0.13–0.26). Regarding at‐risk/hazardous alcohol use and alcohol use problems/consequences, cross‐sectional studies (
+    rs = 0.23–0.24) produced stronger associations than longitudinal studies ( rs = 0.13–0.14). Concerning tobacco and illicit
+    substance use, the strongest associations were identified for lifetime exposure ( rs = 0.18–0.32). Conclusions Racial
+    discrimination appears to be a consistent correlate of multiple alcohol and other drug use outcomes in minoritised racial/ethnic
+    groups, predominantly based in the United States, yet the magnitude of these associations differs across outcomes. Demographic
+    and methodological characteristics somewhat moderate these associations.
+  abstract_source: openalex
+  harvested_on: '2026-11-04'
+  summary: 'A meta-analysis of 130 studies (273 effect sizes, 17 outcomes) in minoritised racial and ethnic groups, mostly
+    in the US. Racial discrimination was positively associated with 16 alcohol and drug outcomes, most strongly at-risk or
+    hazardous alcohol use (r = 0.24), at-risk cannabis use (r = 0.24) and substance use disorder (r = 0.25). For tobacco use
+    the association differed by group: largest among Indigenous North Americans (r = 0.27, two studies), small among Black
+    Americans (r = 0.06), with little evidence among Latinx or Asian American samples. Cross-sectional studies gave stronger
+    associations than longitudinal ones for alcohol outcomes.'
+  role_here: support
+  verified: true
+  verified_on: '2026-11-04'
+  used_by:
+  - links/L30
+  - links/L31
+  - links/L32
+- n: 66
+  key: ebrahimi2024
+  tier: current
+  citation: 'Ebrahimi CT, Song H, Machado M, Segura P, Espinosa A, Polanco-Roman L. Racism-related experiences and substance
+    use: a systematic and meta-analytic review. Social Science & Medicine. 2024;362:117434.'
+  doi: 10.1016/j.socscimed.2024.117434
+  pmid: '39461166'
+  year: 2024
+  openalex: https://openalex.org/W4403587567
+  title_checked: 'Racism-related experiences and substance use: A systematic and meta-analytic review'
+  abstract: Examinations highlighting interpersonal racism-related experiences as risk factors for substance use are well
+    documented, particularly for alcohol use. The associations between racism-related experiences across other levels of influence
+    (e.g., historical trauma, online, internalized) and use of other types of substances, while emerging, have yielded mixed
+    findings. The present systematic review and meta-analyses examined the associations between multilevel racism-related
+    experiences and different types of substances including substance use overall, alcohol, binge drinking, tobacco/nicotine,
+    cannabis, illicit drugs, and polysubstance use among ethnoracially minoritized adolescents and emerging adults (12-29
+    years old). A systematic literature search and the Newcastle-Ottawa Scale (NOS) were used to identify, assess quality,
+    and bias of included articles. Random-effects meta-analyses estimated pooled effect sizes for seven substance use outcomes
+    and by age, sex, and race/ethnicity. Out of a total of 3190 articles, 91 (N = 190,065 participants) met inclusion criteria,
+    79 of which were included in the meta-analysis. The studies included were predominantly cross-sectional, school-based
+    samples, and focused on Black individuals. Most examined interpersonal racism and few examined online and historical forms
+    of racism. Meta-analyses demonstrated a significant positive association, with a small pooled effect size, between racism-related
+    experiences and each substance use outcome. Moderations by age, sex, and race/ethnicity were found. Racism-related experiences
+    are a risk factor for substance use among ethnoracially minoritized adolescents and emerging adults. Interventions addressing
+    racism-related experiences across multiple dimensions are critical for the prevention and treatment of substance use among
+    ethnoracially minoritized communities.
+  abstract_source: pubmed
+  harvested_on: '2026-11-04'
+  summary: 'A systematic review and meta-analysis of racism-related experiences and substance use among minoritised adolescents
+    and emerging adults aged 12 to 29: 91 studies (190,065 participants), 79 of them pooled. Racism-related experiences showed
+    a significant but small positive pooled association with each of seven outcomes, including alcohol, binge drinking, tobacco
+    or nicotine, cannabis, illicit drugs and polysubstance use. Most studies were cross-sectional, school-based and of Black
+    young people, and the associations varied with age, sex and race or ethnicity.'
+  role_here: support
+  verified: true
+  verified_on: '2026-11-04'
+  used_by:
+  - links/L30
+  - links/L31
+  - links/L32
+- n: 67
+  key: gilbert_zemore2016
+  tier: classic
+  citation: 'Gilbert PA, Zemore SE. Discrimination and drinking: a systematic review of the evidence. Social Science & Medicine.
+    2016;161:178-194.'
+  doi: 10.1016/j.socscimed.2016.06.009
+  pmid: '27315370'
+  year: 2016
+  openalex: https://openalex.org/W2414905662
+  title_checked: 'Discrimination and drinking: A systematic review of the evidence'
+  abstract: Although it is widely accepted that discrimination is associated with heavy and hazardous drinking, particularly
+    within stress and coping frameworks, there has been no comprehensive review of the evidence. In response, we conducted
+    a systematic review of the English language peer-reviewed literature to summarize studies of discrimination and alcohol-related
+    outcomes, broadly defined. Searching six online data bases, we identified 938 non-duplicative titles published between
+    1980 and 2015, of which 97 met all inclusion criteria for our review and reported quantitative tests of associations between
+    discrimination and alcohol use. We extracted key study characteristics and assessed quality based on reported methodological
+    details. Papers generally supported a positive association; however, the quantity and quality of evidence varied considerably.
+    The largest number of studies was of racial/ethnic discrimination among African Americans in the United States, followed
+    by sexual orientation and gender discrimination. Studies of racial/ethnic discrimination were notable for their frequent
+    use of complex modeling (i.e., mediation, moderation) but focused nearly exclusively on interpersonal discrimination.
+    In contrast, studies of sexual orientation discrimination (i.e., heterosexism, homophobia) examined both internalized
+    and interpersonal aspects; however, the literature largely relied on global tests of association using cross-sectional
+    data. Some populations (e.g., Native Americans, Asian and Pacific Islanders) and types of discrimination (e.g., systemic/structural
+    racism; ageism) received scant attention. This review extends our knowledge of a key social determinant of health through
+    alcohol use. We identified gaps in the evidence base and suggest directions for future research related to discrimination
+    and alcohol misuse.
+  abstract_source: pubmed
+  harvested_on: '2026-11-04'
+  summary: A systematic review of 97 studies (1980–2015) testing links between discrimination and alcohol outcomes. The studies
+    generally supported a positive association, but their number and quality varied widely. Most concerned racial or ethnic
+    discrimination against African Americans in the US, followed by sexual-orientation and gender discrimination, and some
+    populations and structural forms of discrimination were barely studied.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-04'
+  used_by:
+  - links/L30
+- n: 68
+  key: rodrigues2022
+  tier: current
+  citation: 'Rodrigues YE, Fanton M, Novossat RS, Canuto R. Perceived racial discrimination and eating habits: a systematic
+    review and conceptual models. Nutrition Reviews. 2022.'
+  doi: 10.1093/nutrit/nuac001
+  pmid: '35182155'
+  year: 2022
+  openalex: https://openalex.org/W4206103947
+  title_checked: 'Perceived racial discrimination and eating habits: a systematic review and conceptual models'
+  abstract: 'CONTEXT: There is no systematic review on the relationship between racial discrimination and eating habits. OBJECTIVE:
+    A systematic review was conducted to synthesize evidence on the association between perceived racial discrimination (PRD)
+    and eating habits. A conceptual model was developed to depict the most common mechanisms used to explain this association.
+    DATA SOURCES: Articles were retrieved from the PubMed, Embase, LILACS, and PsycINFO databases from inception to January
+    2021. STUDY SELECTION: Only observational studies were included, and there were no restrictions on age, racial group,
+    or country. Two reviewers selected the articles independently. DATA EXTRACTION: Data were extracted independently by 2
+    reviewers. The assessment of methodological quality was conducted using the Newcastle-Ottawa Scale. RESULTS: All studies
+    retrieved were conducted among the US population. Nineteen studies were included. On average, the studies showed a methodological
+    quality of 66%. Forty-six associations were evaluated: 38 between PRD and negative eating habits, 29 between PRD and eating
+    behavior, and 17 between PRD and food consumption. CONCLUSIONS: PRD negatively affects eating habits. A conceptual framework
+    based on ecosocial theory is suggested as a guide for future research. Further studies in different countries (beyond
+    the United States) should be conducted to understand how racial discrimination affects eating habits within different
+    ethnic, cultural, social, and economic contexts. SYSTEMATIC REVIEW REGISTRATION: PROSPERO registration no. CRD42019142605.'
+  abstract_source: openalex
+  harvested_on: '2026-11-04'
+  summary: A systematic review of 19 observational studies, all in the US, on perceived racial discrimination and eating habits;
+    it evaluated 46 associations covering eating behaviour and food consumption, with an average methodological quality of
+    66%. The authors conclude that perceived racial discrimination harms eating habits and propose an ecosocial conceptual
+    model, calling for studies outside the US. The evidence was not pooled into a single effect.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-04'
+  used_by:
+  - links/L33
+- n: 69
+  key: pascoe_smartrichman2009
+  tier: classic
+  citation: 'Pascoe EA, Smart Richman L. Perceived discrimination and health: a meta-analytic review. Psychological Bulletin.
+    2009;135(4):531-554.'
+  doi: 10.1037/a0016059
+  pmid: '19586161'
+  year: 2009
+  openalex: https://openalex.org/W2120100418
+  title_checked: 'Perceived discrimination and health: A meta-analytic review.'
+  abstract: Perceived discrimination has been studied with regard to its impact on several types of health effects. This meta-analysis
+    provides a comprehensive account of the relationships between multiple forms of perceived discrimination and both mental
+    and physical health outcomes. In addition, this meta-analysis examines potential mechanisms by which perceiving discrimination
+    may affect health, including through psychological and physiological stress responses and health behaviors. Analysis of
+    134 samples suggests that when weighting each study's contribution by sample size, perceived discrimination has a significant
+    negative effect on both mental and physical health. Perceived discrimination also produces significantly heightened stress
+    responses and is related to participation in unhealthy and nonparticipation in healthy behaviors. These findings suggest
+    potential pathways linking perceived discrimination to negative health outcomes.
+  abstract_source: openalex
+  harvested_on: '2026-11-04'
+  summary: A meta-analysis of 134 samples in which perceived discrimination was linked to worse mental and physical health.
+    It also links perceived discrimination to heightened stress responses and to more unhealthy and fewer healthy behaviours.
+    Its behaviour findings are pooled across several behaviours rather than reported for each one.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-04'
+  used_by:
+  - links/L14

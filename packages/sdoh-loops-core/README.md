@@ -20,7 +20,7 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.2.0 @feelingsarereal/sdoh-loops-pack@0.1.1
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.4.1 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.

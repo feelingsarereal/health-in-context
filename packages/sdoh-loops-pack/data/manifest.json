@@ -339,6 +339,25 @@
    "by": "cowork"
   },
   {
+   "date": "2026-11-04",
+   "what": "SL19: four new links from QE04 (perceived discrimination), all +, grade S, each with named target codes: L30 → QE10 hazardous alcohol use (Gates 2025, Gilbert & Zemore 2016, Ebrahimi 2024), L31 → QE11 hazardous drug use (Gates 2025, Ebrahimi 2024), L32 → QE13 tobacco use (Ebrahimi 2024, Gates 2025; varies by group), L33 → QE23 inappropriate diet or eating habits (Rodrigues 2022). L14 stays withheld with an updated reason and gains Pascoe & Smart Richman 2009. Five references added with verbatim abstracts and PMIDs",
+   "why": "Finding F02 of the S5.2 primer fact-check; Daniel's decision 2026-11-04 ('add all four')",
+   "records": [
+    "links/L30",
+    "links/L31",
+    "links/L32",
+    "links/L33",
+    "links/L14",
+    "references/gates2025",
+    "references/ebrahimi2024",
+    "references/gilbert_zemore2016",
+    "references/rodrigues2022",
+    "references/pascoe_smartrichman2009"
+   ],
+   "source": "source/research/sl19_pack_additions.yaml (Cowork); abstracts and PMIDs from Daniel's OpenAlex/PubMed fetch, 2026-11-04",
+   "by": "cowork"
+  },
+  {
    "date": "2026-11-03",
    "what": "Primers cite the now-verified methods papers (reading-clds: Richardson 1986, 1995; weights-fcm: Kosko 1986, Özesmi & Özesmi 2004) instead of 'not yet verified here'; app-methods corrected (variable framing no longer attributed to an 'event-labelled boxes' argument; loop dominance can shift as behaviour unfolds, not 'depends on behaviour over time')",
    "why": "Read against the papers while writing the worked-example tutorial",
@@ -430,20 +449,6 @@
     "scenarios/w2"
    ],
    "source": "w2 walk 2026-11-02",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-01",
-   "what": "New L29 (QE01 stress → QD80 unemployment, grade M, Maehlisen et al. 2018, verbatim abstract); Lawes et al. 2022 added as mixed evidence on the withheld L22; reference card years now follow the citation's issue year (8 cards had OpenAlex's online-first year); w2 step 4 updated (QE01 → QD80 is evidence) and a new w2 step checks the 'outside the evidence's codes' message with QE82.0 → QD51 (L25)",
-   "why": "T-EVID-03/04 after K5 review; independent check passed with wording fixes",
-   "records": [
-    "links/L29",
-    "references/maehlisen2018",
-    "references/lawes2022",
-    "references[].year",
-    "scenarios/w2"
-   ],
-   "source": "OpenAlex harvest 2026-11-01; independent reviewer",
    "by": "cowork"
   }
  ],

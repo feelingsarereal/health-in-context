@@ -10,6 +10,16 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.4.1] — 2026-11-04
+
+Patch: tested with, and pinned to, the new pack (SL19). Pack: `0.2.0`. No change to the core's code or props.
+
+- `peerDependencies` names `@feelingsarereal/sdoh-loops-pack` `0.2.0`. That pack adds L30–L33 (QE04 → QE10, QE11, QE13,
+  QE23), so the evidence check now backs those links and their descendants (e.g. QE04 → QE11.1), and the association menu
+  offers them under QE04's "Leads to". QE04 → QE20 and QE03 → any behaviour stay unmatched. Unit tests cover all of these.
+- An embedding app that bumps to 0.4.1 must pin pack 0.2.0 as well. Its drift test will report new links, and possibly
+  new loops, on maps that use QE04.
+
 ## [0.4.0] — 2026-11-04
 
 Minor (SL20 + SL21 + SL22 + SL23, with SL24's shared wording): a light theme entry, `<Notice text>`, the dock's

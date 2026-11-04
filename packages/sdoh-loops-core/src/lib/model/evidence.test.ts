@@ -205,3 +205,38 @@ describe('K7: loops that tie on strength are listed by name', () => {
     expect(strongestLoops(stronger, n).map((l) => n.get(l.key))).toEqual(['R2', 'R1']);
   });
 });
+
+describe('SL19 (pack 0.2.0): QE04 perceived discrimination → four health behaviours, L30–L33', () => {
+  const sdoh = (code: string) => ({ code_status: 'sdoh' as const, code });
+  const cases: [string, string][] = [['QE10', 'L30'], ['QE11', 'L31'], ['QE13', 'L32'], ['QE23', 'L33']];
+  for (const [to, id] of cases) {
+    it(`QE04 → ${to} matches ${id} (+, grade S)`, () => {
+      const r = checkLink(sdoh('QE04'), sdoh(to), '+');
+      expect(r.check).toBe('match');
+      expect(r.link?.id).toBe(id);
+      expect(r.link?.grade).toBe('S');
+      expect(r.link?.codes).toEqual({ from: ['QE04'], to: [to] });
+    });
+  }
+  it('a code backs its descendants: QE04 → QE11.1 (cannabis) matches L31', () => {
+    expect(checkLink(sdoh('QE04'), sdoh('QE11.1'), '+')).toMatchObject({ check: 'match', link: { id: 'L31' } });
+  });
+  it('the minus polarity is not backed', () => {
+    expect(checkLink(sdoh('QE04'), sdoh('QE10'), '−').check).toBe('opposite-polarity');
+  });
+  it('still unmatched: QE04 → QE20 (physical activity) and QE03 → QE10 (exclusion or rejection)', () => {
+    for (const [f, t] of [['QE04', 'QE20'], ['QE03', 'QE10']]) {
+      const r = checkLink(sdoh(f), sdoh(t), '+');
+      expect(r.check, `${f} → ${t}`).not.toBe('match');
+      expect(r.link, `${f} → ${t}`).toBeNull();
+    }
+  });
+  it('L30–L33 cite their references inline, and QE04 leads to them in the association menu', () => {
+    const ids = associations('QE04').leadsTo.map((l) => l.id);
+    expect(ids).toEqual(expect.arrayContaining(['L30', 'L31', 'L32', 'L33']));
+    for (const l of associations('QE04').leadsTo.filter((x) => ['L30', 'L31', 'L32', 'L33'].includes(x.id))) {
+      expect(l.mechanism).toMatch(/\[\d+\]$/);
+      for (const n of l.mechanism.match(/\[(\d+)\]/g)!.map((m) => Number(m.slice(1, -1)))) expect(l.refs).toContain(n);
+    }
+  });
+});

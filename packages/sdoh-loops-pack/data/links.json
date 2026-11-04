@@ -469,6 +469,102 @@
     ]
    },
    "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstract, 2026-11-01 (T-EVID-03) — the study measured perceived everyday-life stress (Cohen's Perceived Stress Scale), read here as QE01 Stress, not elsewhere classified."
+  },
+  {
+   "id": "L30",
+   "from": "QE00-QE0Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Perceived racial discrimination is associated with at-risk or hazardous alcohol use in minoritised groups, in a meta-analysis and a systematic review. [65] [67]",
+   "refs": [
+    65,
+    67,
+    66
+   ],
+   "suggest": [
+    "QE10"
+   ],
+   "codes": {
+    "from": [
+     "QE04"
+    ],
+    "to": [
+     "QE10"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-04 (SL19, T-EVID-01)."
+  },
+  {
+   "id": "L31",
+   "from": "QE00-QE0Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Perceived racial discrimination is associated with at-risk cannabis use, illicit drug use and substance use disorder, in meta-analyses of minoritised groups. [65] [66]",
+   "refs": [
+    65,
+    66
+   ],
+   "suggest": [
+    "QE11"
+   ],
+   "codes": {
+    "from": [
+     "QE04"
+    ],
+    "to": [
+     "QE11"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-04 (SL19, T-EVID-01)."
+  },
+  {
+   "id": "L32",
+   "from": "QE00-QE0Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Racism-related experiences are associated with tobacco or nicotine use among minoritised young people (small pooled effect); across adult samples the association varies by group, clear among Indigenous North Americans, small among Black Americans and unclear among Latinx and Asian Americans. [66] [65]",
+   "refs": [
+    66,
+    65
+   ],
+   "suggest": [
+    "QE13"
+   ],
+   "codes": {
+    "from": [
+     "QE04"
+    ],
+    "to": [
+     "QE13"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-04 (SL19, T-EVID-01)."
+  },
+  {
+   "id": "L33",
+   "from": "QE00-QE0Z",
+   "to": "QE10-QE2Z",
+   "polarity": "+",
+   "grade": "S",
+   "mechanism": "Perceived racial discrimination is associated with poorer eating habits, in a systematic review of 19 US observational studies (not pooled). [68]",
+   "refs": [
+    68
+   ],
+   "suggest": [
+    "QE23"
+   ],
+   "codes": {
+    "from": [
+     "QE04"
+    ],
+    "to": [
+     "QE23"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-04 (SL19, T-EVID-01)."
   }
  ],
  "can_cycle": true,
@@ -553,10 +649,11 @@
    "grade": "S",
    "refs": [
     20,
-    38
+    38,
+    69
    ],
    "reason": [
-    "Withheld 2026-10-23 after independent check: the cited studies report associations with health and mortality, not with health behaviours, so the target block does not fit."
+    "Withheld, updated 2026-11-04 (SL19): the original sources report health and mortality, not behaviours, and Pascoe & Smart Richman 2009 pools behaviours into one composite. Behaviour-specific reviews now support QE04 → QE10, QE11, QE13 and QE23, offered as L30–L33. Still withheld: QE04 → QE20 (physical activity; the only review, on weight stigma, finds mixed and indirect evidence) and QE03 → any behaviour (no review-level evidence on exclusion or rejection and specific behaviours)."
    ],
    "kind": "withheld"
   },
