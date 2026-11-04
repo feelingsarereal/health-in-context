@@ -78,8 +78,8 @@
  "stale": 0,
  "build_errors": 0,
  "safety_tests": {
-  "date": "2026-11-03",
-  "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-11-03)",
+  "date": "2026-11-04",
+  "summary": "safety 14/14 passed · walkthroughs 4/4 passed (run 2026-11-04)",
   "safety": {
    "passed": 14,
    "failed": 0,
@@ -107,7 +107,7 @@
     "✓ w1: a loop built through the association menu closes on evidence, then one deliberate override",
     "✓ w2: evidence link between existing nodes, overrides, analyses, export and re-import",
     "✓ w3: a relative's situation on a phone, no codes needed",
-    "✓ w3: long-press on a node opens the association menu (touch alternative to right-click)"
+    "✓ w3: long-press on a node opens the peek, and its Associations… the association menu (touch alternative to right-click)"
    ]
   }
  }

@@ -105,7 +105,7 @@ for (const theme of ['light', 'dark'] as const) {
     const scan = async (where: string) => (await new AxeBuilder({ page: page as never }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()).violations.map((v) => `${where}: ${v.id} — ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
     const all = await scan('peek');
     await page.keyboard.press('Escape');
-    await page.getByTestId('dock-toggle').click();
+    await page.getByTestId('dock-fold').click();
     await expect(page.getByTestId('dock-rail')).toBeVisible();
     all.push(...(await scan('dock collapsed')));
     await page.getByTestId('fullscreen').click();

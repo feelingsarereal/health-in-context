@@ -53,17 +53,17 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `onSelectionChange`, `onMapChange`, `onLoad`, `onOpenMap` | Events. `onOpenMap(id)` follows an import in the Map panel. `onSelectionChange` fires once per real change. |
 | `selection` | 0.2.0 (SL16). The selection, controlled: pass it with `onSelectionChange` and set it from your reader (click a passage → its circumstance is selected and brought into view). Ids not on the map are ignored. Uncontrolled when left out. |
 | `hideNode` | 0.2.0 (SL16). `(node) => boolean`: circumstances it returns true for (and their links) are left out of the canvas, the list view and every analysis; they stay in the map, its edits and its file exports. Change the function to toggle them (e.g. low-confidence inferences, D5). |
-| `sideCards` | 0.2.0 (SL17). `{ id, title, render(selection) }[]`: your cards in the side dock, stacked below the core's editor, each collapsible; they come along into full screen. Use this instead of a column of your own. |
+| `sideCards` | 0.2.0 (SL17). `{ id, title, render(selection) }[]`: your cards in the side dock, stacked below the core's Edit and Analyse cards (0.3.0), each collapsible; they come along into full screen. Use this instead of a column of your own. |
 | `renderPeek` | 0.2.0 (SL17). `(target) => ReactNode`, `target` is `{ kind: 'node', node }` or `{ kind: 'edge', edge }`: your lines in the read-only peek, below the core's (e.g. the passages behind it). |
 | `view` / `onViewChange` / `viewHref` | Canvas or list; uncontrolled when left out. `viewHref` gives the switch a real URL if you route views. |
 | `panel` / `onPanelChange` | The side-panel tab; uncontrolled when left out. |
 | `missing` | What to show when `map` is an id that is not in `storage`. |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
-Since 0.2.0 it adds `F` (full screen), `]` (hide or show the side dock) and Shift+F10 / the ContextMenu key (peek at
+Since 0.2.0 it adds `F` (full screen), `]` (fold or open the side dock; since 0.3.0 also the » / « buttons on the dock and its rail) and Shift+F10 / the ContextMenu key (peek at
 the selection). Right-click, Ctrl-click and long-press open the peek; the association menu is its "Associations…"
-button (and `A`, the toolbar, the editor and the ⋯ handle). The dock's collapse state is kept per viewer under
-`<storage slug>:view:dock`; the per-map Node text setting is `layout.nodeText` in the map file.
+button (and `A`, the toolbar, the Edit card's Selected tab and the ⋯ handle). The dock's collapse state, and since 0.3.0 its width (the resize
+handle on its left edge), are kept per viewer under `<storage slug>:view:dock`; the per-map Node text setting is `layout.nodeText` in the map file.
 
 ### Build settings a consumer needs
 

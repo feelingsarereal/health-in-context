@@ -10,6 +10,37 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.3.0] — 2026-11-04
+
+Minor (SL17 review findings 1–4, Daniel's click-through of 0.2.0): the side dock and the layout picker. Pack: `0.1.1`
+(unchanged). No new props and no change to the map file; one new per-viewer setting (the dock's width). Minor rather
+than patch because the resize handle is a new feature, and a toolbar button and a copy key are gone.
+
+- **Fold control on the dock (finding 1):** a » button at the dock's top right, beside the first card's header
+  (`aria-label` "Fold the side dock", tooltip "Fold the side dock (])"). On the rail a « button at the top reopens it
+  ("Open the side dock (])"). Focus follows to the counterpart each way, so reopening puts focus back in the dock.
+  `]` still folds and opens. The toolbar button "Hide the side panels" (`data-testid="dock-toggle"`) is removed, so
+  the action has one name. The canvas refits after a fold or a reopen.
+- **Layout picker (finding 2):** a visible "Layout" label and plain option names, each with a one-line tooltip:
+  **Clustered** (fCoSE) and **Evenly spaced** (ELK stress). The engine ids in the map file (`layout.engine`) are unchanged.
+  Picking a layout re-arranges the unpinned boxes at once, as Auto-arrange does; pinned boxes stay put. The engine change
+  and the new positions share one undo step when the layout settles within a second, so Undo puts both back. The
+  picker is grouped (`role="group"`, "Arrange") with Auto-arrange, Re-arrange all and Arrange selection. The picker now
+  reads the map's own engine, so Undo also resets it.
+- **Edit and Analyse (finding 3):** the dock's "Editor" card is split into two collapsible cards, each with its own
+  tab row. **Edit** has Selected, To code, and Map & export. **Analyse** has the "Evidence-backed links only" toggle, then
+  Loops (with its count), Links, Paths, Leverage, What-if, Clusters and Legend. The host's `sideCards` stay below both.
+  Copy keys are now `dock.edit` and `dock.analyse`; `dock.editor`, `dock.collapse` and `dock.expand` are gone, and new
+  keys are `dock.fold`, `dock.unfold`, `dock.resize` (+ tips) and `layoutPick.*`. The `panel` / `onPanelChange` props are
+  unchanged: `panel` is the tab chosen last, and each card shows the tab it last had. Card ids in the stored dock
+  state are `edit` and `analyse`; an `editor` entry stored by 0.2.0 is ignored.
+- **Resize handle (finding 4):** on the dock's left edge, `role="separator"` with `aria-orientation="vertical"`,
+  `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. Pointer drag works between 280 px and half the workspace. ←/→
+  move it 16 px (Shift: 64 px), and Home or double-click resets the default 400 px. The canvas refits while it moves,
+  throttled to one refit per 120 ms plus one at the end. The width is kept per viewer, in the same
+  `<storage slug>:view:dock` entry as the collapse state (`width`, written only once changed), never in the map. It
+  survives a reload and a fold to the rail.
+
 ## [0.2.0] — 2026-11-04
 
 Minor (SL16 + SL17): two props embedding apps asked for, and the map-readability work (S6.1 Part A). Pack: `0.1.1`

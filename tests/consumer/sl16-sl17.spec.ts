@@ -213,25 +213,28 @@ test.describe('SL17', () => {
     await expect(peek).toBeFocused();
   });
 
-  test('the dock: the editor on top, the host card below, both in view at 1440×900; cards and the whole dock collapse, and that is remembered', async ({ page }) => {
+  test('the dock: Edit and Analyse on top, the host card below, all in view at 1440×900; cards and the whole dock collapse, and that is remembered', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await open(page);
     const dock = page.getByTestId('side-dock');
-    const editor = page.getByTestId('dock-card-editor');
+    const editor = page.getByTestId('dock-card-edit');
+    const analyse = page.getByTestId('dock-card-analyse');
     const host = page.getByTestId('dock-card-host:source');
     const eb = (await editor.boundingBox())!;
+    const ab = (await analyse.boundingBox())!;
     const hb = (await host.boundingBox())!;
-    expect(eb.y).toBeLessThan(hb.y);
-    for (const b of [eb, hb]) expect(b.y + b.height).toBeLessThanOrEqual(900);
+    expect(eb.y).toBeLessThan(ab.y);
+    expect(ab.y).toBeLessThan(hb.y);
+    for (const b of [eb, ab, hb]) expect(b.y + b.height).toBeLessThanOrEqual(900);
     await expect(page.getByTestId('fixture-card')).toBeInViewport();
     await expect(page.getByTestId('panel-inspect')).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollHeight > innerHeight && scrollY > 0)).toBe(false);
     // one card collapses by its header; the other takes the room
-    const t = page.getByTestId('dock-card-editor-toggle');
+    const t = page.getByTestId('dock-card-edit-toggle');
     await expect(t).toHaveAttribute('aria-expanded', 'true');
     await t.click();
     await expect(t).toHaveAttribute('aria-expanded', 'false');
-    await expect(page.getByTestId('dock-card-editor-body')).toBeHidden();
+    await expect(page.getByTestId('dock-card-edit-body')).toBeHidden();
     expect((await host.boundingBox())!.height).toBeGreaterThan(hb.height);
     // the whole dock: ] collapses it to a rail; the canvas spans the workspace
     await page.getByTestId('canvas').focus();
@@ -242,15 +245,15 @@ test.describe('SL17', () => {
     await expect.poll(async () => (await page.getByTestId('canvas').boundingBox())!.width).toBeGreaterThan(ws.width - 80);
     expect(await axe(page, 'dock collapsed')).toEqual([]);
     // remembered per viewer, under the host's slug, and never in the map
-    expect(JSON.parse((await page.evaluate((k) => localStorage.getItem(k), DOCK_KEY))!)).toEqual({ open: false, closed: ['editor'] });
+    expect(JSON.parse((await page.evaluate((k) => localStorage.getItem(k), DOCK_KEY))!)).toEqual({ open: false, closed: ['edit'] });
     await page.reload();
     await expect(page.getByTestId('dock-rail')).toBeVisible();
     await expect(page.getByTestId('fixture-stored').locator('li')).toHaveCount(0);
     // the rail shows each card's title and reopens the dock at that card
     await expect(page.getByTestId('dock-rail')).toContainText('In the source');
-    await page.getByTestId('dock-rail-editor').click();
+    await page.getByTestId('dock-rail-edit').click();
     await expect(dock).toHaveAttribute('data-open', 'true');
-    await expect(page.getByTestId('dock-card-editor-body')).toBeVisible();
+    await expect(page.getByTestId('dock-card-edit-body')).toBeVisible();
     // blocked or empty storage: the defaults
     await page.evaluate((k) => localStorage.setItem(k, 'not json'), DOCK_KEY);
     await page.reload();
@@ -260,9 +263,10 @@ test.describe('SL17', () => {
   test('narrow screens keep the panels below the canvas (no rail)', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await open(page);
-    await expect(page.getByTestId('dock-toggle')).toHaveCount(0);
+    await expect(page.getByTestId('dock-fold')).toHaveCount(0);
+    await expect(page.getByTestId('dock-resize')).toHaveCount(0);
     const cv = (await page.getByTestId('canvas').boundingBox())!;
-    const ed = (await page.getByTestId('dock-card-editor').boundingBox())!;
+    const ed = (await page.getByTestId('dock-card-edit').boundingBox())!;
     expect(ed.y).toBeGreaterThan(cv.y + cv.height - 1);
     await expect(page.getByTestId('dock-card-host:source')).toBeAttached();
   });

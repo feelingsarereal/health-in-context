@@ -125,10 +125,19 @@ const FALLBACK = {
     loops: 'Loops', noLoops: 'In no loop', mechanism: 'Mechanism', description: 'Description', yes: 'Yes', no: 'No', open: 'Open in editor', assoc: 'Associations…',
   },
   /** SL17: the stacked side dock and full screen */
-  dock: { editor: 'Editor', collapse: 'Hide the side panels', expand: 'Show the side panels', card: 'Collapse or expand', fullscreen: 'Full screen', exitFullscreen: 'Exit full screen' },
+  dock: {
+    edit: 'Edit', analyse: 'Analyse', fold: 'Fold the side dock', foldTip: 'Fold the side dock (])', unfold: 'Open the side dock', unfoldTip: 'Open the side dock (])',
+    resize: 'Resize the side dock', resizeTip: 'Drag, or use ← →, to resize the side dock; double-click or Home resets it', card: 'Collapse or expand', fullscreen: 'Full screen', exitFullscreen: 'Exit full screen',
+  },
+  /** SL17 review 2: the layout picker, in plain words; the engine ids in the map file are unchanged */
+  layoutPick: {
+    label: 'Layout', fcose: 'Clustered', 'elk-stress': 'Evenly spaced',
+    fcoseTip: 'Linked circumstances pull together, so groups and loops stand out.',
+    'elk-stressTip': 'Distance on screen follows distance in links.',
+  } as Record<string, string>,
   nodeText: { label: 'Node text', title: 'Title', 'title-code': 'Title + code', full: 'Full' } as Record<string, string>,
   /** SL17: keys added in this release; the pack's own list (keys) shows first */
-  keysMore: [['F', 'full screen (Esc leaves)'], [']', 'hide / show the side panels'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
+  keysMore: [['F', 'full screen (Esc leaves)'], [']', 'fold / open the side dock'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
   keys: [
     ['N', 'new circumstance'], ['E', 'new link from the selection'], ['A', 'association menu'], ['1 / 2', '1st / 2nd-degree neighbourhood'], ['L', 'loops panel'],
     ['R', 'auto-arrange'], ['P', 'pin / unpin'], ['Del', 'delete'], ['⌘Z / ⌘⇧Z', 'undo / redo'], ['⌘B / ⌘I / ⌘U', 'bold / italic / underline while editing text'],

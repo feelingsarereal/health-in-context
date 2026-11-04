@@ -12,6 +12,8 @@ import { useMapDoc } from './components/map/useMapDoc';
 import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, toGraph, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap as SdohMapDoc } from './lib/model/map';
 import { emptyDoc, plainText } from './lib/model/rich';
 import { feedbackClusters, neighbourhood, findLoops, DEFAULT_WEIGHT, type Loop } from './lib/analysis';
+type Engine = 'fcose' | 'elk-stress';
+const ENGINES: Engine[] = ['fcose', 'elk-stress'];
 import { assignLoopNames } from './lib/model/interchange';
 import { evidenceCanCloseALoop, checkLink } from './lib/model/evidence';
 import { LinkForm, BasisPanel } from './components/map/LinkForm';
@@ -47,6 +49,18 @@ export interface SideCard {
 }
 const NO_SELECTION: Selection = { nodes: [], edges: [] };
 const sameSelection = (a: Selection, b: Selection) => a.nodes.join('\n') === b.nodes.join('\n') && a.edges.join('\n') === b.edges.join('\n');
+
+/** SL17: the dock's per-viewer state; `width` (review 4) only once the viewer resized it */
+interface DockPref {
+  open: boolean;
+  closed: string[];
+  width?: number;
+}
+const DOCK_DEFAULT = 400;
+const DOCK_MIN = 280;
+/** SL17 review 3: the dock's two core cards and their tabs */
+const EDIT_PANELS: Panel[] = ['inspect', 'tocode', 'map'];
+const ANALYSE_PANELS: Panel[] = ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend'];
 
 export interface NewNodeReq {
   pos?: { x: number; y: number };
@@ -219,7 +233,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   /** K4 D10: on a phone the secondary tools sit behind "More" (always shown from the sm breakpoint up) */
   const [toolsOpen, setToolsOpen] = useState(false);
   const sec = toolsOpen ? '' : 'max-sm:hidden';
-  const [engine, setEngine] = useState<'fcose' | 'elk-stress'>(map.layout.engine);
+  // SL17 review 2: the layout engine is the map's own (so Undo puts the picker back too)
+  const engine = map.layout.engine;
   const [live, setLive] = useState('');
   const [error, setError] = useState<string | null>(null);
   const announce = useCallback((s: string) => setLive((p) => (p === s ? s + ' ' : s)), []);
@@ -271,26 +286,129 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // collapses to a rail. Per-viewer browser storage under the store's slug; never saved into the map.
   const wide = useWideViewport();
   const dockId = `dock-${useId().replace(/:/g, '')}`;
-  const [dock, setDock] = useState<{ open: boolean; closed: string[] }>(() => {
+  // SL17 review 4: the dock's width (set by its resize handle) is kept with the collapse state, only once changed
+  const [dock, setDock] = useState<DockPref>(() => {
     try {
       const v = JSON.parse(viewPref(storage, 'dock') ?? 'null');
-      if (v && typeof v.open === 'boolean' && Array.isArray(v.closed)) return { open: v.open, closed: v.closed.filter((x: unknown) => typeof x === 'string') };
+      if (v && typeof v.open === 'boolean' && Array.isArray(v.closed)) {
+        const d: DockPref = { open: v.open, closed: v.closed.filter((x: unknown) => typeof x === 'string') };
+        if (typeof v.width === 'number' && Number.isFinite(v.width)) d.width = Math.max(DOCK_MIN, Math.round(v.width));
+        return d;
+      }
     } catch {
       /* unreadable: the defaults */
     }
     return { open: true, closed: [] };
   });
-  const saveDock = (d: typeof dock) => {
+  const saveDock = (d: DockPref) => {
     setDock(d);
     setViewPref(storage, 'dock', JSON.stringify(d));
   };
   const dockOpen = dock.open || !wide;
-  const setDockOpen = (open: boolean) => {
+  const foldBtn = useRef<HTMLButtonElement>(null);
+  const unfoldBtn = useRef<HTMLButtonElement>(null);
+  const refocusDock = useRef<'fold' | 'unfold' | null>(null);
+  const setDockOpen = (open: boolean, focus = false) => {
     saveDock({ ...dock, open });
-    announce(open ? 'Side panels shown.' : 'Side panels hidden; the canvas has the full width.');
+    // SL17 review 1: the control that folded the dock is gone, so focus moves to its counterpart (« on the rail, » on the dock)
+    if (focus) refocusDock.current = open ? 'fold' : 'unfold';
+    announce(open ? 'Side dock open.' : 'Side dock folded; the canvas has the full width.');
   };
-  const setCardOpen = (id: string, open: boolean, alsoDock = false) => saveDock({ open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] });
+  useEffect(() => {
+    const f = refocusDock.current;
+    refocusDock.current = null;
+    if (f) (f === 'fold' ? foldBtn : unfoldBtn).current?.focus();
+  }, [dockOpen]);
+  const setCardOpen = (id: string, open: boolean, alsoDock = false) => saveDock({ ...dock, open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] });
   const cardOpen = (id: string) => !dock.closed.includes(id);
+  // the canvas refits once the grid has settled at its new size, after a fold or a reopen
+  const dockFirst = useRef(true);
+  useEffect(() => {
+    if (dockFirst.current) {
+      dockFirst.current = false;
+      return;
+    }
+    const t = setTimeout(() => canvas.current?.refit(), 80);
+    return () => clearTimeout(t);
+  }, [dockOpen]);
+
+  // ── SL17 review 4: the dock's resize handle, on its left edge. Between DOCK_MIN and half the workspace; the canvas
+  // refits while it moves, throttled. Per viewer, never in the map; folding to the rail keeps it.
+  const gridEl = useRef<HTMLDivElement>(null);
+  const [dockW, setDockW] = useState<number | null>(null); // while dragging: not yet saved
+  const dockMax = () => Math.max(DOCK_MIN, Math.floor((gridEl.current?.getBoundingClientRect().width ?? 2 * DOCK_DEFAULT) / 2));
+  const clampW = (w: number) => Math.round(Math.min(dockMax(), Math.max(DOCK_MIN, w)));
+  const width = clampW(dockW ?? dock.width ?? DOCK_DEFAULT);
+  const refitAt = useRef(0);
+  const refitT = useRef(0);
+  const refitSoon = () => {
+    // throttled: at most every 120 ms while it moves, and once more when it stops
+    clearTimeout(refitT.current);
+    const now = Date.now();
+    if (now - refitAt.current > 120) {
+      refitAt.current = now;
+      requestAnimationFrame(() => canvas.current?.refit());
+    }
+    refitT.current = window.setTimeout(() => canvas.current?.refit(), 140);
+  };
+  useEffect(() => () => clearTimeout(refitT.current), []);
+  const saveWidth = (w: number | undefined) => {
+    const next: DockPref = { ...dock };
+    if (w === undefined) delete next.width;
+    else next.width = clampW(w);
+    saveDock(next);
+    setDockW(null);
+    refitSoon();
+  };
+  const dragFrom = useRef<number | null>(null);
+  const resizer = wide && dockOpen && (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      aria-label={C.dock.resize}
+      aria-controls={dockId}
+      aria-valuenow={width}
+      aria-valuemin={DOCK_MIN}
+      aria-valuemax={dockMax()}
+      tabIndex={0}
+      title={C.dock.resizeTip}
+      className="group absolute -left-3 top-0 z-10 flex h-full w-3 cursor-col-resize touch-none items-center justify-center outline-none"
+      data-testid="dock-resize"
+      onKeyDown={(e) => {
+        const step = e.shiftKey ? 64 : 16;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') saveWidth(width + (e.key === 'ArrowLeft' ? step : -step));
+        else if (e.key === 'Home') saveWidth(undefined);
+        else return;
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onDoubleClick={() => saveWidth(undefined)}
+      onPointerDown={(e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        e.currentTarget.setPointerCapture(e.pointerId);
+        dragFrom.current = e.clientX + width; // the dock's right edge stays put
+        setDockW(width);
+      }}
+      onPointerMove={(e) => {
+        if (dragFrom.current === null) return;
+        setDockW(clampW(dragFrom.current - e.clientX));
+        refitSoon();
+      }}
+      onPointerUp={(e) => {
+        if (dragFrom.current === null) return;
+        const w = clampW(dragFrom.current - e.clientX);
+        dragFrom.current = null;
+        saveWidth(w);
+      }}
+      onPointerCancel={() => {
+        dragFrom.current = null;
+        setDockW(null);
+      }}
+    >
+      <span aria-hidden="true" className="h-12 w-1 rounded-full bg-[color:var(--bx-line)] group-hover:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2" />
+    </div>
+  );
 
   // ── SL17: the peek
   const [peek, setPeek] = useState<(PeekRequest & { keyboard: boolean }) | null>(null);
@@ -420,9 +538,19 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     apply((m) => selected.nodes.reduce((acc, id) => updateNode(acc, id, { pinned: pin }), m));
     announce(pin ? 'Pinned.' : 'Unpinned.');
   };
-  const arrange = (scope: 'unpinned' | 'all' | 'selection') => {
-    canvas.current?.layout(scope, engine);
+  const arrange = (scope: 'unpinned' | 'all' | 'selection', using: Engine = engine) => {
+    canvas.current?.layout(scope, using);
     announce(scope === 'selection' ? 'Arranging the selection.' : 'Arranging the map.');
+  };
+  /**
+   * SL17 review 2: picking a layout re-arranges the unpinned boxes at once, as Auto-arrange does. The engine and the new
+   * positions share the 'layout' undo key, so one Undo puts both back when the layout settles within a second.
+   */
+  const pickEngine = (v: Engine) => {
+    if (v === engine) return;
+    apply((m) => ({ ...m, layout: { ...m.layout, engine: v } }), 'layout');
+    if (map.nodes.length) arrange('unpinned', v);
+    announce(`Layout: ${C.layoutPick[v]}. Arranging the unpinned circumstances; Undo puts them back.`);
   };
   const openAssoc = (id?: string) => {
     const target = id ?? selected.nodes[0];
@@ -474,7 +602,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           toggleFs();
           break;
         case ']':
-          if (wide) setDockOpen(!dock.open);
+          if (wide) setDockOpen(!dock.open, t.closest('[data-testid="side-dock"]') !== null);
           break;
         case 'n':
         case 'N':
@@ -587,16 +715,18 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
       {view === 'canvas' && (
         <>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('unpinned')} disabled={!map.nodes.length} data-testid="arrange" aria-keyshortcuts="R">{C.toolbar.arrange}</button>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('all')} disabled={!map.nodes.length}>{C.toolbar.arrangeAll}</button>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => arrange('selection')} disabled={selected.nodes.length < 2}>{C.toolbar.arrangeSel}</button>
-          <label className={`inline-flex items-center gap-1 text-sm ${sec}`}>
-            <span className="sr-only">{C.toolbar.engine}</span>
-            <select className="bx-input ax-tap w-auto" value={engine} onChange={(e) => { const v = e.target.value as 'fcose'; setEngine(v); apply((m) => ({ ...m, layout: { ...m.layout, engine: v } })); }} aria-label={C.toolbar.engine}>
-              <option value="fcose">fCoSE (default)</option>
-              <option value="elk-stress">ELK stress</option>
-            </select>
-          </label>
+          {/* SL17 review 2: the layout picker sits with the three arrange buttons */}
+          <div className={`inline-flex flex-wrap items-center gap-1.5 ${sec}`} role="group" aria-label="Arrange" data-testid="arrange-group">
+            <label className="inline-flex items-center gap-1 text-sm font-semibold" title={C.layoutPick[`${engine}Tip`]}>
+              <span>{C.layoutPick.label}</span>
+              <select className="bx-input ax-tap w-auto font-normal" value={engine} onChange={(e) => pickEngine(e.target.value as Engine)} data-testid="layout-engine">
+                {ENGINES.map((v) => <option key={v} value={v} title={C.layoutPick[`${v}Tip`]}>{C.layoutPick[v]}</option>)}
+              </select>
+            </label>
+            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('unpinned')} disabled={!map.nodes.length} data-testid="arrange" aria-keyshortcuts="R">{C.toolbar.arrange}</button>
+            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('all')} disabled={!map.nodes.length}>{C.toolbar.arrangeAll}</button>
+            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('selection')} disabled={selected.nodes.length < 2}>{C.toolbar.arrangeSel}</button>
+          </div>
         </>
       )}
       <button type="button" className="bx-btn ax-tap" onClick={doc.undo} disabled={!doc.canUndo} aria-keyshortcuts="Meta+Z" data-testid="undo">{C.toolbar.undo}</button>
@@ -612,7 +742,6 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         </>
       )}
       <button type="button" className={`bx-btn ax-tap ${fs !== 'off' ? 'bx-btn-on' : ''}`} aria-pressed={fs !== 'off'} onClick={toggleFs} aria-keyshortcuts="F" data-testid="fullscreen">{fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen}</button>
-      {wide && <button type="button" className="bx-btn ax-tap" aria-expanded={dock.open} aria-controls={dockId} onClick={() => setDockOpen(!dock.open)} aria-keyshortcuts="]" data-testid="dock-toggle">{dock.open ? C.dock.collapse : C.dock.expand}</button>}
       <a className="bx-btn ax-tap" href={props.viewHref?.(otherView, map.id) ?? '#'} onClick={switchView} data-testid="switch-view">{view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView}</a>
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
       <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
@@ -725,15 +854,16 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   };
   const toCodeCount = map.nodes.filter((n) => n.kind !== 'note' && n.code_status === 'undetermined').length;
 
-  const editor = (
+  // SL17 review 3: two core cards, each with its own tab row — Edit (the selection, To code, the map file) and
+  // Analyse (the evidence filter and the analyses). `panel` is the tab last chosen; each card remembers its own.
+  const lastTab = useRef<{ edit: Panel; analyse: Panel }>({ edit: 'inspect', analyse: 'loops' });
+  if (EDIT_PANELS.includes(panel)) lastTab.current.edit = panel;
+  else lastTab.current.analyse = panel;
+  const tabs = (list: Panel[], cur: Panel) => (
     <>
-      <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
-        <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
-        <span id="evidence-toggle-label">{C.evidence.toggle}</span>
-      </label>
       <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
-        {PANELS.map((p) => (
-          <button key={p} type="button" className={`bx-btn ax-tap px-2 ${panel === p ? 'bx-btn-on' : ''}`} aria-pressed={panel === p} onClick={() => setPanel(p)} data-testid={`panel-${p}`}>
+        {list.map((p) => (
+          <button key={p} type="button" className={`bx-btn ax-tap px-2 ${cur === p ? 'bx-btn-on' : ''}`} aria-pressed={cur === p} onClick={() => setPanel(p)} data-testid={`panel-${p}`}>
             {C.panels[p]}
             {p === 'loops' && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5" data-testid="loops-count">{loops.loops.length}</span>}
             {p === 'tocode' && toCodeCount > 0 && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5">{toCodeCount}</span>}
@@ -741,38 +871,57 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         ))}
       </div>
       {/* positioned, so sr-only (absolute) fields inside scroll with the panel and are clipped by it */}
-      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[panel]}>
-        <h3 className="sr-only">{C.panels[panel]}</h3>
-        {panelBody[panel]}
+      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[cur]} data-testid={`panel-body-${cur}`}>
+        <h3 className="sr-only">{C.panels[cur]}</h3>
+        {panelBody[cur]}
       </div>
     </>
   );
-  // SL17: the dock's cards, top to bottom: the core's editor, then the host's; each scrolls inside itself, so one card
-  // never pushes the others off screen
-  const cards: { id: string; title: string; body: ReactNode; editor?: boolean }[] = [
-    { id: 'editor', title: C.dock.editor, body: editor, editor: true },
+  const editCard = tabs(EDIT_PANELS, lastTab.current.edit);
+  const analyseCard = (
+    <>
+      <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
+        <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
+        <span id="evidence-toggle-label">{C.evidence.toggle}</span>
+      </label>
+      {tabs(ANALYSE_PANELS, lastTab.current.analyse)}
+    </>
+  );
+  // SL17: the dock's cards, top to bottom: the core's Edit and Analyse, then the host's; each scrolls inside itself, so
+  // one card never pushes the others off screen
+  const cards: { id: string; title: string; body: ReactNode; core?: boolean }[] = [
+    { id: 'edit', title: C.dock.edit, body: editCard, core: true },
+    { id: 'analyse', title: C.dock.analyse, body: analyseCard, core: true },
     ...(props.sideCards ?? []).map((c) => ({ id: `host:${c.id}`, title: c.title, body: <div className="p-3">{c.render(selected)}</div> })),
   ];
   const side = (
     <aside id={dockId} className="flex min-h-0 min-w-0 flex-1 flex-col gap-2" aria-label="Map panels" data-testid="side-dock" data-open={dockOpen ? 'true' : 'false'}>
       {dockOpen ? (
-        cards.map((c) => {
+        cards.map((c, i) => {
           const open = cardOpen(c.id);
           return (
             <section
               key={c.id}
-              className={`bx-card flex min-h-0 min-w-0 flex-col p-0 ${open ? (c.editor ? 'lg:flex-[3_1_0%]' : 'lg:flex-[2_1_0%]') : 'flex-none'}`}
+              className={`bx-card flex min-h-0 min-w-0 flex-col p-0 ${open ? (c.core ? 'lg:flex-[3_1_0%]' : 'lg:flex-[2_1_0%]') : 'flex-none'}`}
               aria-labelledby={`${dockId}-${c.id}-h`}
               data-testid={`dock-card-${c.id}`}
               data-open={open ? 'true' : 'false'}
             >
-              <h2 id={`${dockId}-${c.id}-h`} className="m-0 border-b border-[color:var(--bx-line)] text-sm font-semibold">
-                <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-left ax-tap" aria-expanded={open} aria-controls={`${dockId}-${c.id}-b`} onClick={() => setCardOpen(c.id, !open)} data-testid={`dock-card-${c.id}-toggle`}>
-                  <span aria-hidden="true">{open ? '▾' : '▸'}</span>
-                  {c.title}
-                </button>
-              </h2>
-              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.editor ? '' : 'overflow-y-auto'} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
+              <div className="flex items-stretch border-b border-[color:var(--bx-line)]">
+                <h2 id={`${dockId}-${c.id}-h`} className="m-0 min-w-0 flex-1 text-sm font-semibold">
+                  <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-left ax-tap" aria-expanded={open} aria-controls={`${dockId}-${c.id}-b`} onClick={() => setCardOpen(c.id, !open)} data-testid={`dock-card-${c.id}-toggle`}>
+                    <span aria-hidden="true">{open ? '▾' : '▸'}</span>
+                    {c.title}
+                  </button>
+                </h2>
+                {/* SL17 review 1: the fold control is on the dock itself, top right, beside the first card's header */}
+                {i === 0 && wide && (
+                  <button ref={foldBtn} type="button" className="ax-tap px-3 text-base font-semibold hover:bg-paper-2 dark:hover:bg-night" aria-label={C.dock.fold} title={C.dock.foldTip} aria-expanded={true} aria-controls={dockId} aria-keyshortcuts="]" onClick={() => setDockOpen(false, true)} data-testid="dock-fold">
+                    <span aria-hidden="true">»</span>
+                  </button>
+                )}
+              </div>
+              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.core ? '' : 'overflow-y-auto'} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
                 {c.body}
               </div>
             </section>
@@ -780,8 +929,11 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         })
       ) : (
         <div className="bx-card flex h-full flex-col items-center gap-2 overflow-y-auto p-1" data-testid="dock-rail">
+          <button ref={unfoldBtn} type="button" className="ax-tap w-full rounded px-1 py-1 text-base font-semibold hover:bg-paper-2 dark:hover:bg-night" aria-label={C.dock.unfold} title={C.dock.unfoldTip} aria-expanded={false} aria-controls={dockId} aria-keyshortcuts="]" onClick={() => setDockOpen(true, true)} data-testid="dock-unfold">
+            <span aria-hidden="true">«</span>
+          </button>
           {cards.map((c) => (
-            <button key={c.id} type="button" className="ax-tap rounded px-1 py-2 text-sm font-semibold hover:bg-paper-2 dark:hover:bg-night [writing-mode:vertical-rl]" onClick={() => setCardOpen(c.id, true, true)} data-testid={`dock-rail-${c.id}`}>
+            <button key={c.id} type="button" className="ax-tap rounded px-1 py-2 text-sm font-semibold hover:bg-paper-2 dark:hover:bg-night [writing-mode:vertical-rl]" onClick={() => { refocusDock.current = 'fold'; setCardOpen(c.id, true, true); }} data-testid={`dock-rail-${c.id}`}>
               {c.title}
             </button>
           ))}
@@ -805,13 +957,15 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         setPeek(null);
         setSelected(peek.kind === 'node' ? { nodes: [peek.id], edges: [] } : { nodes: [], edges: [peek.id] });
         setPanel('inspect');
-        if (!dockOpen || !cardOpen('editor')) saveDock({ open: true, closed: dock.closed.filter((x) => x !== 'editor') });
+        if (!dockOpen || !cardOpen('edit')) saveDock({ ...dock, open: true, closed: dock.closed.filter((x) => x !== 'edit') });
       }}
       onAssoc={peek.kind === 'node' && peekTarget.kind === 'node' && peekTarget.node.kind !== 'note' ? () => { setPeek(null); openAssoc(peek.id); } : undefined}
     />
   );
   const fsOn = fs !== 'off';
-  const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${dockOpen ? 'lg:grid-cols-[minmax(0,1fr)_400px]' : 'lg:grid-cols-[minmax(0,1fr)_3rem]'} ${fsOn ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
+  const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${fsOn ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
+  // from lg up the dock column takes its stored width (review 4), or the rail's
+  const gridStyle = wide ? { gridTemplateColumns: dockOpen ? `minmax(0,1fr) ${width}px` : 'minmax(0,1fr) 3rem' } : undefined;
   const tall = fsOn ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
 
   return (
@@ -825,7 +979,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       <div className="sr-only" role="status" aria-live="polite" data-testid="live">{live}</div>
       {toolbar}
       {view === 'canvas' ? (
-        <div className={grid}>
+        <div ref={gridEl} className={grid} style={gridStyle}>
           <div className={`relative h-[60vh] min-h-[22rem] ${tall} rounded-xl border border-[color:var(--bx-line)] overflow-hidden`}>
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
@@ -861,12 +1015,12 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             </Suspense>
             {peekBox}
           </div>
-          <div className={`${tall} min-h-0 min-w-0 flex`}>{side}</div>
+          <div className={`${tall} relative min-h-0 min-w-0 flex`}>{resizer}{side}</div>
         </div>
       ) : (
-        <div className={grid}>
+        <div ref={gridEl} className={grid} style={gridStyle}>
           <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
-          <div className="min-h-0 flex">{side}</div>
+          <div className="relative min-h-0 flex">{resizer}{side}</div>
         </div>
       )}
 
