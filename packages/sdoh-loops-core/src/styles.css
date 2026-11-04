@@ -72,7 +72,9 @@
   .ax-canvas      { @apply relative bg-[color:var(--bx-bg)]; background-image: radial-gradient(circle, rgb(31 27 22 / 0.06) 1px, transparent 1.2px); background-size: 24px 24px; }
   .dark .ax-canvas { background-image: radial-gradient(circle, rgb(239 234 226 / 0.06) 1px, transparent 1.2px); }
   /* K14: a long loop name wraps onto a second line (the label carries the break); on a phone the glyph also scales with zoom (inline transform) */
-  .ax-loop-r, .ax-loop-b { @apply absolute flex items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-center text-[11px] font-bold shadow-sm; white-space: pre-line; line-height: 13px; min-width: 30px; min-height: 30px; padding: 4px 8px; transform: translate(-50%, -50%); transform-origin: center; }
+  /* SL20: the button is the hit target, never under 24 × 24 CSS px (WCAG 2.5.8); the glyph face inside it scales */
+  .ax-loop        { @apply absolute flex items-center justify-center rounded-full; min-width: 24px; min-height: 24px; padding: 0; border: 0; background: transparent; transform: translate(-50%, -50%); }
+  .ax-loop-r, .ax-loop-b { @apply flex flex-none items-center justify-center rounded-full border-2 bg-[color:var(--bx-bg)] text-center text-[11px] font-bold shadow-sm; white-space: pre-line; line-height: 13px; min-width: 30px; min-height: 30px; padding: 4px 8px; transform-origin: center; }
   .ax-loop-r      { border-color: var(--ax-pos); color: var(--ax-pos); }
   .ax-loop-b      { border-color: var(--ax-neg); color: var(--ax-neg); }
   /* SL17: a box's text, drawn over the canvas and scaled with its zoom (inline transform); the box takes this size */

@@ -1,7 +1,7 @@
 /** K7: numbered loop glyphs, ties listed by name (panel and report), and ⋯ / connector handles that avoid edge marks. */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName, menuItem } from '../helpers';
 
 const ABUSE = 'Personal history of physical abuse';
 const UNEMP = 'Problem associated with unemployment';
@@ -56,7 +56,7 @@ test('K7.1 and K7.2: glyphs show the loop name; tied loops list R1 before R2, in
   // 2 — R1 and R2 tie at 0.125: R1 first (it is the longer loop, which used to put it second)
   await expect(page.getByTestId('loop-item').getByTestId('loop-name')).toHaveText(['R1', 'R2']);
   await panel(page, 'map');
-  const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId('export-md').click()]);
+  const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, 'export-md')]);
   const p = test.info().outputPath(d.suggestedFilename());
   await d.saveAs(p);
   const md = fs.readFileSync(p, 'utf8');

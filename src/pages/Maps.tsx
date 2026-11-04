@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { S, C, getStore, type MapSummary, newMap, newId, Field, PageHead, Dialog, importFile, count } from '@feelingsarereal/sdoh-loops-core';
 import { ClearData } from '@/components/ui/ClearData';
@@ -11,6 +11,56 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
+  /** SL24: a file dragged over the page shows the drop zone */
+  const [dragging, setDragging] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  // SL24: the same import as the map's Map menu (importFile, unchanged): a new map on this device, opened on success
+  const openFile = async (f: File | undefined) => {
+    if (!f) return;
+    setMsg(null);
+    try {
+      const m = await importFile(f, await getStore());
+      open(m.id);
+    } catch (err) {
+      setMsg((err as Error).message);
+    }
+  };
+  useEffect(() => {
+    let depth = 0;
+    const hasFile = (e: DragEvent) => !!e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+    const enter = (e: DragEvent) => {
+      if (!hasFile(e)) return;
+      depth++;
+      setDragging(true);
+    };
+    const over = (e: DragEvent) => {
+      if (!hasFile(e)) return;
+      e.preventDefault(); // allow the drop
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    };
+    const leave = (e: DragEvent) => {
+      if (!hasFile(e)) return;
+      depth = Math.max(0, depth - 1);
+      if (!depth) setDragging(false);
+    };
+    const drop = (e: DragEvent) => {
+      if (!hasFile(e)) return;
+      e.preventDefault();
+      depth = 0;
+      setDragging(false);
+      openFile(e.dataTransfer?.files?.[0]);
+    };
+    window.addEventListener('dragenter', enter);
+    window.addEventListener('dragover', over);
+    window.addEventListener('dragleave', leave);
+    window.addEventListener('drop', drop);
+    return () => {
+      window.removeEventListener('dragenter', enter);
+      window.removeEventListener('dragover', over);
+      window.removeEventListener('dragleave', leave);
+      window.removeEventListener('drop', drop);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [renaming, setRenaming] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
   /** K6 D9: the map awaiting a delete confirmation, in the app's own dialog (as Clear my data does) */
@@ -45,25 +95,44 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
         </div>
       </Dialog>
       <PageHead title={C.maps.title} lead={`${C.maps.lead} ${S.privacy.saved_here}`} />
-      <form
-        className="bx-card mb-6 p-4"
-        aria-labelledby={`${id}-new`}
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const m = newMap(name, subject);
-          await (await getStore()).save(m);
-          open(m.id);
-        }}
-      >
-        <h2 id={`${id}-new`} className="mb-2 text-xl font-semibold">{C.maps.new}</h2>
-        <Field label={C.maps.name} htmlFor={`${id}-name`}>
-          <input id={`${id}-name`} className="bx-input ax-tap" value={name} onChange={(e) => setName(e.target.value)} data-testid="new-map-name" />
-        </Field>
-        <Field label={C.maps.subject} htmlFor={`${id}-subject`} nudgeId={`${id}-subject-n`}>
-          <input id={`${id}-subject`} className="bx-input ax-tap" value={subject} onChange={(e) => setSubject(e.target.value)} aria-describedby={`${id}-subject-n`} data-testid="new-map-subject" />
-        </Field>
-        <button type="submit" className="bx-btn-primary ax-tap" data-testid="create-map">{C.maps.create}</button>
-      </form>
+      {dragging && (
+        <div className="pointer-events-none fixed inset-3 z-50 flex items-center justify-center rounded-xl border-4 border-dashed border-[color:var(--bx-accent)] bg-[color:var(--bx-bg)]/90" data-testid="drop-zone" aria-hidden="true">
+          <p className="font-display text-2xl font-semibold">{C.maps.dropHere}</p>
+        </div>
+      )}
+      {/* SL24: two equal ways to start — a blank map, or a map file — side by side, stacked on narrow screens */}
+      <section className="bx-card mb-6 p-4" aria-labelledby={`${id}-start`} data-testid="start-map">
+        <h2 id={`${id}-start`} className="mb-3 text-xl font-semibold">{C.maps.start}</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          <form
+            aria-labelledby={`${id}-new`}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const m = newMap(name, subject);
+              await (await getStore()).save(m);
+              open(m.id);
+            }}
+          >
+            <h3 id={`${id}-new`} className="mb-2 text-lg font-semibold">{C.maps.new}</h3>
+            <Field label={C.maps.name} htmlFor={`${id}-name`}>
+              <input id={`${id}-name`} className="bx-input ax-tap" value={name} onChange={(e) => setName(e.target.value)} data-testid="new-map-name" />
+            </Field>
+            <Field label={C.maps.subject} htmlFor={`${id}-subject`} nudgeId={`${id}-subject-n`}>
+              <input id={`${id}-subject`} className="bx-input ax-tap" value={subject} onChange={(e) => setSubject(e.target.value)} aria-describedby={`${id}-subject-n`} data-testid="new-map-subject" />
+            </Field>
+            <button type="submit" className="bx-btn-primary ax-tap" data-testid="create-map">{C.maps.create}</button>
+          </form>
+          <div aria-labelledby={`${id}-open`} role="group" className="md:border-l md:border-[color:var(--bx-line)] md:pl-6">
+            <h3 id={`${id}-open`} className="mb-2 text-lg font-semibold">{C.maps.openFile}</h3>
+            <p id={`${id}-open-hint`} className="mb-3 text-sm bx-muted">{C.maps.openFileHint}</p>
+            <button type="button" className="bx-btn-primary ax-tap" aria-describedby={`${id}-open-hint${msg ? ` ${id}-open-err` : ''}`} onClick={() => fileInput.current?.click()} data-testid="open-map-file">
+              {C.maps.openFile}…
+            </button>
+            <input ref={fileInput} type="file" hidden accept=".json,.csv,application/json,text/csv" aria-label={C.maps.openFile} data-testid="open-map-input" onChange={(e) => { openFile(e.target.files?.[0]); e.target.value = ''; }} />
+            {msg && <p id={`${id}-open-err`} role="alert" className="mt-2 text-sm bx-todo" data-testid="open-map-error">{msg}</p>}
+          </div>
+        </div>
+      </section>
       <h2 className="text-2xl">Saved maps</h2>
       {list === null ? <p role="status" className="bx-muted">Loading…</p> : !list.length ? <p className="mt-2 bx-muted" data-testid="no-maps">{C.maps.empty}</p> : (
         <ul className="mt-2 space-y-2" data-testid="map-list">
@@ -120,26 +189,6 @@ export default function Maps({ embedded, onOpen }: { embedded?: boolean; onOpen?
           ))}
         </ul>
       )}
-      <div className="mt-6 bx-card p-4">
-        <label className="block text-sm font-semibold" htmlFor={`${id}-imp`}>{C.maps.import}</label>
-        <input
-          id={`${id}-imp`}
-          type="file"
-          accept=".json,.csv,application/json,text/csv"
-          className="mt-1 block w-full text-sm"
-          onChange={async (e) => {
-            const f = e.target.files?.[0];
-            if (!f) return;
-            try {
-              const m = await importFile(f, await getStore());
-              open(m.id);
-            } catch (err) {
-              setMsg((err as Error).message);
-            }
-          }}
-        />
-        {msg && <p role="alert" className="mt-2 text-sm">{msg}</p>}
-      </div>
       {!embedded && (
         <div className="mt-6">
           <ClearData />

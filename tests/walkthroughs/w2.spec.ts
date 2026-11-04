@@ -1,7 +1,7 @@
 /** w2 · p-student · "Close a link through evidence, build a two-loop model with overrides, read the analyses and export" (rewritten K2; K3 code-level evidence; K5: L01 ships; K6: L29 ships, and a step for L25's codes). */
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, fillLinkForm, newMap, offOrigin, panel, recordRequests, selectNodeByName } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, fillLinkForm, newMap, offOrigin, panel, recordRequests, selectNodeByName, menuItem } from '../helpers';
 import { h1Violations } from '../lint';
 
 const UNEMP = 'Problem associated with unemployment';
@@ -135,7 +135,7 @@ test('w2: evidence link between existing nodes, overrides, analyses, export and 
   // 9 — export JSON, CSV, Markdown; import the JSON into a new map: same nodes, edges, weights, polarities, bases, reasons, loops
   await panel(page, 'map');
   const dl = async (id: string) => {
-    const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId(id).click()]);
+    const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, id)]);
     const p = test.info().outputPath(d.suggestedFilename());
     await d.saveAs(p);
     return p;

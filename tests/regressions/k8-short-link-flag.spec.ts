@@ -1,7 +1,7 @@
 /** K8: on a short override link the +/− label used to be drawn over the mid-edge ⚑ and hide it (UI-18). */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
 
 const LOWINC = 'Low income';
 const STRESS = 'Stress, not elsewhere classified';
@@ -20,7 +20,7 @@ async function shortLinkMap(page: Page) {
   // export, place the circumstances exactly, pin them, and import the result (SL17: the boxes take their text's
   // measured size, so 230 apart keeps the link about 80 px long)
   await panel(page, 'map');
-  const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId('export-json').click()]);
+  const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, 'export-json')]);
   const p = test.info().outputPath('k8.json');
   await d.saveAs(p);
   const m = JSON.parse(fs.readFileSync(p, 'utf8'));

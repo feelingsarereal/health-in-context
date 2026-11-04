@@ -272,6 +272,8 @@ function glyphHalf(label: string) {
   return { hw: Math.max(15, (chars * 7 + 16) / 2), hh: lines.length > 1 ? 19 : 15 };
 }
 /** K14: under 768 px the glyphs scale with the canvas zoom, as the boxes do, within these bounds */
+/** SL20: half the loop glyph's minimum hit target (24 × 24 CSS px, WCAG 2.5.8) */
+const HIT_HALF = 12;
 const glyphScale = (narrow: boolean, zoom: number) => (narrow ? Math.max(0.3, Math.min(1.5, zoom)) : 1);
 const handleSize = (zoom: number) => Math.max(44, Math.min(72, Math.round(HANDLE_PX * zoom)));
 /** K6 D10: a link whose straight line would run through another circumstance bends around it, by this much clearance */
@@ -394,7 +396,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
   P.current = props;
   const syncing = useRef(false);
   const [overlay, setOverlay] = useState<{
-    loops: { key: string; x: number; y: number; kind: string; label: string; scale: number }[];
+    loops: { key: string; x: number; y: number; kind: string; label: string; scale: number; hw: number; hh: number }[];
     more: { x: number; y: number } | null;
     handle: { x: number; y: number } | null;
     /** rendered size of the ⋯ and connector buttons (px) */
@@ -432,7 +434,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const label = glyphLabel(p.loopNames.get(l.key) ?? l.kind);
       const k = glyphScale(narrowRef.current, cy.zoom());
       const h = glyphHalf(label);
-      return [{ key: l.key, kind: l.kind, label, scale: k, hw: h.hw * k, hh: h.hh * k, x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
+      // SL20: placed (and kept apart) by its hit target, which is never under 24 × 24 px however small the face scales
+      return [{ key: l.key, kind: l.kind, label, scale: k, hw: Math.max(HIT_HALF, h.hw * k), hh: Math.max(HIT_HALF, h.hh * k), x: ps.reduce((s, q) => s + q.x, 0) / ps.length, y: ps.reduce((s, q) => s + q.y, 0) / ps.length }];
     });
     // K7: every edge's marks, as circles in rendered px: the mid-edge badge (⚑, ‖) and the +/− polarity label, which sits
     // 26 model px back from the arrowhead along the edge (approximated toward the midpoint on a bent edge)
@@ -929,8 +932,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         <button
           key={l.key}
           type="button"
-          className={`${l.kind === 'R' ? 'ax-loop-r' : 'ax-loop-b'} ${props.activeLoop === l.key ? 'ring-2 ring-[color:var(--bx-accent)]' : ''}`}
-          style={{ left: l.x, top: l.y, transform: `translate(-50%, -50%) scale(${l.scale})` }}
+          className="ax-loop"
+          style={{ left: l.x, top: l.y, ...(l.scale === 1 ? {} : { width: Math.round(2 * l.hw), height: Math.round(2 * l.hh) }) }}
           onClick={() => props.onLoop(l.key)}
           aria-label={`Loop ${props.loopNames.get(l.key)}: ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}`}
           aria-pressed={props.activeLoop === l.key}
@@ -939,8 +942,10 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           data-label={l.label}
           data-scale={l.scale.toFixed(3)}
         >
-          <span aria-hidden="true">{l.kind === 'R' ? '↻' : '↺'}</span>
-          {l.label}
+          <span className={`${l.kind === 'R' ? 'ax-loop-r' : 'ax-loop-b'} ${props.activeLoop === l.key ? 'ring-2 ring-[color:var(--bx-accent)]' : ''}`} style={l.scale === 1 ? undefined : { transform: `scale(${l.scale})` }} data-testid="loop-glyph-face">
+            <span aria-hidden="true">{l.kind === 'R' ? '↻' : '↺'}</span>
+            {l.label}
+          </span>
         </button>
       ))}
       {overlay.more && (

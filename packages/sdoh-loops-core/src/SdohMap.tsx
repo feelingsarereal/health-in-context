@@ -25,7 +25,8 @@ import { CodePopout } from './components/map/CodePopout';
 import { CitedText } from './components/evidence/CitedText';
 import { RefCard } from './components/evidence/RefCard';
 import { LoopsPanel, LinksPanel, PathsPanel, LeveragePanel, PulsePanel, ToCodePanel, ClustersPanel, LegendPanel, nameOf } from './components/map/Panels';
-import { MapDetails } from './components/map/MapDetails';
+import { AboutMap, MapMenu, type MapMenuHandle, type MapMenuItem } from './components/map/MapDetails';
+import { SelectionRead } from './components/map/SelectionRead';
 import { ListView } from './components/map/ListView';
 import type { CanvasHandle, Highlight, PeekRequest } from './components/map/Canvas';
 import { Peek, type PeekTarget } from './components/map/Peek';
@@ -33,7 +34,8 @@ import { links as packLinks } from './lib/data/scheme';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
 const titleOf = (c: string) => codeMap.get(c)?.title;
-export const PANELS = ['inspect', 'loops', 'links', 'paths', 'leverage', 'pulse', 'tocode', 'clusters', 'legend', 'map'] as const;
+/** SL23: the Whole map card's tabs (the selection has its own card; the file actions are in the Map menu) */
+export const PANELS = ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend', 'needsCode', 'about'] as const;
 export type Panel = (typeof PANELS)[number];
 export type MapView = 'canvas' | 'list';
 export interface Selection {
@@ -55,12 +57,11 @@ interface DockPref {
   open: boolean;
   closed: string[];
   width?: number;
+  /** SL23: the selection card's mode, only once the viewer chose */
+  mode?: 'read' | 'edit';
 }
 const DOCK_DEFAULT = 400;
 const DOCK_MIN = 280;
-/** SL17 review 3: the dock's two core cards and their tabs */
-const EDIT_PANELS: Panel[] = ['inspect', 'tocode', 'map'];
-const ANALYSE_PANELS: Panel[] = ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend'];
 
 export interface NewNodeReq {
   pos?: { x: number; y: number };
@@ -101,7 +102,9 @@ export interface SdohMapProps {
   onViewChange?: (view: MapView) => void;
   /** the href of the view switch, for a consumer that routes views by URL */
   viewHref?: (view: MapView, id: string) => string;
-  /** the side-panel tab; uncontrolled when left out */
+  /** SL23: the host's own items at the end of the toolbar's Map menu (e.g. "Reset to the built map") */
+  mapMenuItems?: MapMenuItem[];
+  /** the Whole map card's tab; uncontrolled when left out */
   panel?: Panel;
   onPanelChange?: (panel: Panel) => void;
   /** shown when the map is not in `storage` */
@@ -155,6 +158,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   }, [full, hiddenKey]);
   const { theme, reducedMotion } = useTheme();
   const canvas = useRef<CanvasHandle>(null);
+  const mapMenu = useRef<MapMenuHandle>(null);
   const [ownView, setOwnView] = useState<MapView>('canvas');
   const view = props.view ?? ownView;
   const otherView: MapView = view === 'canvas' ? 'list' : 'canvas';
@@ -164,7 +168,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     if (props.onViewChange) props.onViewChange(otherView);
     else setOwnView(otherView);
   };
-  const [ownPanel, setOwnPanel] = useState<Panel>('inspect');
+  const [ownPanel, setOwnPanel] = useState<Panel>('loops');
   const panel = props.panel ?? ownPanel;
   const setPanel = (p: Panel) => {
     if (props.onPanelChange) props.onPanelChange(p);
@@ -293,6 +297,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       if (v && typeof v.open === 'boolean' && Array.isArray(v.closed)) {
         const d: DockPref = { open: v.open, closed: v.closed.filter((x: unknown) => typeof x === 'string') };
         if (typeof v.width === 'number' && Number.isFinite(v.width)) d.width = Math.max(DOCK_MIN, Math.round(v.width));
+        if (v.mode === 'read' || v.mode === 'edit') d.mode = v.mode;
         return d;
       }
     } catch {
@@ -321,6 +326,16 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   }, [dockOpen]);
   const setCardOpen = (id: string, open: boolean, alsoDock = false) => saveDock({ ...dock, open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] });
   const cardOpen = (id: string) => !dock.closed.includes(id);
+  // ── SL23: Read / Edit for the selection card (and About this map). A read-only original is always in Read, with no
+  // toggle: the first edit made elsewhere (a drag, a new circumstance) forks a copy, and the toggle appears on the copy.
+  const canEdit = !doc.readOnly;
+  const mode: 'read' | 'edit' = canEdit && dock.mode === 'edit' ? 'edit' : 'read';
+  const editing = mode === 'edit';
+  const setMode = (m: 'read' | 'edit', extra: Partial<DockPref> = {}) => {
+    if (!canEdit) return;
+    saveDock({ ...dock, ...extra, mode: m });
+    announce(m === 'edit' ? 'Edit mode: the editing controls are shown.' : 'Read mode.');
+  };
   // the canvas refits once the grid has settled at its new size, after a fold or a reopen
   const dockFirst = useRef(true);
   useEffect(() => {
@@ -478,7 +493,6 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   };
   const selectNode = (id: string) => {
     setSelected({ nodes: [id], edges: [] });
-    setPanel('inspect');
   };
   const pickLoop = (l: Loop | null) => {
     setPathHl(null);
@@ -580,8 +594,15 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target instanceof Element ? e.target : document.body;
-      if (t.closest('input, textarea, select, [contenteditable="true"], dialog[open]') || document.querySelector('dialog[open]')) return;
       const mod = e.metaKey || e.ctrlKey;
+      // SL23: ⌘O opens a map file, ⌘S saves a copy — from anywhere in the map but a dialog
+      if (mod && !e.altKey && !e.shiftKey && (e.key === 'o' || e.key === 's' || e.key === 'O' || e.key === 'S') && !document.querySelector('dialog[open]')) {
+        e.preventDefault();
+        if (e.key.toLowerCase() === 'o') mapMenu.current?.openFile();
+        else mapMenu.current?.saveCopy();
+        return;
+      }
+      if (t.closest('input, textarea, select, [contenteditable="true"], dialog[open]') || document.querySelector('dialog[open]')) return;
       if (mod && e.key.toLowerCase() === 'z') {
         e.preventDefault();
         if (e.shiftKey) doc.redo();
@@ -611,6 +632,14 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           break;
         case 'e':
         case 'E':
+          // SL23: E toggles Read / Edit; a new link is K (and the toolbar's Link to…)
+          if (canEdit) {
+            e.preventDefault();
+            setMode(editing ? 'read' : 'edit');
+          }
+          break;
+        case 'k':
+        case 'K':
           e.preventDefault();
           openLink(linkFrom());
           break;
@@ -628,7 +657,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             setActiveLoop(null);
             setPathHl(null);
             setHood((h) => (h && h.id === selected.nodes[0] && h.hops === hops ? null : { id: selected.nodes[0], hops }));
-            announce(`${hops === 1 ? '1st' : '2nd'}-degree neighbourhood of ${nm(selected.nodes[0])}: outgoing and incoming shown in separate tints.`);
+            announce(`${hops === 1 ? '1st' : '2nd'}-degree neighborhood of ${nm(selected.nodes[0])}: outgoing and incoming shown in separate tints.`);
           }
           break;
         case 'l':
@@ -665,7 +694,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         case 'Enter':
           if (onCanvas && selected.nodes.length) {
             e.preventDefault();
-            setPanel('inspect');
+            // SL23: Enter edits the selection — Edit mode, then its first field
+            if (!editing) setMode('edit', { open: true, closed: dock.closed.filter((x) => x !== 'selection') });
             setTimeout(() => (document.querySelector('[data-testid="inspector"] [contenteditable], [data-testid="inspector"] input, [data-testid="inspector"] button') as HTMLElement | null)?.focus(), 30);
           }
           break;
@@ -706,11 +736,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const toolbar = (
     <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
       <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
+      {/* SL23: the map file actions — open (import) first, save a copy, the exports, print, the host's items */}
+      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={props.mapMenuItems} />
       <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
         {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
       </span>
       <button type="button" className="bx-btn-primary ax-tap" onClick={() => setNewNodeReq({})} data-testid="add-node" aria-keyshortcuts="N">{C.toolbar.addNode}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(linkFrom())} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="E">{C.toolbar.addEdge}</button>
+      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(linkFrom())} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="K">{C.toolbar.addEdge}</button>
       <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc()} disabled={!selNode || selNode.kind === 'note'} data-testid="open-assoc" aria-keyshortcuts="A">{C.toolbar.assoc}</button>
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
       {view === 'canvas' && (
@@ -738,7 +770,6 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.fit()}>{C.toolbar.fit}</button>
           <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(1.25)} aria-label="Zoom in">＋</button>
           <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(0.8)} aria-label="Zoom out">－</button>
-          <button type="button" className={`bx-btn ax-tap ${sec} ${map.layout.theme === 'print' ? 'bx-btn-on' : ''}`} aria-pressed={map.layout.theme === 'print'} onClick={() => apply((m) => ({ ...m, layout: { ...m.layout, theme: m.layout.theme === 'print' ? 'auto' : 'print' } }))}>{C.toolbar.print}</button>
         </>
       )}
       <button type="button" className={`bx-btn ax-tap ${fs !== 'off' ? 'bx-btn-on' : ''}`} aria-pressed={fs !== 'off'} onClick={toggleFs} aria-keyshortcuts="F" data-testid="fullscreen">{fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen}</button>
@@ -748,8 +779,9 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     </div>
   );
 
+  const emptyHint = map.nodes.length ? 'Select a circumstance or a link to edit it.' : coarse ? C.canvas.emptyTouch : C.canvas.empty;
   const inspector = (
-    <div data-testid="inspector">
+    <div data-testid="inspector" data-mode="edit">
       {!selNode && !selEdge && (
         <div className="text-sm bx-muted">
           {selected.nodes.length + selected.edges.length > 1 ? (
@@ -766,11 +798,11 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                     onChange={(e) => {
                       const fill = e.target.value === 'block' ? null : e.target.value;
                       apply((m) => selected.nodes.reduce((acc, id) => updateNode(acc, id, { style: { ...(acc.nodes.find((n) => n.id === id)?.style ?? {}), fill } }), m));
-                      announce(`Colour set on ${count(selected.nodes.length, 'circumstance')}.`);
+                      announce(`Color set on ${count(selected.nodes.length, 'circumstance')}.`);
                     }}
                   >
                     <option value="" disabled>Choose…</option>
-                    <option value="block">Block colour</option>
+                    <option value="block">Block color</option>
                     {USER_COLOURS.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </label>
@@ -779,9 +811,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             </div>
           ) : (
             // K14: the add-the-first-circumstance hint only on an empty map
-            <p data-testid="inspector-empty">
-              {map.nodes.length ? 'Select a circumstance or a link to edit it.' : coarse ? C.canvas.emptyTouch : C.canvas.empty}
-            </p>
+            <p data-testid="inspector-empty">{emptyHint}</p>
           )}
         </div>
       )}
@@ -822,8 +852,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     </div>
   );
 
+  // SL23: Read mode — the selection as text, with no editing control in the DOM
+  const reader = (
+    <div data-testid="inspector" data-mode="read">
+      <SelectionRead map={map} node={selNode} edge={selEdge} multi={{ nodes: selected.nodes.length, edges: selected.edges.length }} nm={nm} loops={loops.loops} loopNames={loopNames} empty={emptyHint} />
+    </div>
+  );
   const panelBody: Record<Panel, JSX.Element> = {
-    inspect: inspector,
     loops: (
       <LoopsPanel
         map={map}
@@ -842,58 +877,86 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         }}
       />
     ),
-    links: <LinksPanel map={map} graph={graph} basisOf={basisOf} onPick={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} />,
+    links: <LinksPanel map={map} graph={graph} basisOf={basisOf} onPick={(id) => setSelected({ nodes: [], edges: [id] })} />,
     paths: <PathsPanel map={map} graph={graph} announce={announce} onPick={(p) => { setActiveLoop(null); setHood(null); setPathHl(p ? { nodes: p.nodes, edges: p.edges } : null); }} />,
     leverage: <LeveragePanel map={map} graph={graph} loops={loops} onPick={selectNode} />,
     pulse: <PulsePanel map={map} graph={graph} announce={announce} />,
-    tocode: <ToCodePanel map={map} onPick={selectNode} onPickEdge={(id) => { setSelected({ nodes: [], edges: [id] }); setPanel('inspect'); }} nm={nm} />,
+    needsCode: <ToCodePanel map={map} onPick={selectNode} onPickEdge={(id) => setSelected({ nodes: [], edges: [id] })} nm={nm} />,
     clusters: <ClustersPanel map={map} graph={graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} />,
     legend: <LegendPanel />,
-    // the file exports are the whole document, hidden circumstances included (SL16); the pictures are what the canvas shows
-    map: <MapDetails map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} />,
+    // SL23: the map's name, subject and notes; editable in Edit mode only. The file actions are in the Map menu.
+    about: <AboutMap map={full} apply={apply} editing={editing} />,
   };
   const toCodeCount = map.nodes.filter((n) => n.kind !== 'note' && n.code_status === 'undetermined').length;
 
-  // SL17 review 3: two core cards, each with its own tab row — Edit (the selection, To code, the map file) and
-  // Analyse (the evidence filter and the analyses). `panel` is the tab last chosen; each card remembers its own.
-  const lastTab = useRef<{ edit: Panel; analyse: Panel }>({ edit: 'inspect', analyse: 'loops' });
-  if (EDIT_PANELS.includes(panel)) lastTab.current.edit = panel;
-  else lastTab.current.analyse = panel;
-  const tabs = (list: Panel[], cur: Panel) => (
-    <>
-      <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
-        {list.map((p) => (
-          <button key={p} type="button" className={`bx-btn ax-tap px-2 ${cur === p ? 'bx-btn-on' : ''}`} aria-pressed={cur === p} onClick={() => setPanel(p)} data-testid={`panel-${p}`}>
-            {C.panels[p]}
-            {p === 'loops' && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5" data-testid="loops-count">{loops.loops.length}</span>}
-            {p === 'tocode' && toCodeCount > 0 && <span className="bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5">{toCodeCount}</span>}
-          </button>
-        ))}
-      </div>
-      {/* positioned, so sr-only (absolute) fields inside scroll with the panel and are clipped by it */}
-      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[cur]} data-testid={`panel-body-${cur}`}>
-        <h3 className="sr-only">{C.panels[cur]}</h3>
-        {panelBody[cur]}
-      </div>
-    </>
-  );
-  const editCard = tabs(EDIT_PANELS, lastTab.current.edit);
-  const analyseCard = (
+  // SL23 point 7: "Needs a code" stays visible at zero, greyed out (aria-disabled) with a tooltip, while it lists nothing
+  const needsCodeEmpty = toCodeCount === 0 && counts.review === 0;
+  const chip = 'bx-chip bg-paper-2 text-ink dark:bg-night dark:text-night-ink px-1.5';
+  // SL23: two core cards — the selection (no tabs; Read or Edit) and the Whole map (the evidence filter and its tabs)
+  const wholeCard = (
     <>
       <label className="flex items-center gap-2 border-b border-[color:var(--bx-line)] px-3 py-2 text-sm font-semibold ax-tap">
         <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
         <span id="evidence-toggle-label">{C.evidence.toggle}</span>
       </label>
-      {tabs(ANALYSE_PANELS, lastTab.current.analyse)}
+      <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
+        {PANELS.map((p) => {
+          const off = p === 'needsCode' && needsCodeEmpty && panel !== p;
+          return (
+            <button
+              key={p}
+              type="button"
+              className={`bx-btn ax-tap px-2 ${panel === p ? 'bx-btn-on' : ''} ${off ? 'cursor-not-allowed opacity-60' : ''}`}
+              aria-pressed={panel === p}
+              aria-disabled={off || undefined}
+              title={off ? C.needsCode.none : undefined}
+              onClick={() => !off && setPanel(p)}
+              data-testid={`panel-${p}`}
+            >
+              {C.panels[p]}
+              {p === 'loops' && <span className={chip} data-testid="loops-count">{loops.loops.length}</span>}
+              {p === 'needsCode' && toCodeCount > 0 && <span className={chip} data-testid="needs-code-count">{toCodeCount}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {/* positioned, so sr-only (absolute) fields inside scroll with the panel and are clipped by it */}
+      <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={C.panels[panel]} data-testid={`panel-body-${panel}`}>
+        <h3 className="sr-only">{C.panels[panel]}</h3>
+        {panelBody[panel]}
+      </div>
     </>
   );
-  // SL17: the dock's cards, top to bottom: the core's Edit and Analyse, then the host's; each scrolls inside itself, so
-  // one card never pushes the others off screen
-  const cards: { id: string; title: string; body: ReactNode; core?: boolean }[] = [
-    { id: 'edit', title: C.dock.edit, body: editCard, core: true },
-    { id: 'analyse', title: C.dock.analyse, body: analyseCard, core: true },
-    ...(props.sideCards ?? []).map((c) => ({ id: `host:${c.id}`, title: c.title, body: <div className="p-3">{c.render(selected)}</div> })),
+  const nSel = selected.nodes.length + selected.edges.length;
+  const selTitle = selNode
+    ? (selNode.kind === 'note' ? C.dock.selection.note : C.dock.selection.node)
+    : selEdge
+      ? C.dock.selection.edge
+      : nSel
+        ? `${C.dock.selection.many}: ${[selected.nodes.length ? count(selected.nodes.length, 'circumstance') : '', selected.edges.length ? count(selected.edges.length, 'link') : ''].filter(Boolean).join(', ')}`
+        : C.dock.selection.none;
+  const selectionCard = (
+    // positioned, so sr-only (absolute) fields inside scroll with the card and are clipped by it
+    <div className="relative min-h-0 flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={selTitle} data-testid="selection-body">
+      {editing ? inspector : reader}
+    </div>
+  );
+  // the dock's cards, top to bottom: the selection, the whole map, then the host's; each scrolls inside itself, so one
+  // card never pushes the others off screen
+  const cards: { id: string; title: string; body: ReactNode; kind: 'selection' | 'core' | 'host' }[] = [
+    { id: 'selection', title: selTitle, body: selectionCard, kind: 'selection' },
+    { id: 'whole', title: C.dock.wholeMap, body: wholeCard, kind: 'core' },
+    ...(props.sideCards ?? []).map((c) => ({ id: `host:${c.id}`, title: c.title, body: <div className="p-3">{c.render(selected)}</div>, kind: 'host' as const })),
   ];
+  const modeToggle = canEdit && (
+    <div className="flex items-center gap-0.5 self-center px-1" role="group" aria-label={C.dock.mode} data-testid="mode-toggle">
+      {(['read', 'edit'] as const).map((m) => (
+        <button key={m} type="button" className={`bx-btn ax-tap px-2 py-0.5 text-xs ${mode === m ? 'bx-btn-on' : ''}`} aria-pressed={mode === m} aria-keyshortcuts="E" onClick={() => mode !== m && setMode(m)} data-testid={`mode-${m}`}>
+          {C.dock[m]}
+        </button>
+      ))}
+    </div>
+  );
   const side = (
     <aside id={dockId} className="flex min-h-0 min-w-0 flex-1 flex-col gap-2" aria-label="Map panels" data-testid="side-dock" data-open={dockOpen ? 'true' : 'false'}>
       {dockOpen ? (
@@ -902,7 +965,9 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           return (
             <section
               key={c.id}
-              className={`bx-card flex min-h-0 min-w-0 flex-col p-0 ${open ? (c.core ? 'lg:flex-[3_1_0%]' : 'lg:flex-[2_1_0%]') : 'flex-none'}`}
+              // SL23: the selection card takes its content's height (up to 55%); the whole map and the host's cards share the rest
+              // (the Whole map keeps room for its tabs and a few lines; each card clips what it cannot show, and scrolls inside)
+              className={`bx-card flex min-h-0 min-w-0 flex-col overflow-hidden p-0 ${open ? (c.kind === 'selection' ? 'lg:max-h-[50%] lg:flex-[0_1_auto]' : c.kind === 'core' ? 'lg:min-h-[15rem] lg:flex-[3_1_0%]' : 'lg:flex-[2_1_0%]') : 'flex-none'}`}
               aria-labelledby={`${dockId}-${c.id}-h`}
               data-testid={`dock-card-${c.id}`}
               data-open={open ? 'true' : 'false'}
@@ -914,6 +979,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                     {c.title}
                   </button>
                 </h2>
+                {c.kind === 'selection' && open && modeToggle}
                 {/* SL17 review 1: the fold control is on the dock itself, top right, beside the first card's header */}
                 {i === 0 && wide && (
                   <button ref={foldBtn} type="button" className="ax-tap px-3 text-base font-semibold hover:bg-paper-2 dark:hover:bg-night" aria-label={C.dock.fold} title={C.dock.foldTip} aria-expanded={true} aria-controls={dockId} aria-keyshortcuts="]" onClick={() => setDockOpen(false, true)} data-testid="dock-fold">
@@ -921,7 +987,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                   </button>
                 )}
               </div>
-              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.core ? '' : 'overflow-y-auto'} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
+              <div id={`${dockId}-${c.id}-b`} className={`relative min-h-0 flex-1 flex-col ${c.kind === 'host' ? 'overflow-y-auto' : ''} ${open ? 'flex' : 'hidden'}`} data-testid={`dock-card-${c.id}-body`}>
                 {c.body}
               </div>
             </section>
@@ -956,8 +1022,10 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       onOpen={() => {
         setPeek(null);
         setSelected(peek.kind === 'node' ? { nodes: [peek.id], edges: [] } : { nodes: [], edges: [peek.id] });
-        setPanel('inspect');
-        if (!dockOpen || !cardOpen('edit')) saveDock({ ...dock, open: true, closed: dock.closed.filter((x) => x !== 'edit') });
+        // SL23: "Open in editor" opens the selection card in Edit (Read only on a read-only original)
+        const shown = { open: true, closed: dock.closed.filter((x) => x !== 'selection') };
+        if (canEdit) setMode('edit', shown);
+        else if (!dockOpen || !cardOpen('selection')) saveDock({ ...dock, ...shown });
       }}
       onAssoc={peek.kind === 'node' && peekTarget.kind === 'node' && peekTarget.node.kind !== 'note' ? () => { setPeek(null); openAssoc(peek.id); } : undefined}
     />
@@ -997,10 +1065,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                 describeEdge={describeEdge}
                 edgeTip={edgeTip}
                 onConnect={(from, to) => openLink(from, to || null)}
-                onSelect={(nodes, edges) => {
-                  setSelected({ nodes, edges });
-                  if (nodes.length + edges.length) setPanel('inspect');
-                }}
+                onSelect={(nodes, edges) => setSelected({ nodes, edges })}
                 onAddAt={(pos) => setNewNodeReq({ pos })}
                 onContext={(id) => openAssoc(id)}
                 onPeek={(r) => setPeek({ ...r, keyboard: false })}
@@ -1037,7 +1102,6 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
               apply((m) => addEdge(m, e));
               setLinkReq(null);
               setSelected({ nodes: [], edges: [e.id] });
-              setPanel('inspect');
               announce(`Added ${describeEdge(e)}.`);
             }}
           />

@@ -10,6 +10,59 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.4.0] — 2026-11-04
+
+Minor (SL20 + SL21 + SL22 + SL23, with SL24's shared wording): a light theme entry, `<Notice text>`, the dock's
+selection and Whole map cards with Read / Edit, the Map menu, US spelling, and tappable loop glyphs. Pack: `0.1.1`
+(unchanged). No change to the map file. **Breaking for 0.x consumers:** the `Panel` ids, the `E` key, a few copy keys
+and test ids changed (below); the map props are otherwise unchanged.
+
+- **Loop glyphs you can tap (SL20, WCAG 2.5.8):** the glyph's button is now its hit target, never under 24 × 24 CSS px,
+  with the visible face inside it (it still scales with the zoom on a phone). Glyphs are placed and kept apart by that
+  target. Axe's `target-size` rule is clean on a phone, zoomed out, in the consumer fixture.
+- **`@feelingsarereal/sdoh-loops-core/theme` (SL21):** `ThemeProvider`, `useTheme` and `styles.css`, with no import of
+  the pack data (`sideEffects` names it so the styles survive tree-shaking). An app shell imports only this and lazy-loads
+  the root entry on its map route; the consumer fixture now does, and its first chunk carries no `situations.json` or
+  `references.json` (a bundle test).
+- **`<Notice text>` (SL22):** an optional `text` (plain text or a short node) for an embedding app's own
+  `safety.yaml → notice`; without it, the pack's notice. The consumer fixture shows its own.
+- **The dock, by what each card is for (SL23):**
+  - **The selection card** is titled by what is selected — "Selected circumstance", "Selected canvas note",
+    "Selected link", "Selected: 3 circumstances" (or "…, 1 link"), "Nothing selected" — and has no tab row. It sizes
+    to its content, up to half the dock.
+  - **Read / Edit**, a segmented control in its header. **Read** (the default) shows the selection as text: code and
+    WHO title, label, circumstance, code status, type, links in and out (each with its basis, evidence id and grade),
+    loops, pinned state, notes, and the code's WHO text; a link's polarity, weight, delay, confidence, basis with grade,
+    and its mechanism with SDOH Loops references. No editing control is in the DOM. **Edit** adds the controls and
+    fields of 0.3.0. `E` toggles it. The mode is kept per viewer with the dock state (`mode`), never in the map.
+    A read-only original hides the toggle and stays in Read. The peek's "Open in editor" opens the card in Edit, and
+    Enter on the canvas does too.
+  - **Whole map:** the "Evidence-backed links only" toggle, then Loops (count), Links, Paths, Leverage, What-if,
+    Clusters, Legend, **Needs a code** and **About this map**. `PANELS` is now those nine ids; `inspect`, `tocode`
+    and `map` are gone, and the default tab is `loops`.
+  - **Needs a code** (was "To code"): a count badge for "Not sure yet" circumstances, a first line saying what the list
+    is for, and — while there is nothing to list (no such circumstance and no link to review) — greyed out with
+    `aria-disabled` and the tooltip "Every circumstance has a code status". The links to review stay listed there.
+  - **About this map:** the map's name, subject (with the de-identification hint), notes and its two display settings
+    (thickness, Node text). It is editable in Edit mode only; Read shows text.
+  - Stored card ids are `selection` and `whole` (`edit` / `analyse` from 0.3.0 are ignored).
+- **The Map menu (SL23):** a "Map" menu button beside the map's title (the ARIA menu-button pattern: Enter, Space or
+  ↓ open it on the first item, ↑ on the last; arrows, Home, End; Esc returns to the button). Items, each with a
+  one-line description: **Open a map file…** (first; the same import and validation as before, into a new map, then
+  `onOpenMap`), **Save a copy** (.json), the CSV, loop report, PNG and SVG exports, **Print / grayscale** (moved off
+  the toolbar row, a `menuitemcheckbox`), then the host's own `mapMenuItems` (new prop). `⌘O` / `Ctrl+O` and
+  `⌘S` / `Ctrl+S` work from anywhere in the map but a dialog. The export test ids (`export-json` …) and
+  `import-file` are kept, on the menu items and the hidden file input.
+- **Keys:** `E` is Read / Edit, `K` is a new link from the selection (the toolbar's Link to… is unchanged). The
+  pack 0.1.1 key list still says `E` for a new link; the core drops that line and lists `E`, `K` and `⌘O / ⌘S` itself.
+- **US English (SL23):** the core's copy is US spelling ("color", "grayscale", "neighborhood", "Analyze"); the few
+  British UI strings the pack 0.1.1 still carries under `app:` are respelled in the core until the pack's own change.
+  WHO's titles and definitions are verbatim and untouched. A unit test checks a denylist of British forms over `C`.
+- **Copy keys:** new `dock.selection.*`, `dock.read`, `dock.edit` (now the mode), `dock.mode`, `dock.wholeMap`,
+  `panels.needsCode`, `panels.about`, `needsCode.*`, `read.*`, `mapMenu.*`, and (SL24) `maps.start`, `maps.openFile`,
+  `maps.openFileHint`, `maps.dropHere`; `maps.new` is "Create a blank map". Gone: `dock.analyse`, `panels.inspect`,
+  `panels.tocode`, `panels.map`, `node.toCode`, `maps.import`.
+
 ## [0.3.0] — 2026-11-04
 
 Minor (SL17 review findings 1–4, Daniel's click-through of 0.2.0): the side dock and the layout picker. Pack: `0.1.1`

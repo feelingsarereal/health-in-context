@@ -17,7 +17,9 @@ const FALLBACK = {
     title: 'My maps',
     lead: 'Each map is saved in this browser as you work.',
     empty: 'No maps on this device yet.',
-    new: 'New map',
+    /** SL24: My maps' top card, two ways in */
+    start: 'Start a map',
+    new: 'Create a blank map',
     name: 'Map name',
     subject: 'Subject (initials or a label)',
     create: 'Create map',
@@ -26,7 +28,10 @@ const FALLBACK = {
     duplicate: 'Duplicate',
     delete: 'Delete',
     deleteConfirm: 'Delete this map from this browser? This cannot be undone.',
-    import: 'Import a map (.json or .csv)',
+    /** SL24 + SL23: the same wording on My maps and in the map's Map menu ("Open a map file…") */
+    openFile: 'Open a map file',
+    openFileHint: 'A map exported from SDOH Loops or an SDOH Interrogator app',
+    dropHere: 'Drop a map file here to open it',
   },
   node: {
     variableHint: "Read this box as 'how much of this is present'.",
@@ -42,10 +47,9 @@ const FALLBACK = {
     severity: 'Severity (optional, 0–3)',
     since: 'Since (optional)',
     notes: 'Notes',
-    fill: 'Fill colour',
+    fill: 'Fill color',
     pinned: 'Pinned in place',
     add: 'Add circumstance',
-    toCode: 'To code',
     toCodeEmpty: 'Every circumstance has a code status other than "Not sure yet".',
     note: 'Canvas note',
     addNote: 'Add a canvas note',
@@ -60,7 +64,7 @@ const FALLBACK = {
     description: 'Describe how one leads to the other',
     line: 'Line',
     route: 'Route',
-    colour: 'Line colour',
+    colour: 'Line color',
     thickness: 'Thickness follows |weight|',
     add: 'Add link',
     evidence: 'Evidence',
@@ -105,7 +109,24 @@ const FALLBACK = {
     noneIn: 'None end here.',
     hideSecond: 'Hide 2nd-degree',
   },
-  panels: { inspect: 'Selected', loops: 'Loops', links: 'Links', paths: 'Paths', leverage: 'Leverage', pulse: 'What-if', tocode: 'To code', clusters: 'Clusters', legend: 'Legend', map: 'Map & export' },
+  /** SL23: the Whole map card's tabs; the selection has a card of its own, and the map file actions are in the Map menu */
+  panels: { loops: 'Loops', links: 'Links', paths: 'Paths', leverage: 'Leverage', pulse: 'What-if', clusters: 'Clusters', legend: 'Legend', needsCode: 'Needs a code', about: 'About this map' },
+  needsCode: {
+    lead: "Circumstances marked 'Not sure yet'. The evidence check can only vouch for links between coded circumstances.",
+    none: 'Every circumstance has a code status',
+  },
+  /** SL23: the selection card's Read mode */
+  read: { type: 'Type', severity: 'Severity', since: 'Since', pinned: 'Pinned in place', notPinned: 'Not pinned', thickness: 'Thickness follows |weight|' },
+  /** SL23: the toolbar's Map menu */
+  mapMenu: {
+    button: 'Map', label: 'Map file', saved: 'Saved a copy of the map as a file.',
+    save: 'Save a copy', saveDesc: 'Download this map as a .json file you can open again.',
+    csv: 'Export the links (.csv)', csvDesc: 'Every link as a spreadsheet row, with its evidence.',
+    md: 'Export the loop report (.md)', mdDesc: 'The loops, their strength and their links, as text.',
+    png: 'Export a picture (.png)', pngDesc: 'The canvas as an image.',
+    svg: 'Export a picture (.svg)', svgDesc: 'The canvas as a scalable drawing.',
+    printDesc: 'Gray boxes and patterned links, for printing in black and white.',
+  },
   loops: { filterAll: 'All', rename: 'Rename', arrangeCircle: 'Arrange loop as circle', clear: 'Clear highlight', byNode: 'Through circumstance', anyNode: 'Any circumstance' },
   paths: { from: 'From', to: 'To', find: 'Find paths', none: 'No path leads from the first to the second.', summary: 'Net effect' },
   leverage: { node: 'Circumstance', in: 'Weighted in', out: 'Weighted out', between: 'Betweenness', loops: 'Loops through it', sortNote: 'Sorted by the column you choose; ties by loops, then betweenness, then weighted degree.' },
@@ -113,7 +134,7 @@ const FALLBACK = {
   clusters: { lead: 'Groups of circumstances that sit inside shared feedback (strongly connected components).', none: 'No feedback clusters yet.', hulls: 'Show clusters on the canvas' },
   toolbar: {
     addNode: 'New circumstance', addEdge: 'Link to…', assoc: 'Associations', arrange: 'Auto-arrange', arrangeAll: 'Re-arrange all (ignore pins)', arrangeSel: 'Arrange selection',
-    engine: 'Layout', undo: 'Undo', redo: 'Redo', hood1: '1st-degree', hood2: '2nd-degree', fit: 'Fit', listView: 'List view', canvasView: 'Canvas view', keys: 'Keyboard', more: 'More actions for the selected circumstance', moreTools: 'More', print: 'Print / greyscale',
+    engine: 'Layout', undo: 'Undo', redo: 'Redo', hood1: '1st-degree', hood2: '2nd-degree', fit: 'Fit', listView: 'List view', canvasView: 'Canvas view', keys: 'Keyboard', more: 'More actions for the selected circumstance', moreTools: 'More', print: 'Print / grayscale',
   },
   canvas: { label: 'Map canvas. Use the arrow keys to move between circumstances, Enter to edit, A for associations, N for a new circumstance, and ? for every key.', empty: 'Double-click the canvas or press N to add the first circumstance.', emptyTouch: 'Tap New circumstance to add the first circumstance.', outline: 'Everything on the canvas' },
   exportI: { title: 'Export', json: 'Map (.json)', csv: 'Edge list (.csv)', md: 'Loop report (.md)', png: 'Picture (.png)', svg: 'Picture (.svg)', importTitle: 'Import into a new map', imported: 'Imported into a new map.' },
@@ -126,7 +147,8 @@ const FALLBACK = {
   },
   /** SL17: the stacked side dock and full screen */
   dock: {
-    edit: 'Edit', analyse: 'Analyse', fold: 'Fold the side dock', foldTip: 'Fold the side dock (])', unfold: 'Open the side dock', unfoldTip: 'Open the side dock (])',
+    selection: { node: 'Selected circumstance', note: 'Selected canvas note', edge: 'Selected link', many: 'Selected', none: 'Nothing selected' } as Record<string, string>,
+    read: 'Read', edit: 'Edit', mode: 'Read or edit the selection', wholeMap: 'Whole map', fold: 'Fold the side dock', foldTip: 'Fold the side dock (])', unfold: 'Open the side dock', unfoldTip: 'Open the side dock (])',
     resize: 'Resize the side dock', resizeTip: 'Drag, or use ← →, to resize the side dock; double-click or Home resets it', card: 'Collapse or expand', fullscreen: 'Full screen', exitFullscreen: 'Exit full screen',
   },
   /** SL17 review 2: the layout picker, in plain words; the engine ids in the map file are unchanged */
@@ -137,9 +159,9 @@ const FALLBACK = {
   } as Record<string, string>,
   nodeText: { label: 'Node text', title: 'Title', 'title-code': 'Title + code', full: 'Full' } as Record<string, string>,
   /** SL17: keys added in this release; the pack's own list (keys) shows first */
-  keysMore: [['F', 'full screen (Esc leaves)'], [']', 'fold / open the side dock'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
+  keysMore: [['E', 'read / edit the selection'], ['K', 'new link from the selection'], ['⌘O / ⌘S', 'open a map file / save a copy'], ['F', 'full screen (Esc leaves)'], [']', 'fold / open the side dock'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
   keys: [
-    ['N', 'new circumstance'], ['E', 'new link from the selection'], ['A', 'association menu'], ['1 / 2', '1st / 2nd-degree neighbourhood'], ['L', 'loops panel'],
+    ['N', 'new circumstance'], ['E', 'new link from the selection'], ['A', 'association menu'], ['1 / 2', '1st / 2nd-degree neighborhood'], ['L', 'loops panel'],
     ['R', 'auto-arrange'], ['P', 'pin / unpin'], ['Del', 'delete'], ['⌘Z / ⌘⇧Z', 'undo / redo'], ['⌘B / ⌘I / ⌘U', 'bold / italic / underline while editing text'],
     ['← → ↑ ↓', 'move between circumstances'], ['Shift + arrows', 'nudge the selected circumstance (pins it)'], ['Enter', 'edit the selection'], ['Esc', 'clear the selection'], ['?', 'this list'],
   ] as [string, string][],
@@ -166,5 +188,25 @@ export function overlay<T>(base: T, over: unknown): T {
   return base;
 }
 
-export const C = overlay(overlay(FALLBACK, S), (S as { app?: unknown }).app);
+const merged = overlay(overlay(FALLBACK, S), (S as { app?: unknown }).app);
+
+/**
+ * SL23: the interface is in US English. The pinned pack 0.1.1 still carries a few British UI strings under `app:`;
+ * these win over it until the pack's own strings change. WHO's titles and definitions are never touched (not copy).
+ */
+const US: [RegExp, string][] = [
+  [/\bcolour/g, 'color'], [/\bColour/g, 'Color'], [/greyscale/g, 'grayscale'], [/Greyscale/g, 'Grayscale'], [/neighbourhood/g, 'neighborhood'],
+  [/\banalyse/g, 'analyze'], [/\bAnalyse/g, 'Analyze'], [/organis/g, 'organiz'], [/recognis/g, 'recogniz'], [/\bcentre/g, 'center'], [/\bcentred/g, 'centered'],
+];
+function us<T>(v: T): T {
+  if (typeof v === 'string') return US.reduce((t, [re, to]) => t.replace(re, to), v as string) as T;
+  if (Array.isArray(v)) return v.map(us) as T;
+  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, us(x)])) as T;
+  return v;
+}
+// SL23: E toggles Read / Edit; "new link from the selection" moves to K (the pack's key list still says E)
+merged.keys = merged.keys.filter(([k]) => k !== 'E');
+// SL24: My maps' blank-map heading sits beside "Open a map file" now (the pack still says "New map")
+merged.maps.new = FALLBACK.maps.new;
+export const C = us(merged);
 

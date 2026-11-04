@@ -16,6 +16,7 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   await page.getByTestId('new-map-name').fill('Mom');
   await page.getByTestId('create-map').tap();
   await expect(page.getByTestId('map-name')).toHaveText('Mom');
+  await page.getByTestId('mode-edit').tap(); // SL23: the selection card opens in Read
   await noHScroll();
   await page.getByTestId('add-node').tap();
   await fillNodeDialog(page, { circumstance: 'Mom was laid off' });

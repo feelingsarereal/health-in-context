@@ -21,6 +21,22 @@ export async function newMap(page: Page, name: string, subject = '') {
   if (subject) await page.getByTestId('new-map-subject').fill(subject);
   await page.getByTestId('create-map').click();
   await expect(page.getByTestId('map-name')).toHaveText(name);
+  // SL23: the selection card opens in Read; these flows edit, so they switch to Edit (remembered per viewer)
+  await editMode(page);
+}
+
+/** SL23: the selection card in Edit mode (the toggle is in its header; E toggles it too) */
+export async function editMode(page: Page) {
+  const b = page.getByTestId('mode-edit');
+  if ((await b.getAttribute('aria-pressed')) !== 'true') await b.click();
+  await expect(b).toHaveAttribute('aria-pressed', 'true');
+}
+
+/** SL23: an item of the toolbar's Map menu (open a file, save a copy, the exports, print), by its test id */
+export async function menuItem(page: Page, testId: string) {
+  const btn = page.getByTestId('map-menu');
+  if ((await btn.getAttribute('aria-expanded')) !== 'true') await btn.click();
+  await page.getByTestId(testId).click();
 }
 
 export async function typeRich(page: Page, dialogOrScope: ReturnType<Page['locator']>, label: string, text: string) {
@@ -99,8 +115,17 @@ export async function addEdge(page: Page, from: string, to: string, opts: EdgeOp
   await fillLinkForm(page, to, opts);
 }
 
+/**
+ * A dock tab. SL23: the selection has its own card (no tab), "To code" is "Needs a code" and "Map & export" became
+ * "About this map" (the exports are in the Map menu); the old ids map onto the new places.
+ */
 export async function panel(page: Page, id: string) {
-  await page.getByTestId(`panel-${id}`).click();
+  if (id === 'inspect') return editMode(page);
+  const to = id === 'tocode' ? 'needsCode' : id === 'map' ? 'about' : id;
+  const tab = page.getByTestId(`panel-${to}`);
+  // Needs a code is greyed out (aria-disabled) while it would list nothing
+  if ((await tab.getAttribute('aria-disabled')) === 'true') return;
+  await tab.click();
 }
 
 /** Select a node on the canvas by its outline position: arrow-key navigation from the canvas (keyboard path). */

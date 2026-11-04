@@ -34,10 +34,10 @@ export default function MapPage({ view }: { view: MapView }) {
 
   const listHref = useHref('/map/list');
   const canvasHref = useHref('/map');
-  const panel = (PANELS as readonly string[]).includes(sp.get('view') ?? '') ? (sp.get('view') as Panel) : 'inspect';
+  const panel = (PANELS as readonly string[]).includes(sp.get('view') ?? '') ? (sp.get('view') as Panel) : 'loops';
   const setPanel = (p: Panel) => {
     const n = new URLSearchParams(sp);
-    if (p === 'inspect') n.delete('view');
+    if (p === 'loops') n.delete('view');
     else n.set('view', p);
     setSp(n, { replace: true });
   };

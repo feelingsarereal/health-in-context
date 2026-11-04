@@ -65,7 +65,7 @@ test.describe('SL17 review', () => {
     expect(fb.y + fb.height - db.y).toBeLessThanOrEqual(48);
     expect(db.x + db.width - (fb.x + fb.width)).toBeLessThan(4); // flush right
     // beside the first card's header
-    const hb = (await page.getByTestId('dock-card-edit-toggle').boundingBox())!;
+    const hb = (await page.getByTestId('dock-card-selection-toggle').boundingBox())!;
     expect(Math.abs(hb.y - fb.y)).toBeLessThan(4);
     expect(hb.x + hb.width).toBeLessThanOrEqual(fb.x + 1);
     // one click folds it; the canvas spans the workspace; Fit refits every box inside the wider canvas
@@ -139,35 +139,19 @@ test.describe('SL17 review', () => {
     expect(await axe(page, 'layout picker')).toEqual([]);
   });
 
-  test('3: Edit (Selected, To code, Map & export) and Analyse (the evidence toggle, Loops with count, Links … Legend): both tab rows in view; each collapses on its own; remembered', async ({ page }) => {
+  test('3 (superseded by SL23): the dock\'s core cards collapse on their own and that is remembered', async ({ page }) => {
     await open(page);
-    const edit = page.getByTestId('dock-card-edit');
-    const analyse = page.getByTestId('dock-card-analyse');
-    await expect(edit.getByRole('heading', { level: 2, name: 'Edit', exact: true })).toBeVisible();
-    await expect(analyse.getByRole('heading', { level: 2, name: 'Analyse', exact: true })).toBeVisible();
-    await expect(page.getByTestId('side-dock')).not.toContainText('Editor');
-    for (const p of ['inspect', 'tocode', 'map']) await expect(edit.getByTestId(`panel-${p}`)).toBeInViewport();
-    for (const p of ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend']) await expect(analyse.getByTestId(`panel-${p}`)).toBeInViewport();
-    await expect(analyse.getByTestId('evidence-toggle')).toBeInViewport();
-    await expect(analyse.getByTestId('loops-count')).toHaveText('3');
-    expect(await page.evaluate(() => scrollY)).toBe(0);
-    // each card has its own body: the selection in Edit and the loops in Analyse at once
-    await page.getByTestId('panel-loops').click();
-    await expect(page.getByTestId('panel-body-inspect')).toBeVisible();
-    await expect(page.getByTestId('panel-body-loops')).toBeVisible();
-    // collapsing Analyse leaves Edit usable
-    await page.getByTestId('dock-card-analyse-toggle').click();
-    await expect(page.getByTestId('dock-card-analyse-body')).toBeHidden();
+    await expect(page.getByTestId('side-dock')).not.toContainText(/Editor|Analyse/);
+    // collapsing the Whole map leaves the selection card usable
+    await page.getByTestId('dock-card-whole-toggle').click();
+    await expect(page.getByTestId('dock-card-whole-body')).toBeHidden();
     await page.getByTestId('fixture-select').click();
     await expect(page.getByTestId('inspector')).toContainText('Debt up');
-    await page.getByTestId('panel-map').click();
-    await expect(page.getByTestId('panel-body-map')).toBeVisible();
-    // remembered per viewer
-    expect(await dockPref(page)).toEqual({ open: true, closed: ['analyse'] });
+    expect(await dockPref(page)).toEqual({ open: true, closed: ['whole'] });
     await page.reload();
-    await expect(page.getByTestId('dock-card-analyse-body')).toBeHidden();
-    await expect(page.getByTestId('dock-card-edit-body')).toBeVisible();
-    expect(await axe(page, 'Analyse collapsed')).toEqual([]);
+    await expect(page.getByTestId('dock-card-whole-body')).toBeHidden();
+    await expect(page.getByTestId('dock-card-selection-body')).toBeVisible();
+    expect(await axe(page, 'Whole map collapsed')).toEqual([]);
   });
 
   test('4: the resize handle — drag and arrow keys within 280 px … half the workspace; kept over a reload and a fold; Home and double-click reset', async ({ page }) => {

@@ -4,7 +4,7 @@
  */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName, menuItem } from '../helpers';
 
 const HOUSING = 'Problems associated with housing, unspecified';
 const UNEMP = 'Problem associated with unemployment';
@@ -155,7 +155,7 @@ test('D10: a link whose straight line would cross another circumstance bends aro
   await addEdge(page, 'Alpha', 'Beta', { override: 'x' });
   // export, put the three in a row, re-import, then link Alpha → Gamma straight through Beta
   await panel(page, 'map');
-  const [dl] = await Promise.all([page.waitForEvent('download'), page.getByTestId('export-json').click()]);
+  const [dl] = await Promise.all([page.waitForEvent('download'), menuItem(page, 'export-json')]);
   const p = test.info().outputPath('row.json');
   await dl.saveAs(p);
   const m = JSON.parse(fs.readFileSync(p, 'utf8'));

@@ -290,6 +290,8 @@ export function ToCodePanel({ map, onPick, onPickEdge, nm: nmE }: { map: SdohMap
   const review = map.edges.filter((e) => e.basis === 'needs-review');
   return (
     <div data-testid="tocode-panel">
+      {/* SL23 point 7: what the list is, and why it matters */}
+      <p className="mb-3 text-sm" data-testid="needs-code-lead">{C.needsCode.lead}</p>
       {review.length > 0 && (
         <section className="mb-4" aria-label={C.evidence.toReview}>
           <h3 className="font-semibold">⚑ {C.evidence.toReview} ({review.length})</h3>

@@ -37,8 +37,12 @@ test.describe('phone (390 px)', () => {
     for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Zoom out' }).click();
     await expect.poll(async () => (await zoomOf(page)) < 0.9).toBe(true);
     await expect.poll(async () => Math.abs((await scaleOf(page)) - Math.max(0.3, await zoomOf(page)))).toBeLessThan(0.01);
-    const h = (await glyph.boundingBox())!.height;
+    // the face shrinks; SL20: the button around it stays a 24 × 24 px hit target
+    const h = (await glyph.getByTestId('loop-glyph-face').boundingBox())!.height;
     expect(h).toBeLessThan(30 * 0.9);
+    const hit = (await glyph.boundingBox())!;
+    expect(hit.width).toBeGreaterThanOrEqual(24);
+    expect(hit.height).toBeGreaterThanOrEqual(24);
     // the glyph is never much taller than a circumstance's box at the same zoom
     const bb = (await page.getByTestId('canvas-outline').locator('li[data-node]').first().getAttribute('data-bb'))!.split(',').map(Number);
     expect(h).toBeLessThanOrEqual(bb[3] - bb[1] + 1);

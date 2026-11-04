@@ -12,19 +12,24 @@ export function Todo({ children }: { children: ReactNode }) {
 export function Heuristic({ label }: { label: string }) {
   return <span className="ax-heuristic" data-heuristic>{/heuristic/i.test(label) ? label : `heuristic · ${label}`}</span>;
 }
-export function Notice({ compact, plain }: { compact?: boolean; plain?: boolean }) {
+/**
+ * SAFETY H5: the not-advice notice. SL22: `text` is an embedding app's own wording (its safety.yaml → notice), plain
+ * text or a short node; without it, the pinned pack's notice (the standalone app's wording).
+ */
+export function Notice({ compact, plain, text }: { compact?: boolean; plain?: boolean; text?: ReactNode }) {
+  const body = text ?? safety.notice;
   // K14: `plain` is the same words as a page section, not the "Before you start" banner that the first-run panel dismisses
   if (plain)
     return (
       <section className="mt-6" role="note" aria-labelledby="notice-plain-title" data-testid="notice">
         <h2 id="notice-plain-title" className="font-display text-xl font-semibold">{C.notice.plainTitle}</h2>
-        <p className="mt-1">{safety.notice}</p>
+        <p className="mt-1" data-testid="notice-text">{body}</p>
       </section>
     );
   return (
     <div className={`bx-banner ${compact ? 'mb-0' : ''}`} role="note" data-testid="notice">
       <p className="font-semibold">{S.first_run.title}</p>
-      <p className="mt-1">{safety.notice}</p>
+      <p className="mt-1" data-testid="notice-text">{body}</p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 interface ThemeCtx { theme: Theme; toggle: () => void; reducedMotion: boolean }
 
 const Ctx = createContext<ThemeCtx>({ theme: 'light', toggle: () => {}, reducedMotion: false });

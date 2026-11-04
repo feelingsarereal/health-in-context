@@ -5,7 +5,7 @@
  */
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName, typeRich } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName, typeRich, menuItem } from '../helpers';
 
 const SENTINEL = 'ZQX-SENTINEL-7731';
 
@@ -30,7 +30,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await typeRich(page, page.getByTestId('node-dialog'), 'Canvas note', `Note ${SENTINEL}`);
   await page.getByTestId('node-dialog').getByTestId('node-submit').click();
   await panel(page, 'map');
-  await typeRich(page, page.getByTestId('map-panel'), 'Map notes', `MN ${SENTINEL}`);
+  await typeRich(page, page.getByTestId('about-map'), 'Map notes', `MN ${SENTINEL}`);
   await panel(page, 'loops');
   await page.getByTestId('loop-item').first().getByRole('button', { name: 'Rename' }).click();
   await page.getByLabel('Loop name').fill(`Loop ${SENTINEL}`);
@@ -57,7 +57,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   // exports and import
   await panel(page, 'map');
   for (const id of ['export-json', 'export-csv', 'export-md', 'export-png', 'export-svg']) {
-    const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId(id).click()]);
+    const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, id)]);
     const p = test.info().outputPath(d.suggestedFilename());
     await d.saveAs(p);
     if (id === 'export-json') {

@@ -41,6 +41,6 @@ test('Link to… with a link selected starts From that link’s source, not the 
   await page.keyboard.press('Escape');
   // the E shortcut does the same
   await page.getByTestId('canvas').focus();
-  await page.keyboard.press('e');
+  await page.keyboard.press('k'); // SL23: K is a new link (E is Read / Edit)
   await expect(page.getByTestId('edge-dialog').getByTestId('edge-from')).toHaveValue(stressId!);
 });

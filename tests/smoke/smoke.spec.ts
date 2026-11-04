@@ -74,7 +74,7 @@ test('keyboard-only path through the main surface (p-navigator)', async ({ page 
   await page.keyboard.press('Enter');
   // E → new link dialog; submit with the defaults (from the selection, QD51, to QD80: no shipped link, so an override)
   await page.getByTestId('canvas').focus();
-  await page.keyboard.press('e');
+  await page.keyboard.press('k'); // SL23: K is a new link (E is Read / Edit)
   const ed = page.getByTestId('edge-dialog');
   await expect(ed).toBeVisible();
   await expect(ed.getByTestId('edge-submit')).toBeDisabled();

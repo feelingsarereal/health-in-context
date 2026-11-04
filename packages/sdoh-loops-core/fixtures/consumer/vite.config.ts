@@ -16,6 +16,6 @@ export default defineConfig({
   base: '/',
   plugins: [react()],
   resolve: { alias: { ...sdohCoreAlias } },
-  css: { postcss: { plugins: [tailwind({ presets: [preset], content: [here('./index.html'), here('./main.tsx'), ...sdohCoreContent] }), autoprefixer()] } },
+  css: { postcss: { plugins: [tailwind({ presets: [preset], content: [here('./index.html'), here('./main.tsx'), here('./Fixture.tsx'), ...sdohCoreContent] }), autoprefixer()] } },
   build: { outDir: here('./dist'), emptyOutDir: true, target: 'es2020', chunkSizeWarningLimit: 1600 },
 });

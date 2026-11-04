@@ -7,7 +7,7 @@ import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { offOrigin, recordRequests } from '../helpers';
+import { offOrigin, recordRequests, menuItem } from '../helpers';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const DIST = path.join(ROOT, 'packages/sdoh-loops-core/fixtures/consumer/dist');
@@ -66,7 +66,7 @@ test('K13 consumer: no runtime fetches, no off-origin requests, no telemetry API
   const reqs = recordRequests(page);
   await page.goto('/');
   await expect(page.getByTestId('map-name')).toHaveText(EXAMPLE.name);
-  for (const p of ['loops', 'links', 'paths', 'leverage', 'pulse', 'tocode', 'clusters', 'legend', 'map', 'inspect']) await panel(page, p);
+  for (const p of ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend', 'about']) await panel(page, p); // Needs a code is greyed out at zero (SL23)
   await page.getByTestId('switch-view').click();
   await expect(page.getByTestId('switch-view')).toHaveText(/canvas/i);
   await page.getByTestId('switch-view').click();
@@ -95,7 +95,7 @@ test('K13 consumer: the built map is a read-only original — the first edit sav
   // the fixture lists its own store (not the withOriginals view): the original is never written to it
   await expect(page.getByTestId('fixture-stored').locator('li')).toHaveCount(0);
   // an edit: greyscale on
-  await page.getByRole('button', { name: /greyscale|print/i }).click();
+  await menuItem(page, 'menu-print');
   await expect(page.getByTestId('map-name')).toHaveText(`${EXAMPLE.name} (copy)`);
   await expect(page.getByTestId('fixture-events')).toContainText(new RegExp(`copy:map-[^:]+:from:${EXAMPLE.id}`));
   await expect(page.getByTestId('fixture-stored')).toHaveText(`${EXAMPLE.name} (copy) · 9 links`);

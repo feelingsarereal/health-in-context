@@ -1,7 +1,7 @@
 /** K9: WHO's own ICD-11 text (no interim copy), the licence citation (§1.3) on About, /methods, the pop-out and every export. */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { addEdge, addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
 
 const CITATION =
   'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO).';
@@ -9,7 +9,7 @@ const BURNOUT = 'Burnout';
 const LOWINC = 'Low income';
 
 async function save(page: Page, testId: string) {
-  const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId(testId).click()]);
+  const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, testId)]);
   const p = test.info().outputPath(d.suggestedFilename());
   await d.saveAs(p);
   return fs.readFileSync(p, 'utf8');

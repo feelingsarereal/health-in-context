@@ -6,7 +6,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
-import { addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
 
 const text = (page: Page) => page.getByTestId('node-text-layer').locator('[data-node-text]').first();
 async function start(page: Page) {
@@ -54,7 +54,7 @@ test('SL17: the Node text setting — Title, Full — is saved with the map and 
   // and the JSON export carries the setting
   await panel(page, 'map');
   const dl = page.waitForEvent('download');
-  await page.getByTestId('export-json').click();
+  await menuItem(page, 'export-json');
   const file = await (await dl).path();
   const json = JSON.parse(fs.readFileSync(file, 'utf8'));
   expect(json.layout.nodeText).toBe('full');
@@ -68,9 +68,9 @@ test('SL17: greyscale and dark mode keep the text readable; a label’s own colo
   await page.getByTestId('theme-toggle').click();
   await expect.poll(() => title.evaluate((el) => getComputedStyle(el).color)).not.toBe(ink);
   // greyscale/print: dark ink on the white boxes
-  await page.getByRole('button', { name: /greyscale|print/i }).click();
+  await menuItem(page, 'menu-print');
   await expect.poll(() => title.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(31, 27, 22)');
-  await page.getByRole('button', { name: /greyscale|print/i }).click();
+  await menuItem(page, 'menu-print');
   await page.getByTestId('theme-toggle').click();
   // a label's own colour and size, set in the editor, win on the canvas
   const label = page.getByTestId('inspector').getByRole('textbox', { name: 'Short label (optional)', exact: true });
@@ -84,7 +84,7 @@ test('SL17: PNG and SVG exports still carry the boxes’ text', async ({ page })
   await start(page);
   await panel(page, 'map');
   const dl = page.waitForEvent('download');
-  await page.getByTestId('export-svg').click();
+  await menuItem(page, 'export-svg');
   const svg = fs.readFileSync(await (await dl).path(), 'utf8') as string;
   expect(svg).toContain('Losing the flat');
   expect(svg).toContain('QD71.Z');
