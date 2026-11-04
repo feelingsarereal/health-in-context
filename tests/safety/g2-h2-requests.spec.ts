@@ -31,6 +31,20 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('node-dialog').getByTestId('node-submit').click();
   await panel(page, 'map');
   await typeRich(page, page.getByTestId('about-map'), 'Map notes', `MN ${SENTINEL}`);
+  // SL26: the notebook — a free note (title, tags, body) and a structured note's field
+  await page.getByTestId('notebook-toggle').click();
+  await page.getByTestId('nb-new').click();
+  await page.getByTestId('nb-title').fill(`NT ${SENTINEL}`);
+  await page.getByTestId('nb-tags').fill(`tag-${SENTINEL}`);
+  await page.getByTestId('nb-tags').press('Enter');
+  await page.getByTestId('nb-body').click();
+  await page.keyboard.type(`NB ${SENTINEL}`);
+  await page.getByTestId('nb-template').selectOption({ label: 'Intake' });
+  await page.getByTestId('nb-field-asks').click();
+  await page.keyboard.type(`NF ${SENTINEL}`);
+  await page.getByTestId('nb-search').fill(SENTINEL);
+  await expect(page.getByTestId('nb-note')).toHaveCount(2);
+  await page.getByTestId('notebook-toggle').click();
   await panel(page, 'loops');
   await page.getByTestId('loop-item').first().getByRole('button', { name: 'Rename' }).click();
   await page.getByLabel('Loop name').fill(`Loop ${SENTINEL}`);

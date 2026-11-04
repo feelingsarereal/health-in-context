@@ -5,8 +5,12 @@
 import { DEFAULT_WEIGHT, edgeError, type AGraph, type Polarity } from '../analysis';
 import { emptyDoc, isEmpty, sanitizeRich, type RichDoc } from './rich';
 import { checkLink, type Basis } from './evidence';
+import { sanitizeNotebook, type Notebook } from './notebook';
 
-export const SCHEMA_VERSION = 2;
+/** SL26: schema 3 adds the optional `notebook` block (S7.1); a map without one is written as schema 2 (exportJSON). */
+export const SCHEMA_VERSION = 3;
+/** the last schema without the notebook block: what released 0.4.x cores read */
+export const SCHEMA_NO_NOTEBOOK = 2;
 export const PACK_VERSION = '0.1';
 export const ICD11_RELEASE = 'ICD-11 MMS 2026-01';
 
@@ -91,6 +95,8 @@ export interface SdohMap {
   nodes: MapNode[];
   edges: MapEdge[];
   loops: MapLoopName[];
+  /** SL26 (schema 3): the case manager notebook, one per map; device-only, saved and exported with the map */
+  notebook?: Notebook;
   [extra: string]: unknown;
 }
 
@@ -342,7 +348,9 @@ export function migrate(input: unknown): SdohMap {
     return r;
   });
   const layout = (raw.layout ?? {}) as Partial<SdohMap['layout']>;
-  return {
+  // SL26: schema 3's notebook block, sanitized; schema 1 and 2 files have none and open unchanged
+  const notebook = sanitizeNotebook(raw.notebook);
+  const out: SdohMap = {
     ...raw,
     schema_version: SCHEMA_VERSION,
     pack_version: typeof raw.pack_version === 'string' ? raw.pack_version : PACK_VERSION,
@@ -363,4 +371,20 @@ export function migrate(input: unknown): SdohMap {
     edges: checked,
     loops: Array.isArray(raw.loops) ? (raw.loops as MapLoopName[]).filter((l) => typeof l?.id === 'string' && typeof l?.name === 'string') : [],
   };
+  if (notebook) out.notebook = notebook;
+  else delete out.notebook;
+  return out;
+}
+
+/** SL26: true when the map carries a notebook with at least one note. */
+export function hasNotebook(m: Pick<SdohMap, 'notebook'>): boolean {
+  return !!m.notebook?.notes.length;
+}
+/**
+ * SL26: the map without its notebook, as a schema 2 document — what "Export the map without the notebook" writes, and
+ * what every export of a map with no notes writes, so released 0.4.x cores (which refuse schema 3) still open it.
+ */
+export function withoutNotebook(m: SdohMap): SdohMap {
+  const { notebook: _drop, ...rest } = m;
+  return { ...rest, schema_version: SCHEMA_NO_NOTEBOOK } as SdohMap;
 }

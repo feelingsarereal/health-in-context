@@ -15,12 +15,13 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 - **Association menu** and **Link to…** with the evidence gate and overrides (UI-17, UI-18).
 - **Side panel**: Inspect, Loops, Links, Paths, Leverage, What-if, To code, Clusters, Legend, Map; analyses A1–A8.
 - **Exports and import**: JSON, CSV, Markdown loop report, PNG, SVG; import of `.json` / `.csv` into a new map.
+- **The notebook** (0.5.0, opt-in): free and structured notes beside the map, with the identifier check and its labels.
 - **The pack loader**: the pinned content pack's data (`@feelingsarereal/sdoh-loops-pack`) and its pin check.
 
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.4.1 @feelingsarereal/sdoh-loops-pack@0.2.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.5.0 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
@@ -57,8 +58,10 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `renderPeek` | 0.2.0 (SL17). `(target) => ReactNode`, `target` is `{ kind: 'node', node }` or `{ kind: 'edge', edge }`: your lines in the read-only peek, below the core's (e.g. the passages behind it). |
 | `view` / `onViewChange` / `viewHref` | Canvas or list; uncontrolled when left out. `viewHref` gives the switch a real URL if you route views. |
 | `panel` / `onPanelChange` | The Whole map card's tab (`PANELS`: loops, links, paths, leverage, pulse, clusters, legend, needsCode, about; 0.4.0 dropped `inspect`, `tocode` and `map`); uncontrolled when left out. |
-| `mapMenuItems` | 0.4.0 (SL23). `{ id, label, description?, onSelect }[]`: your own file actions (e.g. "Reset to the built map") at the end of the toolbar's Map menu, instead of buttons beside the canvas. |
+| `mapMenuItems` | 0.4.0 (SL23). `{ id, label, description?, onSelect, exports? }[]`: your own file actions (e.g. "Reset to the built map") at the end of the toolbar's Map menu, instead of buttons beside the canvas. Since 0.5.0, `exports: true` marks an item that sends the map somewhere (e.g. "Open in SDOH Loops"): with the notebook on, it warns first while possible identifiers remain. |
 | `missing` | What to show when `map` is an id that is not in `storage`. |
+| `notebook` | 0.5.0 (SL26). `true` shows the case manager notebook: a toggle beside List view (a column with its own resize handle from lg up; Map / Notebook tabs below). Off by default; embedding apps keep it off until SL28. Notes live in the map's `notebook` block (schema 3). |
+| `notebookTemplates` | 0.5.0 (SL26). `NoteTemplate[]` (`{ id, name, fields: { key, label }[] }`): your templates, after the core's Intake, Contact note, Case conference and Plan review. Each note from one starts with a Date field (a year by default). |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
 Since 0.2.0 it adds `F` (full screen), `]` (fold or open the side dock; since 0.3.0 also the » / « buttons on the dock and its rail) and Shift+F10 / the ContextMenu key (peek at
@@ -69,6 +72,20 @@ save a copy. The dock's collapse state, since 0.3.0 its width (the resize handle
 Read / Edit mode are kept per viewer under `<storage slug>:view:dock`; the per-map Node text setting is
 `layout.nodeText` in the map file. A read-only original always shows Read, with no toggle: the first edit made
 elsewhere (a drag, a new circumstance, Print / grayscale) forks the copy, and the toggle appears on it.
+
+### The notebook (0.5.0, SL26)
+
+One notebook per map, saved inside the map file (`notebook: { notes, dismissed, replaced }`, schema 3) and autosaved with
+it; Undo / Redo cover it, and "Clear my data" (your store's `clearAll()`) empties it. Free notes (rich text with headings
+and lists) and structured notes (a template's headed fields). The identifier check is a local heuristic: it underlines
+possible identifiers as the user types, counts them in the notebook header, and offers **Replace with a label**
+([Person A], [date], [phone] …; only the category and count are kept, never the value, and Undo cannot restore it) or
+**Not an identifier**. Every export, Print and an `exports: true` host menu item warn while flags remain. A map without
+notes — or "Save a copy without the notebook" — exports as schema 2, which 0.4.x cores open. Put `<NotebookHelp />` on
+your Help page when you turn the notebook on.
+
+The notebook ends with a live, read-only **case summary** of the map as shown: tiles, the list view's circumstances table
+(sortable, filterable; a row click selects on the map), the loops, and the top 5 by leverage.
 
 ### The light entry: `/theme` (0.4.0, SL21)
 

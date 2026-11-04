@@ -31,6 +31,10 @@ import { ListView } from './components/map/ListView';
 import type { CanvasHandle, Highlight, PeekRequest } from './components/map/Canvas';
 import { Peek, type PeekTarget } from './components/map/Peek';
 import { links as packLinks } from './lib/data/scheme';
+import { Notebook } from './components/notebook/Notebook';
+import { CaseSummary } from './components/notebook/CaseSummary';
+import { CORE_TEMPLATES, labelAll, notebookFlags, type NoteTemplate } from './lib/model/notebook';
+import { hasNotebook } from './lib/model/map';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
 const titleOf = (c: string) => codeMap.get(c)?.title;
@@ -59,9 +63,14 @@ interface DockPref {
   width?: number;
   /** SL23: the selection card's mode, only once the viewer chose */
   mode?: 'read' | 'edit';
+  /** SL26: the notebook is shown (beside the map from lg up, as the second tab below), and its width once resized */
+  notebook?: boolean;
+  nbWidth?: number;
 }
 const DOCK_DEFAULT = 400;
 const DOCK_MIN = 280;
+const NB_DEFAULT = 420;
+const NB_MIN = 300;
 
 export interface NewNodeReq {
   pos?: { x: number; y: number };
@@ -109,6 +118,13 @@ export interface SdohMapProps {
   onPanelChange?: (panel: Panel) => void;
   /** shown when the map is not in `storage` */
   missing?: ReactNode;
+  /**
+   * SL26: the case manager notebook beside the map (a view toggle; tabs on a phone). Off by default: embedding apps
+   * keep it off until SL28. The standalone SDOH Loops app turns it on.
+   */
+  notebook?: boolean;
+  /** SL26: the host's own note templates, offered after the core's four (Intake, Contact note, Case conference, Plan review) */
+  notebookTemplates?: NoteTemplate[];
 }
 
 /**
@@ -298,6 +314,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         const d: DockPref = { open: v.open, closed: v.closed.filter((x: unknown) => typeof x === 'string') };
         if (typeof v.width === 'number' && Number.isFinite(v.width)) d.width = Math.max(DOCK_MIN, Math.round(v.width));
         if (v.mode === 'read' || v.mode === 'edit') d.mode = v.mode;
+        if (typeof v.notebook === 'boolean') d.notebook = v.notebook;
+        if (typeof v.nbWidth === 'number' && Number.isFinite(v.nbWidth)) d.nbWidth = Math.max(NB_MIN, Math.round(v.nbWidth));
         return d;
       }
     } catch {
@@ -424,6 +442,101 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       <span aria-hidden="true" className="h-12 w-1 rounded-full bg-[color:var(--bx-line)] group-hover:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2" />
     </div>
   );
+
+  // ── SL26: the notebook — a view state per viewer (kept with the dock's), never in the map. From lg up it is a column
+  // between the canvas and the dock with its own resize handle; below lg it is the second of two tabs (Map, Notebook).
+  const nbEnabled = !!props.notebook;
+  const nbOn = nbEnabled && dock.notebook === true;
+  const setNbOn = (on: boolean) => {
+    saveDock({ ...dock, notebook: on });
+    announce(on ? `${C.notebook.title} shown.` : `${C.notebook.title} hidden.`);
+  };
+  const [nbW, setNbW] = useState<number | null>(null);
+  const nbMax = () => Math.max(NB_MIN, Math.floor((gridEl.current?.getBoundingClientRect().width ?? 3 * NB_DEFAULT) * 0.45));
+  const clampNb = (w: number) => Math.round(Math.min(nbMax(), Math.max(NB_MIN, w)));
+  const nbWidth = clampNb(nbW ?? dock.nbWidth ?? NB_DEFAULT);
+  const saveNbWidth = (w: number | undefined) => {
+    const next: DockPref = { ...dock };
+    if (w === undefined) delete next.nbWidth;
+    else next.nbWidth = clampNb(w);
+    saveDock(next);
+    setNbW(null);
+    refitSoon();
+  };
+  const nbDrag = useRef<number | null>(null);
+  const nbResizer = wide && nbOn && (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      aria-label={C.notebook.resize}
+      aria-valuenow={nbWidth}
+      aria-valuemin={NB_MIN}
+      aria-valuemax={nbMax()}
+      tabIndex={0}
+      title={C.notebook.resizeTip}
+      className="group absolute -left-3 top-0 z-10 flex h-full w-3 cursor-col-resize touch-none items-center justify-center outline-none"
+      data-testid="nb-resize"
+      data-print-hide
+      onKeyDown={(e) => {
+        const step = e.shiftKey ? 64 : 16;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') saveNbWidth(nbWidth + (e.key === 'ArrowLeft' ? step : -step));
+        else if (e.key === 'Home') saveNbWidth(undefined);
+        else return;
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onDoubleClick={() => saveNbWidth(undefined)}
+      onPointerDown={(e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        e.currentTarget.setPointerCapture(e.pointerId);
+        nbDrag.current = e.clientX + nbWidth;
+        setNbW(nbWidth);
+      }}
+      onPointerMove={(e) => {
+        if (nbDrag.current === null) return;
+        setNbW(clampNb(nbDrag.current - e.clientX));
+        refitSoon();
+      }}
+      onPointerUp={(e) => {
+        if (nbDrag.current === null) return;
+        const w = clampNb(nbDrag.current - e.clientX);
+        nbDrag.current = null;
+        saveNbWidth(w);
+      }}
+      onPointerCancel={() => {
+        nbDrag.current = null;
+        setNbW(null);
+      }}
+    >
+      <span aria-hidden="true" className="h-12 w-1 rounded-full bg-[color:var(--bx-line)] group-hover:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:bg-[color:var(--bx-accent,currentColor)] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2" />
+    </div>
+  );
+  const nbFirst = useRef(true);
+  useEffect(() => {
+    if (nbFirst.current) {
+      nbFirst.current = false;
+      return;
+    }
+    const t = setTimeout(() => canvas.current?.refit(), 80);
+    return () => clearTimeout(t);
+  }, [nbOn]);
+  // the identifier check over the whole notebook; every export, Print and a host's exporting item warn while it finds any
+  const flags = useMemo(() => (nbEnabled ? notebookFlags(full.notebook) : []), [nbEnabled, full.notebook]);
+  const [warn, setWarn] = useState<{ run: (m: SdohMapDoc) => void } | null>(null);
+  const guard = (run: (m: SdohMapDoc) => void) => {
+    if (!flags.length) return run(full);
+    setWarn({ run });
+  };
+  const [printing, setPrinting] = useState(false);
+  const printNotebook = () =>
+    guard(() => {
+      setPrinting(true);
+      setTimeout(() => {
+        window.print();
+        setPrinting(false);
+      }, 60);
+    });
 
   // ── SL17: the peek
   const [peek, setPeek] = useState<(PeekRequest & { keyboard: boolean }) | null>(null);
@@ -602,7 +715,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         else mapMenu.current?.saveCopy();
         return;
       }
-      if (t.closest('input, textarea, select, [contenteditable="true"], dialog[open]') || document.querySelector('dialog[open]')) return;
+      // SL26: nothing typed or pressed in the notebook is a map key (Delete there never deletes a circumstance)
+      if (t.closest('input, textarea, select, [contenteditable="true"], dialog[open], [data-notebook]') || document.querySelector('dialog[open]')) return;
       if (mod && e.key.toLowerCase() === 'z') {
         e.preventDefault();
         if (e.shiftKey) doc.redo();
@@ -737,7 +851,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
       <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
       {/* SL23: the map file actions — open (import) first, save a copy, the exports, print, the host's items */}
-      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={props.mapMenuItems} />
+      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} />
       <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
         {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
       </span>
@@ -774,6 +888,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       )}
       <button type="button" className={`bx-btn ax-tap ${fs !== 'off' ? 'bx-btn-on' : ''}`} aria-pressed={fs !== 'off'} onClick={toggleFs} aria-keyshortcuts="F" data-testid="fullscreen">{fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen}</button>
       <a className="bx-btn ax-tap" href={props.viewHref?.(otherView, map.id) ?? '#'} onClick={switchView} data-testid="switch-view">{view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView}</a>
+      {/* SL26: the notebook beside the canvas or the list (below lg, the Map / Notebook tabs instead) */}
+      {nbEnabled && wide && (
+        <button type="button" className={`bx-btn ax-tap ${nbOn ? 'bx-btn-on' : ''}`} aria-pressed={nbOn} title={C.notebook.toggleTip} onClick={() => setNbOn(!nbOn)} data-testid="notebook-toggle">
+          {C.notebook.toggle}
+          {flags.length > 0 && <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span>}
+        </button>
+      )}
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
       <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
     </div>
@@ -1033,22 +1154,70 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const fsOn = fs !== 'off';
   const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${fsOn ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
   // from lg up the dock column takes its stored width (review 4), or the rail's
-  const gridStyle = wide ? { gridTemplateColumns: dockOpen ? `minmax(0,1fr) ${width}px` : 'minmax(0,1fr) 3rem' } : undefined;
   const tall = fsOn ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
+  const gridStyle = wide ? { gridTemplateColumns: `minmax(0,1fr) ${nbOn ? `${nbWidth}px ` : ''}${dockOpen ? `${width}px` : '3rem'}` } : undefined;
+  // SL26: below lg the notebook is a tab of its own: it takes the canvas's place, and the canvas stays mounted, hidden
+  const nbTab = nbOn && !wide;
+  const nbCol = nbOn && (
+    <div className={`${wide ? tall : 'h-[75vh] min-h-[24rem]'} relative min-h-0 min-w-0 flex`} id={`${dockId}-nb`} role={wide ? undefined : 'tabpanel'} aria-labelledby={wide ? undefined : `${dockId}-tab-nb`} data-testid="notebook-col">
+      {nbResizer}
+      <div className="bx-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-0">
+        <Notebook map={full} apply={apply} scrub={doc.scrub} flags={flags} templates={[...CORE_TEMPLATES, ...(props.notebookTemplates ?? [])]} announce={announce} onPrint={printNotebook}
+          summary={
+            <CaseSummary
+              map={map}
+              graph={graph}
+              loops={loops}
+              loopNames={loopNames}
+              nm={nm}
+              flags={flags.length}
+              hidden={hiddenIds.length}
+              selected={selected}
+              onSelect={(id) => {
+                setSelected({ nodes: [id], edges: [] });
+                // below lg the map is the other tab: go there to show it
+                if (!wide) setNbOn(false);
+                if (view === 'canvas') setTimeout(() => canvas.current?.reveal([id]), wide ? 0 : 120);
+              }}
+              onLoop={(l) => {
+                if (!wide) setNbOn(false);
+                setPanel('loops');
+                setTimeout(() => pickLoop(l), wide ? 0 : 120);
+              }}
+            />
+          }
+        />
+      </div>
+    </div>
+  );
+  const nbTabs = nbEnabled && !wide && (
+    <div className="mb-2 flex gap-1" role="tablist" aria-label={C.notebook.tabs} data-testid="nb-tabs" data-print-hide>
+      {([['map', C.notebook.mapTab], ['nb', C.notebook.toggle]] as const).map(([k, l]) => {
+        const on = k === 'nb' ? nbOn : !nbOn;
+        return (
+          <button key={k} type="button" role="tab" id={`${dockId}-tab-${k}`} aria-selected={on} aria-controls={k === 'nb' ? `${dockId}-nb` : `${dockId}-main`} tabIndex={on ? 0 : -1} className={`bx-btn ax-tap flex-1 ${on ? 'bx-btn-on' : ''}`} onClick={() => on || setNbOn(k === 'nb')} onKeyDown={(e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setNbOn(!nbOn); setTimeout(() => document.getElementById(`${dockId}-tab-${nbOn ? 'map' : 'nb'}`)?.focus(), 0); } }} data-testid={`nb-tab-${k}`}>
+            {l}
+            {k === 'nb' && flags.length > 0 && <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div
       ref={ws}
-      className={`${map.layout.theme === 'print' ? 'ax-print' : ''} ${fsOn ? 'flex flex-col overflow-auto bg-[color:var(--bx-bg)] p-2 text-[color:var(--bx-ink)] sm:p-3' : ''} ${fs === 'overlay' ? 'fixed inset-0 z-[60]' : ''} ${fs === 'api' ? 'h-full w-full' : ''}`}
+      className={`${map.layout.theme === 'print' ? 'ax-print' : ''} ${printing ? 'nb-printing' : ''} ${fsOn ? 'flex flex-col overflow-auto bg-[color:var(--bx-bg)] p-2 text-[color:var(--bx-ink)] sm:p-3' : ''} ${fs === 'overlay' ? 'fixed inset-0 z-[60]' : ''} ${fs === 'api' ? 'h-full w-full' : ''}`}
       data-testid="map-workspace"
       data-fullscreen={fs}
     >
       <h1 className="sr-only">{view === 'canvas' ? 'Map' : C.list.title}: {map.name}</h1>
       <div className="sr-only" role="status" aria-live="polite" data-testid="live">{live}</div>
       {toolbar}
+      {nbTabs}
       {view === 'canvas' ? (
         <div ref={gridEl} className={grid} style={gridStyle}>
-          <div className={`relative h-[60vh] min-h-[22rem] ${tall} rounded-xl border border-[color:var(--bx-line)] overflow-hidden`}>
+          <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} data-print-hide>
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
                 ref={canvas}
@@ -1080,14 +1249,42 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             </Suspense>
             {peekBox}
           </div>
-          <div className={`${tall} relative min-h-0 min-w-0 flex`}>{resizer}{side}</div>
+          {nbCol}
+          <div className={`${tall} relative min-h-0 min-w-0 flex ${nbTab ? 'hidden' : ''}`} data-print-hide>{resizer}{side}</div>
         </div>
       ) : (
         <div ref={gridEl} className={grid} style={gridStyle}>
-          <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
-          <div className="relative min-h-0 flex">{resizer}{side}</div>
+          <div id={`${dockId}-main`} className={`min-w-0 ${nbTab ? 'hidden' : ''}`} data-print-hide>
+            <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
+          </div>
+          {nbCol}
+          <div className={`relative min-h-0 flex ${nbTab ? 'hidden' : ''}`} data-print-hide>{resizer}{side}</div>
         </div>
       )}
+      <Dialog open={!!warn} onClose={() => setWarn(null)} title={C.notebook.warnTitle} testId="nb-warn">
+        <p className="mb-2" data-testid="nb-warn-count">{C.notebook.warnLead} {count(flags.length, C.notebook.identifier)}.</p>
+        <p className="mb-4 text-sm bx-muted">{C.notebook.warnHint}</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="bx-btn-primary ax-tap"
+            data-autofocus
+            data-testid="nb-warn-label"
+            onClick={() => {
+              const w = warn;
+              setWarn(null);
+              const next = { ...full, notebook: labelAll(full.notebook), updated: new Date().toISOString() };
+              doc.scrub((m) => ({ ...m, notebook: labelAll(m.notebook) }));
+              announce(`${C.notebook.replaced} labels. ${C.notebook.replacedNote}`);
+              w?.run(next);
+            }}
+          >
+            {C.notebook.warnLabel}
+          </button>
+          <button type="button" className="bx-btn ax-tap" data-testid="nb-warn-anyway" onClick={() => { const w = warn; setWarn(null); w?.run(full); }}>{C.notebook.warnAnyway}</button>
+          <button type="button" className="bx-btn ax-tap" data-testid="nb-warn-cancel" onClick={() => setWarn(null)}>{C.notebook.warnCancel}</button>
+        </div>
+      </Dialog>
 
       <NewNodeDialog req={newNodeReq} onClose={() => setNewNodeReq(null)} onCreate={createNode} anchorName={newNodeReq?.follow ? nm(newNodeReq.follow.anchor) : ''} />
       <Dialog open={!!linkReq} onClose={() => setLinkReq(null)} title={C.evidence.linkTo} wide testId="edge-dialog">

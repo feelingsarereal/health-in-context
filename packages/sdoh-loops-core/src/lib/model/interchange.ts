@@ -3,7 +3,7 @@
  * PNG/SVG come from the canvas (src/components/map/Canvas.tsx); everything here is pure text.
  */
 import { findLoops, strongestLoops, type LoopResult } from '../analysis';
-import { migrate, newEdge, newMap, newNode, toGraph, today, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType, type MapLoopName } from './map';
+import { hasNotebook, migrate, newEdge, newMap, newNode, toGraph, today, withoutNotebook, ImportError, type MapNode, type SdohMap, type CodeStatus, type OtherType, type MapLoopName } from './map';
 import { docFromText, plainText } from './rich';
 
 export type TitleOf = (code: string) => string | undefined;
@@ -18,8 +18,10 @@ export function nodeName(n: MapNode, titleOf: TitleOf): string {
 }
 
 /** K9: every export carries the ICD-11 licence citation (§1.3): JSON `meta`, a CSV comment line, a Markdown footer. */
+/** SL26: a map with notes is written as schema 3 with its notebook; without notes, as schema 2 (withoutNotebook). */
 export function exportJSON(m: SdohMap, citation?: string): string {
-  return JSON.stringify(citation ? { ...m, meta: { icd11_citation: citation } } : m, null, 2) + '\n';
+  const doc = hasNotebook(m) ? m : withoutNotebook(m);
+  return JSON.stringify(citation ? { ...doc, meta: { icd11_citation: citation } } : doc, null, 2) + '\n';
 }
 
 export function importJSON(text: string): SdohMap {

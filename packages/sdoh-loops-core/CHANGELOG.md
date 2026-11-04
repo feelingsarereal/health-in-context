@@ -10,6 +10,64 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.5.0] — 2026-11-04
+
+Minor (SL26, S7.1 slice 1): the case manager notebook, map schema 3, and the identifier check. Pack: `0.2.0`
+(unchanged). New props, new exports, one new optional block in the map file; existing props and behavior unchanged.
+The notebook is **off unless the host passes `notebook`**: embedding apps keep it off until SL28.
+
+- **`<SdohMap notebook>`** (new prop, default off) shows a **Notebook** toggle beside List view. From lg up the notebook is
+  a column between the canvas (or list) and the dock, with its own resize handle (same keys as the dock's: ← →, Home,
+  double-click); below lg, **Map** and **Notebook** are tabs (arrow keys move between them). Whether it is shown and its
+  width are per-viewer view state, kept with the dock's under `<slug>:view:dock` (`notebook`, `nbWidth`), never in the map.
+  **`notebookTemplates`** (new prop): the host's own `NoteTemplate`s, offered after the core's four.
+- **Notes:** create, rename, reorder (drag, or Alt+↑ / Alt+↓ on a focused note; Move up / Move down), duplicate and delete
+  with an undo toast. **Free notes** use the map notes editor (bold, italic, underline, size, color) plus headings (H2, H3)
+  and bulleted and numbered lists. **Structured notes** come from a template with headed fields, each a short rich-text
+  block: *Intake*, *Contact note*, *Case conference*, *Plan review*. Each starts with a **Date** field that takes a year by
+  default; "Use a full date" switches it to a date picker, and a full date is flagged. Search across notes (title, tags,
+  text, fields); tags with a tag filter.
+- **Storage:** the notebook lives in the map's new **`notebook`** block (`{ notes, dismissed, replaced }`) and autosaves
+  through the map's store; the toolbar's Undo / Redo cover notebook edits. **Schema 3**: `SCHEMA_VERSION` is 3; schema 1
+  and 2 files open unchanged (no notebook block is added). A map with notes exports as schema 3; a map without notes, and
+  **"Save a copy without the notebook"** (a new Map menu item when the notebook has notes), export as **schema 2**, so
+  released 0.4.x cores — which refuse any schema above 2 — still open them. A 0.4.x core cannot open a schema 3 file; it
+  says so and imports nothing. "Save a copy" is the map plus its notebook by default. **Clear my data** empties notebooks
+  with the maps that hold them (H4).
+- **Identifier flags (a local heuristic, labeled so on screen and in Help; it never blocks typing):** as the user types,
+  possible identifiers are underlined — names after an honorific or "my name is", dates other than a bare year, phone
+  numbers, email and street addresses, ZIP+4, SSN-like and record-like numbers. The notebook header reads "3 possible
+  identifiers"; the list offers **Replace with a label** and **Not an identifier** (remembered per notebook, as
+  `category:value`) for each, and **Label them all**. A label replaces every copy of that value in the notebook, so the
+  same person is the same **[Person A]** throughout (the bare surname after "Mr." too); the other labels are `[date]`,
+  `[phone]`, `[email]`, `[address]`, `[ZIP code]`, `[ID number]` and `[record no.]`. **Only the category and count of what
+  was replaced are stored (`replaced`), never the value**, and the replacement is applied to every step of the undo
+  history and resets the field's own history, so Undo cannot bring it back (the Interrogator's `deid.yaml` rule).
+- **Case summary (point 5, Daniel 13:54):** always the last section of the notebook, below every note; it cannot be
+  deleted or moved, it updates live from the map, and it is read only (no editing control). **Tiles:** circumstances
+  (by code status), links (evidence · ⚑), loops (reinforcing · balancing), Needs a code, and possible identifiers still
+  flagged. **Circumstances table:** the list view's own table, now a shared component (`NodesTable`), so the two are
+  identical row for row — circumstance, code and WHO title, code status · type, description, and links out and in with
+  polarity and evidence; sort (map order, name, code, code status, most links), filter by code status or block, and a
+  row click selects the circumstance on the map (on a phone it switches to the Map tab). **Loops** with their kind and
+  members (a click highlights the loop), and **Leverage, top 5** (the Leverage tab's order, labeled a heuristic). It
+  works on the map as shown: with `hideNode` it leaves those circumstances out and says "2 hidden circumstances not
+  shown." Print includes it, so the notebook prints as a report.
+- **List view:** its circumstances table is `NodesTable` too, which adds a **Code status · type** column and a **Links
+  out and in** column (the row's test id, `data-node` and actions are unchanged).
+- **Export warnings:** every Map menu export (Save a copy, CSV, loop report, PNG, SVG), the notebook's **Print**, and any
+  host `mapMenuItems` entry marked **`exports: true`** (e.g. an Interrogator app's "Open in SDOH Loops") warn while flags
+  remain: **Label them all, then continue**, **Continue anyway** or **Cancel**.
+- **Exports:** `NotebookHelp` (the Help page section: what the notebook is for, that it stays on this device, what the
+  check can and cannot catch), the notebook model (`Notebook`, `Note`, `NoteTemplate`, `CORE_TEMPLATES`, `notebookFlags`,
+  `labelFlag`, `labelAll`, `dismissFlag`, `sanitizeNotebook`, …), `findIdentifiers` and `IDENTIFIER_CATEGORIES`, and from
+  the map model `hasNotebook`, `withoutNotebook` and `SCHEMA_NO_NOTEBOOK`. `MapMenuItem` gains `exports?`.
+- **Rich text:** the formatting buttons keep the caret in the text (they no longer take focus on mousedown), in every
+  rich-text field.
+- **Copy:** US English, new keys under `notebook.*`.
+- **Upkeep for an embedding app** bumping to 0.5.0: nothing changes unless it passes `notebook`. Its built maps (no
+  notebook) migrate to schema 3 in memory and still export as schema 2; its drift test should see no difference.
+
 ## [0.4.1] — 2026-11-04
 
 Patch: tested with, and pinned to, the new pack (SL19). Pack: `0.2.0`. No change to the core's code or props.

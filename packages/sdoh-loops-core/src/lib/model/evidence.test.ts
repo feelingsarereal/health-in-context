@@ -4,7 +4,7 @@ import { aliasHits, associations } from '../data/scheme';
 import { EVIDENCE_CASES, QD71_1_EVICTION_CASE, RECODE_CASE, V2_BLOCK_LEVEL_CASE, W1_LOOP, L22_LOOP } from './__fixtures__/evidence-golden';
 import { findLoops, strongestLoops } from '../analysis';
 import { assignLoopNames } from './interchange';
-import { addEdge, addNode, migrate, newEdge, newMap, newNode, toGraph, updateEdge, updateNode, ModelError } from './map';
+import { addEdge, addNode, migrate, newEdge, newMap, newNode, toGraph, updateEdge, updateNode, ModelError, SCHEMA_VERSION } from './map';
 import { docFromText } from './rich';
 
 describe('UI-18 evidence check — golden fixtures', () => {
@@ -108,7 +108,7 @@ describe('UI-18 in the model', () => {
       ],
     };
     const out = migrate(v1);
-    expect(out.schema_version).toBe(2);
+    expect(out.schema_version).toBe(SCHEMA_VERSION);
     expect(out.edges.map((e) => [e.basis, e.check])).toEqual([['evidence', 'match'], ['needs-review', 'withheld:L23']]);
   });
   it('a v2 import with a block-level evidence edge now outside the codes becomes needs-review', () => {

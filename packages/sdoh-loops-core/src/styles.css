@@ -104,7 +104,17 @@
 
 /* The map's print / greyscale theme (UI-14) and print stylesheet for outputs */
 .ax-print .ax-canvas { filter: grayscale(1); }
+/* SL26: the notebook's possible identifiers — a wavy underline that never blocks typing */
+.nb-flag { text-decoration: underline wavy #b45309; text-decoration-thickness: 1.5px; text-underline-offset: 3px; background: rgb(180 83 9 / 0.08); border-radius: 2px; cursor: pointer; }
+mark.nb-flag { color: inherit; }
+.dark .nb-flag { text-decoration-color: #fbbf24; background: rgb(251 191 36 / 0.12); }
+.nb-doc h2 { font-size: 1.15rem; font-weight: 600; margin: 0.4rem 0 0.2rem; }
+.nb-doc h3 { font-size: 1rem; font-weight: 600; margin: 0.3rem 0 0.15rem; }
+.nb-doc ul { list-style: disc; padding-left: 1.4rem; }
+.nb-doc ol { list-style: decimal; padding-left: 1.4rem; }
 @media print {
+  .nb-printing [data-print-hide] { display: none !important; }
+  .nb-printing [data-notebook] { height: auto !important; overflow: visible !important; }
   header, footer, nav, .no-print { display: none !important; }
   body { background: white; color: black; }
   .bx-card { box-shadow: none; border-color: #999; }

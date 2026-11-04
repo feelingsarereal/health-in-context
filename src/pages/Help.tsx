@@ -1,4 +1,4 @@
-import { ageDays, safety, PageHead } from '@feelingsarereal/sdoh-loops-core';
+import { ageDays, safety, PageHead, NotebookHelp } from '@feelingsarereal/sdoh-loops-core';
 
 /** SAFETY H6: a static list of the pack's help entries. No triage logic, no branches on user input. */
 export default function Help() {
@@ -27,6 +27,8 @@ export default function Help() {
           );
         })}
       </ul>
+      {/* SL26: what the notebook is for, that it stays on this device, and what the identifier check can and cannot catch */}
+      <NotebookHelp />
     </div>
   );
 }

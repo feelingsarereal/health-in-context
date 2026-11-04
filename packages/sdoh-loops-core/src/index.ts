@@ -19,6 +19,10 @@ export * from './lib/model/rich';
 export * from './lib/model/interchange';
 export * from './lib/model/evidence';
 export { importFile } from './lib/model/importFile';
+// SL26: the case manager notebook's model, identifier check and Help section
+export * from './lib/model/notebook';
+export * from './lib/model/identifiers';
+export { NotebookHelp } from './components/notebook/Notebook';
 
 // the pinned pack's data, the interface copy and the shared UI pieces the standalone app's pages use too
 export * from './lib/data/core';

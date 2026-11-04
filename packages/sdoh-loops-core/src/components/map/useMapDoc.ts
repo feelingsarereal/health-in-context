@@ -107,6 +107,26 @@ export function useMapDoc(id: string | null, store: MapStore, events: MapDocEven
     [commit, fork],
   );
 
+  /**
+   * SL26: change the open map and every step of its undo history the same way, without adding a step — a label that
+   * replaces a possible identifier, so Undo can never bring the replaced value back. On a read-only original it is an
+   * ordinary edit (the copy is forked, and the original was never stored here).
+   */
+  const scrub = useCallback(
+    (fn: (m: SdohMap) => SdohMap) => {
+      const m = cur.current;
+      if (!m) return;
+      if (readOnly.current) return apply(fn);
+      const next = fn(m);
+      if (next === m) return;
+      past.current = past.current.map(fn);
+      future.current = future.current.map(fn);
+      lastKey.current = null;
+      commit(next);
+    },
+    [apply, commit],
+  );
+
   const undo = useCallback(() => {
     const m = cur.current;
     const prev = past.current.pop();
@@ -143,6 +163,7 @@ export function useMapDoc(id: string | null, store: MapStore, events: MapDocEven
     map,
     status,
     apply,
+    scrub,
     undo,
     redo,
     canUndo: past.current.length > 0,
