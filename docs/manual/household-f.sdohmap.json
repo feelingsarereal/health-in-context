@@ -1,0 +1,1248 @@
+{
+ "schema_version": 2,
+ "pack_version": "0.1",
+ "icd11_release": "ICD-11 MMS 2026-01",
+ "id": "map-mw34dmi617b9be5b4",
+ "name": "Household F, after the fire",
+ "subject": "Household F",
+ "created": "2026-11-05T05:43:17.550Z",
+ "updated": "2026-11-05T05:43:29.379Z",
+ "layout": {
+  "engine": "fcose",
+  "theme": "auto",
+  "thickness": true
+ },
+ "notes": {
+  "type": "doc",
+  "content": [
+   {
+    "type": "paragraph"
+   }
+  ]
+ },
+ "nodes": [
+  {
+   "id": "n-mw34do092b0b1365f",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QE81",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Home lost in a wildfire"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How much the loss of the home to the fire still shapes daily life"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": 0,
+   "created": "2026-11-05T05:43:19.497Z",
+   "updated": "2026-11-05T05:43:19.497Z"
+  },
+  {
+   "id": "n-mw34dohh3974de8d9",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD71.0",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Without a home"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How long the household has been without a stable place to live"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 434,
+   "y": 136,
+   "created": "2026-11-05T05:43:20.117Z",
+   "updated": "2026-11-05T05:43:20.117Z"
+  },
+  {
+   "id": "n-mw34dong46b6ab95d",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD80",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Work lost after the fire"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How much paid work has been lost since the fire"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": 136,
+   "created": "2026-11-05T05:43:20.332Z",
+   "updated": "2026-11-05T05:43:20.332Z"
+  },
+  {
+   "id": "n-mw34dosy596f4ea84",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD51",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Low income"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How far income falls short of basic costs"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 205,
+   "y": 248,
+   "created": "2026-11-05T05:43:20.530Z",
+   "updated": "2026-11-05T05:43:20.530Z"
+  },
+  {
+   "id": "n-mw34doyk64e2433e4",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QD61",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Not enough food"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How often there is not enough food, or none that can be stored or cooked"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 0,
+   "y": 372,
+   "created": "2026-11-05T05:43:20.732Z",
+   "updated": "2026-11-05T05:43:20.732Z"
+  },
+  {
+   "id": "n-mw34dp447f21555be",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QE01",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Stress"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How much day-to-day stress the adults report"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": -205,
+   "y": 136,
+   "created": "2026-11-05T05:43:20.932Z",
+   "updated": "2026-11-05T05:43:20.932Z"
+  },
+  {
+   "id": "n-mw34dpal85371346d",
+   "kind": "circumstance",
+   "code_status": "sdoh",
+   "code": "QE70.0",
+   "type": null,
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Little family to fall back on"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How little help family can give: a place to stay, money, childcare"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 434,
+   "y": 0,
+   "created": "2026-11-05T05:43:21.165Z",
+   "updated": "2026-11-05T05:43:21.165Z"
+  },
+  {
+   "id": "n-mw34dpqc9de8c60ae",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "resource",
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "No shower, laundry or kitchen"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How far the household is from a place to wash, do laundry and cook"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 434,
+   "y": 360,
+   "created": "2026-11-05T05:43:21.732Z",
+   "updated": "2026-11-05T05:43:21.732Z"
+  },
+  {
+   "id": "n-mw34dpvfa5d6fea10",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "resource",
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Priority on the housing waiting list"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How high the household ranks on the local housing waiting list"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 670,
+   "y": 205,
+   "created": "2026-11-05T05:43:21.915Z",
+   "updated": "2026-11-05T05:43:21.915Z"
+  },
+  {
+   "id": "n-mw34dq01b04e8d403",
+   "kind": "circumstance",
+   "code_status": "other",
+   "code": null,
+   "type": "policy",
+   "ref": null,
+   "label": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Faster housing placement"
+       }
+      ]
+     }
+    ]
+   },
+   "circumstance": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How quickly people displaced by disaster are placed in housing"
+       }
+      ]
+     }
+    ]
+   },
+   "severity": null,
+   "since": null,
+   "notes": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph"
+     }
+    ]
+   },
+   "style": {},
+   "pinned": false,
+   "x": 670,
+   "y": 25,
+   "created": "2026-11-05T05:43:22.081Z",
+   "updated": "2026-11-05T05:43:22.081Z"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e-mw34drq5c8a62905f",
+   "from": "n-mw34dong46b6ab95d",
+   "to": "n-mw34dosy596f4ea84",
+   "polarity": "+",
+   "weight": 0.75,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Pay stopped when the work was lost."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    45
+   ],
+   "link": "L01",
+   "basis": "evidence",
+   "check": "match",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34drv6d8c866629",
+   "from": "n-mw34dosy596f4ea84",
+   "to": "n-mw34doyk64e2433e4",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Less money for groceries."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    24
+   ],
+   "link": "L04",
+   "basis": "evidence",
+   "check": "match",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34ds08e0f324d2d",
+   "from": "n-mw34dong46b6ab95d",
+   "to": "n-mw34dp447f21555be",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Losing work adds worry every day."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    26
+   ],
+   "link": "L22",
+   "basis": "evidence",
+   "check": "match",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34ds5dfcbc5b4b2",
+   "from": "n-mw34dp447f21555be",
+   "to": "n-mw34dong46b6ab95d",
+   "polarity": "+",
+   "weight": 0.25,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Stress makes it harder to look for and keep work."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [
+    48
+   ],
+   "link": "L29",
+   "basis": "evidence",
+   "check": "match",
+   "override_reason": null,
+   "override_at": null,
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dsdpgd35fb471",
+   "from": "n-mw34do092b0b1365f",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "+",
+   "weight": 1,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "The fire destroyed the home."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "no-link",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Disaster directly caused the loss of the home; no study in this app covers disaster → homelessness."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dslkhc838cb16",
+   "from": "n-mw34do092b0b1365f",
+   "to": "n-mw34dong46b6ab95d",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "The work was done from the home that burned."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "outside-codes:L20",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Specific to this household: the workplace was the home."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dstgi6c28dcb2",
+   "from": "n-mw34dohh3974de8d9",
+   "to": "n-mw34dpqc9de8c60ae",
+   "polarity": "+",
+   "weight": 0.75,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Without a home there is nowhere to wash, do laundry or cook."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Direct consequence described by the household; not a research claim."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dt1sj5692fc5e",
+   "from": "n-mw34dpqc9de8c60ae",
+   "to": "n-mw34dong46b6ab95d",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Without a shower or clean clothes, job interviews are hard to attend."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Reported by the household; no study in this app covers it."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dt9nk24b73a06",
+   "from": "n-mw34dpqc9de8c60ae",
+   "to": "n-mw34doyk64e2433e4",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "No fridge or stove: food spoils or cannot be cooked."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Reported by the household; no study in this app covers it."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34du3ql0feb3cc7",
+   "from": "n-mw34dong46b6ab95d",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Without pay from work, renting again is out of reach."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "outside-codes:L26",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "The app’s evidence (L26) is about eviction (QD71.Z), not homelessness (QD71.0)."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34duczme3c3984b",
+   "from": "n-mw34dosy596f4ea84",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": true,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Low income keeps the household from renting again."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "outside-codes:L02",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "The app’s evidence (L02) is about eviction (QD71.Z), not homelessness (QD71.0)."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dujyn6c704f45",
+   "from": "n-mw34dpal85371346d",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "+",
+   "weight": 0.25,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "No relatives with room to share."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "no-link",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Reported by the household."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34durcob59d270a",
+   "from": "n-mw34dohh3974de8d9",
+   "to": "n-mw34dpvfa5d6fea10",
+   "polarity": "+",
+   "weight": 0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "The longer without a home, the higher the household ranks on the list."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How the local waiting list works; not a research claim."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34duzop6834895b",
+   "from": "n-mw34dpvfa5d6fea10",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "−",
+   "weight": -0.5,
+   "delay": true,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "A higher rank brings a housing offer sooner."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "How the local waiting list works; not a research claim."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  },
+  {
+   "id": "e-mw34dv73q4097d2b1",
+   "from": "n-mw34dq01b04e8d403",
+   "to": "n-mw34dohh3974de8d9",
+   "polarity": "−",
+   "weight": -0.5,
+   "delay": false,
+   "confidence": "medium",
+   "description": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "Hypothesis for discussion: faster placement would shorten time without a home."
+       }
+      ]
+     }
+    ]
+   },
+   "evidence": [],
+   "link": null,
+   "basis": "override",
+   "check": "uncoded-end",
+   "override_reason": {
+    "type": "doc",
+    "content": [
+     {
+      "type": "paragraph",
+      "content": [
+       {
+        "type": "text",
+        "text": "A policy idea to discuss, not an estimate."
+       }
+      ]
+     }
+    ]
+   },
+   "override_at": "2026-11-04",
+   "style": {
+    "line": "solid",
+    "route": "curved",
+    "widthByWeight": true
+   }
+  }
+ ],
+ "loops": [
+  {
+   "id": "e-mw34ds08e0f324d2d>e-mw34ds5dfcbc5b4b2",
+   "name": "R1",
+   "members": [
+    "n-mw34dong46b6ab95d",
+    "n-mw34dp447f21555be"
+   ]
+  },
+  {
+   "id": "e-mw34dstgi6c28dcb2>e-mw34dt1sj5692fc5e>e-mw34du3ql0feb3cc7",
+   "name": "R2",
+   "members": [
+    "n-mw34dohh3974de8d9",
+    "n-mw34dpqc9de8c60ae",
+    "n-mw34dong46b6ab95d"
+   ]
+  },
+  {
+   "id": "e-mw34dstgi6c28dcb2>e-mw34dt1sj5692fc5e>e-mw34drq5c8a62905f>e-mw34duczme3c3984b",
+   "name": "R3",
+   "members": [
+    "n-mw34dohh3974de8d9",
+    "n-mw34dpqc9de8c60ae",
+    "n-mw34dong46b6ab95d",
+    "n-mw34dosy596f4ea84"
+   ]
+  },
+  {
+   "id": "e-mw34durcob59d270a>e-mw34duzop6834895b",
+   "name": "B1",
+   "members": [
+    "n-mw34dohh3974de8d9",
+    "n-mw34dpvfa5d6fea10"
+   ]
+  }
+ ],
+ "meta": {
+  "icd11_citation": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO)."
+ }
+}
