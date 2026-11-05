@@ -19,7 +19,7 @@
     "release:dry": "npm pack --dry-run -w @feelingsarereal/sdoh-loops-pack -w @feelingsarereal/sdoh-loops-core"
   },
   "dependencies": {
-    "@feelingsarereal/sdoh-loops-core": "0.6.0",
+    "@feelingsarereal/sdoh-loops-core": "0.7.0",
     "@feelingsarereal/sdoh-loops-pack": "0.2.0",
     "idb-keyval": "6.2.1",
     "js-yaml": "4.1.0",
@@ -45,6 +45,7 @@
     "autoprefixer": "10.4.20",
     "fake-indexeddb": "6.0.0",
     "jsdom": "25.0.1",
+    "jszip": "3.10.2",
     "lighthouse": "12.2.1",
     "postcss": "8.4.49",
     "tailwindcss": "3.4.17",

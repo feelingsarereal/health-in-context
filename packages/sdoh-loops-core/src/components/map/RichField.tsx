@@ -9,6 +9,7 @@ import { FONT_SIZES, sanitizeRich, type RichDoc } from '../../lib/model/rich';
 import { sanitizeNote, type NoteDoc } from '../../lib/model/notebook';
 import { USER_COLOURS } from '../../lib/palette';
 import { IdentifierFlags, flagsKey, type FlagsOptions } from '../notebook/flagsExtension';
+import { PageMarks } from '../notebook/pageMarks';
 
 /** font-size as a textStyle attribute (UI-15: S / M / L / XL), restricted to the allowed sizes. */
 const FontSize = Extension.create({
@@ -38,7 +39,7 @@ export type RichFieldFlags = Omit<FlagsOptions, 'tip'> & { tip: string; version:
  * SL26: `blocks` adds headings (2, 3) and bullet and numbered lists, for the notebook's free notes (a NoteDoc), and
  * `flags` underlines possible identifiers as the user types.
  */
-export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd }: {
+export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd, readOnly, pages }: {
   id: string; value: D; onChange: (d: D) => void; label: string; describedBy?: string; singleLine?: boolean; minRows?: number; blocks?: boolean; flags?: RichFieldFlags; testId?: string;
   /** SL31 quick edit: bold, italic and underline only in the toolbar (other formatting already in the text is kept) */
   compact?: boolean;
@@ -47,6 +48,10 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   autoFocus?: boolean;
   /** SL31 quick edit: after the style buttons (the "More formatting" link) */
   toolbarEnd?: ReactNode;
+  /** SL29: an imported note's text — shown, selectable and flagged, never edited (no toolbar) */
+  readOnly?: boolean;
+  /** SL29: an imported PDF's page starts, drawn as "p. N" before their block */
+  pages?: { block: number; page: number }[];
 }) {
   const keyRef = useRef(onKey);
   keyRef.current = onKey;
@@ -61,9 +66,11 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
       TextStyle,
       Color,
       FontSize,
+      ...(pages?.length ? [PageMarks.configure({ pages })] : []),
       ...(flags ? [IdentifierFlags.configure({ isDismissed: (c, v) => !!fl.current?.isDismissed(c, v), tip: flags.tip, onFlag: () => fl.current?.onFlag?.() })] : []),
     ],
     content: value,
+    editable: !readOnly,
     ...(autoFocus ? { autofocus: 'end' as const } : {}),
     editorProps: {
       attributes: {
@@ -71,6 +78,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
         role: 'textbox',
         'aria-multiline': singleLine ? 'false' : 'true',
         'aria-label': label,
+        ...(readOnly ? { 'aria-readonly': 'true', tabindex: '0' } : {}),
         ...(testId ? { 'data-testid': testId } : {}),
         ...(describedBy ? { 'aria-describedby': describedBy } : {}),
         class: `bx-input ax-rt min-h-[2.5rem] focus:outline-none ${blocks ? 'nb-doc' : ''}`,
@@ -121,7 +129,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   const keepFocus = (e: { preventDefault: () => void }) => e.preventDefault();
   return (
     <div>
-      {editor && (
+      {editor && !readOnly && (
         <div className="mb-1 flex flex-wrap items-center gap-1" role="toolbar" aria-label={`${label}: text style`}>
           <button type="button" onMouseDown={keepFocus} className={`bx-btn px-2 py-0.5 ${editor.isActive('bold') ? 'bx-btn-on' : ''}`} aria-pressed={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} aria-label="Bold">
             <b>B</b>

@@ -127,3 +127,7 @@ mark.nb-flag { color: inherit; }
 .ax-qe-pen:focus { opacity: 1; }
 @media (pointer: coarse) { .ax-qe-pen { opacity: 1; } }
 @media print { .ax-qe-pen { display: none; } }
+
+/* SL29: an imported PDF's page markers ("p. 2"), drawn before the block each page starts at */
+.nb-page { display: block; margin: 0.75rem 0 0.25rem; font-size: 0.75rem; font-weight: 600; color: var(--bx-muted, #5b5348); border-top: 1px dashed var(--bx-line); padding-top: 0.25rem; user-select: none; }
+.nb-page[data-page="1"] { margin-top: 0; border-top: 0; padding-top: 0; }

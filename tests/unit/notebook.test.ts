@@ -74,6 +74,7 @@ describe('SL26 identifier patterns: a positive and a negative fixture per catego
     phone: [['Call (256) 555-0134 after five', '(256) 555-0134'], ['cell 256.555.0134', '256.555.0134'], ['+1 256-555-0134', '+1 256-555-0134']],
     email: [['write to ana.ruiz@example.org today', 'ana.ruiz@example.org']],
     address: [['lives at 1420 Oak Street, Apt 3B now', '1420 Oak Street, Apt 3B'], ['She lives at 1420 Oak Street.', '1420 Oak Street'], ['moved to 22 N Main St.', '22 N Main St.'], ['mail to P.O. Box 118', 'P.O. Box 118']],
+    city: [['lives in Huntsville, Alabama now', 'Huntsville']],
     zip: [['ZIP 35801-1234 on file', '35801-1234']],
     ssn: [['number 123-45-6789 on the form', '123-45-6789']],
     record: [['MRN 4481923 in the chart', 'MRN 4481923'], ['case #A-20931 opened', 'case #A-20931'], ['ref 90817264 noted', '90817264']],
@@ -86,6 +87,7 @@ describe('SL26 identifier patterns: a positive and a negative fixture per catego
     phone: 'about 555 people, 3 kids and 2 adults',
     email: 'shared an @ sign on a flyer at example dot org',
     address: 'three big steps forward on Main Street',
+    city: 'Alabama has the AL East and the St. Louis Blues',
     zip: 'about 35801 households in the county',
     ssn: 'between 12 and 45 hours a week',
     record: 'room 12, page 4, case worker visited',
@@ -184,8 +186,33 @@ describe('SL31 identifier gaps: ZIP next to a state, ages, dates of birth — po
     });
   it('labels: [ZIP code], [age], [date of birth]; the lead words stay', () => {
     const nb = nbWith(free('Intake', 'A 34-year-old mother, DOB 03/14/1991, of Huntsville, AL 35801.'));
-    expect(notebookFlags(nb).map((f) => f.category)).toEqual(['age', 'dob', 'zip']);
-    expect(noteDocText(labelAll(nb).notes[0].body)).toBe('A [age] mother, DOB [date of birth], of Huntsville, AL [ZIP code].');
+    // SL29: the city before the state is flagged too
+    expect(notebookFlags(nb).map((f) => f.category)).toEqual(['age', 'dob', 'city', 'zip']);
+    expect(noteDocText(labelAll(nb).notes[0].body)).toBe('A [age] mother, DOB [date of birth], of [city], AL [ZIP code].');
+  });
+});
+
+describe('SL29 cities below the state (HIPAA Safe Harbor): [city]; a state alone is never flagged', () => {
+  const POS: [string, string][] = [
+    ['Huntsville, AL', 'Huntsville'],
+    ['lives in Huntsville, Alabama', 'Huntsville'],
+    ['Huntsville AL 35801', 'Huntsville'],
+    ['Visited St. Louis, MO last week', 'St. Louis'],
+    ['moved to New York, NY 10012', 'New York'],
+    ['Salt Lake City, Utah.', 'Salt Lake City'],
+  ];
+  const NEG = ['Alabama', 'the AL East', 'St. Louis Blues', 'Yes, OK.', 'Huntsville AL is far', 'She moved to Alabama in 2019.'];
+  for (const [text, value] of POS)
+    it(`"${value}" in "${text}"`, () => {
+      expect(findIdentifiers(text).map((h) => [h.category, h.value])).toContainEqual(['city', value]);
+    });
+  for (const text of NEG)
+    it(`no city in "${text}"`, () => {
+      expect(findIdentifiers(text).filter((h) => h.category === 'city')).toEqual([]);
+    });
+  it('labels: "[city], AL [ZIP code]"; a name before a state stays a name', () => {
+    expect(noteDocText(labelAll(nbWith(free('Intake', 'Lives in Huntsville AL 35801.'))).notes[0].body)).toBe('Lives in [city] AL [ZIP code].');
+    expect(findIdentifiers('Mrs. Jane Doe, AL').map((h) => h.category)).toEqual(['person']);
   });
 });
 

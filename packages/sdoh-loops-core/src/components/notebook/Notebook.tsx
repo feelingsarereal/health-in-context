@@ -4,10 +4,11 @@ import { count } from '../../lib/plural';
 import type { SdohMap } from '../../lib/model/map';
 import {
   addNote, allTags, deleteNote, dismissFlag, duplicateNote, isDismissed, labelAll, labelFlag, moveNote, newFreeNote, newStructuredNote, parseTags, searchNotes, updateField, updateNote, DATE_FIELD,
-  type Flag, type Note, type NoteDoc, type Notebook as NotebookDoc, type NoteTemplate,
+  type Flag, type Note, type NoteDoc, type Notebook as NotebookDoc, type NoteTable, type NoteTemplate,
 } from '../../lib/model/notebook';
 import type { RichDoc } from '../../lib/model/rich';
 import RichField, { type RichFieldFlags } from '../map/RichField';
+import { findIdentifiers } from '../../lib/model/identifiers';
 
 type Apply = (fn: (m: SdohMap) => SdohMap, key?: string) => void;
 type NB = (nb: NotebookDoc | undefined) => NotebookDoc;
@@ -24,6 +25,12 @@ export interface NotebookProps {
   onPrint: () => void;
   /** SL26 point 5: the case summary, always last, below every note */
   summary?: ReactNode;
+  /** SL29: import — the file picker, "Paste as a note", and files dropped on the notebook */
+  onImport?: () => void;
+  onPaste?: () => void;
+  onDropFiles?: (files: File[]) => void;
+  /** SL29: show this note (after an import); `n` changes each time */
+  focus?: { id: string; n: number } | null;
 }
 
 interface Toast {
@@ -36,7 +43,7 @@ interface Toast {
  * reorder by drag or Alt+↑ / Alt+↓, duplicate and delete with an undo toast, and the identifier check's count, list
  * and one-click labels. Every edit goes through the map's own apply(), so it autosaves and Undo / Redo cover it.
  */
-export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary }: NotebookProps) {
+export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary, onImport, onPaste, onDropFiles, focus }: NotebookProps) {
   const uid = useId().replace(/:/g, '');
   const nb = map.notebook;
   const notes = nb?.notes ?? [];
@@ -52,6 +59,16 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
   const flagsList = useRef<HTMLDivElement>(null);
 
   const note = notes.find((n) => n.id === sel) ?? null;
+  const [dropping, setDropping] = useState(false);
+  const dragDepth = useRef(0);
+  useEffect(() => {
+    if (!focus) return;
+    setSel(focus.id);
+    setQ('');
+    setTag(null);
+    focusNote.current = focus.id;
+  }, [focus?.n]); // eslint-disable-line react-hooks/exhaustive-deps
+  const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files');
   useEffect(() => {
     if (!note && notes.length && sel === null) setSel(notes[0].id);
   }, [note, notes, sel]);
@@ -173,7 +190,38 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
 
   const n = flags.length;
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden" aria-labelledby={`${uid}-h`} data-notebook data-testid="notebook">
+    <section
+      className="relative flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
+      aria-labelledby={`${uid}-h`}
+      data-notebook
+      data-testid="notebook"
+      onDragEnter={(e) => {
+        if (!onDropFiles || !hasFiles(e)) return;
+        e.preventDefault();
+        dragDepth.current++;
+        setDropping(true);
+      }}
+      onDragOver={(e) => {
+        if (onDropFiles && hasFiles(e)) e.preventDefault();
+      }}
+      onDragLeave={(e) => {
+        if (!onDropFiles || !hasFiles(e)) return;
+        dragDepth.current = Math.max(0, dragDepth.current - 1);
+        if (!dragDepth.current) setDropping(false);
+      }}
+      onDrop={(e) => {
+        if (!onDropFiles || !e.dataTransfer?.files?.length) return;
+        e.preventDefault();
+        dragDepth.current = 0;
+        setDropping(false);
+        onDropFiles(Array.from(e.dataTransfer.files));
+      }}
+    >
+      {dropping && (
+        <div className="pointer-events-none absolute inset-2 z-20 flex items-center justify-center rounded-lg border-2 border-dashed border-[color:var(--bx-ink)] bg-[color:var(--bx-bg)]/90 p-4 text-center font-semibold" data-testid="nb-drop-zone">
+          {C.notebook.importing.drop}
+        </div>
+      )}
       <div className="border-b border-[color:var(--bx-line)] p-3">
         <div className="flex flex-wrap items-center gap-2">
           <h2 id={`${uid}-h`} className="m-0 font-display text-lg font-semibold">{C.notebook.title}</h2>
@@ -215,6 +263,8 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
         )}
         <div className="mt-2 flex flex-wrap items-center gap-2" data-print-hide>
           <button type="button" className="bx-btn-primary ax-tap" onClick={() => create(newFreeNote(C.notebook.untitled))} data-testid="nb-new">{C.notebook.newFree}</button>
+          {onImport && <button type="button" className="bx-btn ax-tap" title={C.notebook.importing.buttonTip} onClick={onImport} data-testid="nb-import">{C.notebook.importing.button}</button>}
+          {onPaste && <button type="button" className="bx-btn ax-tap" onClick={onPaste} data-testid="nb-paste-open">{C.notebook.importing.paste}</button>}
           <select
             className="bx-input ax-tap w-auto"
             aria-label={C.notebook.newFromTemplate}
@@ -278,7 +328,7 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
                       >
                         <span aria-hidden="true" className="cursor-grab bx-muted">⋮⋮</span>
                         <span className="min-w-0 flex-1 truncate">{x.title || C.notebook.untitled}</span>
-                        <span className="text-xs bx-muted">{x.kind === 'structured' ? templates.find((t) => t.id === x.template)?.name ?? C.notebook.structured : C.notebook.free}</span>
+                        <span className="text-xs bx-muted">{x.kind === 'structured' ? templates.find((t) => t.id === x.template)?.name ?? C.notebook.structured : x.kind === 'imported' ? `${C.notebook.importing.kind} · ${x.source?.type.toUpperCase()}` : C.notebook.free}</span>
                         {k > 0 && <span className="bx-chip px-1.5 text-xs" aria-label={count(k, C.notebook.identifier)}>⚠ {k}</span>}
                       </button>
                     </li>
@@ -337,7 +387,9 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
       <label htmlFor={`${uid}-tags`} className="mb-1 mt-3 block text-sm font-semibold">{C.notebook.tags}</label>
       <input id={`${uid}-tags`} className="bx-input ax-tap w-full" value={tagDraft} onChange={(e) => setTagDraft(e.target.value)} onBlur={commitTags} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), commitTags())} data-testid="nb-tags" />
       <div className="mt-3">
-          {note.kind === 'free' ? (
+          {note.kind === 'imported' ? (
+            <ImportedBody uid={uid} note={note} flags={flags} />
+          ) : note.kind === 'free' ? (
             <>
               <p className="mb-1 text-sm font-semibold" id={`${uid}-body-l`}>{C.notebook.body}</p>
               <RichField id={`${uid}-body`} label={C.notebook.body} value={note.body as unknown as RichDoc} blocks flags={flags} minRows={8} testId="nb-body" onChange={(d) => change((b) => updateNote(b, note.id, { body: d as unknown as NoteDoc }), `nb:${note.id}:body`)} />
@@ -375,6 +427,65 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
   );
 }
 
+const size = (b: number) => (b >= 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+/**
+ * SL29: an imported note's text, verbatim — read-only (selectable, flagged, with a PDF's page markers), or a CSV's
+ * table — under a line that says where it came from and what the identifier review decided.
+ */
+function ImportedBody({ uid, note, flags }: { uid: string; note: Note; flags: RichFieldFlags }) {
+  const s = note.source;
+  return (
+    <div data-testid="nb-imported" data-type={s?.type}>
+      {s && (
+        <p className="mb-2 text-xs bx-muted" data-testid="nb-source">
+          {C.notebook.importing.source} <span className="font-semibold">{s.filename}</span> · {s.type.toUpperCase()} · {size(s.size)}
+          {s.pages ? ` · ${count(s.pages, 'page')}` : ''} · {new Date(s.imported).toLocaleDateString()} · {C.notebook.importing.review[s.review]}
+          {s.review === 'kept' && s.kept ? ` (${count(s.kept, C.notebook.identifier)})` : ''}
+        </p>
+      )}
+      <p className="mb-2 text-xs bx-muted">{C.notebook.importing.verbatim}</p>
+      {note.table ? (
+        <ImportedTable table={note.table} label={C.notebook.importing.table} isDismissed={flags.isDismissed} />
+      ) : (
+        <>
+          <p className="mb-1 text-sm font-semibold">{C.notebook.importing.text}</p>
+          <RichField id={`${uid}-body`} label={C.notebook.importing.text} value={note.body as unknown as RichDoc} blocks readOnly pages={note.anchors} flags={flags} minRows={8} testId="nb-body" onChange={() => undefined} />
+        </>
+      )}
+    </div>
+  );
+}
+
+/** SL29: an imported CSV — its cells as text, possible identifiers marked as in the editors. */
+export function ImportedTable({ table, label, isDismissed }: { table: NoteTable; label: string; isDismissed: (c: string, v: string) => boolean }) {
+  const cell = (t: string) => {
+    const hits = findIdentifiers(t).filter((h) => !isDismissed(h.category, h.value));
+    if (!hits.length) return t;
+    const out: ReactNode[] = [];
+    let at = 0;
+    hits.forEach((h, i) => {
+      out.push(t.slice(at, h.start), <span key={i} className="nb-flag" data-flag={h.category} title={C.notebook.flagTip}>{t.slice(h.start, h.end)}</span>);
+      at = h.end;
+    });
+    out.push(t.slice(at));
+    return out;
+  };
+  return (
+    <div className="max-h-[28rem] overflow-auto overscroll-contain rounded border border-[color:var(--bx-line)]" tabIndex={0} role="region" aria-label={label} data-testid="nb-table">
+      <table className="w-full border-collapse text-sm">
+        <thead>
+          <tr>{table.header.map((h, i) => <th key={i} scope="col" className="border-b border-[color:var(--bx-line)] px-2 py-1 text-left font-semibold">{cell(h)}</th>)}</tr>
+        </thead>
+        <tbody>
+          {table.rows.map((r, i) => (
+            <tr key={i}>{r.map((c, j) => <td key={j} className="border-b border-[color:var(--bx-line)] px-2 py-1 align-top whitespace-pre-wrap">{cell(c)}</td>)}</tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 /** SL26: the Help page's section on the notebook — what it is for, that it stays on this device, what the check can and cannot catch. */
 export function NotebookHelp() {
   return (
@@ -384,6 +495,7 @@ export function NotebookHelp() {
       <p className="mt-2">{C.notebook.help.device}</p>
       <h3 className="mt-4 text-lg font-semibold">{C.notebook.check}</h3>
       <p className="mt-2">{C.notebook.help.check}</p>
+      <p className="mt-2">{C.notebook.help.importing}</p>
       <p className="mt-2">{C.notebook.help.cannot}</p>
     </section>
   );

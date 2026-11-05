@@ -5,6 +5,7 @@
  */
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import { makePdf } from '../fixtures/import-files';
 import { addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName, typeRich, menuItem } from '../helpers';
 
 const SENTINEL = 'ZQX-SENTINEL-7731';
@@ -42,8 +43,16 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('nb-template').selectOption({ label: 'Intake' });
   await page.getByTestId('nb-field-asks').click();
   await page.keyboard.type(`NF ${SENTINEL}`);
+  // SL29: imported files — a text file and a two-page PDF (pdf.js and its worker run) with the sentinel, saved as is
+  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.getByTestId('nb-import').click()]);
+  await fc.setFiles([
+    { name: `IMP-${SENTINEL}.txt`, mimeType: 'text/plain', buffer: Buffer.from(`Imported ${SENTINEL}`) },
+    { name: 'imp.pdf', mimeType: 'application/pdf', buffer: Buffer.from(new Uint8Array(makePdf([[`PDF ${SENTINEL}`], ['page two']]))) },
+  ]);
+  for (let i = 0; i < 2; i++) await page.getByTestId('nb-review-save').click();
+  await page.getByTestId('nb-import-done').click();
   await page.getByTestId('nb-search').fill(SENTINEL);
-  await expect(page.getByTestId('nb-note')).toHaveCount(2);
+  await expect(page.getByTestId('nb-note')).toHaveCount(4);
   await page.getByTestId('notebook-toggle').click();
   // SL30 point 4: the notebook's first opening at 1400 px folded the dock; unfold it for the panels
   if (await page.getByTestId('dock-unfold').count()) await page.getByTestId('dock-unfold').click();

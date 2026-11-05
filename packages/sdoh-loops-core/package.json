@@ -1,6 +1,6 @@
 {
   "name": "@feelingsarereal/sdoh-loops-core",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The SDOH Loops map as a React component — canvas, list view, evidence gate, analyses A1–A8, exports — for the standalone SDOH Loops app and every SDOH Interrogator app. On-device only.",
   "type": "module",
   "license": "UNLICENSED",
@@ -60,6 +60,8 @@
     "cytoscape-elk": "2.2.0",
     "cytoscape-fcose": "2.2.0",
     "cytoscape-svg": "0.4.0",
-    "idb-keyval": "6.2.1"
+    "idb-keyval": "6.2.1",
+    "mammoth": "1.8.0",
+    "pdfjs-dist": "4.10.38"
   }
 }

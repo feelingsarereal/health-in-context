@@ -21,7 +21,7 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.6.0 @feelingsarereal/sdoh-loops-pack@0.2.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.7.0 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
@@ -63,6 +63,7 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `notebook` | 0.5.0 (SL26). `true` shows the case manager notebook: a toggle beside List view (a column with its own resize handle from lg up; Map / Notebook tabs below). Off by default; embedding apps keep it off until SL28. Notes live in the map's `notebook` block (schema 3). |
 | `notebookTemplates` | 0.5.0 (SL26). `NoteTemplate[]` (`{ id, name, fields: { key, label }[] }`): your templates, after the core's Intake, Contact note, Case conference and Plan review. Each note from one starts with a Date field (a year by default). |
 | `quickEdit` | 0.6.0 (SL31). Default `true` wherever the map is editable: in the selection card's Read mode a ✎ edits the label, the description, the notes and a link's description in place (Enter or a click away saves as one Undo step, Esc cancels), and "Pinned in place" and a link's delay are switches. Codes, code status, polarity, weight, confidence, overrides and delete stay in Edit mode. `false` turns it off; a read-only map never shows it. |
+| `notebookImport` | 0.7.0 (SL29). `{ maxMB?, maxPages? }` (defaults 20 and 300): limits for importing files into the notebook. |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
 Since 0.2.0 it adds `F` (full screen), `]` (fold or open the side dock; since 0.3.0 also the » / « buttons on the dock and its rail) and Shift+F10 / the ContextMenu key (peek at
@@ -87,6 +88,21 @@ your Help page when you turn the notebook on.
 
 The notebook ends with a live, read-only **case summary** of the map as shown: tiles, the list view's circumstances table
 (sortable, filterable; a row click selects on the map), the loops, and the top 5 by leverage.
+
+### Importing files into the notebook (0.7.0, SL29)
+
+With `notebook` on, **Import a file…** (the notebook header, the Map menu's "Import into the notebook…", or a drop on
+the notebook) and **Paste as a note** turn `.txt`, `.md`, `.html`/`.htm`, `.rtf`, `.csv`, `.docx` and `.pdf` files into
+notes of kind `imported` (`source: { filename, type, size, imported, pages?, review, kept? }`; a PDF's page starts in
+`anchors`; a CSV as `table`). Several files at once; one failing never stops the others. Each opens in a review step with
+the identifier check's flags before it is saved — Label all, Review one by one, or Keep as is (confirmed, and recorded
+in `source.review`). The original file is not stored, nor its metadata. Imported text is kept verbatim (title and tags
+stay editable). Scanned PDFs (no text layer) are reported, not OCR'd.
+
+Everything runs on the device and loads on first import only: the text formats and Word (mammoth) in a worker
+bundled with your app, PDFs in pdf.js's worker, emitted as a file of your own origin. Your Vite build must process the
+core's source (the default for this package, which ships TypeScript; do not pre-bundle it with `optimizeDeps.include`),
+so the core's `?worker` and `?url` imports resolve.
 
 ### Workspace height (0.5.1, SL30)
 

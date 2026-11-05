@@ -27,13 +27,15 @@ import { RefCard } from './components/evidence/RefCard';
 import { LoopsPanel, LinksPanel, PathsPanel, LeveragePanel, PulsePanel, ToCodePanel, ClustersPanel, LegendPanel, nameOf } from './components/map/Panels';
 import { AboutMap, MapMenu, type MapMenuHandle, type MapMenuItem } from './components/map/MapDetails';
 import { SelectionRead } from './components/map/SelectionRead';
+import { NotebookImport, type NotebookImportHandle } from './components/notebook/Import';
+import { ACCEPT, DEFAULT_LIMITS, type ImportLimits } from './lib/import/limits';
 import { ListView } from './components/map/ListView';
 import type { CanvasHandle, Highlight, PeekRequest } from './components/map/Canvas';
 import { Peek, type PeekTarget } from './components/map/Peek';
 import { links as packLinks } from './lib/data/scheme';
 import { Notebook } from './components/notebook/Notebook';
 import { CaseSummary } from './components/notebook/CaseSummary';
-import { CORE_TEMPLATES, labelAll, notebookFlags, type NoteTemplate } from './lib/model/notebook';
+import { addNote, CORE_TEMPLATES, labelAll, notebookFlags, type NoteTemplate } from './lib/model/notebook';
 import { hasNotebook } from './lib/model/map';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
@@ -163,6 +165,11 @@ export interface SdohMapProps {
   notebook?: boolean;
   /** SL26: the host's own note templates, offered after the core's four (Intake, Contact note, Case conference, Plan review) */
   notebookTemplates?: NoteTemplate[];
+  /**
+   * SL29: the notebook's file import limits — the largest file in MB (default 20) and the most PDF pages (default 300).
+   * Import runs on the device; the parsers load on first use.
+   */
+  notebookImport?: Partial<ImportLimits>;
 }
 
 /**
@@ -520,6 +527,38 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     saveDock({ ...dock, notebook: on });
     announce(on ? `${C.notebook.title} shown.` : `${C.notebook.title} hidden.`);
   };
+  // SL29: import files into the notebook — the controller stays mounted, so the Map menu item works with it closed
+  const importer = useRef<NotebookImportHandle>(null);
+  const [nbFocus, setNbFocus] = useState<{ id: string; n: number } | null>(null);
+  const importLimits = { ...DEFAULT_LIMITS, ...(props.notebookImport ?? {}) };
+  const saveImported = (note: Parameters<typeof addNote>[1], base: { dismissed: string[]; replaced: Record<string, number> }) =>
+    apply((m) => {
+      const b = m.notebook ?? { notes: [], dismissed: [], replaced: {} };
+      return { ...m, notebook: { ...addNote(b, note), dismissed: [...new Set([...b.dismissed, ...base.dismissed])], replaced: { ...b.replaced, ...base.replaced } }, updated: new Date().toISOString() };
+    });
+  const importItem: MapMenuItem | null = nbEnabled
+    ? {
+        id: 'nb-import',
+        label: C.notebook.importing.menu,
+        description: C.notebook.importing.menuHint,
+        onSelect: () => importer.current?.openFile(),
+      }
+    : null;
+  const nbImport = nbEnabled && (
+    <NotebookImport
+      ref={importer}
+      notebook={full.notebook}
+      onSave={saveImported}
+      onDone={(id) => {
+        if (!id) return;
+        if (!nbOn) setNbOn(true);
+        setNbFocus((f) => ({ id, n: (f?.n ?? 0) + 1 }));
+      }}
+      limits={importLimits}
+      accept={ACCEPT}
+      announce={announce}
+    />
+  );
   const [nbW, setNbW] = useState<number | null>(null);
   const nbMax = () => Math.max(NB_MIN, Math.floor((gridEl.current?.getBoundingClientRect().width ?? 3 * NB_DEFAULT) * 0.45));
   const clampNb = (w: number) => Math.round(Math.min(nbMax(), Math.max(NB_MIN, w)));
@@ -923,7 +962,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
       <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
       {/* SL23: the map file actions — open (import) first, save a copy, the exports, print, the host's items */}
-      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} />
+      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={importItem ? [importItem, ...(props.mapMenuItems ?? [])] : props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} />
       <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
         {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
       </span>
@@ -1250,6 +1289,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       {nbResizer}
       <div className="bx-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-0">
         <Notebook map={full} apply={apply} scrub={doc.scrub} flags={flags} templates={[...CORE_TEMPLATES, ...(props.notebookTemplates ?? [])]} announce={announce} onPrint={printNotebook}
+          onImport={() => importer.current?.openFile()} onPaste={() => importer.current?.openPaste()} onDropFiles={(fs) => importer.current?.importFiles(fs)} focus={nbFocus}
           summary={
             <CaseSummary
               map={map}
@@ -1304,6 +1344,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       <div className="sr-only" role="status" aria-live="polite" data-testid="live">{live}</div>
       {toolbar}
       {nbTabs}
+      {nbImport}
       {view === 'canvas' ? (
         <div ref={gridEl} className={grid} style={gridStyle}>
           <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} overscroll-contain rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} data-print-hide>

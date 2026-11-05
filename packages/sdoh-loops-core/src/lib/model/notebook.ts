@@ -113,10 +113,45 @@ export interface NoteField {
   /** every other field: a short rich-text block */
   body?: RichDoc;
 }
+/** SL29: the file an imported note came from. The original is never stored, nor its metadata (author, title fields). */
+export interface NoteSource {
+  filename: string;
+  /** the format it was read as: txt, md, html, rtf, csv, docx or pdf */
+  type: ImportType;
+  /** bytes */
+  size: number;
+  /** when it was imported (ISO) */
+  imported: string;
+  /** a PDF's page count */
+  pages?: number;
+  /**
+   * what the user chose in the identifier review before saving: 'none' (nothing was flagged), 'labelled' (Label all),
+   * 'reviewed' (one by one), 'kept' (Keep as is, confirmed); `kept` is how many flags were left as they were
+   */
+  review: 'none' | 'labelled' | 'reviewed' | 'kept';
+  kept?: number;
+}
+export const IMPORT_TYPES = ['txt', 'md', 'html', 'rtf', 'csv', 'docx', 'pdf'] as const;
+export type ImportType = (typeof IMPORT_TYPES)[number];
+/** SL29: a page break kept as an anchor: the page starts at this top-level block of the body ("p. 3") */
+export interface NoteAnchor {
+  block: number;
+  page: number;
+}
+/** SL29: an imported CSV, as a table: the header row and the rows, every cell plain text */
+export interface NoteTable {
+  header: string[];
+  rows: string[][];
+}
 export interface Note {
   id: string;
   title: string;
-  kind: 'free' | 'structured';
+  /** SL29: 'imported' — text read from a file, kept verbatim (title and tags stay editable; labels still replace values) */
+  kind: 'free' | 'structured' | 'imported';
+  /** SL29: an imported note's file, page anchors and (for a CSV) its table */
+  source?: NoteSource;
+  anchors?: NoteAnchor[];
+  table?: NoteTable;
   /** the template id of a structured note */
   template?: string;
   /** a free note's body */
@@ -223,9 +258,44 @@ export function newStructuredNote(tpl: NoteTemplate, year = String(new Date().ge
   };
 }
 
+/** SL29: an imported note, ready for the review step (not yet in any notebook). */
+export function newImportedNote(p: { title: string; body?: NoteDoc; anchors?: NoteAnchor[]; table?: NoteTable; source: Omit<NoteSource, 'imported' | 'review'> }): Note {
+  const t = now();
+  return {
+    id: nid(),
+    title: p.title,
+    kind: 'imported',
+    body: p.body ?? emptyNoteDoc(),
+    ...(p.anchors?.length ? { anchors: p.anchors } : {}),
+    ...(p.table ? { table: p.table } : {}),
+    source: { ...p.source, imported: t, review: 'none' },
+    created: t,
+    updated: t,
+    tags: [],
+  };
+}
+/**
+ * SL29: where a top-level block of an imported note sits — its page ("p. 3") and the heading it is under ("under
+ * Housing") — so a span can say where its quote came from.
+ */
+export function anchorOf(n: Note, block: number): { page?: number; heading?: string; label: string } {
+  const page = [...(n.anchors ?? [])].filter((a) => a.block <= block).sort((a, b) => b.block - a.block)[0]?.page;
+  let heading: string | undefined;
+  for (let i = Math.min(block, n.body.content.length - 1); i >= 0; i--) {
+    const b = n.body.content[i];
+    if (b?.type === 'heading' && i < block) {
+      heading = blockText(b).trim();
+      break;
+    }
+  }
+  const label = [page ? `p. ${page}` : '', heading ? `under ${heading}` : ''].filter(Boolean).join(', ');
+  return { ...(page ? { page } : {}), ...(heading ? { heading } : {}), label };
+}
+const tableText = (t: NoteTable | undefined) => (t ? [t.header, ...t.rows].map((r) => r.join(' ')).join('\n') : '');
+
 /** The note's searchable text: title, tags, body and every field. */
 export function noteText(n: Note): string {
-  return [n.title, n.tags.join(' '), noteDocText(n.body), ...(n.fields ?? []).map((f) => (f.key === DATE_FIELD.key ? f.value ?? '' : `${f.label}\n${noteDocText(f.body)}`))].join('\n');
+  return [n.title, n.tags.join(' '), noteDocText(n.body), tableText(n.table), ...(n.fields ?? []).map((f) => (f.key === DATE_FIELD.key ? f.value ?? '' : `${f.label}\n${noteDocText(f.body)}`))].join('\n');
 }
 export function searchNotes(nb: Notebook, q: string, tag?: string | null): Note[] {
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -314,6 +384,8 @@ export function notebookFlags(nb: Notebook | undefined): Flag[] {
     flagsIn(n.title, { note: n.id, where: 'title' }, nb, out);
     if (n.tags.length) flagsIn(n.tags.join(', '), { note: n.id, where: 'tags' }, nb, out);
     for (const b of textblocks(n.body)) flagsIn(blockText(b), { note: n.id, where: 'body' }, nb, out);
+    // SL29: an imported table, cell by cell
+    if (n.table) for (const row of [n.table.header, ...n.table.rows]) for (const cell of row) flagsIn(cell, { note: n.id, where: 'table' }, nb, out);
     for (const f of n.fields ?? []) {
       if (f.key === DATE_FIELD.key) flagsIn(f.value ?? '', { note: n.id, where: f.key }, nb, out);
       else for (const b of textblocks(f.body)) flagsIn(blockText(b), { note: n.id, where: f.key }, nb, out);
@@ -337,6 +409,7 @@ export const LABELS: Record<IdentifierCategory, string> = {
   phone: '[phone]',
   email: '[email]',
   address: '[address]',
+  city: '[city]',
   zip: '[ZIP code]',
   ssn: '[ID number]',
   record: '[record no.]',
@@ -414,6 +487,7 @@ function replaceInNote(n: Note, res: RegExp[], label: string): Note {
     title: str(n.title),
     tags: n.tags.map(str),
     body: doc(n.body),
+    ...(n.table ? { table: { header: n.table.header.map(str), rows: n.table.rows.map((r) => r.map(str)) } } : {}),
     ...(n.fields
       ? { fields: n.fields.map((f) => (f.key === DATE_FIELD.key ? { ...f, value: str(f.value ?? ''), ...(str(f.value ?? '') !== (f.value ?? '') ? { full: false } : {}) } : { ...f, body: f.body ? doc(f.body) : f.body })) }
       : {}),
@@ -453,7 +527,7 @@ export function sanitizeNotebook(input: unknown): Notebook | undefined {
   const notes: Note[] = (Array.isArray(raw.notes) ? (raw.notes as Record<string, unknown>[]) : [])
     .filter((n) => n && typeof n.id === 'string')
     .map((n) => {
-      const kind = n.kind === 'structured' && Array.isArray(n.fields) ? 'structured' : 'free';
+      const kind = n.kind === 'structured' && Array.isArray(n.fields) ? 'structured' : n.kind === 'imported' && n.source && typeof n.source === 'object' ? 'imported' : 'free';
       const note: Note = {
         ...n,
         id: n.id as string,
@@ -471,6 +545,30 @@ export function sanitizeNotebook(input: unknown): Notebook | undefined {
           .filter((f) => f && typeof f.key === 'string')
           .map((f) => (f.key === DATE_FIELD.key ? { key: DATE_FIELD.key, label: str(f.label, DATE_FIELD.label), value: str(f.value), full: !!f.full } : { key: f.key as string, label: str(f.label, f.key as string), body: sanitizeRich(f.body) }));
       else delete note.fields;
+      if (kind === 'imported') {
+        const src = n.source as Record<string, unknown>;
+        const reviews = ['none', 'labelled', 'reviewed', 'kept'];
+        note.source = {
+          filename: str(src.filename, 'Imported file'),
+          type: (IMPORT_TYPES as readonly string[]).includes(src.type as string) ? (src.type as ImportType) : 'txt',
+          size: Number.isFinite(src.size) ? Math.max(0, Math.round(src.size as number)) : 0,
+          imported: str(src.imported, now()),
+          ...(Number.isInteger(src.pages) && (src.pages as number) > 0 ? { pages: src.pages as number } : {}),
+          review: reviews.includes(src.review as string) ? (src.review as NoteSource['review']) : 'none',
+          ...(Number.isInteger(src.kept) && (src.kept as number) > 0 ? { kept: src.kept as number } : {}),
+        };
+        const anchors = (Array.isArray(n.anchors) ? (n.anchors as Record<string, unknown>[]) : []).filter((a) => a && Number.isInteger(a.block) && Number.isInteger(a.page) && (a.block as number) >= 0 && (a.page as number) > 0).map((a) => ({ block: a.block as number, page: a.page as number }));
+        if (anchors.length) note.anchors = anchors;
+        else delete note.anchors;
+        const t = n.table as { header?: unknown; rows?: unknown } | undefined;
+        const cells = (r: unknown) => (Array.isArray(r) ? r.map((c) => (typeof c === 'string' ? c : c == null ? '' : String(c))) : []);
+        if (t && Array.isArray(t.header) && Array.isArray(t.rows)) note.table = { header: cells(t.header), rows: (t.rows as unknown[]).map(cells) };
+        else delete note.table;
+      } else {
+        delete note.source;
+        delete note.anchors;
+        delete note.table;
+      }
       return note;
     });
   const replaced: Notebook['replaced'] = {};

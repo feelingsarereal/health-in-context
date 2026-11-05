@@ -10,6 +10,38 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.7.0] — 2026-11-04
+
+Minor (SL29, S7.1 slice 2): import files into the case manager notebook, and cities in the identifier check.
+Pack: `0.2.0` (unchanged). New prop, new note kind (in schema 3: older cores read an imported note as a free note); existing
+behavior unchanged.
+
+- **Import a file…** in the notebook header, **Import into the notebook…** in the Map menu, a drop on the notebook
+  (with a drop zone), and **Paste as a note**. Formats: `.txt`, `.md` (front matter dropped), `.html`/`.htm`
+  (sanitized to text, headings and lists; head, title, meta, scripts and styles dropped), `.rtf` (font, color and style
+  tables and the `\info` group dropped), `.csv` (a table note), `.docx` (bundled mammoth; the body only, so its
+  properties are never read), `.pdf` (bundled pdf.js 4.10.38, its worker served from the app's own origin, the text
+  layer page by page; the document info is never read). A scanned PDF reports "This PDF has no text layer (it looks
+  scanned), so nothing could be read", with OCR named as a later option; any other type is refused with the list of
+  supported types. Several files at once, each one note; a failure in one never blocks the others.
+- **Kept:** the text, as a note of kind `imported` with `source: { filename, type, size, imported, pages?, review,
+  kept? }`; PDF page starts as `anchors` (drawn as "p. N" markers) and DOCX/HTML/Markdown headings, so `anchorOf(note,
+  block)` says "p. 3" or "under Housing". **The original file is not stored**, nor its metadata; the dialog says so and
+  suggests keeping the original where it already lives. Imported text is verbatim: shown read-only (selectable, with
+  its flags), with title and tags editable; labels still replace identifiers in it.
+- **The identifier check runs before saving.** Each file opens in a review step with the flags shown and a count by
+  category: **Label all**, **Review one by one** (Replace with a label / Not an identifier, flag by flag), **Keep as is**
+  (asks once; recorded as `review: 'kept'` with the count kept), or Skip this file. Labelling happens on the unsaved copy,
+  so a replaced value never reaches storage; label counts by category are recorded as in SL26.
+- **Limits:** 20 MB per file and 300 PDF pages by default, set with the new **`notebookImport`** prop. A progress bar runs
+  while files are read; reading runs in workers, so the page stays responsive.
+- **Cities in the identifier check** (HIPAA Safe Harbor: a unit smaller than a state): "City, ST", "City, State" and a
+  city followed by a state and ZIP ("Huntsville AL 35801") become `[city]`; a state alone, "the AL East" and "St. Louis
+  Blues" are not flagged; a name before a state stays a name. Help lists cities among what is caught.
+- **Bundle:** the parsers load on first import only (import entry 2.4 kB gzip; pdf.js 121 kB gzip; the import worker
+  393 kB and the pdf.js worker 1.4 MB, both lazy); the standalone app's map route grew 3.1 kB gzip; the consumer
+  fixture's first chunk is unchanged (SL21).
+
 ## [0.6.0] — 2026-11-04
 
 Minor (SL31): quick field edit in Read mode (a new prop), the page-scroll leak left after 0.5.1, and three more kinds of
