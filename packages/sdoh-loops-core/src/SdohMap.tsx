@@ -22,6 +22,7 @@ import { Dialog } from './components/ui/Dialog';
 import { NodeFields, EdgeFields, type NodeDraft } from './components/map/Forms';
 import { AssociationMenu, type FollowRequest } from './components/map/AssociationMenu';
 import { CodePopout } from './components/map/CodePopout';
+import { CrosswalkContext } from './lib/xwalk';
 import { CitedText } from './components/evidence/CitedText';
 import { RefCard } from './components/evidence/RefCard';
 import { LoopsPanel, LinksPanel, PathsPanel, LeveragePanel, PulsePanel, ToCodePanel, ClustersPanel, LegendPanel, nameOf } from './components/map/Panels';
@@ -162,6 +163,13 @@ export interface SdohMapProps {
    * editable; a read-only map never shows it. Codes, code status, polarity, weight, confidence and overrides stay in Edit.
    */
   quickEdit?: boolean;
+  /**
+   * SL32 (T-LIC-01): the ICD-10-CM crosswalk on code cards, the peek and the code picker's detail. Default true. Pass
+   * false while WHO's written agreement for ICD-11 ↔ ICD-10-CM mapping (§1.2.4) is pending: the Healthy People 2030
+   * domains stay as the builder's topic tag. A public build also adds `sdohCrosswalk({ crosswalk: false })` to its Vite
+   * config, so no pairing is left in the bundle.
+   */
+  crosswalk?: boolean;
   /** SL17: the host's cards in the side dock, stacked below the core's editor */
   sideCards?: SideCard[];
   /** SL17: the host's own lines in the peek, below the core's */
@@ -1618,6 +1626,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   );
 
   return (
+    <CrosswalkContext.Provider value={props.crosswalk !== false}>
     <CitationsContext.Provider value={citations}>
     <div
       ref={ws}
@@ -1783,6 +1792,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       </Dialog>
     </div>
     </CitationsContext.Provider>
+    </CrosswalkContext.Provider>
   );
 }
 

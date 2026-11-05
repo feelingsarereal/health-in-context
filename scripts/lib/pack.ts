@@ -116,6 +116,9 @@ const SituationItemSchema = z
         hp2030_titles: z.array(z.string().nullable()).optional(),
         icd10cm_titles: z.array(z.string().nullable()).optional(),
         sources: z.array(z.number().int()).optional(),
+        /** SL32: the sources behind each half, so a build with the ICD-10-CM crosswalk off keeps only the HP2030 one */
+        hp2030_sources: z.array(z.number().int()).optional(),
+        icd10cm_sources: z.array(z.number().int()).optional(),
       })
       .optional(),
   })
@@ -229,7 +232,7 @@ export const UpkeepSchema = z.object({
   sweeps: z.array(z.object({ id: z.string(), every_days: z.number().int(), scope: z.string() })).default([]),
 });
 export const ChangesSchema = z.array(z.object({ date: dateLike, what: z.string(), why: z.string(), records: z.array(z.string()).optional(), source: z.string().optional(), by: z.string() }));
-export const TodoSchema = z.object({ items: z.array(z.object({ id: z.string(), what: z.string(), blocks: z.string().optional(), status: z.string().optional() })) });
+export const TodoSchema = z.object({ items: z.array(z.object({ id: z.string(), what: z.string(), blocks: z.string().optional(), status: z.string().optional(), xwalk: z.boolean().optional() })) });
 export const ScopeSchema = z
   .object({
     interview: z.array(z.object({ q: z.string(), a: z.string(), date: dateLike })).default([]),

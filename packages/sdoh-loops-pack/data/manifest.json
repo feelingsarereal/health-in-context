@@ -20,7 +20,7 @@
   "evidence": {
    "body": "records"
   },
-  "delivery": "local",
+  "delivery": "pages",
   "storage": "device",
   "github_account": "feelingsarereal",
   "builder": {
@@ -29,7 +29,7 @@
    "date": "2026-10-23"
   },
   "permissions": {
-   "text": "builder-authored; ICD-11 titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI (WHO, CC BY-ND 3.0 IGO, ICD-11 licence checked 2026-11-02; crosswalk use under §1.2.4 is undecided, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
+   "text": "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases, Healthy People 2030 topic tags) are marked as not from WHO; the crosswalk to another classification is left out of the public build until WHO's written agreement (§1.2.4, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
    "figures": "none reproduced"
   },
   "concept_self_checks": false,
@@ -358,6 +358,21 @@
    "by": "cowork"
   },
   {
+   "date": "2026-11-04",
+   "what": "SL32 (public prototype): crosswalk text that pairs ICD-11 with another classification is marked (an xwalk comment pair around two sentences of the icd11-chapter24 primer, xwalk: true on T-XWALK-01, per-half crosswalk sources) so a build with the crosswalk off leaves it out; WHO's §1.3 citation and the prototype banner added as interface strings; manifest delivery: pages and the licence wording in permissions.text",
+   "why": "T-LIC-01: mapping ICD-11 to another classification needs WHO's separate written agreement (§1.2.4), still pending",
+   "records": [
+    "concepts/icd11-chapter24",
+    "todo/T-XWALK-01",
+    "situations.items[].crosswalk",
+    "ui-strings/codes",
+    "ui-strings/prototype_banner",
+    "manifest"
+   ],
+   "source": "SL32, Daniel 2026-11-04",
+   "by": "claude-code"
+  },
+  {
    "date": "2026-11-03",
    "what": "Primers cite the now-verified methods papers (reading-clds: Richardson 1986, 1995; weights-fcm: Kosko 1986, Özesmi & Özesmi 2004) instead of 'not yet verified here'; app-methods corrected (variable framing no longer attributed to an 'event-labelled boxes' argument; loop dominance can shift as behaviour unfolds, not 'depends on behaviour over time')",
    "why": "Read against the papers while writing the worked-example tutorial",
@@ -439,16 +454,6 @@
     "situations.known_gaps"
    ],
    "source": "WHO ICD-API container, ICD-11 MMS 2026-01, pulled 2026-11-02",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "Scenario w2 wording matched to the app: step 3 (the association dialog shows only the 'Assign an SDOH code' note) and step 5 (L25's message names QE82 → QD50)",
-   "why": "Claude Code's w2 walk, finding 6",
-   "records": [
-    "scenarios/w2"
-   ],
-   "source": "w2 walk 2026-11-02",
    "by": "cowork"
   }
  ],
@@ -607,7 +612,8 @@
   },
   {
    "id": "T-XWALK-01",
-   "what": "Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside Z55–Z65."
+   "what": "Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside Z55–Z65.",
+   "xwalk": true
   },
   {
    "id": "T-EVID-01",

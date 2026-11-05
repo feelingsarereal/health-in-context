@@ -2,6 +2,7 @@
 import referencesJson from '@feelingsarereal/sdoh-loops-pack/data/references.json';
 import glossaryJson from '@feelingsarereal/sdoh-loops-pack/data/glossary.json';
 import conceptsJson from '@feelingsarereal/sdoh-loops-pack/data/concepts.json';
+import { unmarkXwalk } from '../xwalk';
 
 export interface Ref {
   n: number; key: string; tier: 'seminal' | 'classic' | 'current' | 'background'; citation: string; year: number;
@@ -14,7 +15,8 @@ export interface Concept { id: string; title: string; one_liner: string; why_her
 
 export const references = referencesJson as Ref[];
 export const glossary = glossaryJson as Term[];
-export const concepts = conceptsJson as Concept[];
+// SL32: the pack's <!-- xwalk --> markers never show (the Vite plugin removes them, or their text, at build time)
+export const concepts = (conceptsJson as Concept[]).map((c) => ({ ...c, body: unmarkXwalk(c.body) }));
 export const refMap = new Map(references.map((r) => [r.n, r]));
 export const termMap = new Map(glossary.map((t) => [t.id, t]));
 export const conceptMap = new Map(concepts.map((c) => [c.id, c]));

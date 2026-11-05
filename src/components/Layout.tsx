@@ -3,6 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { useTheme, manifest, S, C } from '@feelingsarereal/sdoh-loops-core';
 import { ClearData } from './ui/ClearData';
 import { FirstRun } from './ui/FirstRun';
+import { PrototypeBanner } from './ui/PrototypeBanner';
 
 const NAV: [string, string][] = [
   ['/map', C.nav.map],
@@ -27,6 +28,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <a href="#main" className="sr-only-focusable fixed left-2 top-2 z-50 bx-btn">
         {C.skip}
       </a>
+      <PrototypeBanner />
       <header className="sticky top-0 z-40 border-b border-[color:var(--bx-line)] bg-paper/90 dark:bg-night/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2">
           <Link to="/" className="font-display text-xl font-semibold whitespace-nowrap">
@@ -75,6 +77,9 @@ export function Layout({ children }: { children: ReactNode }) {
           <Link to="/about" className="underline">{C.nav.about}</Link>
           <Link to="/help" className="underline">{C.nav.help}</Link>
           <ClearData />
+          {/* SL32 (T-LIC-01): WHO's required citation, verbatim (§1.3), on every page — one line of the footer's own row,
+              so the footer stays inside the share of the window the map's viewport fit allows (SL31) */}
+          <p className="basis-full text-xs leading-4" data-testid="footer-who-citation">{S.codes.who_citation}</p>
         </div>
       </footer>
     </div>

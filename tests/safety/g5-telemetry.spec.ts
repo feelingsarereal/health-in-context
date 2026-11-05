@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../dist');
+// SL32: SDOH_DIST=dist-pages checks the Pages build (playwright.pages.config.ts)
+const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..', process.env.SDOH_DIST ?? 'dist');
 const HOSTS = ['google-analytics', 'googletagmanager', 'gtag(', 'segment.io', 'cdn.segment', 'sentry.io', 'browser.sentry', 'mixpanel', 'plausible.io', 'hotjar', 'amplitude.com', 'posthog', 'datadoghq', 'newrelic', 'fullstory', 'clarity.ms', 'fonts.googleapis', 'fonts.gstatic', 'navigator.sendBeacon'];
 
 test('G5: no external script or stylesheet in dist/index.html', () => {

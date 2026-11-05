@@ -9,6 +9,27 @@ version's entry — so any change to the pack's data needs a new version here fi
 - **Minor:** codes, links, references, terms or strings are added; nothing a consumer reads is taken away.
 - **Patch:** wording, corrections, re-verification dates.
 
+## [0.3.0] — 2026-11-04
+
+Minor (SL32, T-LIC-01): the pack marks what pairs ICD-11 with ICD-10-CM, so a build with the crosswalk off can leave it
+out (core 0.10.0's `sdohCrosswalk` Vite plugin); adds WHO's required citation and the public prototype's banner as
+strings. Nothing a consumer reads is taken away, and no code, link, reference or term changes. Logged in
+`content-pack/changes.yaml`.
+
+- sha256: `c8b6a6eff68a6436aff90c74ca788fafbe674ae8f30fb268a319d0b956ad58f8`
+- **Crosswalk sources per half:** every code's `crosswalk` gains `hp2030_sources` (`[62]`, Healthy People 2030) and
+  `icd10cm_sources` (`[63]`, CMS Z codes). `sources` stays `[62, 63]`.
+- **Marked text:** the `icd11-chapter24` primer wraps two sentences in `<!-- xwalk -->…<!-- /xwalk -->`. They are
+  "In the United States … Z55–Z65 play the same role [63]" and "The crosswalk to Healthy People 2030 domains and to
+  ICD-10-CM categories is marked as a proposed mapping…". The core removes the markers at load time; core 0.9.0 and
+  earlier render the body as Markdown, where the comments don't show.
+- **Marked record:** to-do `T-XWALK-01` (replace the proposed crosswalk with WHO's mapping tables) gains `xwalk: true`.
+- **Strings:** `codes.who_citation` holds WHO's §1.3 citation, verbatim ("… Licensed under CC BY-ND 3.0 IGO.").
+  `codes.builder_topic` is "Builder topic, not from WHO". `prototype_banner` holds the banner's text, its link
+  label and its dismiss label.
+- **Manifest:** `delivery: pages`; `permissions.text` carries the citation's licence wording and says the crosswalk
+  is left out of the public build until WHO's written agreement.
+
 ## [0.2.0] — 2026-11-04
 
 Minor (SL19, finding F02 of the S5.2 primer fact-check; Daniel's decision "add all four"): four links and five

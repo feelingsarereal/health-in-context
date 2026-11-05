@@ -12,9 +12,9 @@ const SENTINEL = 'ZQX-SENTINEL-7731';
 
 test('G2/H2: a typed sentinel never appears in any request; no off-origin requests', async ({ page, baseURL }) => {
   const reqs = recordRequests(page);
-  await page.goto('/');
+  await page.goto('./');
   await dismissFirstRun(page);
-  for (const r of ['/evidence', '/references', '/glossary', '/concepts', '/concepts/reading-clds', '/help', '/methods', '/about']) await page.goto(r);
+  for (const r of ['./evidence', './references', './glossary', './concepts', './concepts/reading-clds', './help', './methods', './about']) await page.goto(r);
 
   await newMap(page, `Map ${SENTINEL}`, `S ${SENTINEL}`);
   await addNode(page, { code: 'QD71.Z', search: 'evict', label: `L ${SENTINEL}`, circumstance: `C ${SENTINEL}` });

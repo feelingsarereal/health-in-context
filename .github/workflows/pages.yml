@@ -1,0 +1,68 @@
+# SL32: the public prototype on GitHub Pages — https://feelingsarereal.github.io/sdoh-loops/ — deployed from main.
+# The Pages build has the ICD-10-CM crosswalk off (VITE_SDOH_XWALK=off: WHO's §1.2.4 agreement is pending, T-LIC-01)
+# and the prototype banner on. It must pass the crosswalk dist test before it deploys, and again once it is live.
+# The core and the pack are this repo's own workspaces, so `npm ci` links them; the token is only there in case a
+# package ever comes from GitHub Packages (secret NODE_AUTH_TOKEN with read:packages, else the workflow token).
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@feelingsarereal'
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.GITHUB_TOKEN }}
+      - run: npm test
+      # BASE_PATH=/sdoh-loops/, VITE_SDOH_XWALK=off, VITE_SDOH_PAGES=on → dist-pages/ (with 404.html for deep links)
+      - run: npm run build:pages
+      - run: test -f dist-pages/404.html
+      - name: Crosswalk dist test
+        run: npm run check:xwalk
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Crosswalk dist test against the live site
+        run: npx tsx scripts/check-xwalk-dist.ts "${{ needs.deploy.outputs.url }}"

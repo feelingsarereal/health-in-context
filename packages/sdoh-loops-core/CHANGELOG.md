@@ -10,6 +10,30 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.10.0] — 2026-11-04
+
+Minor (SL32, T-LIC-01): the ICD-10-CM crosswalk can be switched off, for the public prototype while WHO's written
+agreement for mapping ICD-11 to another classification (§1.2.4, request 202611431) is pending. Pack: `0.3.0`. New
+prop `crosswalk`; new Vite plugin `sdohCrosswalk`. Existing behavior is unchanged with the defaults.
+
+- **`crosswalk?: boolean`** (default true). With false, the code card hides its ICD-10-CM lines. That covers the
+  selection card, the peek's code, the code picker's detail and the notebook's code view (they all use one code card).
+  The Healthy People 2030 domains stay, under **Topic**, with the chip "Builder topic, not from WHO" and their own
+  source ([62]) only. The list view, the CSV, the loop report and the case report never carried the crosswalk, so
+  there was nothing to hide there.
+- **`sdohCrosswalk({ crosswalk })`** from `@feelingsarereal/sdoh-loops-core/vite`. With `crosswalk: false` it removes
+  these from the pack's data as it is bundled: the ICD-10-CM half of every code's crosswalk, the text the pack marks
+  `<!-- xwalk -->…<!-- /xwalk -->`, and its records marked `xwalk: true`. It also sets `VITE_SDOH_XWALK=off`, which
+  compiles the core's ICD-10-CM lines out. The result: nothing in the output pairs an ICD-11 code with an ICD-10-CM
+  one. With true it only removes the markers. `xwalkOn(process.env.VITE_SDOH_XWALK)` reads the usual env switch.
+- **Exports** `XWALK_BUILD`, `CrosswalkContext`, `useCrosswalk` and `unmarkXwalk`, for a host's own pages.
+- The 101s' bodies have the pack's crosswalk markers removed at load time, so a host without the plugin never shows them.
+
+**For hosts:** nothing changes unless you publish. A public build adds `sdohCrosswalk({ crosswalk: false })` to its
+Vite plugins and passes `crosswalk={false}`. It should also guard any of its own ICD-10-CM text with
+`import.meta.env.VITE_SDOH_XWALK !== 'off'`. Then it runs a dist test like the standalone app's
+`scripts/check-xwalk-dist.ts`.
+
 ## [0.9.0] — 2026-11-04
 
 Minor (SL28, S7.1 slice 4): traceability everywhere — a notebook passage can point at every item kind and every item

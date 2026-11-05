@@ -12,10 +12,10 @@ const NUDGE = safety.deidentify.nudge as string;
 
 test('H3: the nudge renders on every field in safety.yaml → deidentify.fields', async ({ page }) => {
   expect(safety.deidentify.fields).toEqual(['subject', 'circumstance', 'label', 'description', 'notes']);
-  await page.goto('/');
+  await page.goto('./');
   await dismissFirstRun(page);
   // subject (new-map form)
-  await page.goto('/maps');
+  await page.goto('./maps');
   const subjNudge = await page.getByTestId('new-map-subject').getAttribute('aria-describedby');
   await expect(page.locator(`[id="${subjNudge}"]`)).toHaveText(NUDGE);
   await newMap(page, 'Nudges', 'X.');
@@ -45,8 +45,8 @@ test('H3: the nudge renders on every field in safety.yaml → deidentify.fields'
   await expect(page.locator(`[id="${sId}"]`)).toHaveText(NUDGE);
 });
 
-test('H4: clear my data empties storage on this device', async ({ page }) => {
-  await page.goto('/');
+test('H4: clear my data empties storage on this device', async ({ page, baseURL }) => {
+  await page.goto('./');
   await dismissFirstRun(page);
   await newMap(page, 'To be cleared', 'Z.');
   await addNode(page, { status: 'undetermined', label: 'Something' });
@@ -56,7 +56,7 @@ test('H4: clear my data empties storage on this device', async ({ page }) => {
   await page.getByTestId('clear-data').click();
   await expect(page.getByTestId('clear-dialog')).toContainText('Delete every map stored in this browser? This cannot be undone.');
   await page.getByTestId('clear-confirm').click();
-  await page.waitForURL((u) => u.pathname === '/');
+  await page.waitForURL((u) => u.pathname === new URL('./', baseURL + (baseURL!.endsWith('/') ? '' : '/')).pathname);
   await page.reload();
   const after = await page.evaluate(async () => {
     const dbs = (await indexedDB.databases()).map((d) => d.name);
@@ -76,23 +76,23 @@ test('H4: clear my data empties storage on this device', async ({ page }) => {
     return { maps, keys };
   });
   expect(after).toEqual({ maps: 0, keys: [] });
-  await page.goto('/maps');
+  await page.goto('./maps');
   await expect(page.getByTestId('no-maps')).toBeVisible();
 });
 
 test('H5: the not-advice notice on first run, on / and on /about', async ({ page }) => {
-  await page.goto('/evidence');
+  await page.goto('./evidence');
   await expect(page.getByTestId('first-run')).toContainText(safety.notice);
   await page.getByTestId('first-run').getByRole('button', { name: 'Got it' }).click();
   await expect(page.getByTestId('first-run')).toHaveCount(0);
-  await page.goto('/');
+  await page.goto('./');
   await expect(page.getByTestId('notice')).toContainText(safety.notice);
-  await page.goto('/about');
+  await page.goto('./about');
   await expect(page.getByTestId('notice')).toContainText(safety.notice);
 });
 
 test('H6: help lists every pack entry with source and date; no inputs, no branching', async ({ page }) => {
-  await page.goto('/help');
+  await page.goto('./help');
   const entries = page.getByTestId('help-entry');
   await expect(entries).toHaveCount(safety.help.length);
   for (const h of safety.help) {
@@ -105,18 +105,18 @@ test('H6: help lists every pack entry with source and date; no inputs, no branch
 });
 
 test('G3: as_of is visible on /, /about and /methods; the source of the ICD-11 text is named (K9: WHO\'s own)', async ({ page }) => {
-  for (const r of ['/', '/about', '/methods']) {
+  for (const r of ['./', './about', './methods']) {
     await page.goto(r);
     await expect(page.getByTestId('as-of')).toContainText('2026-10-23');
   }
   await expect(page.getByTestId('text-source')).toContainText("WHO's own text");
   await expect(page.getByTestId('text-source')).toContainText('WHO ICD-API');
-  await page.goto('/about');
+  await page.goto('./about');
   await expect(page.getByTestId('text-source')).toContainText("WHO's own text");
 });
 
 test('G4: every heuristic result carries its label where it renders', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await dismissFirstRun(page);
   await newMap(page, 'Heuristics');
   await addNode(page, { status: 'undetermined', label: 'A' });
@@ -129,6 +129,6 @@ test('G4: every heuristic result carries its label where it renders', async ({ p
   await expect(page.getByTestId('leverage-panel').locator('[data-heuristic]')).toContainText('Heuristic — hints for discussion');
   await panel(page, 'pulse');
   await expect(page.getByTestId('pulse-panel').locator('[data-heuristic]')).toContainText('What-if pulse — qualitative exploration, not prediction');
-  await page.goto('/methods');
+  await page.goto('./methods');
   await expect(page.getByTestId('heuristics')).toContainText('Loop strength — structural heuristic, not loop dominance');
 });

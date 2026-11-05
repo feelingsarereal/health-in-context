@@ -347,7 +347,8 @@ test('Export case → Open a map file: the map and the notebook come back with e
   const file = JSON.parse(fs.readFileSync(p, 'utf8'));
   expect(file.provenance).toMatchObject({ notes: 1, spans: 3, mentions: 0 });
   expect(file.provenance.labelledTotal).toBeGreaterThan(0);
-  expect(file.provenance.pins).toMatchObject({ pack: '0.2.0' });
+  // the pack this build pins (SL32: 0.3.0)
+  expect(file.provenance.pins).toMatchObject({ pack: JSON.parse(fs.readFileSync('packages/sdoh-loops-pack/package.json', 'utf8')).version });
   expect(JSON.stringify(file.provenance)).not.toContain('205-555');
   await page.getByTestId('import-file').setInputFiles(p);
   await expect(page.getByTestId('map-name')).toContainText('(imported)');

@@ -1,0 +1,11 @@
+# SL32 crosswalk dist test allowlist — general mentions that map no ICD-11 code to an ICD-10-CM one.
+# One entry per line: the exact text as it appears in the build, a TAB, then the reason. Cowork reviews before publishing.
+ICD-11 codes, with the literature crosswalked to Healthy People 2030, WHO CSDH and ICD-10-CM Z55–Z65	scope.yaml interview record of 2026-10-23 (shown on /methods): says what the research covers; names the ICD-10-CM categories as a range and pairs no ICD-11 code with one
+ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag	todo T-LIC-01 status (licence record on /methods): describes the plan this build carries out; maps no code
+and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes)	todo T-LIC-01 status: describes the local build's crosswalk and its size; maps no code (the wording predates SL32 and is now true of local builds only)
+The ICD-10-CM crosswalk is hidden until WHO's permission arrives.	prototype banner, wording set by SL32; says the crosswalk is hidden, maps no code
+Lists the ICD-10-CM Z code categories used in the United States to document social determinants: Z55 education and literacy, Z56 employment and unemployment, Z57 occupational exposure, Z58 physical environment, Z59 housing and economic circumstances, Z60 social environment, Z62 upbringing, Z63 primary support group, and Z64–Z65 psychosocial circumstances.	reference [63] (CMS, Using Z Codes) summary: ICD-10-CM's own categories with their topics; no ICD-11 code is named or paired
+"ICD-10-CM Z codes","Z55–Z65"	glossary z-codes: search variants of the term (what Z codes are); no ICD-11 code
+The ICD-10-CM categories Z55–Z65 used in the US to record social determinants in health records.	glossary z-codes short definition: what Z codes are; no ICD-11 code
+In ICD-10-CM, categories Z55–Z65 record problems related to education	glossary z-codes definition: ICD-10-CM's own categories; no ICD-11 code
+CMS — Using Z codes (ICD-10-CM)	icd11-chapter24 primer further-reading title (CMS's own document title); a link, maps no code

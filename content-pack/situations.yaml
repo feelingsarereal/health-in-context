@@ -182,6 +182,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD51
   title: Low income
   group: QD50-QD5Z
@@ -211,6 +215,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD60
   title: Problems associated with inadequate drinking-water
@@ -248,6 +256,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD61
   title: Inadequate food
   group: QD60-QD6Z
@@ -282,6 +294,10 @@ items:
     - Problems related to physical environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD70
   title: Problems associated with the natural environment or human-made changes to the environment
@@ -318,6 +334,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD70.0
   title: Problems associated with exposure to noise
   group: QD70-QD7Z
@@ -347,6 +367,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD70.1
   title: Problems associated with exposure to air pollution
@@ -379,6 +403,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD70.2
   title: Problems associated with exposure to water pollution
   group: QD70-QD7Z
@@ -409,6 +437,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD70.3
   title: Problems associated with exposure to soil pollution
   group: QD70-QD7Z
@@ -437,6 +469,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD70.4
   title: Problems associated with exposure to radiation
   group: QD70-QD7Z
@@ -464,6 +500,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD70.5
   title: Problems associated with exposure to tobacco smoke
@@ -502,6 +542,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD70.6
   title: Problems associated with inadequate access to electricity
   group: QD70-QD7Z
@@ -529,6 +573,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD71
   title: Problems associated with housing
@@ -558,6 +606,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
   subgroup: QD71
 - code: QD71.0
@@ -596,6 +648,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
   subgroup: QD71
 - code: QD71.1
   title: Inadequate housing
@@ -633,6 +689,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
   subgroup: QD71
 - code: QD71.2
   title: Problems related to living in residential institution
@@ -665,6 +725,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
   subgroup: QD71
 - code: QD80
@@ -699,6 +763,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD81
   title: Problem associated with change of job
   group: QD80-QD8Z
@@ -726,6 +794,10 @@ items:
     - Occupational exposure to risk factors
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD82
   title: Problem associated with threat of job loss
@@ -755,6 +827,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD83
   title: Problem with employment conditions
   group: QD80-QD8Z
@@ -780,6 +856,10 @@ items:
     - Occupational exposure to risk factors
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD83.0
   title: Problem associated with uncongenial work
@@ -808,6 +888,10 @@ items:
     - Occupational exposure to risk factors
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD83.1
   title: Problem associated with stressful work schedule
@@ -838,6 +922,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD84
   title: Occupational exposure to risk-factors
   group: QD80-QD8Z
@@ -863,6 +951,10 @@ items:
     - Occupational exposure to risk factors
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD84.0
   title: Occupational exposure to dust
@@ -896,6 +988,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD84.1
   title: Occupational exposure to toxic agents in agriculture
   group: QD80-QD8Z
@@ -925,6 +1021,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD84.2
   title: Occupational exposure to toxic agents in industries other than agriculture
   group: QD80-QD8Z
@@ -953,6 +1053,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD84.3
   title: Occupational exposure to vibration
   group: QD80-QD8Z
@@ -980,6 +1084,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD84.4
   title: Occupational exposure to ergonomic risk
   group: QD80-QD8Z
@@ -1006,6 +1114,10 @@ items:
     - Occupational exposure to risk factors
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD85
   title: Burnout
@@ -1046,6 +1158,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD90
   title: Problem associated with illiteracy or low-level literacy
   group: QD90-QD9Z
@@ -1078,6 +1194,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QD91
   title: Problem associated with education unavailable or unattainable
   group: QD90-QD9Z
@@ -1105,6 +1225,10 @@ items:
     - Problems related to education and literacy
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QD92
   title: Problem with educational progress
@@ -1138,6 +1262,10 @@ items:
     - Problems related to education and literacy
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE00
   title: Acculturation difficulty
@@ -1175,6 +1303,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE01
   title: Stress, not elsewhere classified
   group: QE00-QE0Z
@@ -1205,6 +1337,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE02
   title: Social role conflict
   group: QE00-QE0Z
@@ -1230,6 +1366,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE03
   title: Social exclusion or rejection
@@ -1263,6 +1403,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE04
   title: Target of perceived adverse discrimination or persecution
@@ -1305,6 +1449,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE10
   title: Hazardous alcohol use
   group: QE10-QE2Z
@@ -1339,6 +1487,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11
   title: Hazardous drug use
   group: QE10-QE2Z
@@ -1371,6 +1523,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE11.0
   title: Hazardous use of opioids
@@ -1413,6 +1569,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.1
   title: Hazardous use of cannabis
   group: QE10-QE2Z
@@ -1448,6 +1608,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE11.2
   title: Hazardous use of sedatives, hypnotics or anxiolytics
@@ -1490,6 +1654,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.3
   title: Hazardous use of cocaine
   group: QE10-QE2Z
@@ -1528,6 +1696,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.4
   title: Hazardous use of stimulants including amphetamines or methamphetamine
   group: QE10-QE2Z
@@ -1564,6 +1736,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.5
   title: Hazardous use of caffeine
   group: QE10-QE2Z
@@ -1597,6 +1773,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE11.6
   title: Hazardous use of MDMA or related drugs
@@ -1634,6 +1814,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.7
   title: Hazardous use of dissociative drugs including ketamine or PCP
   group: QE10-QE2Z
@@ -1670,6 +1854,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE11.8
   title: Hazardous use of other specified psychoactive substances
   group: QE10-QE2Z
@@ -1703,6 +1891,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE11.9
   title: Hazardous use of unknown or unspecified psychoactive substances
@@ -1739,6 +1931,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE12
   title: Hazardous nicotine use
   group: QE10-QE2Z
@@ -1773,6 +1969,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE13
   title: Tobacco use
@@ -1815,6 +2015,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE20
   title: Lack of physical exercise
   group: QE10-QE2Z
@@ -1840,6 +2044,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE21
   title: Hazardous gambling or betting
@@ -1877,6 +2085,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE22
   title: Hazardous gaming
   group: QE10-QE2Z
@@ -1909,6 +2121,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE23
   title: Problems with inappropriate diet or eating habits
@@ -1944,6 +2160,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE24
   title: Problems with hygiene behaviours
   group: QE10-QE2Z
@@ -1969,6 +2189,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE25
   title: Problems with oral health behaviours
@@ -1996,6 +2220,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE26
   title: Problem with sun exposure behaviour
   group: QE10-QE2Z
@@ -2020,6 +2248,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE27
   title: Problem with behaviours related to psychological health or wellbeing
@@ -2046,6 +2278,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE28
   title: Problem with health literacy
   group: QE10-QE2Z
@@ -2070,6 +2306,10 @@ items:
     - null
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE30
   title: Insufficient social insurance support
@@ -2100,6 +2340,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE30.0
   title: Insufficient social insurance support, aged
   group: QE30-QE3Z
@@ -2128,6 +2372,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE30.1
   title: Insufficient social insurance support, disability
@@ -2158,6 +2406,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE30.2
   title: Insufficient social insurance support, unemployment
   group: QE30-QE3Z
@@ -2186,6 +2438,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE30.3
   title: Insufficient social insurance support, family support
@@ -2216,6 +2472,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE31
   title: Insufficient social welfare support
   group: QE30-QE3Z
@@ -2241,6 +2501,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE31.0
   title: Insufficient social welfare support, child protection
@@ -2271,6 +2535,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE31.1
   title: Insufficient social welfare support, protection against domestic violence
   group: QE30-QE3Z
@@ -2299,6 +2567,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE31.2
   title: Insufficient social welfare support, protection against homelessness
@@ -2329,6 +2601,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE31.3
   title: Insufficient social welfare support, post prison services
   group: QE30-QE3Z
@@ -2357,6 +2633,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE40
   title: Problem associated with conviction in civil or criminal proceedings without imprisonment
@@ -2387,6 +2667,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE41
   title: Problem associated with imprisonment or other incarceration
   group: QE40-QE4Z
@@ -2415,6 +2699,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE42
   title: Problem associated with release from prison
   group: QE40-QE4Z
@@ -2441,6 +2729,10 @@ items:
     - Problems related to other psychosocial circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE50
   title: Problem associated with interpersonal interactions
@@ -2473,6 +2765,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE50.0
   title: Problem associated with relationship with friend
   group: QE50-QE5Z
@@ -2500,6 +2796,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE50.1
   title: Relationships with teachers or classmates
   group: QE50-QE5Z
@@ -2525,6 +2825,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE50.10
   title: Dissatisfaction with school environment
@@ -2554,6 +2858,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE50.2
   title: Problem associated with relationships with people at work
   group: QE50-QE5Z
@@ -2581,6 +2889,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE50.3
   title: Relationships with neighbours, tenant or landlord
@@ -2614,6 +2926,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE50.4
   title: Relationship with parents, in-laws or other family members
@@ -2653,6 +2969,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE50.5
   title: Discord with counsellors
   group: QE50-QE5Z
@@ -2685,6 +3005,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE50.6
   title: Inadequate social skills
   group: QE50-QE5Z
@@ -2713,6 +3037,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE50.7
   title: Personality difficulty
@@ -2749,6 +3077,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE51
   title: Problem associated with interactions with spouse or partner
   group: QE50-QE5Z
@@ -2774,6 +3106,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE51.0
   title: Relationship distress with spouse or partner
@@ -2814,6 +3150,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE51.1
   title: History of spouse or partner violence
@@ -2889,6 +3229,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE52
   title: Problem associated with interpersonal interactions in childhood
   group: QE50-QE5Z
@@ -2914,6 +3258,10 @@ items:
     - Problems related to social environment
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE52.0
   title: Caregiver-child relationship problem
@@ -2946,6 +3294,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE52.1
   title: Loss of love relationship in childhood
   group: QE50-QE5Z
@@ -2977,6 +3329,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE60
   title: Absence of family member
   group: QE60-QE6Z
@@ -3004,6 +3360,10 @@ items:
     - Other problems related to primary support group
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE61
   title: Disappearance or death of family member
@@ -3036,6 +3396,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE61.0
   title: Loss or death of child
   group: QE60-QE6Z
@@ -3066,6 +3430,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE62
   title: Uncomplicated bereavement
   group: QE60-QE6Z
@@ -3093,6 +3461,10 @@ items:
     - Other problems related to primary support group
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE70
   title: Problems related to primary support group, including family circumstances
@@ -3125,6 +3497,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE70.0
   title: Inadequate family support
   group: QE70
@@ -3151,6 +3527,10 @@ items:
     - Other problems related to primary support group
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE70.1
   title: Disruption of family by separation or divorce
@@ -3184,6 +3564,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE70.2
   title: Dependent relative needing care at home
   group: QE70
@@ -3212,6 +3596,10 @@ items:
     - Other problems related to primary support group
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE80
   title: Victim of crime or terrorism
@@ -3248,6 +3636,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE81
   title: Exposure to disaster, war or other hostilities
   group: QE80-QE8Z
@@ -3281,6 +3673,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE82
   title: Personal history of maltreatment
   group: QE80-QE8Z
@@ -3310,6 +3706,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE82.0
   title: Personal history of physical abuse
@@ -3343,6 +3743,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE82.1
   title: Personal history of sexual abuse
   group: QE80-QE8Z
@@ -3374,6 +3778,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE82.2
   title: Personal history of psychological abuse
@@ -3412,6 +3820,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE82.3
   title: Personal history of neglect
   group: QE80-QE8Z
@@ -3442,6 +3854,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE83
   title: Personal frightening experience in childhood
   group: QE80-QE8Z
@@ -3470,6 +3886,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE84
   title: Acute stress reaction
@@ -3526,6 +3946,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE90
   title: Inadequate parental supervision or control
   group: QE90-QE9Z
@@ -3560,6 +3984,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE91
   title: Parental overprotection
   group: QE90-QE9Z
@@ -3587,6 +4015,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE92
   title: Altered pattern of family relationships in childhood
@@ -3621,6 +4053,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE93
   title: Removal from home in childhood
   group: QE90-QE9Z
@@ -3648,6 +4084,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QE94
   title: Institutional upbringing
@@ -3679,6 +4119,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE95
   title: Inappropriate parental pressure or other abnormal qualities of upbringing
   group: QE90-QE9Z
@@ -3709,6 +4153,10 @@ items:
     sources:
     - 62
     - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
+    - 63
 - code: QE96
   title: Events resulting in loss of self-esteem in childhood
   group: QE90-QE9Z
@@ -3737,6 +4185,10 @@ items:
     - Problems related to upbringing
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
 - code: QF20
   title: Difficulty or need for assistance with learning
@@ -4007,6 +4459,10 @@ items:
     - Problems related to housing and economic circumstances
     sources:
     - 62
+    - 63
+    hp2030_sources:
+    - 62
+    icd10cm_sources:
     - 63
   subgroup: QD71
 residuals:

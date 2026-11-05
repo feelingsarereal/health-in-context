@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { manifest, S, scheme, AsOf, Notice, PageHead } from '@feelingsarereal/sdoh-loops-core';
 import { provenance } from '@/lib/build-info';
+import { PAGES_BUILD, ISSUES_URL } from '@/components/ui/PrototypeBanner';
 
 export default function About() {
   return (
@@ -28,17 +29,24 @@ export default function About() {
         <dt className="font-semibold">ICD-11 text</dt>
         <dd data-testid="text-source">{scheme.text_source}</dd>
         <dt className="font-semibold">ICD-11 citation</dt>
+        <dd data-testid="who-citation">{S.codes.who_citation}</dd>
+        <dt className="font-semibold">Licence line in the WHO ICD-API</dt>
         <dd data-testid="icd-citation">{S.codes.citation}</dd>
         <dt className="font-semibold">Licence and permissions</dt>
         <dd>
           Text: {manifest.permissions.text}. Figures: {manifest.permissions.figures}.
         </dd>
         <dt className="font-semibold">Storage</dt>
-        <dd>On this device only ({manifest.storage}). Delivery: {manifest.delivery} (this app is not published).</dd>
+        <dd data-testid="delivery">
+          On this device only ({manifest.storage}).{' '}
+          {PAGES_BUILD
+            ? <>This copy is the public prototype on GitHub Pages: a test site. Everything you type still stays in this browser.</>
+            : <>Delivery: {manifest.delivery}; this copy runs from your own computer.</>}
+        </dd>
         <dt className="font-semibold">Report an error</dt>
         <dd>
           Note the page, the code or reference number, and what looks wrong, and send it to the app's maintainer (the {manifest.github_account} account that owns this
-          app). Every fact and its source is listed on <Link to="/methods" className="underline">Methods</Link>. Pack build: {provenance.build_errors} build error(s).
+          app){PAGES_BUILD && <>, or open an issue on <a className="underline" href={ISSUES_URL} target="_blank" rel="noreferrer">the repository's Issues page</a></>}. Every fact and its source is listed on <Link to="/methods" className="underline">Methods</Link>. Pack build: {provenance.build_errors} build error(s).
         </dd>
       </dl>
     </div>

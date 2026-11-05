@@ -14,6 +14,10 @@ codes:
   source: "WHO's own text, ICD-11 MMS release 2026-01."
   citation_from: situations.scheme.licence
   proposed_xwalk: "Proposed mapping — builder's reading, not from WHO"
+  # SL32 (T-LIC-01): WHO's required citation, verbatim (§1.3), in every page's footer and on About
+  who_citation: "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO."
+  # SL32: the Healthy People 2030 domains when the ICD-10-CM crosswalk is off — the builder's own topic tag
+  builder_topic: "Builder topic, not from WHO"
   builder_alias: "Builder alias — not an ICD-11 index term"
   status:
     sdoh: "SDOH code"
@@ -295,3 +299,11 @@ app:
     usedBy: Used by
     why: Why it mattered
     open: Open the source
+# SL32: the banner on every page of the public (GitHub Pages) build only
+prototype_banner:
+  lead: "Prototype for testing."
+  body_1: "Commissioned research, not peer reviewed. It does not diagnose anyone."
+  strong: "Don't enter real client information"
+  body_2: ": anything you type stays in this browser, but this is a test site. The ICD-10-CM crosswalk is hidden until WHO's permission arrives."
+  report: "Report a problem"
+  dismiss: "Hide this notice for this visit"

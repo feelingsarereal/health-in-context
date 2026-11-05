@@ -2,7 +2,7 @@
 
 Map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place.
 A static, on-device workbench built from the Actualizer action pack in `content-pack/` (workbench · safety profile
-`health` · delivery `local`). Everything a person types stays in this browser (IndexedDB) and leaves only through an
+`health` · delivery `pages`: a public prototype at https://feelingsarereal.github.io/sdoh-loops/, SL32). Everything a person types stays in this browser (IndexedDB) and leaves only through an
 export they start.
 
 ## Quick start (local)
@@ -62,10 +62,36 @@ The pack is the only source of facts. Change `content-pack/` (or rebuild it from
 `content-pack/ui-strings.yaml` live in the core's `src/lib/copy.ts` for review. A change to the pack's data needs a new
 pack version (`packages/sdoh-loops-pack/README.md`); `npm test` says so when it is missing.
 
-## Publishing this later
+## The public prototype (GitHub Pages, SL32)
 
-Delivery is `local`; nothing is pushed. To publish on GitHub Pages later (Daniel's decision, and only after todo
-T-LIC-01 and T-ICD-01 are closed):
+`main` deploys to https://feelingsarereal.github.io/sdoh-loops/ through `.github/workflows/pages.yml`. The workflow
+runs `npm ci`, then `npm test`, then `npm run build:pages`, then `npm run check:xwalk`, then deploys, then runs the
+crosswalk test again against the live site. The Pages build differs from a local build in three ways:
+
+- **No ICD-10-CM crosswalk** (`VITE_SDOH_XWALK=off`). Mapping ICD-11 to another classification needs WHO's separate
+  written agreement (§1.2.4, todo T-LIC-01, request 202611431). The core's `sdohCrosswalk` plugin leaves the pack's
+  ICD-10-CM data and its marked text out of the bundle, and `<SdohMap crosswalk={false}>` hides the lines. The
+  Healthy People 2030 domains stay, as "Builder topic, not from WHO".
+- **The crosswalk dist test** (`scripts/check-xwalk-dist.ts`). No text in `dist-pages/` may match
+  `/ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/` outside `xwalk-allowlist.txt`. That file lists general mentions that map
+  no code, each with its reason. Cowork reviews it before publishing.
+- **The prototype banner** (`VITE_SDOH_PAGES=on`) above the header on every page. Hiding it lasts for the visit;
+  a reload brings it back.
+
+WHO's §1.3 citation is in every page's footer and on About, in both builds.
+
+```bash
+npm run build:pages && npm run check:xwalk && npm run test:pages   # locally, under /sdoh-loops/
+SDOH_LIVE_URL=https://feelingsarereal.github.io/sdoh-loops/ npx playwright test --config playwright.pages.config.ts
+npx tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/sdoh-loops/
+```
+
+When WHO agrees, set `VITE_SDOH_XWALK` to on in the workflow (or drop it), and drop the banner's crosswalk sentence
+in the pack.
+
+## Publishing history
+
+Before SL32, delivery was `local`. These were the original steps for publishing (now done by `pages.yml`):
 
 1. Confirm `gh auth status` shows the `feelingsarereal` account.
 2. `gh repo create feelingsarereal/sdoh-loops --private --source . --push`.

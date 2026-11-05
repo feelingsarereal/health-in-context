@@ -21,6 +21,7 @@ items:
   what: Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010
     verified 2026-10-23 against the WHO PDF.
 - id: T-XWALK-01
+  xwalk: true
   what: Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside
     Z55–Z65.
 - id: T-EVID-01

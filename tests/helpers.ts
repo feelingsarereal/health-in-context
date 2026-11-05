@@ -16,7 +16,7 @@ export async function dismissFirstRun(page: Page) {
 }
 
 export async function newMap(page: Page, name: string, subject = '') {
-  await page.goto('/maps');
+  await page.goto('./maps');
   await page.getByTestId('new-map-name').fill(name);
   if (subject) await page.getByTestId('new-map-subject').fill(subject);
   await page.getByTestId('create-map').click();

@@ -10,9 +10,11 @@ import { addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../he
 import { h1Violations, PHRASES, ALLOWED_PHRASES } from '../lint';
 import { lintText } from '../../scripts/lib/lint';
 
-const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../dist');
+// SL32: SDOH_DIST=dist-pages checks the Pages build (playwright.pages.config.ts)
+const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..', process.env.SDOH_DIST ?? 'dist');
 const concepts = JSON.parse(fs.readFileSync(path.resolve(DIST, '../packages/sdoh-loops-pack/data/concepts.json'), 'utf8')) as { id: string }[];
-const ROUTES = ['/', '/maps', '/evidence', '/references', '/glossary', '/concepts', ...concepts.map((c) => `/concepts/${c.id}`), '/help', '/methods', '/about', '/nope'];
+// SL32: relative paths, so the run also works under the Pages base path (/sdoh-loops/)
+const ROUTES = ['./', './maps', './evidence', './references', './glossary', './concepts', ...concepts.map((c) => `./concepts/${c.id}`), './help', './methods', './about', './nope'];
 
 test('H1: rendered text of every route', async ({ page }) => {
   const all: unknown[] = [];
@@ -27,7 +29,7 @@ test('H1: rendered text of every route', async ({ page }) => {
 });
 
 test('H1: the map surface — pop-out, association menu (with 2nd degree), every panel, list view', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await dismissFirstRun(page);
   await newMap(page, 'Lint');
   const all: unknown[] = [];
