@@ -119,3 +119,11 @@ mark.nb-flag { color: inherit; }
   body { background: white; color: black; }
   .bx-card { box-shadow: none; border-color: #999; }
 }
+
+/* SL31: the quick-edit ✎ shows on hover or focus of its row (always on a touch screen); it is always in the tab order */
+.ax-qe-pen { opacity: 0; }
+[data-qe]:hover .ax-qe-pen,
+[data-qe]:focus-within .ax-qe-pen,
+.ax-qe-pen:focus { opacity: 1; }
+@media (pointer: coarse) { .ax-qe-pen { opacity: 1; } }
+@media print { .ax-qe-pen { display: none; } }

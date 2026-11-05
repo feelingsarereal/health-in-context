@@ -135,6 +135,15 @@ test('point 3: at 1440×900 the workspace fills the viewport; typing in a note n
   await expect(page.getByTestId('case-summary')).toBeInViewport();
   expect(await sc.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  // SL31 point 6: 10 more ticks past the notebook's end, and six Tabs through a note, leave the page where it is
+  for (let i = 0; i < 10; i++) await page.mouse.wheel(0, 600);
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  await last.click();
+  for (let i = 0; i < 6; i++) await page.keyboard.press('Tab');
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  // the document is no taller than the window, footer included
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(900);
+  await expect(page.getByRole('contentinfo')).toBeInViewport();
   await expect(page.getByTestId('notebook-toggle')).toBeInViewport({ ratio: 1 });
   await expect(page.getByTestId('map-menu')).toBeInViewport({ ratio: 1 });
   // the canvas keeps the full workspace height, not half the screen

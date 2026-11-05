@@ -12,6 +12,7 @@ import { RefCard } from '../evidence/RefCard';
 import { CodePopout } from './CodePopout';
 import { RichView } from './RichView';
 import { CodeLine, peekFacts } from './Peek';
+import { QuickRich, QuickToggle, type QuickEditApi } from './QuickEdit';
 
 function Row({ k, children, testId }: { k: string; children: ReactNode; testId?: string }) {
   return (
@@ -22,6 +23,7 @@ function Row({ k, children, testId }: { k: string; children: ReactNode; testId?:
   );
 }
 const dash = <span className="bx-muted">—</span>;
+const hasText = (d: { content: { content?: unknown[] }[] }) => d.content.some((p) => p.content?.length);
 
 /** one link in a circumstance's "links in / out" list: the other end, its polarity and its basis (evidence id and grade) */
 function LinkLine({ e, other, nm }: { e: MapEdge; other: string; nm: (id: string) => string }) {
@@ -41,8 +43,10 @@ function LinkLine({ e, other, nm }: { e: MapEdge; other: string; nm: (id: string
  * SL23: the selection card's Read mode — the selected circumstance, note or link as a reader sees it, as text. No
  * editing control is rendered at all (Edit mode adds them); the evidence references stay openable.
  */
-export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, empty }: {
+export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, empty, quick }: {
   map: SdohMap; node?: MapNode; edge?: MapEdge; multi: { nodes: number; edges: number }; nm: (id: string) => string; loops: Loop[]; loopNames: Map<string, string>; empty: string;
+  /** SL31: quick field edit — left out on a read-only map, or when the host turned it off */
+  quick?: QuickEditApi & { node: (id: string, patch: Partial<MapNode>) => void; edge: (id: string, patch: Partial<MapEdge>) => void };
 }) {
   if (node && node.kind === 'note')
     return (
@@ -61,8 +65,21 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
         {f.code && <CodeLine text={f.code} testId="read-code" />}
         <p className="font-display text-lg font-semibold leading-snug" data-testid="read-title">{f.title}</p>
         <dl className="mt-2 grid grid-cols-[7rem_1fr] gap-x-2 gap-y-1">
-          {f.label && <Row k={C.peek.label}>{f.label}</Row>}
-          <Row k={C.peek.circumstance}>{node.circumstance.content.some((p) => p.content?.length) ? <RichView doc={node.circumstance} /> : dash}</Row>
+          {quick ? (
+            <>
+              <Row k={C.peek.label}>
+                <QuickRich key={`${node.id}-label`} name={C.peek.label} value={node.label} singleLine quick={quick} onSave={(d) => quick.node(node.id, { label: d })} testId="qe-label" view={f.label ? <RichView doc={node.label} /> : dash} />
+              </Row>
+              <Row k={C.peek.circumstance}>
+                <QuickRich key={`${node.id}-circ`} name={C.peek.circumstance} value={node.circumstance} quick={quick} onSave={(d) => quick.node(node.id, { circumstance: d })} testId="qe-circumstance" view={hasText(node.circumstance) ? <RichView doc={node.circumstance} /> : dash} />
+              </Row>
+            </>
+          ) : (
+            <>
+              {f.label && <Row k={C.peek.label}>{f.label}</Row>}
+              <Row k={C.peek.circumstance}>{hasText(node.circumstance) ? <RichView doc={node.circumstance} /> : dash}</Row>
+            </>
+          )}
           <Row k={C.peek.status} testId="read-status">{f.status}</Row>
           {node.code_status === 'other' && <Row k={C.read.type}>{node.type ?? dash}{node.ref ? ` · ${node.ref} (${C.node.userEntered})` : ''}</Row>}
           {node.severity !== null && <Row k={C.read.severity}>{node.severity}</Row>}
@@ -70,8 +87,19 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
           <Row k={C.peek.out} testId="read-out">{out.length ? <ul>{out.map((e) => <LinkLine key={e.id} e={e} other={e.to} nm={nm} />)}</ul> : '0'}</Row>
           <Row k={C.peek.in} testId="read-in">{into.length ? <ul>{into.map((e) => <LinkLine key={e.id} e={e} other={e.from} nm={nm} />)}</ul> : '0'}</Row>
           <Row k={C.peek.loops}>{f.loops.length ? f.loops.join(', ') : C.peek.noLoops}</Row>
-          <Row k={C.read.pinned} testId="read-pinned">{node.pinned ? C.peek.yes : C.peek.no}</Row>
-          {plainText(node.notes) && <Row k={C.node.notes}><RichView doc={node.notes} /></Row>}
+          {quick ? (
+            <>
+              <Row k={C.read.pinned}><QuickToggle name={C.read.pinned} on={node.pinned} quick={quick} onChange={(on) => quick.node(node.id, { pinned: on })} testId="read-pinned" /></Row>
+              <Row k={C.node.notes}>
+                <QuickRich key={`${node.id}-notes`} name={C.node.notes} value={node.notes} quick={quick} onSave={(d) => quick.node(node.id, { notes: d })} testId="qe-notes" view={plainText(node.notes) ? <RichView doc={node.notes} /> : dash} />
+              </Row>
+            </>
+          ) : (
+            <>
+              <Row k={C.read.pinned} testId="read-pinned">{node.pinned ? C.peek.yes : C.peek.no}</Row>
+              {plainText(node.notes) && <Row k={C.node.notes}><RichView doc={node.notes} /></Row>}
+            </>
+          )}
         </dl>
         {node.code && (
           <section className="bx-card mt-3 p-3" aria-label="About this code">
@@ -92,13 +120,19 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
         <dl className="mt-2 grid grid-cols-[7rem_1fr] gap-x-2 gap-y-1">
           <Row k={C.edge.polarity}>{f.polarity === '+' ? S.edges.polarity_plus : S.edges.polarity_minus}</Row>
           <Row k={C.edge.weight}>{f.weight}</Row>
-          <Row k={S.edges.delay}>{f.delay ? C.peek.yes : C.peek.no}</Row>
+          <Row k={S.edges.delay}>{quick ? <QuickToggle name={S.edges.delay} on={!!edge.delay} quick={quick} onChange={(on) => quick.edge(edge.id, { delay: on })} testId="qe-delay" /> : f.delay ? C.peek.yes : C.peek.no}</Row>
           <Row k={C.edge.confidence}>{edge.confidence}</Row>
           <Row k={C.evidence.basis} testId="read-basis">
             {f.link ? <>{C.evidence.basisLabel.evidence} <span className="font-mono">{f.link.id}</span> <GradeChip grade={f.link.grade} /></> : <>{C.evidence.basisLabel[f.basis]}{f.reason ? `: ${f.reason}` : ''}</>}
           </Row>
           {f.link && <Row k={C.peek.mechanism}><CitedText text={f.link.mechanism} as="div" className="bx-prose leading-6" /></Row>}
-          {f.description && <Row k={C.peek.description}>{f.description}</Row>}
+          {quick ? (
+            <Row k={C.peek.description}>
+              <QuickRich key={`${edge.id}-desc`} name={C.peek.description} value={edge.description} quick={quick} onSave={(d) => quick.edge(edge.id, { description: d })} testId="qe-description" view={plainText(edge.description) ? <RichView doc={edge.description} /> : dash} />
+            </Row>
+          ) : (
+            f.description && <Row k={C.peek.description}>{f.description}</Row>
+          )}
         </dl>
         {!f.link && edge.evidence.length > 0 && (
           <section className="mt-3" aria-label={C.edge.evidence}>

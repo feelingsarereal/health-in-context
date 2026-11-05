@@ -21,7 +21,7 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.5.1 @feelingsarereal/sdoh-loops-pack@0.2.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.6.0 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
@@ -62,6 +62,7 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `missing` | What to show when `map` is an id that is not in `storage`. |
 | `notebook` | 0.5.0 (SL26). `true` shows the case manager notebook: a toggle beside List view (a column with its own resize handle from lg up; Map / Notebook tabs below). Off by default; embedding apps keep it off until SL28. Notes live in the map's `notebook` block (schema 3). |
 | `notebookTemplates` | 0.5.0 (SL26). `NoteTemplate[]` (`{ id, name, fields: { key, label }[] }`): your templates, after the core's Intake, Contact note, Case conference and Plan review. Each note from one starts with a Date field (a year by default). |
+| `quickEdit` | 0.6.0 (SL31). Default `true` wherever the map is editable: in the selection card's Read mode a ✎ edits the label, the description, the notes and a link's description in place (Enter or a click away saves as one Undo step, Esc cancels), and "Pinned in place" and a link's delay are switches. Codes, code status, polarity, weight, confidence, overrides and delete stay in Edit mode. `false` turns it off; a read-only map never shows it. |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
 Since 0.2.0 it adds `F` (full screen), `]` (fold or open the side dock; since 0.3.0 also the » / « buttons on the dock and its rail) and Shift+F10 / the ContextMenu key (peek at
@@ -90,7 +91,8 @@ The notebook ends with a live, read-only **case summary** of the map as shown: t
 ### Workspace height (0.5.1, SL30)
 
 From lg up, on the canvas, the workspace (toolbar, canvas, notebook, dock) fills the viewport below where it starts, less
-12 px, and keeps that height as the window or the page above it changes size; the notebook and the dock scroll inside
+what your page lays out below it in normal flow (since 0.6.0: a site footer up to 15% of the window high), so the document is exactly the
+window and never scrolls; it keeps that height as the window or the page around it changes size; the notebook and the dock scroll inside
 themselves, and the page does not scroll while someone works in the map. A sticky site header counts as "above". When
 that would leave under 480 px (a map placed far down a long page), the workspace keeps the older fixed height and the
 page scrolls to it. Below lg, and in the list view, nothing changed. The first time the notebook opens on a screen under

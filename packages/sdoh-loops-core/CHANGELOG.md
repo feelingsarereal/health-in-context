@@ -10,6 +10,34 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.6.0] — 2026-11-04
+
+Minor (SL31): quick field edit in Read mode (a new prop), the page-scroll leak left after 0.5.1, and three more kinds of
+identifier. Pack: `0.2.0` (unchanged). No map-file change; existing behavior unchanged except as listed.
+
+- **Quick field edit (`quickEdit`, new prop, default `true` where the map is editable).** In the selection card's Read
+  mode, hovering or focusing an editable row shows a small ✎ ("Edit Label", always in the tab order, always visible on a
+  touch screen). It turns only that field into an editor in place, focused, while the card stays in Read mode: **Enter**
+  saves (Shift+Enter is a new line in the longer fields), a click away saves, **Esc** cancels; each save is one Undo step
+  and autosaves; the live region says "Label saved."; focus returns to the ✎. Fields: a circumstance's **Label** (one
+  line), **Circumstance** and **Notes** (a compact editor: bold, italic, underline, and "More formatting", which saves
+  and opens Edit mode; formatting already in the text, such as a color or size, is kept), **Pinned in place** (a
+  switch), and a link's **Description** and **Delay** (a switch). **Not quick-editable, by design:** code and code status,
+  polarity, weight, confidence, ⚑ override reasons, and delete — each changes what the evidence check vouches for or
+  needs a reason, so their rows have no ✎. A read-only map (a host's built original) shows none of it.
+- **The page no longer scrolls under the map (SL30 leak).** The fitted workspace now also leaves room for what the page
+  lays out below it when that is footer-sized (up to 15% of the window; more is the host's page carrying on, left to
+  scroll as before), so in the standalone app the document is exactly the window: wheel scrolling past the
+  notebook's end and tabbing through note fields leave `scrollY` at 0. A screen-reader-only caption in the case summary
+  had been stretching the page to almost twice the window; the notebook's scroll box now contains it. The canvas
+  container also has `overscroll-behavior: contain`.
+- **Identifier check: dates of birth, ages, bare ZIP codes.** New categories `dob` ("DOB", "D.O.B.", "date of birth",
+  "born on" and a date → `[date of birth]`, the lead word kept) and `age` ("34-year-old", "34 years old", "34 y/o",
+  "34 years of age", "age 34", "aged 34" → `[age]`); and a bare 5-digit ZIP next to a state or a city and state
+  ("Huntsville, AL 35801", "New York 10012") → `[ZIP code]`. "5 years", "the 10012 form", "born in 1961" and "page 34"
+  stay unflagged. Names without a title or "my name is" stay out of scope; Help now says so plainly and tells the user
+  to read their notes for names. A key a field already handled (`defaultPrevented`) is no longer also a map key.
+
 ## [0.5.1] — 2026-11-04
 
 Patch (SL30, review fixes from the 0.5.0 walkthrough). Pack: `0.2.0` (unchanged). No prop, export or map-file change.

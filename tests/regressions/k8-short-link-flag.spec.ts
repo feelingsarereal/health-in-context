@@ -71,10 +71,9 @@ test('the combined badge follows the link: a − override with a delay reads “
   await shortLinkMap(page);
   const short = edgeLi(page, LOWINC);
   await zoomTo(page, 1.0);
-  // select the link by clicking its line a quarter of the way along, clear of the badge
-  const [x1, y1, x2, y2] = (await short.getAttribute('data-ends'))!.split(',').map(Number);
-  const c = (await page.getByTestId('canvas').boundingBox())!;
-  await page.mouse.click(c.x + x1 + (x2 - x1) / 4, c.y + y1 + (y2 - y1) / 4);
+  // select the link from the Links panel (SL31: a click on so short a line can land on a box when the canvas is shorter)
+  await panel(page, 'links');
+  await page.getByTestId('links-item').filter({ hasText: LOWINC }).first().getByRole('button').first().click();
   const insp = page.getByTestId('edge-inspector');
   await insp.getByTestId('polarity-minus').check({ force: true });
   await insp.getByTestId('edge-delay').check();

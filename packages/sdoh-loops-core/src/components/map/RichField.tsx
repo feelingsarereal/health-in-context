@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useEditor, EditorContent, Extension } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -38,7 +38,18 @@ export type RichFieldFlags = Omit<FlagsOptions, 'tip'> & { tip: string; version:
  * SL26: `blocks` adds headings (2, 3) and bullet and numbered lists, for the notebook's free notes (a NoteDoc), and
  * `flags` underlines possible identifiers as the user types.
  */
-export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId }: { id: string; value: D; onChange: (d: D) => void; label: string; describedBy?: string; singleLine?: boolean; minRows?: number; blocks?: boolean; flags?: RichFieldFlags; testId?: string }) {
+export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd }: {
+  id: string; value: D; onChange: (d: D) => void; label: string; describedBy?: string; singleLine?: boolean; minRows?: number; blocks?: boolean; flags?: RichFieldFlags; testId?: string;
+  /** SL31 quick edit: bold, italic and underline only in the toolbar (other formatting already in the text is kept) */
+  compact?: boolean;
+  /** SL31 quick edit: sees each key first; true means handled (Enter saves, Esc cancels) */
+  onKey?: (e: KeyboardEvent) => boolean;
+  autoFocus?: boolean;
+  /** SL31 quick edit: after the style buttons (the "More formatting" link) */
+  toolbarEnd?: ReactNode;
+}) {
+  const keyRef = useRef(onKey);
+  keyRef.current = onKey;
   const last = useRef<string>(JSON.stringify(value));
   const fl = useRef(flags);
   fl.current = flags;
@@ -53,6 +64,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
       ...(flags ? [IdentifierFlags.configure({ isDismissed: (c, v) => !!fl.current?.isDismissed(c, v), tip: flags.tip, onFlag: () => fl.current?.onFlag?.() })] : []),
     ],
     content: value,
+    ...(autoFocus ? { autofocus: 'end' as const } : {}),
     editorProps: {
       attributes: {
         id,
@@ -65,6 +77,11 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
         style: `min-height: ${singleLine ? 2.4 : 1.6 * minRows + 0.8}rem`,
       },
       handleKeyDown: (_v, e) => {
+        if (keyRef.current?.(e)) {
+          e.preventDefault();
+          e.stopPropagation();
+          return true;
+        }
         if (singleLine && e.key === 'Enter') return true;
         e.stopPropagation();
         return false;
@@ -90,6 +107,12 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
       if (flags) editor.view.updateState(EditorState.create({ doc: editor.state.doc, plugins: editor.state.plugins, selection: editor.state.selection }));
     }
   }, [value, editor]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!editor || !autoFocus) return;
+    // at once, not a frame later: the first key typed after the ✎ lands in the field
+    editor.view.focus();
+    editor.commands.setTextSelection(editor.state.doc.content.size);
+  }, [editor]); // eslint-disable-line react-hooks/exhaustive-deps
   // the dismissed list changed: redraw the underlines
   useEffect(() => {
     if (editor && flags) editor.view.dispatch(editor.state.tr.setMeta(flagsKey, true));
@@ -125,6 +148,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
               </button>
             </>
           )}
+          {!compact && (<>
           <select
             className="bx-input w-auto py-0.5"
             aria-label="Text size"
@@ -147,6 +171,8 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
             ))}
           </select>
           <input type="color" aria-label="Custom text color" className="h-7 w-8 cursor-pointer rounded border border-[color:var(--bx-line)]" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
+          </>)}
+          {toolbarEnd}
         </div>
       )}
       <EditorContent editor={editor} />

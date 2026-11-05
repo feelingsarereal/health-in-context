@@ -332,6 +332,8 @@ export function dismissFlag(nb: Notebook | undefined, category: string, value: s
 export const LABELS: Record<IdentifierCategory, string> = {
   person: '[Person]',
   date: '[date]',
+  dob: '[date of birth]',
+  age: '[age]',
   phone: '[phone]',
   email: '[email]',
   address: '[address]',

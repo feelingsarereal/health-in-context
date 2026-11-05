@@ -241,7 +241,7 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
           </div>
         )}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" data-testid="nb-scroll">
+      <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain" data-testid="nb-scroll">
         {notes.length === 0 ? (
           <p className="p-3 text-sm bx-muted" data-testid="nb-empty">{C.notebook.empty}</p>
         ) : (

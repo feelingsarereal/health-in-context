@@ -71,10 +71,34 @@ interface DockPref {
 }
 /** SL30: under this width, the notebook's first opening folds the dock to its rail (once per viewer) */
 const NB_AUTOFOLD_BELOW = 1600;
-/** SL30: from lg up the workspace fills the viewport below where it starts, less this gap; when that leaves less than
- * FIT_MIN (a map placed far down a host's page), it keeps the older height and the page scrolls to it */
-const FIT_GAP = 12;
+/** SL30: from lg up the workspace fills the viewport below where it starts; SL31: less what the page has below it (the
+ * site footer, a host's notice), so the page itself is exactly the viewport and never scrolls. When that leaves less
+ * than FIT_MIN (a map placed far down a host's page), it keeps the older height and the page scrolls to it. */
 const FIT_MIN = 480;
+/** SL31: the most of the window that what sits below the workspace (a footer) may take before it is left to scroll */
+const FIT_BELOW_MAX = 0.15;
+/**
+ * SL31: the height of what the page lays out below an element in normal flow: its following siblings, then each
+ * ancestor's following siblings, plus each ancestor's bottom padding and border, up to <body>. A stretched (flex-1)
+ * ancestor counts only its own padding, so the measure does not feed on the height it sets.
+ */
+function spaceBelow(el: HTMLElement): number {
+  let sum = 0;
+  for (let n: HTMLElement | null = el; n && n !== document.body; n = n.parentElement) {
+    const p = n.parentElement;
+    if (!p) break;
+    const pcs = getComputedStyle(p);
+    const column = pcs.display !== 'flex' && pcs.display !== 'inline-flex' && pcs.display !== 'grid' ? true : pcs.display === 'grid' ? false : pcs.flexDirection.startsWith('column');
+    if (!column) continue;
+    for (let sib = n.nextElementSibling as HTMLElement | null; sib; sib = sib.nextElementSibling as HTMLElement | null) {
+      const cs = getComputedStyle(sib);
+      if (cs.display === 'none' || cs.position === 'absolute' || cs.position === 'fixed') continue;
+      sum += sib.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom) + (parseFloat(pcs.rowGap) || 0);
+    }
+    sum += parseFloat(pcs.paddingBottom) + parseFloat(pcs.borderBottomWidth);
+  }
+  return sum;
+}
 const DOCK_DEFAULT = 400;
 const DOCK_MIN = 280;
 const NB_DEFAULT = 420;
@@ -104,6 +128,12 @@ export interface SdohMapProps {
    * with their links; they stay in the map, its edits and its file exports. Change it to show or hide them.
    */
   hideNode?: (node: MapNode) => boolean;
+  /**
+   * SL31: quick field edit in the selection card's Read mode — a ✎ on the label, the description, the notes and a
+   * link's description, and switches for "Pinned in place" and a link's delay. Default true wherever the map is
+   * editable; a read-only map never shows it. Codes, code status, polarity, weight, confidence and overrides stay in Edit.
+   */
+  quickEdit?: boolean;
   /** SL17: the host's cards in the side dock, stacked below the core's editor */
   sideCards?: SideCard[];
   /** SL17: the host's own lines in the peek, below the core's */
@@ -320,7 +350,10 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     const measure = () => {
       const el = ws.current;
       if (!el) return;
-      const room = Math.floor(window.innerHeight - (el.getBoundingClientRect().top + window.scrollY) - FIT_GAP);
+      // a footer's worth below (up to 15% of the window) gets room, so the page is exactly the window; more than
+      // that is the host's page carrying on below the map, which the page scrolls to as before
+      const below = spaceBelow(el);
+      const room = Math.floor(window.innerHeight - (el.getBoundingClientRect().top + window.scrollY) - (below <= window.innerHeight * FIT_BELOW_MAX ? below : 0));
       setFitH(room >= FIT_MIN ? room : null);
     };
     measure();
@@ -742,6 +775,9 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // ── keyboard map (app-requirements, "Keyboard map")
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // SL31: a key a field already handled (Enter saving or Esc cancelling a quick edit) is not a map key too: the
+      // editor it came from may already have left the page by now, so its target can no longer say it was typing
+      if (e.defaultPrevented) return;
       const t = e.target instanceof Element ? e.target : document.body;
       const mod = e.metaKey || e.ctrlKey;
       // SL23: ⌘O opens a map file, ⌘S saves a copy — from anywhere in the map but a dialog
@@ -1009,10 +1045,22 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     </div>
   );
 
-  // SL23: Read mode — the selection as text, with no editing control in the DOM
+  // SL23: Read mode — the selection as text; SL31: with quick field edit for the text fields and two switches
+  const quick =
+    canEdit && props.quickEdit !== false
+      ? {
+          save: (name: string, change: () => void) => {
+            change();
+            announce(`${name} ${C.quick.saved}`);
+          },
+          more: () => setMode('edit'),
+          node: (id: string, patch: Partial<MapNode>) => apply((m) => updateNode(m, id, patch)),
+          edge: (id: string, patch: Partial<MapEdge>) => apply((m) => updateEdge(m, id, patch)),
+        }
+      : undefined;
   const reader = (
-    <div data-testid="inspector" data-mode="read">
-      <SelectionRead map={map} node={selNode} edge={selEdge} multi={{ nodes: selected.nodes.length, edges: selected.edges.length }} nm={nm} loops={loops.loops} loopNames={loopNames} empty={emptyHint} />
+    <div data-testid="inspector" data-mode="read" data-quick-edit={quick ? 'on' : 'off'}>
+      <SelectionRead map={map} node={selNode} edge={selEdge} multi={{ nodes: selected.nodes.length, edges: selected.edges.length }} nm={nm} loops={loops.loops} loopNames={loopNames} empty={emptyHint} quick={quick} />
     </div>
   );
   const panelBody: Record<Panel, JSX.Element> = {
@@ -1258,7 +1306,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       {nbTabs}
       {view === 'canvas' ? (
         <div ref={gridEl} className={grid} style={gridStyle}>
-          <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} data-print-hide>
+          <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} overscroll-contain rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} data-print-hide>
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
                 ref={canvas}

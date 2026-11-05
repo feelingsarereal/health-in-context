@@ -1,9 +1,12 @@
 /**
  * SL26: the notebook's identifier check — a local heuristic, never a guarantee, and it never blocks typing (S7.1).
  * Patterns for: names after an honorific or "my name is", dates other than a bare year, phone numbers, email
- * addresses, street addresses, ZIP+4, SSN-like numbers and record-like numbers. Pure functions; nothing leaves the device.
+ * addresses, street addresses, ZIP+4, SSN-like numbers and record-like numbers. SL31: dates of birth ("DOB", "born on"
+ * and a date), ages ("34-year-old", "age 34", "aged 34") and a bare 5-digit ZIP code next to a state or a city and state.
+ * Names without a title or "my name is" are out of scope: they cannot be told from capitalised words reliably.
+ * Pure functions; nothing leaves the device.
  */
-export const IDENTIFIER_CATEGORIES = ['person', 'date', 'phone', 'email', 'address', 'zip', 'ssn', 'record'] as const;
+export const IDENTIFIER_CATEGORIES = ['person', 'date', 'dob', 'age', 'phone', 'email', 'address', 'zip', 'ssn', 'record'] as const;
 export type IdentifierCategory = (typeof IDENTIFIER_CATEGORIES)[number];
 
 export interface IdentifierMatch {
@@ -17,32 +20,48 @@ export interface IdentifierMatch {
 }
 
 const MONTH = '(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)';
+const STATE_ABBR = '(?:A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])';
+const STATE_NAME =
+  '(?:Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New[ \\t]+Hampshire|New[ \\t]+Jersey|New[ \\t]+Mexico|New[ \\t]+York|North[ \\t]+Carolina|North[ \\t]+Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode[ \\t]+Island|South[ \\t]+Carolina|South[ \\t]+Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West[ \\t]+Virginia|Wisconsin|Wyoming|Puerto[ \\t]+Rico)';
+/** SL31: the words that make the date after them a date of birth */
+const DOB_LEAD = /\b(?:DOB|D\.O\.B\.?|[Dd]ate[ \t]+of[ \t]+[Bb]irth|[Bb]irth[ \t]?[Dd]ate|[Bb]orn(?:[ \t]+on)?)(?![\p{L}])\.?[ \t]*[:–-]?[ \t]*/gu;
 const NAME = "\\p{Lu}[\\p{L}'’-]+(?:[ \\t]+\\p{Lu}[\\p{L}'’-]+)?";
 // whole words take no period (a period after them ends the sentence); abbreviations may take one
 const STREET = '(?:(?:Street|Avenue|Road|Boulevard|Lane|Drive|Court|Way|Place|Circle|Terrace|Parkway|Highway|Trail)\\b|(?:St|Ave|Rd|Blvd|Ln|Dr|Ct|Pl|Cir|Ter|Pkwy|Hwy|Trl)\\b\\.?)';
 
+/**
+ * Full dates: 03/14/2026, 3/4/26, 14-03-2026, 14.3.24, 2026-03-14, March 14, March 14th, 2026, 14 March 2026, the 14th
+ * of March, March 2026. SL30: a numeric date may end a sentence ("on 03/14/2026." or "03/14/2026...") — only a further
+ * digit, or a separator followed by a digit, rules it out; one separator throughout.
+ */
+const DATE_SRC = [
+  '(?<!\\d|\\d[/.-])\\d{1,2}([/.-])\\d{1,2}\\1(?:\\d{4}|\\d{2})(?!\\d|[/.-]\\d)',
+  '(?<!\\d|\\d[/.-])\\d{4}([/.-])\\d{1,2}\\2\\d{1,2}(?!\\d|[/.-]\\d)',
+  `\\b${MONTH}\\.?[ \\t]+\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?[ \\t]+\\d{4}\\b)?`,
+  `\\b\\d{1,2}(?:st|nd|rd|th)?[ \\t]+(?:of[ \\t]+)?${MONTH}\\b\\.?(?:,?[ \\t]+\\d{4}\\b)?`,
+  `\\b${MONTH}\\.?,?[ \\t]+\\d{4}\\b`,
+].join('|');
+const DATE_RE = new RegExp(DATE_SRC, 'g');
+/** SL31: a date that starts exactly where a DOB lead ends */
+const DATE_AT = new RegExp(DATE_SRC, 'y');
+
 /** In priority order: where two matches overlap, the earlier category wins. */
-const PATTERNS: { category: IdentifierCategory; re: RegExp; group?: number; name?: number }[] = [
+const PATTERNS: { category: IdentifierCategory; re: RegExp; group?: number; name?: number; /** the match is this pattern, right after `re` */ after?: RegExp }[] = [
+  // SL31: a date after "DOB" or "born on" is a date of birth (checked before plain dates, so it wins the overlap); the
+  // match is the date alone, so "DOB 03/14/1961" becomes "DOB [date of birth]"
+  { category: 'dob', re: DOB_LEAD, after: DATE_AT },
   { category: 'email', re: /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g },
   { category: 'ssn', re: /(?<![\d-])\d{3}[- ]\d{2}[- ]\d{4}(?![\d-])/g },
   { category: 'zip', re: /(?<![\d-])\d{5}-\d{4}(?![\d-])/g },
-  { category: 'phone', re: /(?<![\w-])(?:\+?1[ .-]?)?(?:\(\d{3}\)[ ]?|\d{3}[ .-])\d{3}[ .-]\d{4}(?![\w-])/g },
-  // full dates: 03/14/2026, 3/4/26, 14-03-2026, 14.3.24, 2026-03-14, March 14, March 14th, 2026, 14 March 2026,
-  // the 14th of March, March 2026. SL30: a numeric date may end a sentence ("on 03/14/2026." or "03/14/2026...") —
-  // only a further digit, or a separator followed by a digit, rules it out; one separator throughout.
+  // SL31: a bare 5-digit ZIP only next to a state ("AL 35801", "Huntsville, Alabama 35801"); "the 10012 form" is not one
+  { category: 'zip', re: new RegExp(`\\b(?:${STATE_ABBR}|${STATE_NAME}),?[ \\t]+(\\d{5})(?![\\d-])`, 'g'), group: 1 },
+  // SL31: ages — "34-year-old", "34 years old", "34 y/o", "age 34", "aged 34", "34 years of age"; "5 years" is not one
   {
-    category: 'date',
-    re: new RegExp(
-      [
-        '(?<!\\d|\\d[/.-])\\d{1,2}([/.-])\\d{1,2}\\1(?:\\d{4}|\\d{2})(?!\\d|[/.-]\\d)',
-        '(?<!\\d|\\d[/.-])\\d{4}([/.-])\\d{1,2}\\2\\d{1,2}(?!\\d|[/.-]\\d)',
-        `\\b${MONTH}\\.?[ \\t]+\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?[ \\t]+\\d{4}\\b)?`,
-        `\\b\\d{1,2}(?:st|nd|rd|th)?[ \\t]+(?:of[ \\t]+)?${MONTH}\\b\\.?(?:,?[ \\t]+\\d{4}\\b)?`,
-        `\\b${MONTH}\\.?,?[ \\t]+\\d{4}\\b`,
-      ].join('|'),
-      'g',
-    ),
+    category: 'age',
+    re: /\b\d{1,3}[ \t-]*(?:years?|yrs?)[ \t-]*old\b|\b\d{1,3}[ \t]*(?:y\/o|yo)\b|\b\d{1,3}[ \t]+years?[ \t]+of[ \t]+age\b|\b(?:[Aa]ged?|AGED?)\b[ \t]*:?[ \t]*\d{1,3}(?![\d\/.-]*\d)/g,
   },
+  { category: 'phone', re: /(?<![\w-])(?:\+?1[ .-]?)?(?:\(\d{3}\)[ ]?|\d{3}[ .-])\d{3}[ .-]\d{4}(?![\w-])/g },
+  { category: 'date', re: DATE_RE },
   {
     category: 'address',
     re: new RegExp(`\\b\\d{1,6}[ \\t]+(?:[NSEW]\\.?[ \\t]+)?(?:\\p{Lu}[\\p{L}'’-]*[ \\t]+){1,3}${STREET}(?:,?[ \\t]+(?:Apt|Apartment|Unit|Suite|Ste|#)\\.?[ \\t]*[\\w-]+)?|\\bP\\.?[ \\t]?O\\.?[ \\t]+Box[ \\t]+\\d+`, 'gu'),
@@ -64,6 +83,13 @@ export function findIdentifiers(text: string): IdentifierMatch[] {
     for (let m = p.re.exec(text); m; m = p.re.exec(text)) {
       let start = m.index;
       let value = m[0];
+      if (p.after) {
+        p.after.lastIndex = m.index + m[0].length;
+        const d = p.after.exec(text);
+        if (!d) continue;
+        start = d.index;
+        value = d[0];
+      }
       if (p.group && m[p.group]) {
         start = m.index + m[0].lastIndexOf(m[p.group]);
         value = m[p.group];

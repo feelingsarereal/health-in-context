@@ -117,6 +117,8 @@ const FALLBACK = {
   },
   /** SL23: the selection card's Read mode */
   read: { type: 'Type', severity: 'Severity', since: 'Since', pinned: 'Pinned in place', notPinned: 'Not pinned', thickness: 'Thickness follows |weight|' },
+  /** SL31: quick field edit in Read mode */
+  quick: { edit: 'Edit', saved: 'saved.', more: 'More formatting', hint: 'Enter saves, Shift+Enter starts a new line, Esc cancels.', hintLine: 'Enter saves, Esc cancels.', on: 'Yes', off: 'No' },
   /** SL23: the toolbar's Map menu */
   mapMenu: {
     button: 'Map', label: 'Map file', saved: 'Saved a copy of the map as a file.',
@@ -168,11 +170,11 @@ const FALLBACK = {
     dateYear: 'Year', dateFull: 'Use a full date', dateYearHint: 'A year only, by default.', dateFullHint: 'A full date can identify someone, so it is flagged.',
     check: 'Identifier check (a heuristic)', none: 'No possible identifiers', identifier: 'possible identifier',
     flagsTitle: 'Possible identifiers',
-    heuristic: 'This check is a heuristic. It looks for names after Mr., Ms. or "my name is", full dates, phone numbers, email and street addresses, ZIP+4, and SSN-like or record-like numbers. It can miss an identifier, and it can flag something that is not one. It never stops you typing.',
+    heuristic: 'This check is a heuristic. It looks for names after Mr., Ms. or "my name is", full dates and dates of birth, ages, phone numbers, email and street addresses, ZIP codes (ZIP+4, or five digits after a state), and SSN-like or record-like numbers. It does not look for names on their own: read your notes for names yourself. It can miss an identifier, and it can flag something that is not one. It never stops you typing.',
     label: 'Replace with a label', dismiss: 'Not an identifier', labelAll: 'Label them all', places: 'place',
     replaced: 'Replaced everywhere in this notebook with', replacedNote: 'The replaced text is not kept, so Undo cannot bring it back.',
     dismissedMsg: 'Marked as not an identifier in this notebook.', flagTip: 'Possible identifier — see the list in the notebook header',
-    categories: { person: 'name', date: 'full date', phone: 'phone number', email: 'email address', address: 'street address', zip: 'ZIP+4', ssn: 'SSN-like number', record: 'record-like number' } as Record<string, string>,
+    categories: { person: 'name', date: 'full date', dob: 'date of birth', age: 'age', phone: 'phone number', email: 'email address', address: 'street address', zip: 'ZIP code', ssn: 'SSN-like number', record: 'record-like number' } as Record<string, string>,
     print: 'Print', printTip: 'Print the notebook',
     warnTitle: 'Possible identifiers in the notebook', warnLead: 'The notebook still has', warnHint: 'Label them first, or continue as it is. The check is a heuristic, so read the notes yourself too.',
     warnLabel: 'Label them all, then continue', warnAnyway: 'Continue anyway', warnCancel: 'Cancel',
@@ -190,8 +192,8 @@ const FALLBACK = {
       title: 'The notebook',
       what: 'The notebook sits beside the map. Use it for notes about the case: free notes with headings and lists, or notes from a template (Intake, Contact note, Case conference, Plan review), each with headed fields. Search finds words in any note, and tags group them.',
       device: 'Notes are saved inside the map, in this browser, as you type. Nothing is sent anywhere. They leave this device only when you export the map, and "Clear my data" deletes them with everything else. Export saves the notes with the map; "Save a copy without the notebook" leaves them out.',
-      check: 'As you type, the identifier check underlines things that may identify someone: names after Mr., Ms., Dr. or "my name is", full dates, phone numbers, email and street addresses, ZIP+4, and SSN-like or record-like numbers. "Replace with a label" changes every copy in the notebook to a label such as [Person A] or [phone]; the same person keeps the same letter. Only the kind and the number of replacements are kept, never the text. Every export and Print warns while flags remain.',
-      cannot: 'It is a heuristic, not a guarantee. It cannot catch a first name on its own, a nickname, a place or employer, a rare detail that points to one person, or a name spelled in lower case, and it may flag something harmless; mark that "Not an identifier". A year on its own is never flagged. A name labeled earlier is not recognized if it is typed again after a reload. Read the notes before you share them.',
+      check: 'As you type, the identifier check underlines things that may identify someone: names after Mr., Ms., Dr. or "my name is", full dates and dates of birth (after "DOB" or "born on"), ages ("34-year-old", "age 34"), phone numbers, email and street addresses, ZIP codes (ZIP+4, or five digits after a state or a city and state), and SSN-like or record-like numbers. "Replace with a label" changes every copy in the notebook to a label such as [Person A] or [phone]; the same person keeps the same letter. Only the kind and the number of replacements are kept, never the text. Every export and Print warns while flags remain.',
+      cannot: 'It is a heuristic, not a guarantee. It does not look for names that have no title (Mr., Ms., Dr.) and no "my name is" before them: those cannot be told apart from other capitalized words, so read your notes for names yourself. It also cannot catch a first name on its own, a nickname, a place or employer, a rare detail that points to one person, or a name spelled in lower case, and it may flag something harmless; mark that "Not an identifier". A year on its own is never flagged. A name labeled earlier is not recognized if it is typed again after a reload. Read the notes before you share them.',
     },
   },
   /** SL17 review 2: the layout picker, in plain words; the engine ids in the map file are unchanged */
