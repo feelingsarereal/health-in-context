@@ -39,7 +39,10 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('nb-tags').fill(`tag-${SENTINEL}`);
   await page.getByTestId('nb-tags').press('Enter');
   await page.getByTestId('nb-body').click();
-  await page.keyboard.type(`NB ${SENTINEL}`);
+  await page.keyboard.type(`NB ${SENTINEL} lost my job since the eviction`);
+  // SL27: the local code matcher runs on the device
+  await page.getByTestId('nb-suggest').click();
+  await expect(page.getByTestId('nb-proposal').first()).toBeVisible();
   await page.getByTestId('nb-template').selectOption({ label: 'Intake' });
   await page.getByTestId('nb-field-asks').click();
   await page.keyboard.type(`NF ${SENTINEL}`);

@@ -21,7 +21,7 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 ## Using it
 
 ```bash
-npm install --save-exact @feelingsarereal/sdoh-loops-core@0.7.0 @feelingsarereal/sdoh-loops-pack@0.2.0
+npm install --save-exact @feelingsarereal/sdoh-loops-core@0.8.0 @feelingsarereal/sdoh-loops-pack@0.2.0
 ```
 
 Both come from GitHub Packages: see "Publishing" below for the `.npmrc` a consumer needs.
@@ -64,6 +64,7 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `notebookTemplates` | 0.5.0 (SL26). `NoteTemplate[]` (`{ id, name, fields: { key, label }[] }`): your templates, after the core's Intake, Contact note, Case conference and Plan review. Each note from one starts with a Date field (a year by default). |
 | `quickEdit` | 0.6.0 (SL31). Default `true` wherever the map is editable: in the selection card's Read mode a ✎ edits the label, the description, the notes and a link's description in place (Enter or a click away saves as one Undo step, Esc cancels), and "Pinned in place" and a link's delay are switches. Codes, code status, polarity, weight, confidence, overrides and delete stay in Edit mode. `false` turns it off; a read-only map never shows it. |
 | `notebookImport` | 0.7.0 (SL29). `{ maxMB?, maxPages? }` (defaults 20 and 300): limits for importing files into the notebook. |
+| `extractors` / `allowRemoteExtractors` | 0.8.0 (SL27). `NotebookExtractor[]` (`{ id, label, kind: 'local' \| 'remote', describe, run(note, context) → Promise<Proposal[]> }`), after the core's local code matcher; an engine picker appears with more than one. A `remote` extractor runs only with `allowRemoteExtractors` and only on a note with no unresolved identifier flags; keep it off under the health profile until a SAFETY ruling (S7.2). |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
 Since 0.2.0 it adds `F` (full screen), `]` (fold or open the side dock; since 0.3.0 also the » / « buttons on the dock and its rail) and Shift+F10 / the ContextMenu key (peek at
@@ -88,6 +89,20 @@ your Help page when you turn the notebook on.
 
 The notebook ends with a live, read-only **case summary** of the map as shown: tiles, the list view's circumstances table
 (sortable, filterable; a row click selects on the map), the loops, and the top 5 by leverage.
+
+### Selections, circumstances from text, and suggestions (0.8.0, SL27)
+
+Selecting text in a note opens an action bar — **Create circumstance**, **Add as evidence to…**, **Link to…**,
+**Annotate**, **Copy quote** (Ctrl+Enter or Shift+F10 from the keyboard). A selection becomes a span in the notebook
+(`spans`, anchored by quote, prefix, suffix and offsets; `orphaned` when its text is edited away, never re-pointed) with
+an annotation (`annotations`: comment and targets); a circumstance or link made from or backed by it gets
+`sources: [{ note, span }]`, and both sides are kept in step on load and import. Highlights use the Interrogator
+reader's classes, now in the core's `styles.css`: `.sx-span` (made by the user), `.sx-span-inferred` / `.sx-span-low`
+with "≈" (accepted as inferred), plus `.sx-span-plain` for a span that backs nothing; the selected item's spans get the
+focus ring. Create circumstance offers the local code suggester's top five (pack titles, index terms and aliases,
+Chapter 24 only, "suggested", nothing chosen). The selection card (Read and Edit) lists an item's passages ("In the
+notebook (n)", Go to passage, Remove as evidence), and the peek counts them. **Suggest circumstances in this note** runs
+the extractors (`extractors` prop) into a proposal queue; accepted items keep `suggested_by` in the map file.
 
 ### Importing files into the notebook (0.7.0, SL29)
 

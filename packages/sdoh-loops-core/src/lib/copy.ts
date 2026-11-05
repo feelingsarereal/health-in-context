@@ -188,6 +188,25 @@ const FALLBACK = {
       filter: 'Show', all: 'All circumstances', block: 'Block', leverage: 'Leverage, top 5',
     },
     resize: 'Resize the notebook', resizeTip: 'Drag, or use ← →, to resize the notebook; double-click or Home resets it',
+    /** SL27: selections in notes — spans, annotations, circumstances made from text, and suggestions */
+    passages: {
+      bar: 'Selection actions', create: 'Create circumstance', evidence: 'Add as evidence to…', link: 'Link to…', annotate: 'Annotate', copy: 'Copy quote', copied: 'Quote copied.',
+      comment: 'Comment', saveComment: 'Save comment', editComment: 'Edit comment', annotated: 'Comment saved on the selection.',
+      keyHint: 'Select text, then press Ctrl+Enter (or Shift+F10) for the selection actions.',
+      chooser: 'Passages here', title: 'Passages', supports: 'Supports', plain: 'A highlight only: it supports nothing on the map.', remove: 'Remove passage', removed: 'Passage removed.',
+      orphaned: 'Orphaned selections', orphanedHint: 'The text these were made from was edited or deleted. They are kept here, not moved to other words.',
+      inferred: 'inferred — open to your judgment', explicit: 'explicit', suggestedBy: 'suggested by:', other: 'Other',
+      confidence: { high: 'high confidence', medium: 'medium confidence', low: 'low confidence' } as Record<string, string>,
+      queue: 'Suggestions', engine: 'Engine', remote: 'sends text off this device', suggest: 'Suggest circumstances in this note',
+      refusedRemote: 'This engine sends text off the device, and this app does not allow that.', refusedFlags: 'This note still has possible identifiers. Label or dismiss them first.',
+      failed: 'The suggestions could not be made.', none: 'No suggestions for this note.', accept: 'Accept', editAccept: 'Edit then accept', reject: 'Reject',
+      suggestedTitle: 'Suggested codes', suggestedTag: 'suggested', suggestHint: 'Matched on this device against WHO titles, index terms and search aliases. Nothing is chosen for you.', noSuggestion: 'No code matched these words.',
+      notSure: 'Not sure yet', otherOpt: 'Other (not an SDOH code)', searchAll: 'Search all codes', pickFirst: 'Choose a code, Not sure yet or Other first.', fromText: 'From the notebook:',
+      evidenceTitle: 'Add as evidence to…', evidenceSearch: 'Search circumstances and links', evidenceNodes: 'Circumstances', evidenceEdges: 'Links', evidenceNone: 'Nothing on the map matches.', evidenceAdded: 'Added the passage as evidence to',
+      deleteTitle: 'Delete and its passages', deleteLead: 'passages in the notebook support what you are deleting.', deleteKeep: 'Keep them as plain highlights', deleteRemove: 'Remove them', deleteCancel: 'Cancel',
+      readRow: 'Passages', byRow: 'Suggested by', inNote: 'in',
+      inNotebook: 'In the notebook', goTo: 'Go to passage', removeEvidence: 'Remove as evidence', removedEvidence: 'Removed as evidence from',
+    },
     /** SL29: importing files as notes */
     importing: {
       button: 'Import a file…', buttonTip: 'Text, Markdown, Word, PDF, web page, RTF or CSV files, read on this device',
@@ -201,6 +220,7 @@ const FALLBACK = {
       flagN: 'Possible identifier', saved: 'Saved to the notebook:', skipped: 'Skipped:', done: 'Done', close: 'Close',
       pasteTitle: 'Paste as a note', pasteLabel: 'Text', pasteName: 'Title', pasteGo: 'Review and save', pasteDefault: 'Pasted text',
       later: 'Reading scanned pages (OCR) may come later.',
+      droppedOne: 'character could not be read and was left out.', droppedMany: 'characters could not be read and were left out.',
       source: 'Imported from', review: { none: 'no possible identifiers found', labelled: 'identifiers labeled before saving', reviewed: 'identifiers reviewed one by one before saving', kept: 'kept as is' } as Record<string, string>,
       verbatim: 'Imported text stays as it was read. Its title and tags can change, and labels still replace identifiers.',
       text: 'Imported text', table: 'Imported table', kind: 'Imported',

@@ -114,3 +114,39 @@ describe('SL29 imported notes in the notebook', () => {
     expect(back.notes[0].source).toBeUndefined();
   });
 });
+
+describe('SL27 point 9: PDF text clean-up', () => {
+  it('glyph names give characters, alternates and uniXXXX included; a private-use name gives none', async () => {
+    const { nameToChar } = await import('../../packages/sdoh-loops-core/src/lib/import/glyphs');
+    expect(['parenleft.case', 'parenright', 'hyphen.case', 'endash', 'bullet', 'arrowright', 'uni2192', 'g53F', 'uniE081'].map(nameToChar)).toEqual(['(', ')', '-', '–', '•', '→', '→', null, null]);
+  });
+  it('private-use characters go through the font map or are dropped; U+FFFD and controls dropped; NFC; all counted', async () => {
+    const { cleanPdfText } = await import('../../packages/sdoh-loops-core/src/lib/import/glyphs');
+    const pua = String.fromCodePoint(0xe081);
+    const pua2 = String.fromCodePoint(0xe082);
+    const icon = String.fromCodePoint(0xe900);
+    const r = cleanPdfText(`Collinson ${pua}2024${pua2} ${icon} Café �\u0007`, new Map([[pua, '('], [pua2, ')']]));
+    expect(r.text).toBe('Collinson (2024)  Café ');
+    expect(r.dropped).toBe(3);
+  });
+  it('a Type 3 glyph drawn like a known one (an alternate, moved) takes its character; a flat bar is a dash', async () => {
+    const { recoverMap } = await import('../../packages/sdoh-loops-core/src/lib/import/glyphs');
+    const path = (coords: number[], box: number[]) => ({ fnArray: [91], argsArray: [[[13, 14, 14, 14, 18], coords, box]] });
+    const font = {
+      isType3Font: true,
+      differences: ['g0', 'g1', 'g2', 'g3', 'g4'],
+      toUnicode: { _map: ['(', String.fromCodePoint(0xe081), '0', String.fromCodePoint(0xe089), String.fromCodePoint(0xe900)] },
+      charProcOperatorList: {
+        g0: path([10, 0, 0, 50, 10, 100, 20, 100, 10, 0], [0, 0, 20, 100]),
+        g1: path([10, 80, 0, 130, 10, 180, 20, 180, 10, 80], [0, 80, 20, 180]),
+        g2: path([0, 0, 0, 100, 50, 100, 50, 0, 0, 0], [0, 0, 50, 100]),
+        g3: path([0, 40, 0, 50, 55, 50, 55, 40, 0, 40], [0, 40, 55, 50]),
+        g4: path([0, 0, 0, 30, 30, 30, 30, 0, 0, 0], [0, 0, 30, 30]),
+      },
+    };
+    const m = recoverMap(font);
+    expect(m.get(String.fromCodePoint(0xe081))).toBe('(');
+    expect(m.get(String.fromCodePoint(0xe089))).toBe('–');
+    expect(m.get(String.fromCodePoint(0xe900))).toBe('');
+  });
+});

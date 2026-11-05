@@ -5,7 +5,7 @@
 import { DEFAULT_WEIGHT, edgeError, type AGraph, type Polarity } from '../analysis';
 import { emptyDoc, isEmpty, sanitizeRich, type RichDoc } from './rich';
 import { checkLink, type Basis } from './evidence';
-import { sanitizeNotebook, type Notebook } from './notebook';
+import { sanitizeNotebook, type Notebook, type Target } from './notebook';
 
 /** SL26: schema 3 adds the optional `notebook` block (S7.1); a map without one is written as schema 2 (exportJSON). */
 export const SCHEMA_VERSION = 3;
@@ -46,7 +46,16 @@ export interface MapNode {
   y: number;
   created: string;
   updated: string;
+  /** SL27: the notebook passages this circumstance is drawn from (S7.1 back-references) */
+  sources?: SourceRef[];
+  /** SL27: accepted from an extractor's proposal: which one */
+  suggested_by?: { extractor: string; label: string };
   [extra: string]: unknown;
+}
+/** SL27: a notebook span behind a circumstance or link */
+export interface SourceRef {
+  note: string;
+  span: string;
 }
 
 export interface MapEdge {
@@ -71,6 +80,9 @@ export interface MapEdge {
   /** YYYY-MM-DD the override was confirmed */
   override_at: string | null;
   style: { line?: LineType; route?: Route; color?: string | null; widthByWeight?: boolean };
+  /** SL27: the notebook passages this link is drawn from */
+  sources?: SourceRef[];
+  suggested_by?: { extractor: string; label: string };
   [extra: string]: unknown;
 }
 
@@ -373,7 +385,52 @@ export function migrate(input: unknown): SdohMap {
   };
   if (notebook) out.notebook = notebook;
   else delete out.notebook;
-  return out;
+  return reconcileSources(out);
+}
+
+const cleanSources = (v: unknown): SourceRef[] | undefined => {
+  const out = (Array.isArray(v) ? (v as Record<string, unknown>[]) : []).filter((r) => r && typeof r.note === 'string' && typeof r.span === 'string').map((r) => ({ note: r.note as string, span: r.span as string }));
+  return out.length ? out : undefined;
+};
+const cleanBy = (v: unknown) => {
+  const b = v as Record<string, unknown> | undefined;
+  return b && typeof b.extractor === 'string' && typeof b.label === 'string' ? { extractor: b.extractor, label: b.label } : undefined;
+};
+/**
+ * SL27: make the two sides agree — a circumstance's or link's `sources` and its spans' targets. A pair on either side is
+ * kept on both; a reference to a span, circumstance or link that is not there is dropped. Run on every load and import.
+ */
+export function reconcileSources(m: SdohMap): SdohMap {
+  const nb = m.notebook;
+  const spans = new Map((nb?.spans ?? []).map((x) => [x.id, x]));
+  const anns = new Map((nb?.annotations ?? []).map((a) => [a.span, a]));
+  const want = new Map<string, Set<string>>();
+  const key = (kind: string, id: string) => `${kind}:${id}`;
+  const add = (k: string, span: string) => (want.get(k) ?? want.set(k, new Set()).get(k)!).add(span);
+  const items = [...m.nodes.map((n) => ['node', n] as const), ...m.edges.map((e) => ['edge', e] as const)];
+  const exists = new Set(items.map(([k, x]) => key(k, x.id)));
+  for (const [k, x] of items) for (const r of cleanSources(x.sources) ?? []) if (spans.has(r.span)) add(key(k, x.id), r.span);
+  for (const a of anns.values()) for (const t of a.targets) if ((t.kind === 'node' || t.kind === 'edge') && exists.has(key(t.kind, t.id))) add(key(t.kind, t.id), a.span);
+  const refs = (k: string) => [...(want.get(k) ?? [])].map((sp) => ({ note: spans.get(sp)!.note, span: sp }));
+  const fix = <T extends MapNode | MapEdge>(kind: string, x: T): T => {
+    const r = refs(key(kind, x.id));
+    const by = cleanBy(x.suggested_by);
+    const next = { ...x } as T;
+    if (r.length) next.sources = r;
+    else delete next.sources;
+    if (by) next.suggested_by = by;
+    else delete next.suggested_by;
+    return next;
+  };
+  const nodes = m.nodes.map((n) => fix('node', n));
+  const edges = m.edges.map((e) => fix('edge', e));
+  if (!nb?.spans?.length) return { ...m, nodes, edges };
+  // the span side: every annotation lists exactly the items whose sources name its span, plus its other kinds
+  const back = new Map<string, Target[]>();
+  for (const [k, set] of want) for (const sp of set) (back.get(sp) ?? back.set(sp, []).get(sp)!).push({ kind: k.slice(0, k.indexOf(':')) as Target['kind'], id: k.slice(k.indexOf(':') + 1) });
+  const annotations = [...(nb.annotations ?? [])].map((a) => ({ ...a, targets: [...a.targets.filter((t) => t.kind !== 'node' && t.kind !== 'edge'), ...(back.get(a.span) ?? [])] }));
+  for (const sp of back.keys()) if (!anns.has(sp)) annotations.push({ id: `ann-${sp}`, span: sp, targets: back.get(sp)! });
+  return { ...m, nodes, edges, notebook: { ...nb, annotations } };
 }
 
 /** SL26: true when the map carries a notebook with at least one note. */

@@ -3,11 +3,16 @@ import { C } from '../../lib/copy';
 import { count } from '../../lib/plural';
 import type { SdohMap } from '../../lib/model/map';
 import {
-  addNote, allTags, deleteNote, dismissFlag, duplicateNote, isDismissed, labelAll, labelFlag, moveNote, newFreeNote, newStructuredNote, parseTags, searchNotes, updateField, updateNote, DATE_FIELD,
-  type Flag, type Note, type NoteDoc, type Notebook as NotebookDoc, type NoteTable, type NoteTemplate,
+  addNote, addPassage, allTags, annotationOf, deleteNote, dismissFlag, duplicateNote, isDismissed, labelAll, labelFlag, moveNote, spanFromSelection, newFreeNote, newStructuredNote, parseTags, searchNotes, setAnnotationText, updateField, updateNote, DATE_FIELD,
+  type Flag, type Note, type NoteDoc, type Notebook as NotebookDoc, type NoteTable, type NoteTemplate, type Span, type Target,
 } from '../../lib/model/notebook';
 import type { RichDoc } from '../../lib/model/rich';
 import RichField, { type RichFieldFlags } from '../map/RichField';
+import { plainText } from '../../lib/model/rich';
+import { removeSpan } from '../../lib/model/spans';
+import type { NotebookExtractor, Proposal } from '../../lib/model/extract';
+import { ActionBar, PassageList, ProposalQueue, SpanChooser, type ActionBarHandle, type TargetName } from './Passages';
+import type { SpanDeco, TextSelection } from './spanMarks';
 import { findIdentifiers } from '../../lib/model/identifiers';
 
 type Apply = (fn: (m: SdohMap) => SdohMap, key?: string) => void;
@@ -30,7 +35,19 @@ export interface NotebookProps {
   onPaste?: () => void;
   onDropFiles?: (files: File[]) => void;
   /** SL29: show this note (after an import); `n` changes each time */
-  focus?: { id: string; n: number } | null;
+  focus?: { id: string; n: number; span?: string } | null;
+  /** SL27: spans — what the map has selected (their highlights get the focus ring), names of items, show one on the map */
+  selectedTargets?: Target[];
+  targetName?: TargetName;
+  onShow?: (t: Target) => void;
+  /** SL27: the selection actions that open the map's dialogs */
+  onCreateFrom?: (span: Span) => void;
+  onEvidenceFrom?: (span: Span) => void;
+  onLinkFrom?: (span: Span) => void;
+  /** SL27: extractors (the local code matcher first), the refusal rule's switch, and accepting a proposal */
+  extractors?: NotebookExtractor[];
+  allowRemote?: boolean;
+  onAccept?: (note: Note, p: Proposal, edit: boolean) => void;
 }
 
 interface Toast {
@@ -43,7 +60,7 @@ interface Toast {
  * reorder by drag or Alt+↑ / Alt+↓, duplicate and delete with an undo toast, and the identifier check's count, list
  * and one-click labels. Every edit goes through the map's own apply(), so it autosaves and Undo / Redo cover it.
  */
-export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary, onImport, onPaste, onDropFiles, focus }: NotebookProps) {
+export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary, onImport, onPaste, onDropFiles, focus, selectedTargets = [], targetName, onShow, onCreateFrom, onEvidenceFrom, onLinkFrom, extractors = [], allowRemote = false, onAccept }: NotebookProps) {
   const uid = useId().replace(/:/g, '');
   const nb = map.notebook;
   const notes = nb?.notes ?? [];
@@ -61,12 +78,15 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
   const note = notes.find((n) => n.id === sel) ?? null;
   const [dropping, setDropping] = useState(false);
   const dragDepth = useRef(0);
+  // SL27 point 8: Go to passage — the note, then its highlight
+  const [focusSpan, setFocusSpan] = useState<{ id: string; n: number } | null>(null);
   useEffect(() => {
     if (!focus) return;
     setSel(focus.id);
     setQ('');
     setTag(null);
-    focusNote.current = focus.id;
+    if (focus.span) setFocusSpan({ id: focus.span, n: focus.n });
+    else focusNote.current = focus.id;
   }, [focus?.n]); // eslint-disable-line react-hooks/exhaustive-deps
   const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files');
   useEffect(() => {
@@ -110,7 +130,12 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
     setQ('');
     setTag(null);
     announce(`${C.notebook.newFree}: ${n.title}.`);
-    setTimeout(() => (document.getElementById(`${uid}-title`) as HTMLInputElement | null)?.select(), 30);
+    // the new note's title takes focus — unless the user has already moved focus somewhere else meanwhile
+    const from = document.activeElement;
+    setTimeout(() => {
+      const t = document.getElementById(`${uid}-title`) as HTMLInputElement | null;
+      if (t && (document.activeElement === from || document.activeElement === document.body || !document.activeElement)) t.select();
+    }, 30);
   };
   const remove = (n: Note) => {
     const at = notes.findIndex((x) => x.id === n.id);
@@ -337,7 +362,19 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
               </ul>
             </nav>
             {note ? (
-              <NoteEditor key={note.id} uid={uid} note={note} index={notes.indexOf(note)} total={notes.length} templates={templates} flags={flagsProp} change={change} onMove={(to) => move(note, to)} onDuplicate={() => {
+              <NoteEditor key={note.id} uid={uid} note={note} index={notes.indexOf(note)} total={notes.length} templates={templates} flags={flagsProp} change={change} focusSpan={focusSpan}
+                spansCtx={{
+                  nb, selected: selectedTargets, name: targetName ?? ((t) => t.id), onShow: (t) => onShow?.(t), announce,
+                  onCreate: onCreateFrom, onEvidence: onEvidenceFrom, onLink: onLinkFrom,
+                  onRemove: (id) => {
+                    apply((m) => removeSpan(m, id));
+                    announce(C.notebook.passages.removed);
+                  },
+                  extractors, allowRemote, flags: flagsByNote.get(note.id) ?? 0,
+                  nodes: map.nodes.filter((x) => x.kind !== 'note').map((x) => ({ id: x.id, code: x.code, label: plainText(x.label) })),
+                  onAccept: onAccept ? (p, edit) => onAccept(note, p, edit) : undefined,
+                }}
+                onMove={(to) => move(note, to)} onDuplicate={() => {
                 const d = duplicateNote(map.notebook, note.id, C.notebook.copy);
                 if (!d.note) return;
                 change(() => d.notebook);
@@ -362,10 +399,126 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
   );
 }
 
-function NoteEditor({ uid, note, index, total, templates, flags, change, onMove, onDuplicate, onDelete }: {
+interface SpansCtx {
+  nb: NotebookDoc | undefined;
+  selected: Target[];
+  name: TargetName;
+  onShow: (t: Target) => void;
+  announce: (s: string) => void;
+  onCreate?: (span: Span) => void;
+  onEvidence?: (span: Span) => void;
+  onLink?: (span: Span) => void;
+  onRemove: (span: string) => void;
+  extractors: NotebookExtractor[];
+  allowRemote: boolean;
+  flags: number;
+  nodes: { id: string; code: string | null; label: string }[];
+  onAccept?: (p: Proposal, edit: boolean) => void;
+}
+
+function NoteEditor({ uid, note, index, total, templates, flags, change, onMove, onDuplicate, onDelete, spansCtx: sc, focusSpan }: {
   uid: string; note: Note; index: number; total: number; templates: NoteTemplate[]; flags: RichFieldFlags;
-  change: (fn: NB, key?: string) => void; onMove: (to: number) => void; onDuplicate: () => void; onDelete: () => void;
+  change: (fn: NB, key?: string) => void; onMove: (to: number) => void; onDuplicate: () => void; onDelete: () => void; spansCtx: SpansCtx;
+  focusSpan?: { id: string; n: number } | null;
 }) {
+  // SL27 point 8: Go to passage lands here — the highlight scrolled into view inside the notebook (not the page),
+  // the caret at its start and the focus in its text, and a brief flash
+  useEffect(() => {
+    if (!focusSpan) return;
+    let tries = 0;
+    const go = () => {
+      const el = art.current?.querySelector<HTMLElement>(`[data-span="${focusSpan.id}"]`);
+      if (!el) return void (tries++ < 20 && setTimeout(go, 50));
+      const box = el.closest<HTMLElement>('[data-testid="nb-scroll"]');
+      if (box) box.scrollTop += el.getBoundingClientRect().top - box.getBoundingClientRect().top - box.clientHeight / 3;
+      const ed = el.closest<HTMLElement>('[role="textbox"]');
+      ed?.focus({ preventScroll: true });
+      const r = document.createRange();
+      r.setStart(el.firstChild ?? el, 0);
+      r.collapse(true);
+      const s = getSelection();
+      s?.removeAllRanges();
+      s?.addRange(r);
+      el.classList.add('sx-flash');
+      setTimeout(() => el.classList.remove('sx-flash'), 1700);
+    };
+    go();
+  }, [focusSpan?.n]); // eslint-disable-line react-hooks/exhaustive-deps
+  // SL27: the text selection (for the action bar), the overlap chooser, and the margin on a wide notebook
+  const [textSel, setTextSel] = useState<{ where: string; sel: TextSelection } | null>(null);
+  // the latest selection, set at once (the action keys flush it before React renders): the span is made from this
+  const selNow = useRef<{ where: string; sel: TextSelection } | null>(null);
+  const [chooser, setChooser] = useState<{ at: DOMRect; items: { span: Span; targets: Target[] }[] } | null>(null);
+  const bar = useRef<ActionBarHandle>(null);
+  const art = useRef<HTMLElement>(null);
+  const [wideNb, setWideNb] = useState(false);
+  useEffect(() => {
+    const el = art.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setWideNb(el.getBoundingClientRect().width >= 640));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const lastFocus = useRef<HTMLElement | null>(null);
+  const spanList = (where: string): SpanDeco[] =>
+    (sc.nb?.spans ?? [])
+      .filter((x) => x.note === note.id && x.where === where && !x.orphaned)
+      .map((x) => {
+        const targets = annotationOf(sc.nb, x.id)?.targets ?? [];
+        const pressed = targets.some((t) => sc.selected.some((s) => s.kind === t.kind && s.id === t.id));
+        const cls = x.by?.inferred ? (x.by.confidence === 'low' ? 'sx-span-low' : 'sx-span-inferred') : targets.length ? 'sx-span' : 'sx-span-plain';
+        return { id: x.id, start: x.start, end: x.end, cls, pressed, title: targets.length ? targets.map(sc.name).join(' · ') : C.notebook.passages.plain };
+      });
+  const spansFor = (where: string) => {
+    const list = spanList(where);
+    return {
+      list,
+      version: JSON.stringify(list),
+      onClick: (ids: string[], rect: DOMRect) => {
+        const items = ids.map((id) => ({ span: sc.nb!.spans!.find((x) => x.id === id)!, targets: annotationOf(sc.nb, id)?.targets ?? [] })).filter((x) => x.span);
+        const all = items.flatMap((x) => x.targets);
+        if (all.length === 1) sc.onShow(all[0]);
+        else if (all.length > 1) setChooser({ at: rect, items: items.filter((x) => x.targets.length) });
+      },
+      onSelect: (s: TextSelection | null) => {
+        if (s) {
+          lastFocus.current = document.activeElement as HTMLElement | null;
+          selNow.current = { where, sel: s };
+        }
+        setTextSel((cur) => (s ? { where, sel: s } : cur?.where === where && !art.current?.querySelector('[data-testid="nb-action-bar"]')?.contains(document.activeElement) ? null : cur));
+      },
+    };
+  };
+  const onKey = (e: KeyboardEvent) => {
+    if (textSel && ((e.key === 'Enter' && (e.ctrlKey || e.metaKey)) || (e.key === 'F10' && e.shiftKey))) {
+      bar.current?.focus();
+      return true;
+    }
+    return false;
+  };
+  const span = () => {
+    const cur = selNow.current ?? textSel;
+    return cur ? spanFromSelection(note.id, cur.where, cur.sel) : null;
+  };
+  const act = (fn?: (s: Span) => void) => () => {
+    const s = span();
+    setTextSel(null);
+    selNow.current = null;
+    if (s && fn) fn(s);
+  };
+  const fieldLabel = (where: string) => note.fields?.find((f) => f.key === where)?.label ?? where;
+  const passages = (
+    <PassageList
+      nb={sc.nb}
+      note={note}
+      fieldLabel={fieldLabel}
+      name={sc.name}
+      selected={sc.selected}
+      onShow={sc.onShow}
+      onComment={(id, t) => change((b) => setAnnotationText(b, id, t))}
+      onRemove={sc.onRemove}
+    />
+  );
   const [tagDraft, setTagDraft] = useState(note.tags.join(', '));
   useEffect(() => setTagDraft(note.tags.join(', ')), [note.tags.join('\n')]); // eslint-disable-line react-hooks/exhaustive-deps
   const commitTags = () => {
@@ -375,7 +528,7 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
   };
   const tpl = templates.find((t) => t.id === note.template);
   return (
-    <article className="p-3" aria-labelledby={`${uid}-title-l`} data-testid="nb-editor" data-note-id={note.id}>
+    <article ref={art} className="p-3" aria-labelledby={`${uid}-title-l`} data-testid="nb-editor" data-note-id={note.id}>
       <label id={`${uid}-title-l`} htmlFor={`${uid}-title`} className="mb-1 block text-sm font-semibold">{C.notebook.noteTitle}</label>
       <input id={`${uid}-title`} className="bx-input ax-tap w-full font-semibold" value={note.title} onChange={(e) => change((b) => updateNote(b, note.id, { title: e.target.value }), `nb:${note.id}:title`)} data-testid="nb-title" />
       <div className="mt-2 flex flex-wrap gap-1.5" data-print-hide>
@@ -386,13 +539,15 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
       </div>
       <label htmlFor={`${uid}-tags`} className="mb-1 mt-3 block text-sm font-semibold">{C.notebook.tags}</label>
       <input id={`${uid}-tags`} className="bx-input ax-tap w-full" value={tagDraft} onChange={(e) => setTagDraft(e.target.value)} onBlur={commitTags} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), commitTags())} data-testid="nb-tags" />
-      <div className="mt-3">
+      <p id={`${uid}-sel-h`} className="mt-2 text-xs bx-muted" data-print-hide>{C.notebook.passages.keyHint}</p>
+      <div className={`mt-3 ${wideNb ? 'grid grid-cols-[minmax(0,1fr)_15rem] gap-3' : ''}`} data-testid="nb-text-area" data-margin={wideNb ? 'margin' : 'inline'}>
+      <div className="min-w-0">
           {note.kind === 'imported' ? (
-            <ImportedBody uid={uid} note={note} flags={flags} />
+            <ImportedBody uid={uid} note={note} flags={flags} spans={spansFor('body')} />
           ) : note.kind === 'free' ? (
             <>
               <p className="mb-1 text-sm font-semibold" id={`${uid}-body-l`}>{C.notebook.body}</p>
-              <RichField id={`${uid}-body`} label={C.notebook.body} value={note.body as unknown as RichDoc} blocks flags={flags} minRows={8} testId="nb-body" onChange={(d) => change((b) => updateNote(b, note.id, { body: d as unknown as NoteDoc }), `nb:${note.id}:body`)} />
+              <RichField id={`${uid}-body`} label={C.notebook.body} value={note.body as unknown as RichDoc} blocks flags={flags} minRows={8} testId="nb-body" describedBy={`${uid}-sel-h`} spans={spansFor('body')} onKey={onKey} onChange={(d) => change((b) => updateNote(b, note.id, { body: d as unknown as NoteDoc }), `nb:${note.id}:body`)} />
             </>
           ) : (
             <div className="space-y-3" data-testid="nb-fields" data-template={tpl?.id ?? note.template}>
@@ -416,13 +571,44 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
                 ) : (
                   <div key={f.key}>
                     <p className="mb-1 text-sm font-semibold">{f.label}</p>
-                    <RichField id={`${uid}-f-${f.key}`} label={f.label} value={f.body!} flags={flags} testId={`nb-field-${f.key}`} onChange={(d) => change((b) => updateField(b, note.id, f.key, { body: d as RichDoc }), `nb:${note.id}:${f.key}`)} />
+                    <RichField id={`${uid}-f-${f.key}`} label={f.label} value={f.body!} flags={flags} testId={`nb-field-${f.key}`} describedBy={`${uid}-sel-h`} spans={spansFor(f.key)} onKey={onKey} onChange={(d) => change((b) => updateField(b, note.id, f.key, { body: d as RichDoc }), `nb:${note.id}:${f.key}`)} />
                   </div>
                 ),
               )}
             </div>
           )}
       </div>
+      <div className={wideNb ? 'min-w-0' : 'mt-3'} data-testid="nb-margin">{passages}</div>
+      </div>
+      {sc.onAccept && !note.table && <ProposalQueue note={note} extractors={sc.extractors} allowRemote={sc.allowRemote} flags={sc.flags} nodes={sc.nodes} onAccept={sc.onAccept} />}
+      {textSel && (
+        <ActionBar
+          ref={bar}
+          sel={textSel.sel}
+          onCreate={act(sc.onCreate)}
+          onEvidence={act(sc.onEvidence)}
+          onLink={act(sc.onLink)}
+          onAnnotate={(t) => {
+            const s = span();
+            setTextSel(null);
+            selNow.current = null;
+            if (!s) return;
+            change((b) => addPassage(b, s, { text: t }).notebook);
+            sc.announce(C.notebook.passages.annotated);
+          }}
+          onCopy={() => {
+            const q = textSel.sel.quote;
+            navigator.clipboard?.writeText(q).catch(() => undefined);
+            sc.announce(C.notebook.passages.copied);
+          }}
+          onClose={() => {
+            setTextSel(null);
+            selNow.current = null;
+          }}
+          back={() => lastFocus.current?.focus()}
+        />
+      )}
+      {chooser && <SpanChooser at={chooser.at} items={chooser.items} name={sc.name} onPick={(t) => (setChooser(null), sc.onShow(t))} onClose={() => setChooser(null)} />}
     </article>
   );
 }
@@ -432,7 +618,7 @@ const size = (b: number) => (b >= 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `
  * SL29: an imported note's text, verbatim — read-only (selectable, flagged, with a PDF's page markers), or a CSV's
  * table — under a line that says where it came from and what the identifier review decided.
  */
-function ImportedBody({ uid, note, flags }: { uid: string; note: Note; flags: RichFieldFlags }) {
+function ImportedBody({ uid, note, flags, spans }: { uid: string; note: Note; flags: RichFieldFlags; spans?: Parameters<typeof RichField>[0]['spans'] }) {
   const s = note.source;
   return (
     <div data-testid="nb-imported" data-type={s?.type}>
@@ -441,6 +627,7 @@ function ImportedBody({ uid, note, flags }: { uid: string; note: Note; flags: Ri
           {C.notebook.importing.source} <span className="font-semibold">{s.filename}</span> · {s.type.toUpperCase()} · {size(s.size)}
           {s.pages ? ` · ${count(s.pages, 'page')}` : ''} · {new Date(s.imported).toLocaleDateString()} · {C.notebook.importing.review[s.review]}
           {s.review === 'kept' && s.kept ? ` (${count(s.kept, C.notebook.identifier)})` : ''}
+          {s.dropped ? ` · ${s.dropped} ${s.dropped === 1 ? C.notebook.importing.droppedOne : C.notebook.importing.droppedMany}` : ''}
         </p>
       )}
       <p className="mb-2 text-xs bx-muted">{C.notebook.importing.verbatim}</p>
@@ -449,7 +636,7 @@ function ImportedBody({ uid, note, flags }: { uid: string; note: Note; flags: Ri
       ) : (
         <>
           <p className="mb-1 text-sm font-semibold">{C.notebook.importing.text}</p>
-          <RichField id={`${uid}-body`} label={C.notebook.importing.text} value={note.body as unknown as RichDoc} blocks readOnly pages={note.anchors} flags={flags} minRows={8} testId="nb-body" onChange={() => undefined} />
+          <RichField id={`${uid}-body`} label={C.notebook.importing.text} value={note.body as unknown as RichDoc} blocks readOnly pages={note.anchors} flags={flags} spans={spans} minRows={8} testId="nb-body" onChange={() => undefined} />
         </>
       )}
     </div>

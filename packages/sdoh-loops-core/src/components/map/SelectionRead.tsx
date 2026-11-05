@@ -13,6 +13,13 @@ import { CodePopout } from './CodePopout';
 import { RichView } from './RichView';
 import { CodeLine, peekFacts } from './Peek';
 import { QuickRich, QuickToggle, type QuickEditApi } from './QuickEdit';
+import type { Target } from '../../lib/model/notebook';
+import { SourcesList } from './SourcesList';
+
+/** SL27: who suggested a circumstance or link (from the map file) */
+function Passages({ by }: { map?: SdohMap; t?: Target; by?: { label: string } }) {
+  return by ? <Row k={C.notebook.passages.byRow} testId="read-suggested-by">{by.label}</Row> : null;
+}
 
 function Row({ k, children, testId }: { k: string; children: ReactNode; testId?: string }) {
   return (
@@ -43,10 +50,12 @@ function LinkLine({ e, other, nm }: { e: MapEdge; other: string; nm: (id: string
  * SL23: the selection card's Read mode — the selected circumstance, note or link as a reader sees it, as text. No
  * editing control is rendered at all (Edit mode adds them); the evidence references stay openable.
  */
-export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, empty, quick }: {
+export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, empty, quick, sources }: {
   map: SdohMap; node?: MapNode; edge?: MapEdge; multi: { nodes: number; edges: number }; nm: (id: string) => string; loops: Loop[]; loopNames: Map<string, string>; empty: string;
   /** SL31: quick field edit — left out on a read-only map, or when the host turned it off */
   quick?: QuickEditApi & { node: (id: string, patch: Partial<MapNode>) => void; edge: (id: string, patch: Partial<MapEdge>) => void };
+  /** SL27 point 8: Go to passage, and Remove as evidence (left out on a read-only map) */
+  sources?: { onGo: (span: string) => void; onRemove?: (span: string, t: { kind: 'node' | 'edge'; id: string }) => void };
 }) {
   if (node && node.kind === 'note')
     return (
@@ -89,18 +98,21 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
           <Row k={C.peek.loops}>{f.loops.length ? f.loops.join(', ') : C.peek.noLoops}</Row>
           {quick ? (
             <>
-              <Row k={C.read.pinned}><QuickToggle name={C.read.pinned} on={node.pinned} quick={quick} onChange={(on) => quick.node(node.id, { pinned: on })} testId="read-pinned" /></Row>
+              <Passages map={map} t={{ kind: 'node', id: node.id }} by={node.suggested_by} />
+          <Row k={C.read.pinned}><QuickToggle name={C.read.pinned} on={node.pinned} quick={quick} onChange={(on) => quick.node(node.id, { pinned: on })} testId="read-pinned" /></Row>
               <Row k={C.node.notes}>
                 <QuickRich key={`${node.id}-notes`} name={C.node.notes} value={node.notes} quick={quick} onSave={(d) => quick.node(node.id, { notes: d })} testId="qe-notes" view={plainText(node.notes) ? <RichView doc={node.notes} /> : dash} />
               </Row>
             </>
           ) : (
             <>
-              <Row k={C.read.pinned} testId="read-pinned">{node.pinned ? C.peek.yes : C.peek.no}</Row>
+              <Passages map={map} t={{ kind: 'node', id: node.id }} by={node.suggested_by} />
+          <Row k={C.read.pinned} testId="read-pinned">{node.pinned ? C.peek.yes : C.peek.no}</Row>
               {plainText(node.notes) && <Row k={C.node.notes}><RichView doc={node.notes} /></Row>}
             </>
           )}
         </dl>
+        <SourcesList map={map} t={{ kind: 'node', id: node.id }} compact onGo={sources?.onGo} onRemove={sources?.onRemove ? (sp) => sources.onRemove!(sp, { kind: 'node', id: node.id }) : undefined} />
         {node.code && (
           <section className="bx-card mt-3 p-3" aria-label="About this code">
             <CodePopout code={node.code} />
@@ -122,6 +134,7 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
           <Row k={C.edge.weight}>{f.weight}</Row>
           <Row k={S.edges.delay}>{quick ? <QuickToggle name={S.edges.delay} on={!!edge.delay} quick={quick} onChange={(on) => quick.edge(edge.id, { delay: on })} testId="qe-delay" /> : f.delay ? C.peek.yes : C.peek.no}</Row>
           <Row k={C.edge.confidence}>{edge.confidence}</Row>
+          <Passages map={map} t={{ kind: 'edge', id: edge.id }} by={edge.suggested_by} />
           <Row k={C.evidence.basis} testId="read-basis">
             {f.link ? <>{C.evidence.basisLabel.evidence} <span className="font-mono">{f.link.id}</span> <GradeChip grade={f.link.grade} /></> : <>{C.evidence.basisLabel[f.basis]}{f.reason ? `: ${f.reason}` : ''}</>}
           </Row>
@@ -134,6 +147,7 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
             f.description && <Row k={C.peek.description}>{f.description}</Row>
           )}
         </dl>
+        <SourcesList map={map} t={{ kind: 'edge', id: edge.id }} compact onGo={sources?.onGo} onRemove={sources?.onRemove ? (sp) => sources.onRemove!(sp, { kind: 'edge', id: edge.id }) : undefined} />
         {!f.link && edge.evidence.length > 0 && (
           <section className="mt-3" aria-label={C.edge.evidence}>
             <h3 className="font-semibold">{C.edge.evidence}</h3>

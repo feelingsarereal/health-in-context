@@ -10,6 +10,7 @@ import { sanitizeNote, type NoteDoc } from '../../lib/model/notebook';
 import { USER_COLOURS } from '../../lib/palette';
 import { IdentifierFlags, flagsKey, type FlagsOptions } from '../notebook/flagsExtension';
 import { PageMarks } from '../notebook/pageMarks';
+import { SpanMarks, spanMarksKey, type SpanDeco, type TextSelection } from '../notebook/spanMarks';
 
 /** font-size as a textStyle attribute (UI-15: S / M / L / XL), restricted to the allowed sizes. */
 const FontSize = Extension.create({
@@ -39,7 +40,7 @@ export type RichFieldFlags = Omit<FlagsOptions, 'tip'> & { tip: string; version:
  * SL26: `blocks` adds headings (2, 3) and bullet and numbered lists, for the notebook's free notes (a NoteDoc), and
  * `flags` underlines possible identifiers as the user types.
  */
-export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd, readOnly, pages }: {
+export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd, readOnly, pages, spans }: {
   id: string; value: D; onChange: (d: D) => void; label: string; describedBy?: string; singleLine?: boolean; minRows?: number; blocks?: boolean; flags?: RichFieldFlags; testId?: string;
   /** SL31 quick edit: bold, italic and underline only in the toolbar (other formatting already in the text is kept) */
   compact?: boolean;
@@ -52,7 +53,11 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   readOnly?: boolean;
   /** SL29: an imported PDF's page starts, drawn as "p. N" before their block */
   pages?: { block: number; page: number }[];
+  /** SL27: the notebook's spans in this field (highlights), a click on one, and the text selection for the action bar */
+  spans?: { list: SpanDeco[]; version: string; onClick: (ids: string[], rect: DOMRect) => void; onSelect: (s: TextSelection | null) => void };
 }) {
+  const sp = useRef(spans);
+  sp.current = spans;
   const keyRef = useRef(onKey);
   keyRef.current = onKey;
   const last = useRef<string>(JSON.stringify(value));
@@ -67,11 +72,11 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
       Color,
       FontSize,
       ...(pages?.length ? [PageMarks.configure({ pages })] : []),
+      ...(spans ? [SpanMarks.configure({ spans: () => sp.current?.list ?? [], onClick: (ids, r) => sp.current?.onClick(ids, r), onSelect: (x) => sp.current?.onSelect(x) })] : []),
       ...(flags ? [IdentifierFlags.configure({ isDismissed: (c, v) => !!fl.current?.isDismissed(c, v), tip: flags.tip, onFlag: () => fl.current?.onFlag?.() })] : []),
     ],
     content: value,
     editable: !readOnly,
-    ...(autoFocus ? { autofocus: 'end' as const } : {}),
     editorProps: {
       attributes: {
         id,
@@ -116,11 +121,16 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
     }
   }, [value, editor]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (!editor || !autoFocus) return;
-    // at once, not a frame later: the first key typed after the ✎ lands in the field
+    if (!editor || !autoFocus || editor.view.hasFocus()) return;
+    // at once, not a frame later: the first key typed after the ✎ lands in the field (and a later, deferred focus can
+    // never undo a selection the user has already made)
     editor.view.focus();
     editor.commands.setTextSelection(editor.state.doc.content.size);
   }, [editor]); // eslint-disable-line react-hooks/exhaustive-deps
+  // SL27: the spans or the map's selection changed: redraw the highlights
+  useEffect(() => {
+    if (editor && spans) editor.view.dispatch(editor.state.tr.setMeta(spanMarksKey, true));
+  }, [editor, spans?.version]); // eslint-disable-line react-hooks/exhaustive-deps
   // the dismissed list changed: redraw the underlines
   useEffect(() => {
     if (editor && flags) editor.view.dispatch(editor.state.tr.setMeta(flagsKey, true));

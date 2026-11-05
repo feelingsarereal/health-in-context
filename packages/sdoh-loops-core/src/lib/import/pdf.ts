@@ -6,12 +6,15 @@
  * layer at all (a scan) is reported as such; it is not OCR'd.
  */
 import type { Simple } from './text';
+import { cleanPdfText, needsCleaning, recoverMap, type PdfFontInfo } from './glyphs';
 
 export interface PdfResult {
   blocks: Simple[];
   /** the block each page starts at */
   pageStarts: { block: number; page: number }[];
   pages: number;
+  /** SL27 point 9: characters that could not be read (unmapped private-use glyphs, U+FFFD, controls) and were left out */
+  dropped: number;
 }
 export class PdfError extends Error {
   constructor(public reason: 'pages' | 'scanned' | 'encrypted' | 'error', message: string) {
@@ -19,14 +22,19 @@ export class PdfError extends Error {
   }
 }
 
-type TextItem = { str: string; hasEOL?: boolean; transform: number[]; height?: number };
+type TextItem = { str: string; hasEOL?: boolean; transform: number[]; height?: number; fontName?: string };
 interface PdfJs {
   GlobalWorkerOptions: { workerSrc: string };
   getDocument: (src: object) => { promise: Promise<PdfDoc>; destroy: () => Promise<void> };
 }
 interface PdfDoc {
   numPages: number;
-  getPage: (n: number) => Promise<{ getTextContent: () => Promise<{ items: (TextItem | object)[] }>; cleanup: () => void }>;
+  getPage: (n: number) => Promise<{
+    getTextContent: () => Promise<{ items: (TextItem | object)[] }>;
+    getOperatorList: () => Promise<unknown>;
+    commonObjs: { has: (id: string) => boolean; get: (id: string) => unknown };
+    cleanup: () => void;
+  }>;
   destroy: () => Promise<void>;
 }
 
@@ -46,6 +54,8 @@ export async function parsePdf(
     disableRange: true,
     useWorkerFetch: false,
     stopAtErrors: false,
+    // SL27 point 9: the fonts' encodings, ToUnicode maps and Type 3 outlines, to read private-use glyphs
+    fontExtraProperties: true,
   });
   let doc: PdfDoc;
   try {
@@ -60,11 +70,29 @@ export async function parsePdf(
     const blocks: Simple[] = [];
     const pageStarts: { block: number; page: number }[] = [];
     let chars = 0;
+    let dropped = 0;
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p);
       const tc = await page.getTextContent();
+      let items = tc.items.filter((x): x is TextItem => typeof (x as TextItem).str === 'string');
+      if (items.some((it) => needsCleaning(it.str))) {
+        // the fonts are loaded with the page's operators; then each font's private-use glyphs are read where possible
+        await page.getOperatorList();
+        const maps = new Map<string, Map<string, string>>();
+        const mapFor = (name: string | undefined) => {
+          if (!name) return undefined;
+          if (!maps.has(name)) maps.set(name, recoverMap(page.commonObjs.has(name) ? (page.commonObjs.get(name) as PdfFontInfo) : null));
+          return maps.get(name);
+        };
+        items = items.map((it) => {
+          if (!needsCleaning(it.str)) return it;
+          const r = cleanPdfText(it.str, mapFor(it.fontName));
+          dropped += r.dropped;
+          return { ...it, str: r.text };
+        });
+      } else items = items.map((it) => ({ ...it, str: it.str.normalize('NFC') }));
       page.cleanup();
-      const paras = pageParagraphs(tc.items.filter((x): x is TextItem => typeof (x as TextItem).str === 'string'));
+      const paras = pageParagraphs(items);
       pageStarts.push({ block: blocks.length, page: p });
       for (const t of paras) {
         chars += t.replace(/\s/g, '').length;
@@ -74,7 +102,7 @@ export async function parsePdf(
     }
     if (!chars) throw new PdfError('scanned', 'This PDF has no text layer (it looks scanned), so nothing could be read.');
     // a page with no text still has its anchor, at the next page's first block
-    return { blocks, pageStarts, pages: doc.numPages };
+    return { blocks, pageStarts, pages: doc.numPages, dropped };
   } finally {
     await doc.destroy().catch(() => undefined);
   }

@@ -205,6 +205,11 @@ export const NotebookImport = forwardRef<NotebookImportHandle, {
                 T.noneFound
               )}
             </p>
+            {note.source?.dropped ? (
+              <p className="mt-1 text-sm" data-testid="nb-review-dropped">
+                {note.source.dropped} {note.source.dropped === 1 ? T.droppedOne : T.droppedMany}
+              </p>
+            ) : null}
             <p className="mt-1 text-xs bx-muted">{C.notebook.heuristic}</p>
             <div className="mt-2 max-h-[min(22rem,40vh)] overflow-y-auto overscroll-contain rounded border border-[color:var(--bx-line)] p-2" data-testid="nb-review-text">
               {note.table ? (

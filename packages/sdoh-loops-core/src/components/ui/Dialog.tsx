@@ -10,7 +10,14 @@ export function Dialog({ open, onClose, title, children, wide, testId }: { open:
     if (open && !d.open) {
       back.current = document.activeElement;
       d.showModal();
-      requestAnimationFrame(() => (d.querySelector('[data-autofocus]') as HTMLElement | null)?.focus());
+      // the autofocus target takes focus a frame later — unless the user has already moved focus on from where
+      // showModal put it
+      const first = document.activeElement;
+      requestAnimationFrame(() => {
+        const a = document.activeElement;
+        if (a && a !== first && a !== d && d.contains(a)) return;
+        (d.querySelector('[data-autofocus]') as HTMLElement | null)?.focus();
+      });
     } else if (!open && d.open) {
       d.close();
       (back.current as HTMLElement | null)?.focus?.();

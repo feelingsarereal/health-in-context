@@ -131,3 +131,51 @@ mark.nb-flag { color: inherit; }
 /* SL29: an imported PDF's page markers ("p. 2"), drawn before the block each page starts at */
 .nb-page { display: block; margin: 0.75rem 0 0.25rem; font-size: 0.75rem; font-weight: 600; color: var(--bx-muted, #5b5348); border-top: 1px dashed var(--bx-line); padding-top: 0.25rem; user-select: none; }
 .nb-page[data-page="1"] { margin-top: 0; border-top: 0; padding-top: 0; }
+
+/*
+ * SL27: the SDOH span highlights (DESIGN-SYSTEM fork §0 D0.1), moved into the core so the Interrogator reader and the
+ * notebook share them — told apart by line style (solid · dashed · dotted), never by color alone. The tokens are the
+ * reader's (apps may still set their own). In the notebook a highlight is a decoration inside the editor, so its
+ * "pressed" state is `data-pressed` there; the reader's buttons use aria-pressed.
+ */
+:root {
+  --sx-explicit: #1f6f8b;
+  --sx-implicit: #8a5a00;
+  --sx-selected: #1f1b16;
+  --sx-tint: rgb(31 111 139 / 0.08);
+}
+.dark {
+  --sx-explicit: #7cc4dc;
+  --sx-implicit: #e2b35a;
+  --sx-selected: #efeae2;
+  --sx-tint: rgb(124 196 220 / 0.10);
+}
+.sx-span, .sx-span-inferred, .sx-span-low {
+  font: inherit; color: inherit; text-align: inherit; padding: 0; border: 0; cursor: pointer;
+  border-radius: 2px; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-skip-ink: none;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; display: inline;
+}
+button.sx-span, button.sx-span-inferred, button.sx-span-low { background: none; }
+.sx-span { text-decoration-line: underline; text-decoration-style: solid; text-decoration-color: var(--sx-explicit); background: var(--sx-tint); }
+.sx-span-inferred { text-decoration-line: underline; text-decoration-style: dashed; text-decoration-color: var(--sx-implicit); }
+.sx-span-low { text-decoration-line: underline; text-decoration-style: dotted; text-decoration-color: var(--sx-implicit); }
+.sx-span:hover, .sx-span-inferred:hover, .sx-span-low:hover { background: var(--bx-bg-2); }
+.sx-span[aria-pressed='true'], .sx-span-inferred[aria-pressed='true'], .sx-span-low[aria-pressed='true'],
+.sx-span[data-pressed='true'], .sx-span-inferred[data-pressed='true'], .sx-span-low[data-pressed='true'] { outline: 2px solid var(--sx-selected); outline-offset: 1px; }
+.sx-span:focus-visible, .sx-span-inferred:focus-visible, .sx-span-low:focus-visible { outline: 3px solid var(--bx-accent); outline-offset: 2px; }
+.sx-approx { font-size: 0.65em; vertical-align: super; line-height: 0; color: var(--sx-implicit); margin-left: 1px; }
+/* an outer span another sits inside: its line drawn below the inner one, so both stay visible */
+.sx-wrap { padding-bottom: 5px; border-bottom-width: 2px; }
+.sx-wrap-explicit { border-bottom-style: solid; border-color: var(--sx-explicit); }
+.sx-wrap-inferred { border-bottom-style: dashed; border-color: var(--sx-implicit); }
+.sx-wrap-low { border-bottom-style: dotted; border-color: var(--sx-implicit); }
+.sx-wrap[data-pressed='true'] { outline: 2px solid var(--sx-selected); outline-offset: 1px; }
+/* SL27: a span that supports nothing (kept as a plain highlight) — a thin solid underline, no fill */
+.sx-span-plain { text-decoration-line: underline; text-decoration-style: solid; text-decoration-thickness: 1px; text-decoration-color: var(--bx-muted); text-underline-offset: 4px; }
+/* SL27: a span inside another — the outer one's line drawn lower so both show */
+.sx-nest { text-underline-offset: 7px; }
+
+/* SL27 point 8: Go to passage — a brief flash on the highlight it lands on */
+.sx-flash { animation: sx-flash 1.6s ease-out 1; }
+@keyframes sx-flash { from { background: rgb(251 191 36 / 0.45); } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .sx-flash { animation: none; outline: 2px solid var(--sx-selected); } }

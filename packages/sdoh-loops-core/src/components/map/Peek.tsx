@@ -82,9 +82,11 @@ const names = (xs: string[]) => (xs.length ? `${xs.length}: ${xs.join(', ')}` : 
  * selects the target, and a circumstance's "Associations…" opens the association menu. A host's renderPeek lines go
  * below the core's. Click-away and Esc close it; opened from the keyboard, it takes focus and gives it back.
  */
-export function Peek({ target, at, map, nm, loops, loopNames, renderPeek, keyboard, onClose, onOpen, onAssoc }: {
+export function Peek({ target, at, map, nm, loops, loopNames, renderPeek, keyboard, onClose, onOpen, onAssoc, extra }: {
   target: PeekTarget; at: { x: number; y: number }; map: SdohMap; nm: (id: string) => string; loops: Loop[]; loopNames: Map<string, string>;
   renderPeek?: (target: PeekTarget) => ReactNode; keyboard: boolean; onClose: () => void; onOpen: () => void; onAssoc?: () => void;
+  /** SL27 point 8: the core's own extra line under the facts (the notebook passages' count) */
+  extra?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const back = useRef<Element | null>(null);
@@ -178,6 +180,7 @@ export function Peek({ target, at, map, nm, loops, loopNames, renderPeek, keyboa
           {f.description && <Row k={C.peek.description}>{f.description}</Row>}
         </dl>
       )}
+      {extra}
       {renderPeek && <div className="mt-2 border-t border-[color:var(--bx-line)] pt-2" data-testid="peek-host">{renderPeek(target)}</div>}
       <div className="mt-3 flex flex-wrap gap-1.5">
         <button type="button" className="bx-btn ax-tap" onClick={onOpen} data-testid="peek-open">{C.peek.open}</button>

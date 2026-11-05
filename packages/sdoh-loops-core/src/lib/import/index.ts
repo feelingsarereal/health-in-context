@@ -59,7 +59,7 @@ export async function readImport(file: File, limits: ImportLimits = DEFAULT_LIMI
       const r = await parsePdf(buf, { pdfjs: pdfjs as never, workerSrc: pdfWorkerSrc, maxPages: limits.maxPages, onProgress });
       const { doc, at } = toDocMapped(r.blocks);
       const anchors = r.pageStarts.map((p) => ({ block: p.block < at.length ? at[p.block] : doc.content.length, page: p.page })).filter((a) => a.block < doc.content.length);
-      return { ok: true, note: newImportedNote({ title: titleOf(filename), body: doc, anchors, source: { filename, type, size, pages: r.pages } }) };
+      return { ok: true, note: newImportedNote({ title: titleOf(filename), body: doc, anchors, source: { filename, type, size, pages: r.pages, ...(r.dropped ? { dropped: r.dropped } : {}) } }) };
     }
     onProgress?.(0, 1);
     const r = await run(type, buf);

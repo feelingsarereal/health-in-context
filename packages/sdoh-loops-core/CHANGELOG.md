@@ -10,6 +10,52 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.8.0] — 2026-11-04
+
+Minor (SL27, S7.1 slice 3): select, annotate and create circumstances from notebook text, with suggested codes and the
+extension point for assisted extraction; the selection card and peek list a circumstance's passages; PDF imports read
+private-use glyphs. Pack: `0.2.0` (unchanged). New props and optional map-file fields (`notebook.spans`,
+`notebook.annotations`, `sources`, `suggested_by`) in schema 3; existing behavior unchanged except as listed.
+
+- **Select → span.** A text selection in a note (free, structured or imported) opens an action bar: Create
+  circumstance and Add as evidence to… (two equal actions), Link to…, Annotate, Copy quote; Ctrl+Enter or Shift+F10
+  moves into it from the keyboard, Esc back. A span keeps its quote, prefix, suffix and offsets (a W3C
+  TextQuoteSelector with a position hint), taken from the editor's own text. Edits before or after it move it; an edit
+  inside it, or deleting its text, orphans it — listed under **Orphaned selections**, never re-pointed. A label that
+  replaces an identifier replaces it in a span's copies and comments too.
+- **Highlights** use the Interrogator reader's span classes (DESIGN-SYSTEM §0 D0.1), moved into the core's styles:
+  solid underline for spans the user made, dashed or dotted with "≈" for ones accepted as inferred, a thin underline for
+  a span that backs nothing; told apart by line style in grayscale. The selected circumstance's spans get the focus
+  ring. A click (or a double click) on a highlight selects its circumstance or link, opens the card in the viewer's own
+  mode, and brings it into view; overlapping spans open a chooser.
+- **Annotate:** a comment on a span, in the margin beside the text on a wide notebook (640 px and up) and inline on a
+  narrow one; comments are covered by the identifier check.
+- **Create circumstance:** the selected words pre-fill the label; the panel shows the local suggester's top five codes
+  (pack titles, index terms and `search_aliases`; Chapter 24 only), matched words marked, each "suggested", plus Not
+  sure yet, Other and Search all codes; nothing is chosen until the user picks. **Add as evidence to…** lists the map's
+  circumstances and links, those the selection suggests first. **Link to…** opens the usual form (both ends, the
+  polarity, the evidence check). Each attaches the span both ways in one step, so Undo restores both sides.
+- **Integrity:** deleting a circumstance or link backed by passages asks whether to keep them as plain highlights or
+  remove them; sources and targets are reconciled on every load and import.
+- **The passages on the item (point 8):** the selection card shows **In the notebook (n)** in Read and in Edit — each
+  quote (two lines), its note and anchor ("eviction-letter · p. 2", "Contact note · What was discussed"), **Go to
+  passage** (opens the notebook, scrolls the highlight into view inside it and focuses it) and **Remove as evidence**
+  (one Undo step; the highlight stays only if something else uses it). The peek says "In the notebook: 2 passages",
+  with a link that opens the card.
+- **Assisted extraction (extension point):** `NotebookExtractor` and `Proposal` (the SDOH-EXTRACTION record shape);
+  **Suggest circumstances in this note** runs one (an engine picker only when there are several) into a proposal queue —
+  Accept, Edit then accept, Reject; nothing applied without a click. Every proposal and accepted item says "suggested by:
+  <extractor>", kept in the map file (`suggested_by`, `span.by`). The core's **local code matcher** is first. New props
+  `extractors` and `allowRemoteExtractors`; a `remote` extractor is refused unless the host allows it **and** the note
+  has no unresolved identifier flags.
+- **PDF import reads private-use glyphs (point 9).** A browser's print to PDF can name some glyphs by a private-use code
+  point (Inter's alternates next to digits; icon fonts), which showed as boxes and lost "(2024)"'s parentheses. The text
+  is now NFC-normalized; a private-use glyph takes its character from its glyph name, or (in a Type 3 font) from a glyph
+  with the same outline, or — a flat bar — a dash; anything still unreadable, U+FFFD and control characters are left out
+  and counted ("4 characters could not be read and were left out", in the review step and on the note).
+- Fixes found on the way: the notebook's new-note title no longer takes focus back from where the user moved meanwhile;
+  a quick edit's deferred focus no longer undoes a selection made in it.
+
 ## [0.7.0] — 2026-11-04
 
 Minor (SL29, S7.1 slice 2): import files into the case manager notebook, and cities in the identifier check.

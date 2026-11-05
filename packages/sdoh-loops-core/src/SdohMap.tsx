@@ -9,8 +9,8 @@ import { useCoarsePointer, useWideViewport } from './lib/pointer';
 import { count } from './lib/plural';
 import { setViewPref, viewPref, withOriginals, type MapStore } from './lib/storage';
 import { useMapDoc } from './components/map/useMapDoc';
-import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, toGraph, updateEdge, updateNode, type MapEdge, type MapNode, type SdohMap as SdohMapDoc } from './lib/model/map';
-import { emptyDoc, plainText } from './lib/model/rich';
+import { addEdge, addNode, deleteEdges, deleteNodes, newEdge, newNode, renameLoop, setPositions, toGraph, updateEdge, updateNode, type CodeStatus, type MapEdge, type MapNode, type OtherType, type SdohMap as SdohMapDoc } from './lib/model/map';
+import { docFromText, emptyDoc, plainText } from './lib/model/rich';
 import { feedbackClusters, neighbourhood, findLoops, DEFAULT_WEIGHT, type Loop } from './lib/analysis';
 type Engine = 'fcose' | 'elk-stress';
 const ENGINES: Engine[] = ['fcose', 'elk-stress'];
@@ -35,7 +35,11 @@ import { Peek, type PeekTarget } from './components/map/Peek';
 import { links as packLinks } from './lib/data/scheme';
 import { Notebook } from './components/notebook/Notebook';
 import { CaseSummary } from './components/notebook/CaseSummary';
-import { addNote, CORE_TEMPLATES, labelAll, notebookFlags, type NoteTemplate } from './lib/model/notebook';
+import { addNote, CORE_TEMPLATES, fieldText, labelAll, locate, makeSpan, notebookFlags, type Note, type NoteTemplate, type Span, type SuggestedBy, type Target } from './lib/model/notebook';
+import { attachSpan, deleteWithSpans, detachSpan, spansBehind } from './lib/model/spans';
+import { SourcesCount, SourcesList } from './components/map/SourcesList';
+import { localCodeMatcher, type NotebookExtractor, type Proposal } from './lib/model/extract';
+import { EvidencePicker, SuggestPanel, type FromChoice } from './components/notebook/FromText';
 import { hasNotebook } from './lib/model/map';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
@@ -110,6 +114,12 @@ export interface NewNodeReq {
   pos?: { x: number; y: number };
   follow?: { anchor: string; link: PackLink | null; direction: 'out' | 'in' };
   kind?: 'note';
+  /** SL27: made from a notebook selection — the span to attach, and (Edit then accept) the proposal's reading */
+  fromSpan?: Span;
+  by?: SuggestedBy & { inferred?: boolean; confidence?: 'high' | 'medium' | 'low' };
+  preset?: { code_status: CodeStatus; code: string | null; type: OtherType | null; label: string };
+  /** the proposal's other spans, attached too */
+  moreSpans?: Span[];
 }
 
 export interface SdohMapProps {
@@ -170,6 +180,13 @@ export interface SdohMapProps {
    * Import runs on the device; the parsers load on first use.
    */
   notebookImport?: Partial<ImportLimits>;
+  /**
+   * SL27: more extractors for "Suggest circumstances in this note", after the core's local code matcher (an engine
+   * picker appears when there is more than one). A `remote` one runs only with `allowRemoteExtractors` and only on a
+   * note with no unresolved identifier flags; the health profile keeps it off until a SAFETY ruling (S7.2).
+   */
+  extractors?: NotebookExtractor[];
+  allowRemoteExtractors?: boolean;
 }
 
 /**
@@ -272,7 +289,9 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const [pathHl, setPathHl] = useState<{ nodes: string[]; edges: string[] } | null>(null);
   const [hulls, setHulls] = useState(false);
   const [newNodeReq, setNewNodeReq] = useState<NewNodeReq | null>(null);
-  const [linkReq, setLinkReq] = useState<{ from: string | null; to: string | null } | null>(null);
+  const [linkReq, setLinkReq] = useState<{ from: string | null; to: string | null; span?: Span } | null>(null);
+  // SL27: Add as evidence to… (a passage onto an existing circumstance or link)
+  const [evidenceReq, setEvidenceReq] = useState<Span | null>(null);
   const openLink = (from: string | null, to: string | null = null) => setLinkReq({ from, to });
   // w2 walk: a just-added link is the selection, so From carries on from that link's source, not the map's first node
   const linkFrom = () => selected.nodes[0] ?? (selected.edges.length === 1 ? map.edges.find((e) => e.id === selected.edges[0])?.from ?? null : null);
@@ -529,7 +548,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   };
   // SL29: import files into the notebook — the controller stays mounted, so the Map menu item works with it closed
   const importer = useRef<NotebookImportHandle>(null);
-  const [nbFocus, setNbFocus] = useState<{ id: string; n: number } | null>(null);
+  const [nbFocus, setNbFocus] = useState<{ id: string; n: number; span?: string } | null>(null);
   const importLimits = { ...DEFAULT_LIMITS, ...(props.notebookImport ?? {}) };
   const saveImported = (note: Parameters<typeof addNote>[1], base: { dismissed: string[]; replaced: Record<string, number> }) =>
     apply((m) => {
@@ -741,9 +760,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     let edge: MapEdge | null = null;
     const l = req.follow?.link ?? null;
     if (anchor && l) edge = newEdge({ from: dir === 'out' ? anchor.id : n.id, to: dir === 'out' ? n.id : anchor.id, polarity: l.polarity, weight: (l.polarity === '+' ? 1 : -1) * DEFAULT_WEIGHT, evidence: [...l.refs], link: l.id, basis: 'evidence' });
+    if (req.by) n.suggested_by = { extractor: req.by.extractor, label: req.by.label };
     apply((m) => {
       let next = addNode(m, n);
       if (edge) next = addEdge(next, edge);
+      // SL27: the selection it was made from — the span gets the circumstance as a target, the circumstance the span as
+      // a source, in this one step (so Undo restores both)
+      for (const sp of req.fromSpan ? [req.fromSpan, ...(req.moreSpans ?? [])] : []) next = attachSpan(next, req.by ? { ...sp, by: req.by } : sp, { kind: 'node', id: n.id }).map;
       return next;
     });
     setSelected({ nodes: [n.id], edges: [] });
@@ -761,9 +784,14 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     setSelected({ nodes: [], edges: [edge.id] });
     announce(`Linked ${nm(edge.from)} to ${nm(edge.to)} with evidence link ${l.id}.`);
   };
-  const removeSelection = () => {
+  const [delAsk, setDelAsk] = useState<{ nodes: string[]; edges: string[]; n: number } | null>(null);
+  const removeSelection = (spans?: 'keep' | 'remove') => {
     if (!selected.nodes.length && !selected.edges.length) return;
-    apply((m) => deleteEdges(deleteNodes(m, selected.nodes), selected.edges));
+    // SL27: passages in the notebook support what is being deleted: keep them as plain highlights, or remove them
+    const n = spansBehind(full, selected.nodes, selected.edges);
+    if (n && !spans) return setDelAsk({ nodes: selected.nodes, edges: selected.edges, n });
+    setDelAsk(null);
+    apply((m) => (n ? deleteWithSpans(m, selected.nodes, selected.edges, spans!) : deleteEdges(deleteNodes(m, selected.nodes), selected.edges)));
     announce(`Deleted ${selected.nodes.length} circumstance(s) and ${selected.edges.length} link(s).`);
     setSelected({ nodes: [], edges: [] });
   };
@@ -1039,7 +1067,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                   </select>
                 </label>
               )}
-              <button type="button" className="bx-btn ax-tap mt-2" onClick={removeSelection}>Delete selection</button>
+              <button type="button" className="bx-btn ax-tap mt-2" onClick={() => removeSelection()}>Delete selection</button>
             </div>
           ) : (
             // K14: the add-the-first-circumstance hint only on an empty map
@@ -1053,7 +1081,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             {selNode.kind !== 'note' && <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc(selNode.id)} data-testid="inspector-assoc">{C.assoc.open}</button>}
             {selNode.kind !== 'note' && <button type="button" className="bx-btn ax-tap" onClick={() => openLink(selNode.id)} data-testid="inspector-link-to">{C.evidence.linkTo}</button>}
             <button type="button" className="bx-btn ax-tap" onClick={togglePin}>{selNode.pinned ? 'Unpin' : 'Pin'}</button>
-            <button type="button" className="bx-btn ax-tap" onClick={removeSelection} data-testid="delete-node">{C.list.delete}</button>
+            <button type="button" className="bx-btn ax-tap" onClick={() => removeSelection()} data-testid="delete-node">{C.list.delete}</button>
           </div>
           <NodeFields draft={selNode} onChange={(p, key) => apply((m) => updateNode(m, selNode.id, p), key ? `n:${selNode.id}:${key}` : undefined)} />
           {selNode.code && (
@@ -1062,6 +1090,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             </section>
           )}
           {selNode.code_status === 'other' && selNode.ref && <p className="mt-2 text-xs bx-muted">Reference: {selNode.ref} ({C.node.userEntered})</p>}
+          <SourcesList map={full} t={{ kind: 'node', id: selNode.id }} onGo={goToPassage} onRemove={(sp) => removeEvidence(sp, { kind: 'node', id: selNode.id })} />
         </div>
       )}
       {selEdge && (
@@ -1077,13 +1106,25 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
               setError((err as Error).message);
             }
           }}
-          onDelete={removeSelection}
+          onDelete={() => removeSelection()}
           error={error}
         />
       )}
+      {selEdge && <SourcesList map={full} t={{ kind: 'edge', id: selEdge.id }} onGo={goToPassage} onRemove={(sp) => removeEvidence(sp, { kind: 'edge', id: selEdge.id })} />}
     </div>
   );
 
+  // SL27 point 8: from the card (or the peek) back to the passage, and "Remove as evidence"
+  function goToPassage(spanId: string) {
+    const sp = full.notebook?.spans?.find((x) => x.id === spanId);
+    if (!sp) return;
+    if (!nbOn) setNbOn(true);
+    setNbFocus((f) => ({ id: sp.note, span: spanId, n: (f?.n ?? 0) + 1 }));
+  }
+  function removeEvidence(spanId: string, t: { kind: 'node' | 'edge'; id: string }) {
+    apply((m) => detachSpan(m, spanId, t));
+    announce(`${C.notebook.passages.removedEvidence} ${t.kind === 'node' ? nm(t.id) : 'the link'}.`);
+  }
   // SL23: Read mode — the selection as text; SL31: with quick field edit for the text fields and two switches
   const quick =
     canEdit && props.quickEdit !== false
@@ -1099,7 +1140,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       : undefined;
   const reader = (
     <div data-testid="inspector" data-mode="read" data-quick-edit={quick ? 'on' : 'off'}>
-      <SelectionRead map={map} node={selNode} edge={selEdge} multi={{ nodes: selected.nodes.length, edges: selected.edges.length }} nm={nm} loops={loops.loops} loopNames={loopNames} empty={emptyHint} quick={quick} />
+      <SelectionRead map={map} node={selNode} edge={selEdge} multi={{ nodes: selected.nodes.length, edges: selected.edges.length }} nm={nm} loops={loops.loops} loopNames={loopNames} empty={emptyHint} quick={quick} sources={{ onGo: goToPassage, onRemove: canEdit ? removeEvidence : undefined }} />
     </div>
   );
   const panelBody: Record<Panel, JSX.Element> = {
@@ -1272,6 +1313,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         else if (!dockOpen || !cardOpen('selection')) saveDock({ ...dock, ...shown });
       }}
       onAssoc={peek.kind === 'node' && peekTarget.kind === 'node' && peekTarget.node.kind !== 'note' ? () => { setPeek(null); openAssoc(peek.id); } : undefined}
+      extra={<SourcesCount map={full} t={{ kind: peek.kind, id: peek.id }} onOpen={() => { setPeek(null); showTarget({ kind: peek.kind, id: peek.id }); }} />}
     />
   );
   const fsOn = fs !== 'off';
@@ -1284,12 +1326,62 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const gridStyle = wide ? { gridTemplateColumns: `minmax(0,1fr) ${nbOn ? `${nbWidth}px ` : ''}${dockOpen ? `${width}px` : '3rem'}` } : undefined;
   // SL26: below lg the notebook is a tab of its own: it takes the canvas's place, and the canvas stays mounted, hidden
   const nbTab = nbOn && !wide;
+  // ── SL27: spans in the notebook ↔ the map
+  const selectedTargets: Target[] = useMemo(() => [...selected.nodes.map((id) => ({ kind: 'node', id })), ...selected.edges.map((id) => ({ kind: 'edge', id }))], [selected]);
+  const targetName = (t: Target) => {
+    if (t.kind === 'node') return byId.has(t.id) ? nm(t.id) : t.id;
+    if (t.kind === 'edge') {
+      const e = map.edges.find((x) => x.id === t.id);
+      return e ? `${nm(e.from)} → ${nm(e.to)}` : t.id;
+    }
+    return `${t.kind} ${t.id}`;
+  };
+  /** a click on a highlight: its circumstance or link becomes the map selection, its card opens, the canvas shows it */
+  const showTarget = (t: Target) => {
+    if (t.kind !== 'node' && t.kind !== 'edge') return;
+    if (t.kind === 'node' && !byId.has(t.id)) return;
+    setSelected(t.kind === 'node' ? { nodes: [t.id], edges: [] } : { nodes: [], edges: [t.id] });
+    if (wide && (!dock.open || !cardOpen('selection'))) saveDock({ ...dock, open: true, closed: dock.closed.filter((x) => x !== 'selection') });
+    if (!wide) setNbOn(false);
+    const ids = t.kind === 'node' ? [t.id] : (() => { const e = map.edges.find((x) => x.id === t.id); return e ? [e.from, e.to] : []; })();
+    if (view === 'canvas') setTimeout(() => canvas.current?.reveal(ids), wide ? 0 : 120);
+    announce(`Selected ${targetName(t)}.`);
+  };
+  const extractors = useMemo(() => [localCodeMatcher, ...(props.extractors ?? []).filter((x) => x.id !== localCodeMatcher.id)], [props.extractors]);
+  /** Accept (or Edit then accept) a proposal: the same path as Create circumstance, with the extractor's label kept */
+  const acceptProposal = (note: Note, p: Proposal, edit: boolean) => {
+    const by = { ...p.extractor, inferred: p.status === 'implicit', confidence: p.confidence };
+    const spans = p.spans
+      .map((x) => {
+        const text = fieldText(note, x.where);
+        const loc = locate({ ...x, start: -1, end: -1 }, text);
+        return loc ? makeSpan(note, x.where, loc.start, loc.end) : null;
+      })
+      .filter((x): x is Span => !!x);
+    if (!spans.length) return announce(C.notebook.passages.failed);
+    const preset = { code_status: (p.code ? 'sdoh' : p.other_type ? 'other' : 'undetermined') as CodeStatus, code: p.code, type: p.other_type, label: p.label };
+    const req: NewNodeReq = { fromSpan: spans[0], moreSpans: spans.slice(1), by, preset };
+    if (edit) return setNewNodeReq(req);
+    createNode({ kind: 'circumstance', code_status: preset.code_status, code: preset.code, type: preset.type, ref: null, label: docFromText(p.label), circumstance: emptyDoc(), severity: null, since: null, notes: emptyDoc(), style: {}, pinned: false }, req);
+  };
+  const addEvidence = (sp: Span, t: Target) => {
+    if (t.kind !== 'node' && t.kind !== 'edge') return;
+    apply((m) => attachSpan(m, sp, { kind: t.kind as 'node' | 'edge', id: t.id }).map);
+    setEvidenceReq(null);
+    showTarget(t);
+    announce(`${C.notebook.passages.evidenceAdded} ${targetName(t)}.`);
+  };
   const nbCol = nbOn && (
     <div className={`${wide ? tall : 'h-[75vh] min-h-[24rem]'} relative min-h-0 min-w-0 flex`} id={`${dockId}-nb`} role={wide ? undefined : 'tabpanel'} aria-labelledby={wide ? undefined : `${dockId}-tab-nb`} data-testid="notebook-col">
       {nbResizer}
       <div className="bx-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-0">
         <Notebook map={full} apply={apply} scrub={doc.scrub} flags={flags} templates={[...CORE_TEMPLATES, ...(props.notebookTemplates ?? [])]} announce={announce} onPrint={printNotebook}
           onImport={() => importer.current?.openFile()} onPaste={() => importer.current?.openPaste()} onDropFiles={(fs) => importer.current?.importFiles(fs)} focus={nbFocus}
+          selectedTargets={selectedTargets} targetName={targetName} onShow={showTarget}
+          onCreateFrom={canEdit ? (sp) => setNewNodeReq({ fromSpan: sp }) : undefined}
+          onEvidenceFrom={canEdit ? (sp) => setEvidenceReq(sp) : undefined}
+          onLinkFrom={canEdit ? (sp) => setLinkReq({ from: null, to: null, span: sp }) : undefined}
+          extractors={extractors} allowRemote={!!props.allowRemoteExtractors} onAccept={canEdit ? acceptProposal : undefined}
           summary={
             <CaseSummary
               map={map}
@@ -1426,12 +1518,28 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
             to={linkReq.to}
             onCancel={() => setLinkReq(null)}
             onCreate={(e) => {
-              apply((m) => addEdge(m, e));
+              const sp = linkReq.span;
+              apply((m) => (sp ? attachSpan(addEdge(m, e), sp, { kind: 'edge', id: e.id }).map : addEdge(m, e)));
               setLinkReq(null);
               setSelected({ nodes: [], edges: [e.id] });
               announce(`Added ${describeEdge(e)}.`);
             }}
           />
+        )}
+      </Dialog>
+      <Dialog open={!!evidenceReq} onClose={() => setEvidenceReq(null)} title={C.notebook.passages.evidenceTitle} wide testId="evidence-dialog">
+        {evidenceReq && <EvidencePicker map={map} span={evidenceReq} nm={nm} onPick={(t) => addEvidence(evidenceReq, t)} onCancel={() => setEvidenceReq(null)} />}
+      </Dialog>
+      <Dialog open={!!delAsk} onClose={() => setDelAsk(null)} title={C.notebook.passages.deleteTitle} testId="delete-spans-dialog">
+        {delAsk && (
+          <>
+            <p className="mb-3" data-testid="delete-spans-lead">{count(delAsk.n, 'passage')} {C.notebook.passages.deleteLead.replace(/^passages /, '')}</p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="bx-btn-primary ax-tap" data-autofocus onClick={() => removeSelection('keep')} data-testid="delete-spans-keep">{C.notebook.passages.deleteKeep}</button>
+              <button type="button" className="bx-btn ax-tap" onClick={() => removeSelection('remove')} data-testid="delete-spans-remove">{C.notebook.passages.deleteRemove}</button>
+              <button type="button" className="bx-btn ax-tap" onClick={() => setDelAsk(null)}>{C.notebook.passages.deleteCancel}</button>
+            </div>
+          </>
         )}
       </Dialog>
       <Dialog open={!!assocFor} onClose={() => setAssocFor(null)} title={S.associations.title} wide testId="assoc-dialog">
@@ -1496,7 +1604,31 @@ function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq
 
 /** Mounted fresh for each request, so a quick submit never reuses the previous draft. */
 function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq) => void; anchorName: string }) {
-  const [draft, setDraft] = useState<NodeDraft>(() => ({ kind: req.kind === 'note' ? 'note' : 'circumstance', code_status: 'undetermined', code: null, type: null, ref: null, label: emptyDoc(), circumstance: emptyDoc(), severity: null, since: null, notes: emptyDoc(), style: {}, pinned: false }));
+  const [draft, setDraft] = useState<NodeDraft>(() => ({
+    kind: req.kind === 'note' ? 'note' : 'circumstance',
+    code_status: req.preset?.code_status ?? 'undetermined',
+    code: req.preset?.code ?? null,
+    type: req.preset?.type ?? null,
+    ref: null,
+    // SL27: made from a selection, the label starts as the selected words (editable)
+    label: req.preset ? docFromText(req.preset.label) : req.fromSpan ? docFromText(req.fromSpan.quote) : emptyDoc(),
+    circumstance: emptyDoc(),
+    severity: null,
+    since: null,
+    notes: emptyDoc(),
+    style: {},
+    pinned: false,
+  }));
+  // SL27: from a selection nothing is chosen for the user: a suggested code, Not sure yet, Other, or a search first
+  const [choice, setChoice] = useState<FromChoice | null>(req.preset ? (req.preset.code ? { kind: 'code', code: req.preset.code } : req.preset.code_status === 'other' ? { kind: 'other' } : { kind: 'undetermined' }) : null);
+  const pick = (c: FromChoice) => {
+    setChoice(c);
+    if (c.kind === 'code') setDraft((d) => ({ ...d, code_status: 'sdoh', code: c.code, type: null }));
+    else if (c.kind === 'undetermined') setDraft((d) => ({ ...d, code_status: 'undetermined', code: null, type: null }));
+    else if (c.kind === 'other') setDraft((d) => ({ ...d, code_status: 'other', code: null }));
+    else setDraft((d) => ({ ...d, code_status: 'sdoh', code: null }));
+  };
+  const fromText = !!req.fromSpan;
   const link = req.follow?.link ?? null;
   // K3: 'Add new' offers only codes the link's evidence names — its `suggest` codes downstream, its `codes.from` upstream
   const offered = link ? (req.follow!.direction === 'out' ? link.suggest : link.codes.from) : undefined;
@@ -1520,9 +1652,18 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
               )}
             </p>
           )}
-          <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen only={only} suggested={offered} compact />
+          {fromText && (
+            <>
+              <p className="mb-2 text-sm">{C.notebook.passages.fromText} <span className="sx-span">“{req.fromSpan!.quote.length > 160 ? `${req.fromSpan!.quote.slice(0, 159)}…` : req.fromSpan!.quote}”</span></p>
+              <SuggestPanel text={req.fromSpan!.quote} choice={choice} onPick={pick} />
+            </>
+          )}
+          {(!fromText || choice) && (
+            <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen={!fromText || choice?.kind === 'search'} only={only} suggested={offered} compact />
+          )}
+          {fromText && !choice && <p className="text-sm bx-muted" data-testid="from-pick-first">{C.notebook.passages.pickFirst}</p>}
           <div className="mt-2 flex flex-wrap gap-2">
-            <button type="submit" className="bx-btn-primary ax-tap" data-testid="node-submit" disabled={draft.code_status === 'sdoh' && !draft.code}>
+            <button type="submit" className="bx-btn-primary ax-tap" data-testid="node-submit" disabled={(fromText && !choice) || (draft.code_status === 'sdoh' && !draft.code)}>
               {req.kind === 'note' ? C.node.addNote : C.node.add}
             </button>
             <button type="button" className="bx-btn ax-tap" onClick={onClose}>Cancel</button>
