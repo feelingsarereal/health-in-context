@@ -15,6 +15,10 @@ export interface SpanDeco {
   pressed: boolean;
   /** what it supports, for the tooltip */
   title: string;
+  /** SL28: an @ mention — drawn as a chip with this text at `start` (start = end) */
+  chip?: string;
+  /** SL28 trace view: not connected to the current span or selection */
+  dim?: boolean;
 }
 export interface TextSelection {
   start: number;
@@ -30,6 +34,10 @@ export interface SpanMarksOptions {
   spans: () => SpanDeco[];
   onClick: (ids: string[], rect: DOMRect) => void;
   onSelect: (sel: TextSelection | null) => void;
+  /** SL28: "@" typed at this offset (the @ is not inserted; `literal` inserts it after all) */
+  onMention?: (at: number, literal: () => void) => void;
+  /** SL28: the caret (a collapsed selection in the focused editor) is at this offset; null when it left */
+  onCaret?: (at: number | null) => void;
 }
 
 /**
@@ -80,12 +88,36 @@ function build(doc: PMNode, spans: SpanDeco[]): DecorationSet {
   // longer spans first, so an inner span is drawn inside an outer one (its line raised to show both)
   const sorted = [...spans].sort((a, b) => b.end - b.start - (a.end - a.start));
   for (const s of sorted) {
+    if (s.chip !== undefined) {
+      // a mention: a chip between two characters (after the last one at the very end)
+      if (s.start > at.length) continue;
+      const pos = s.start < at.length ? at[s.start] : at.length ? at[at.length - 1] + 1 : 1;
+      const label = s.chip;
+      decos.push(
+        Decoration.widget(
+          pos,
+          () => {
+            const el = document.createElement('span');
+            el.className = `sx-chip${s.pressed ? ' sx-chip-on' : ''}${s.dim ? ' sx-dim' : ''}`;
+            el.contentEditable = 'false';
+            el.textContent = label;
+            el.title = s.title;
+            el.dataset.span = s.id;
+            el.dataset.chip = 'true';
+            el.dataset.pressed = s.pressed ? 'true' : 'false';
+            return el;
+          },
+          { side: -1, key: `chip-${s.id}-${label}-${s.pressed ? 1 : 0}-${s.dim ? 1 : 0}`, ignoreSelection: true },
+        ),
+      );
+      continue;
+    }
     if (s.start >= s.end || s.end > at.length) continue;
     // an outer span (one with another inside it) draws its line lower, so both lines show
     const outer = sorted.some((o) => o !== s && o.start >= s.start && o.end <= s.end && o.end - o.start < s.end - s.start);
     const from = at[s.start];
     const to = at[s.end - 1] + 1;
-    decos.push(Decoration.inline(from, to, { class: `${s.cls}${outer ? ' sx-nest' : ''}`, 'data-span': s.id, 'data-pressed': s.pressed ? 'true' : 'false', title: s.title }));
+    decos.push(Decoration.inline(from, to, { class: `${s.cls}${outer ? ' sx-nest' : ''}${s.dim ? ' sx-dim' : ''}`, 'data-span': s.id, 'data-pressed': s.pressed ? 'true' : 'false', title: s.title }));
     if (s.cls === 'sx-span-inferred' || s.cls === 'sx-span-low') decos.push(Decoration.widget(to, () => Object.assign(document.createElement('span'), { className: 'sx-approx', textContent: '≈', ariaHidden: 'true' }), { side: -1, key: `approx-${s.id}` }));
   }
   return DecorationSet.create(doc, decos);
@@ -134,6 +166,10 @@ export const SpanMarks = Extension.create<SpanMarksOptions>({
     const spanClick = (view: EditorView, pos: number, e: MouseEvent) => {
       const el = (e.target as Element | null)?.closest?.('[data-span]');
       if (!el) return false;
+      if ((el as HTMLElement).dataset.chip) {
+        o.onClick([(el as HTMLElement).dataset.span!], el.getBoundingClientRect());
+        return true;
+      }
       const off = offsetAt(charPositions(view.state.doc), pos);
       const ids = o.spans().filter((s) => s.start <= off && s.end >= off).map((s) => s.id);
       if (ids.length) o.onClick(ids, el.getBoundingClientRect());
@@ -152,13 +188,39 @@ export const SpanMarks = Extension.create<SpanMarksOptions>({
           // a second click soon after the first counts as a double click in ProseMirror: it shows the item too (and
           // still selects the word, as a double click does)
           handleDoubleClick: (view, pos, e) => spanClick(view, pos, e),
+          // SL28: "@" at the start of a word opens the mention picker where it was typed (inside a word, as in an email
+          // address, it is just an @)
+          handleTextInput: (view, from, to, text) => {
+            if (text !== '@' || !o.onMention || !view.editable) return false;
+            const $from = view.state.doc.resolve(from);
+            const before = $from.parent.textBetween(Math.max(0, $from.parentOffset - 1), $from.parentOffset, undefined, ' ');
+            if (before && !/[\s([{“"'‘—–-]/.test(before)) return false;
+            const off = offsetAt(charPositions(view.state.doc), from);
+            o.onMention(off, () => {
+              const tr = view.state.tr.insertText('@', Math.min(from, view.state.doc.content.size), Math.min(to, view.state.doc.content.size));
+              view.dispatch(tr);
+              view.focus();
+            });
+            return true;
+          },
         },
         view: (view) => {
           const doc = view.dom.ownerDocument;
           let t = 0;
+          let caret: number | null = null;
           const on = () => {
             clearTimeout(t);
-            t = window.setTimeout(() => o.onSelect(readSelection(view)), 60);
+            t = window.setTimeout(() => {
+              o.onSelect(readSelection(view));
+              if (!o.onCaret) return;
+              const ds = doc.getSelection();
+              const inside = !!ds && ds.isCollapsed && ds.rangeCount > 0 && view.dom.contains(ds.anchorNode) && view.hasFocus();
+              const next = inside ? offsetAt(charPositions(view.state.doc), view.state.selection.from) : null;
+              if (next !== caret) {
+                caret = next;
+                o.onCaret(next);
+              }
+            }, 60);
           };
           // the selection-action keys read the selection now, not after the debounce, so the action gets every
           // character the user selected (capture: before the editor's own key handling)

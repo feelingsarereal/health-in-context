@@ -15,6 +15,7 @@ import { CodeLine, peekFacts } from './Peek';
 import { QuickRich, QuickToggle, type QuickEditApi } from './QuickEdit';
 import type { Target } from '../../lib/model/notebook';
 import { SourcesList } from './SourcesList';
+import { CitedInNotebook } from '../notebook/Citations';
 
 /** SL27: who suggested a circumstance or link (from the map file) */
 function Passages({ by }: { map?: SdohMap; t?: Target; by?: { label: string } }) {
@@ -113,6 +114,8 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
           )}
         </dl>
         <SourcesList map={map} t={{ kind: 'node', id: node.id }} compact onGo={sources?.onGo} onRemove={sources?.onRemove ? (sp) => sources.onRemove!(sp, { kind: 'node', id: node.id }) : undefined} />
+        {/* SL28: passages that cite its code */}
+        {node.code && <CitedInNotebook t={{ kind: 'code', id: node.code }} />}
         {node.code && (
           <section className="bx-card mt-3 p-3" aria-label="About this code">
             <CodePopout code={node.code} />
@@ -148,6 +151,8 @@ export function SelectionRead({ map, node, edge, multi, nm, loops, loopNames, em
           )}
         </dl>
         <SourcesList map={map} t={{ kind: 'edge', id: edge.id }} compact onGo={sources?.onGo} onRemove={sources?.onRemove ? (sp) => sources.onRemove!(sp, { kind: 'edge', id: edge.id }) : undefined} />
+        {/* SL28: passages that cite the link's references */}
+        {edge.evidence.map((n) => <CitedInNotebook key={n} t={{ kind: 'reference', id: String(n) }} />)}
         {!f.link && edge.evidence.length > 0 && (
           <section className="mt-3" aria-label={C.edge.evidence}>
             <h3 className="font-semibold">{C.edge.evidence}</h3>

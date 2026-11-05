@@ -167,6 +167,8 @@ test('Link to… from a selection: two circumstances, the polarity chosen, the e
   await freeNote(page, 'Contact', 'Since the eviction the money ran out.');
   await selectText(page, 'Since the eviction the money ran out');
   await page.getByTestId('nb-act-link').click();
+  // SL28: Link to… is the picker over every kind; a new link between two circumstances is its first choice
+  await page.getByTestId('link-any-dialog').getByTestId('link-any-new').click();
   const d = page.getByTestId('edge-dialog');
   await d.getByTestId('edge-from').selectOption({ label: 'Housing trouble' });
   await d.getByRole('radio', { name: /Low income/ }).check();

@@ -23,6 +23,15 @@ export { importFile } from './lib/model/importFile';
 export * from './lib/model/notebook';
 export * from './lib/model/identifiers';
 export { NotebookHelp } from './components/notebook/Notebook';
+// SL28: traceability everywhere — target kinds (and the host's own), passages behind loops and clusters, the trace set,
+// the case file, the circumstances table as data, and "Cited in your notebook" for pages outside the map. The report
+// itself (buildReport, its renderers) loads on first export and is not part of this entry.
+export * from './lib/model/targets';
+export * from './lib/model/caseFile';
+export * from './lib/model/summary';
+export type { CaseReport, ReportOptions } from './lib/model/report';
+export { CitedInNotebook, NotebookCitations, CitationsContext, citationsIn, type Citation, type CitationsValue } from './components/notebook/Citations';
+export { CORE_VERSION } from './lib/version';
 
 // the pinned pack's data, the interface copy and the shared UI pieces the standalone app's pages use too
 export * from './lib/data/core';

@@ -3,7 +3,7 @@ import { C } from '../../lib/copy';
 import { count } from '../../lib/plural';
 import type { SdohMap } from '../../lib/model/map';
 import {
-  addNote, addPassage, allTags, annotationOf, deleteNote, dismissFlag, duplicateNote, isDismissed, labelAll, labelFlag, moveNote, spanFromSelection, newFreeNote, newStructuredNote, parseTags, searchNotes, setAnnotationText, updateField, updateNote, DATE_FIELD,
+  addNote, addPassage, allTags, annotationOf, deleteNote, noteDocText, isChip, dismissFlag, duplicateNote, isDismissed, labelAll, labelFlag, moveNote, spanFromSelection, newFreeNote, newStructuredNote, parseTags, searchNotes, setAnnotationText, updateField, updateNote, DATE_FIELD,
   type Flag, type Note, type NoteDoc, type Notebook as NotebookDoc, type NoteTable, type NoteTemplate, type Span, type Target,
 } from '../../lib/model/notebook';
 import type { RichDoc } from '../../lib/model/rich';
@@ -48,6 +48,34 @@ export interface NotebookProps {
   extractors?: NotebookExtractor[];
   allowRemote?: boolean;
   onAccept?: (note: Note, p: Proposal, edit: boolean) => void;
+  /**
+   * SL28 point 6: the open note, or null for none (every note collapsed). A per-viewer state the host keeps with the
+   * dock's; uncontrolled when left out.
+   */
+  open?: string | null;
+  onOpen?: (id: string | null) => void;
+  /** SL28: the action bar's Link to… (the picker over every kind) and the @ mention picker */
+  onLinkAny?: (span: Span) => void;
+  onMention?: (req: MentionRequest) => void;
+  /** SL28: the span the caret is in (or null), for the map's selection and the trace view */
+  onFocusSpan?: (span: Span | null) => void;
+  /** SL28 trace view: spans connected to the current span or selection; the others are dimmed */
+  trace?: Set<string> | null;
+  /** false on a read-only map: nothing is tidied away on opening */
+  editable?: boolean;
+}
+
+/** SL28: "@" typed in a note — where, so the chip lands there; `literal` types the @ after all (the picker was closed) */
+export interface MentionRequest {
+  note: Note;
+  where: string;
+  at: number;
+  literal: () => void;
+}
+
+/** SL28: a free note nobody wrote in — no title (or the default one), no text, no tags, no passages */
+export function isBlankNote(n: Note, nb: NotebookDoc | undefined, untitled: string): boolean {
+  return n.kind === 'free' && (!n.title.trim() || n.title === untitled) && !noteDocText(n.body).trim() && !n.tags.length && !(nb?.spans ?? []).some((x) => x.note === n.id);
 }
 
 interface Toast {
@@ -60,11 +88,21 @@ interface Toast {
  * reorder by drag or Alt+↑ / Alt+↓, duplicate and delete with an undo toast, and the identifier check's count, list
  * and one-click labels. Every edit goes through the map's own apply(), so it autosaves and Undo / Redo cover it.
  */
-export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary, onImport, onPaste, onDropFiles, focus, selectedTargets = [], targetName, onShow, onCreateFrom, onEvidenceFrom, onLinkFrom, extractors = [], allowRemote = false, onAccept }: NotebookProps) {
+export function Notebook({ map, apply, scrub, flags, templates, announce, onPrint, summary, onImport, onPaste, onDropFiles, focus, selectedTargets = [], targetName, onShow, onCreateFrom, onEvidenceFrom, onLinkFrom, extractors = [], allowRemote = false, onAccept, open, onOpen, onLinkAny, onMention, onFocusSpan, trace, editable = true }: NotebookProps) {
   const uid = useId().replace(/:/g, '');
   const nb = map.notebook;
   const notes = nb?.notes ?? [];
-  const [sel, setSel] = useState<string | null>(notes[0]?.id ?? null);
+  // SL28 point 6: no note is open until the viewer opens one (or last left one open)
+  const [ownSel, setOwnSel] = useState<string | null>(null);
+  const sel = open !== undefined ? open : ownSel;
+  const blankRef = useRef<() => void>(() => undefined);
+  const openRaw = (id: string | null) => (onOpen ? onOpen(id) : setOwnSel(id));
+  const setSel = (id: string | null) => {
+    if (id === sel) return;
+    blankRef.current();
+    openRaw(id);
+  };
+  const canSweep = editable;
   const [q, setQ] = useState('');
   const [tag, setTag] = useState<string | null>(null);
   const [flagsOpen, setFlagsOpen] = useState(false);
@@ -89,9 +127,34 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
     else focusNote.current = focus.id;
   }, [focus?.n]); // eslint-disable-line react-hooks/exhaustive-deps
   const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files');
+  // SL28: a free note left untitled and empty goes when it is collapsed (or another note opens), with an Undo; any left
+  // over from before (the map was closed with one open) go when the notebook next opens
+  blankRef.current = () => {
+    const prev = notes.find((n) => n.id === sel);
+    if (!prev || !isBlankNote(prev, nb, C.notebook.untitled)) return;
+    dropBlank([prev]);
+  };
+  const dropBlank = (list: Note[]) => {
+    const at = list.map((n) => notes.findIndex((x) => x.id === n.id));
+    change((b) => list.reduce<NotebookDoc>((acc, n) => deleteNote(acc, n.id), b ?? { notes: [], dismissed: [], replaced: {} }));
+    const msg = list.length === 1 ? C.notebook.blankRemoved : `${C.notebook.blankRemovedMany.replace('{n}', String(list.length))}`;
+    show({
+      text: msg,
+      undo: () => {
+        change((b) => list.reduce<NotebookDoc>((acc, n, i) => addNote(acc, n, at[i]), b ?? { notes: [], dismissed: [], replaced: {} }));
+        setToast(null);
+        announce(`${C.notebook.undo}: ${msg}`);
+      },
+    });
+    announce(msg);
+  };
+  const swept = useRef(false);
   useEffect(() => {
-    if (!note && notes.length && sel === null) setSel(notes[0].id);
-  }, [note, notes, sel]);
+    if (swept.current || !canSweep) return;
+    swept.current = true;
+    const stale = notes.filter((n) => n.id !== sel && isBlankNote(n, nb, C.notebook.untitled));
+    if (stale.length) dropBlank(stale);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => clearTimeout(toastT.current), []);
   useEffect(() => {
     const id = focusNote.current;
@@ -141,12 +204,12 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
     const at = notes.findIndex((x) => x.id === n.id);
     change((b) => deleteNote(b, n.id));
     const next = notes[at + 1] ?? notes[at - 1] ?? null;
-    setSel(next?.id ?? null);
+    openRaw(next?.id ?? null);
     show({
       text: `${C.notebook.deleted} “${n.title}”.`,
       undo: () => {
         change((b) => addNote(b, n, at));
-        setSel(n.id);
+        openRaw(n.id);
         setToast(null);
         announce(`${C.notebook.undo}: “${n.title}”.`);
       },
@@ -321,7 +384,20 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
           <p className="p-3 text-sm bx-muted" data-testid="nb-empty">{C.notebook.empty}</p>
         ) : (
           <>
-            <nav aria-label={C.notebook.notes} className="border-b border-[color:var(--bx-line)] p-2" data-print-hide>
+            <nav
+              aria-label={C.notebook.notes}
+              className="border-b border-[color:var(--bx-line)] p-2"
+              data-print-hide
+              onKeyDown={(e) => {
+                // SL28 point 6: Esc in the note list collapses the open note
+                if (e.key === 'Escape' && sel && !e.defaultPrevented) {
+                  e.preventDefault();
+                  const was = notes.find((n) => n.id === sel);
+                  setSel(null);
+                  announce(`${C.notebook.collapsed}: “${was?.title || C.notebook.untitled}”.`);
+                }
+              }}
+            >
               <p id={`${uid}-hint`} className="sr-only">{C.notebook.reorderHint}</p>
               {shown.length === 0 && <p className="p-1 text-sm bx-muted">{C.notebook.noMatch}</p>}
               <ul ref={listRef} className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain" data-testid="nb-list">
@@ -346,9 +422,17 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
                         data-note-button
                         className={`ax-tap flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm hover:bg-paper-2 dark:hover:bg-night ${x.id === sel ? 'bg-paper-2 font-semibold dark:bg-night' : ''}`}
                         aria-current={x.id === sel ? 'true' : undefined}
+                        aria-expanded={x.id === sel}
+                        aria-controls={x.id === sel ? `${uid}-editor` : undefined}
                         aria-describedby={`${uid}-hint`}
-                        aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
-                        onClick={() => setSel(x.id)}
+                        aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown Escape"
+                        onClick={() => {
+                          // SL28 point 6: a click on the open note's row collapses it
+                          if (x.id === sel) {
+                            setSel(null);
+                            announce(`${C.notebook.collapsed}: “${x.title || C.notebook.untitled}”.`);
+                          } else setSel(x.id);
+                        }}
                         onKeyDown={(e) => onItemKey(e, x, i)}
                       >
                         <span aria-hidden="true" className="cursor-grab bx-muted">⋮⋮</span>
@@ -365,7 +449,7 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
               <NoteEditor key={note.id} uid={uid} note={note} index={notes.indexOf(note)} total={notes.length} templates={templates} flags={flagsProp} change={change} focusSpan={focusSpan}
                 spansCtx={{
                   nb, selected: selectedTargets, name: targetName ?? ((t) => t.id), onShow: (t) => onShow?.(t), announce,
-                  onCreate: onCreateFrom, onEvidence: onEvidenceFrom, onLink: onLinkFrom,
+                  onCreate: onCreateFrom, onEvidence: onEvidenceFrom, onLink: onLinkAny ?? onLinkFrom, onMention, onFocusSpan, trace: trace ?? null,
                   onRemove: (id) => {
                     apply((m) => removeSpan(m, id));
                     announce(C.notebook.passages.removed);
@@ -380,10 +464,15 @@ export function Notebook({ map, apply, scrub, flags, templates, announce, onPrin
                 change(() => d.notebook);
                 setSel(d.note.id);
                 announce(`${C.notebook.duplicate}: “${d.note.title}”.`);
-              }} onDelete={() => remove(note)} />
-            ) : (
-              <p className="p-3 text-sm bx-muted">{C.notebook.selectOne}</p>
-            )}
+              }} onDelete={() => remove(note)}
+                onCollapse={() => {
+                  const id = note.id;
+                  setSel(null);
+                  announce(`${C.notebook.collapsed}: “${note.title || C.notebook.untitled}”.`);
+                  // focus goes back to the note's row (if it is still there)
+                  setTimeout(() => listRef.current?.querySelector<HTMLElement>(`[data-note-id="${id}"] [data-note-button]`)?.focus(), 0);
+                }} />
+            ) : null}
           </>
         )}
         {summary}
@@ -414,11 +503,14 @@ interface SpansCtx {
   flags: number;
   nodes: { id: string; code: string | null; label: string }[];
   onAccept?: (p: Proposal, edit: boolean) => void;
+  onMention?: (req: MentionRequest) => void;
+  onFocusSpan?: (span: Span | null) => void;
+  trace: Set<string> | null;
 }
 
-function NoteEditor({ uid, note, index, total, templates, flags, change, onMove, onDuplicate, onDelete, spansCtx: sc, focusSpan }: {
+function NoteEditor({ uid, note, index, total, templates, flags, change, onMove, onDuplicate, onDelete, onCollapse, spansCtx: sc, focusSpan }: {
   uid: string; note: Note; index: number; total: number; templates: NoteTemplate[]; flags: RichFieldFlags;
-  change: (fn: NB, key?: string) => void; onMove: (to: number) => void; onDuplicate: () => void; onDelete: () => void; spansCtx: SpansCtx;
+  change: (fn: NB, key?: string) => void; onMove: (to: number) => void; onDuplicate: () => void; onDelete: () => void; onCollapse: () => void; spansCtx: SpansCtx;
   focusSpan?: { id: string; n: number } | null;
 }) {
   // SL27 point 8: Go to passage lands here — the highlight scrolled into view inside the notebook (not the page),
@@ -466,9 +558,21 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
       .map((x) => {
         const targets = annotationOf(sc.nb, x.id)?.targets ?? [];
         const pressed = targets.some((t) => sc.selected.some((s) => s.kind === t.kind && s.id === t.id));
+        const dim = !!sc.trace && !sc.trace.has(x.id);
+        const title = targets.length ? targets.map(sc.name).join(' · ') : C.notebook.passages.plain;
+        // SL28: a mention is a chip with what it names
+        if (isChip(x)) return { id: x.id, start: x.start, end: x.start, cls: 'sx-chip', pressed, dim, title, chip: `@${targets.length ? targets.map(sc.name).join(', ') : '…'}` };
         const cls = x.by?.inferred ? (x.by.confidence === 'low' ? 'sx-span-low' : 'sx-span-inferred') : targets.length ? 'sx-span' : 'sx-span-plain';
-        return { id: x.id, start: x.start, end: x.end, cls, pressed, title: targets.length ? targets.map(sc.name).join(' · ') : C.notebook.passages.plain };
+        return { id: x.id, start: x.start, end: x.end, cls, pressed, dim, title };
       });
+  // SL28: the span the caret is in, reported once each time it changes
+  const caretSpan = useRef<string | null>(null);
+  useEffect(
+    () => () => {
+      if (caretSpan.current) sc.onFocusSpan?.(null);
+    },
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
   const spansFor = (where: string) => {
     const list = spanList(where);
     return {
@@ -486,6 +590,15 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
           selNow.current = { where, sel: s };
         }
         setTextSel((cur) => (s ? { where, sel: s } : cur?.where === where && !art.current?.querySelector('[data-testid="nb-action-bar"]')?.contains(document.activeElement) ? null : cur));
+      },
+      onMention: sc.onMention && note.kind !== 'imported' ? (at: number, literal: () => void) => sc.onMention!({ note, where, at, literal }) : undefined,
+      onCaret: (at: number | null) => {
+        if (!sc.onFocusSpan) return;
+        const x = at === null ? undefined : (sc.nb?.spans ?? []).find((y) => y.note === note.id && y.where === where && !y.orphaned && !isChip(y) && y.start < at && at < y.end);
+        const id = x?.id ?? null;
+        if (id === caretSpan.current) return;
+        caretSpan.current = id;
+        sc.onFocusSpan(x ?? null);
       },
     };
   };
@@ -517,6 +630,7 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
       onShow={sc.onShow}
       onComment={(id, t) => change((b) => setAnnotationText(b, id, t))}
       onRemove={sc.onRemove}
+      dim={sc.trace ? (id) => !sc.trace!.has(id) : undefined}
     />
   );
   const [tagDraft, setTagDraft] = useState(note.tags.join(', '));
@@ -528,8 +642,14 @@ function NoteEditor({ uid, note, index, total, templates, flags, change, onMove,
   };
   const tpl = templates.find((t) => t.id === note.template);
   return (
-    <article ref={art} className="p-3" aria-labelledby={`${uid}-title-l`} data-testid="nb-editor" data-note-id={note.id}>
-      <label id={`${uid}-title-l`} htmlFor={`${uid}-title`} className="mb-1 block text-sm font-semibold">{C.notebook.noteTitle}</label>
+    <article ref={art} id={`${uid}-editor`} className="p-3" aria-labelledby={`${uid}-title-l`} data-testid="nb-editor" data-note-id={note.id}>
+      <div className="mb-1 flex items-center gap-2">
+        <label id={`${uid}-title-l`} htmlFor={`${uid}-title`} className="min-w-0 flex-1 text-sm font-semibold">{C.notebook.noteTitle}</label>
+        {/* SL28 point 6: collapse the note, so no note is open */}
+        <button type="button" className="bx-btn ax-tap px-2 py-0 text-sm" aria-label={C.notebook.collapse} title={C.notebook.collapseTip} aria-expanded="true" aria-controls={`${uid}-editor`} onClick={onCollapse} data-testid="nb-collapse" data-print-hide>
+          <span aria-hidden="true">⌃</span> {C.notebook.collapseShort}
+        </button>
+      </div>
       <input id={`${uid}-title`} className="bx-input ax-tap w-full font-semibold" value={note.title} onChange={(e) => change((b) => updateNote(b, note.id, { title: e.target.value }), `nb:${note.id}:title`)} data-testid="nb-title" />
       <div className="mt-2 flex flex-wrap gap-1.5" data-print-hide>
         <button type="button" className="bx-btn ax-tap px-2 text-sm" onClick={() => onMove(index - 1)} disabled={index === 0} data-testid="nb-move-up">{C.notebook.moveUp}</button>

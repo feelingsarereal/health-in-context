@@ -179,3 +179,8 @@ button.sx-span, button.sx-span-inferred, button.sx-span-low { background: none; 
 .sx-flash { animation: sx-flash 1.6s ease-out 1; }
 @keyframes sx-flash { from { background: rgb(251 191 36 / 0.45); } to { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .sx-flash { animation: none; outline: 2px solid var(--sx-selected); } }
+/* SL28: an @ mention in a note — a chip with what it names (a solid border, so it reads in grayscale too) */
+.sx-chip { display: inline-block; border: 1px solid var(--sx-explicit); border-radius: 0.65rem; padding: 0 0.4rem; margin: 0 1px; font-size: 0.88em; line-height: 1.35; background: var(--sx-tint); cursor: pointer; white-space: nowrap; max-width: 18rem; overflow: hidden; text-overflow: ellipsis; vertical-align: baseline; user-select: none; }
+.sx-chip[data-pressed='true'] { outline: 2px solid var(--sx-selected); outline-offset: 1px; }
+/* SL28 trace view: what is not connected to the current passage or selection */
+.sx-dim, .sx-dim * { color: var(--bx-muted) !important; text-decoration-color: var(--bx-line) !important; background: none !important; border-color: var(--bx-line) !important; }

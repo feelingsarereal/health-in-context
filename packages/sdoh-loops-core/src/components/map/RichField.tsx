@@ -54,7 +54,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   /** SL29: an imported PDF's page starts, drawn as "p. N" before their block */
   pages?: { block: number; page: number }[];
   /** SL27: the notebook's spans in this field (highlights), a click on one, and the text selection for the action bar */
-  spans?: { list: SpanDeco[]; version: string; onClick: (ids: string[], rect: DOMRect) => void; onSelect: (s: TextSelection | null) => void };
+  spans?: { list: SpanDeco[]; version: string; onClick: (ids: string[], rect: DOMRect) => void; onSelect: (s: TextSelection | null) => void; onMention?: (at: number, literal: () => void) => void; onCaret?: (at: number | null) => void };
 }) {
   const sp = useRef(spans);
   sp.current = spans;
@@ -72,7 +72,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
       Color,
       FontSize,
       ...(pages?.length ? [PageMarks.configure({ pages })] : []),
-      ...(spans ? [SpanMarks.configure({ spans: () => sp.current?.list ?? [], onClick: (ids, r) => sp.current?.onClick(ids, r), onSelect: (x) => sp.current?.onSelect(x) })] : []),
+      ...(spans ? [SpanMarks.configure({ spans: () => sp.current?.list ?? [], onClick: (ids, r) => sp.current?.onClick(ids, r), onSelect: (x) => sp.current?.onSelect(x), onMention: spans.onMention ? (at, lit) => sp.current?.onMention?.(at, lit) : undefined, onCaret: (at) => sp.current?.onCaret?.(at) })] : []),
       ...(flags ? [IdentifierFlags.configure({ isDismissed: (c, v) => !!fl.current?.isDismissed(c, v), tip: flags.tip, onFlag: () => fl.current?.onFlag?.() })] : []),
     ],
     content: value,

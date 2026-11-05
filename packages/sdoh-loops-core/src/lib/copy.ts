@@ -160,6 +160,9 @@ const FALLBACK = {
     toggle: 'Notebook', toggleTip: 'Show the notebook beside the map', autoFolded: 'The side dock is folded to make room; press ] to open it again.', tabs: 'Map or notebook', mapTab: 'Map',
     title: 'Notebook', lead: 'Notes about this case, saved inside this map. They stay on this device.',
     newFree: 'New note', newFromTemplate: 'New from a template…', untitled: 'Untitled note',
+    /** SL28 point 6: collapsing the open note; an empty untitled note tidied away */
+    collapse: 'Collapse the note', collapseShort: 'Collapse', collapseTip: 'Collapse this note, so the list and the case summary sit together (or click its row again, or press Esc in the list)', collapsed: 'Collapsed',
+    blankRemoved: 'Removed an empty untitled note.', blankRemovedMany: 'Removed {n} empty untitled notes.',
     noteTitle: 'Note title', tags: 'Tags (separate with commas)', body: 'Note text', notes: 'Notes',
     search: 'Search the notes', allTags: 'All tags', tagFilter: 'Filter by tag',
     empty: 'No notes yet. Start a free note, or pick a template.', noMatch: 'No note matches the search.',
@@ -206,6 +209,22 @@ const FALLBACK = {
       deleteTitle: 'Delete and its passages', deleteLead: 'passages in the notebook support what you are deleting.', deleteKeep: 'Keep them as plain highlights', deleteRemove: 'Remove them', deleteCancel: 'Cancel',
       readRow: 'Passages', byRow: 'Suggested by', inNote: 'in',
       inNotebook: 'In the notebook', goTo: 'Go to passage', removeEvidence: 'Remove as evidence', removedEvidence: 'Removed as evidence from',
+      /** SL28: Link to… over every kind, @ mentions, and the way back from any item */
+      mention: 'mention', linkTitle: 'Link to…', linkSearch: 'Search everything: circumstances, links, loops, codes, references, terms, 101s, notes', linkLead: 'Choose what this passage supports or refers to.',
+      linkNew: 'Draw a new link between two circumstances…', linkNone: 'Nothing matches.', linked: 'Linked the passage to', mentionTitle: 'Mention…', mentionLead: 'Choose what to mention here. Esc types an @ instead.', mentioned: 'Mentioned',
+      citedIn: 'Cited in your notebook', citedInMap: 'in', openItem: 'Open', cancel: 'Cancel', passagesN: 'passages', sources: 'Sources', fold: 'Passages',
+      cardCode: 'Cites this code', cardRefs: 'Cites its references',
+    },
+    /** SL28 point 3: the trace view */
+    trace: { toggle: 'Trace', tip: 'Dim everything not connected to the passage the caret is in, or else to the selection', on: 'Trace view on: everything not connected to the current passage or selection is dimmed.', off: 'Trace view off.' },
+    /** SL28 point 4: case export and the report */
+    caseFile: {
+      menu: 'Export case (.json)', menuDesc: 'The map and its notebook as one file, with a count of notes, passages and labels. Open it again with Open a map file.',
+      report: 'Export report…', reportDesc: 'The notes, the case summary with quoted sources, and the references: PDF, web page, Markdown or Word.',
+      reportTitle: 'Export the case report', format: 'Format', formats: { print: 'Print / Save as PDF', html: 'Web page (.html, one file)', md: 'Markdown (.md)', docx: 'Word (.docx)' } as Record<string, string>,
+      include: 'Include', notes: 'The notes', image: 'The map as a picture', annotations: 'Comments, mentions and each note’s passages', go: 'Export', cancel: 'Cancel',
+      heuristicHint: 'The cover says that the identifier check is a heuristic. Possible identifiers go through the usual warning first.',
+      noImage: 'The picture is made from the canvas; switch to the canvas view to include it.', made: 'Report made.',
     },
     /** SL29: importing files as notes */
     importing: {

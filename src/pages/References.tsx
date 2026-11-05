@@ -1,8 +1,10 @@
 import { references, TIERS, C, RefCard, PageHead } from '@feelingsarereal/sdoh-loops-core';
+import NotebookCites from '@/components/NotebookCites';
 
 /** Tiered as MI topic mode: seminal oldest first, current newest first; each with its verbatim abstract folded. */
 export default function References() {
   return (
+    <NotebookCites>
     <div>
       <PageHead title="References" lead={`${references.length} works, ${references.filter((r) => r.verified).length} verified. Each card shows the records that use it.`} />
       {TIERS.map((t) => {
@@ -27,5 +29,6 @@ export default function References() {
         );
       })}
     </div>
+    </NotebookCites>
   );
 }

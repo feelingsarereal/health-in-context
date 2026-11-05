@@ -114,7 +114,9 @@ export const MapMenu = forwardRef<MapMenuHandle, {
   guard?: (run: (m: SdohMap) => void) => void;
   /** SL26: the notebook is on and has notes: "Save a copy" carries them, and "Save a copy without the notebook" is offered */
   notebook?: boolean;
-}>(function MapMenu({ map, apply, download, canvas, store, onOpenMap, announce, hostItems, guard, notebook }, ref) {
+  /** SL28: the core's notebook exports (Export case, Export report…), after the loop report */
+  coreItems?: { id: string; label: string; description: string; testId: string; guarded: boolean; run: (m: SdohMap) => void }[];
+}>(function MapMenu({ map, apply, download, canvas, store, onOpenMap, announce, hostItems, guard, notebook, coreItems }, ref) {
   const id = useId().replace(/:/g, '');
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -144,6 +146,7 @@ export const MapMenu = forwardRef<MapMenuHandle, {
     } }] : []),
     { id: 'csv', label: C.mapMenu.csv, description: C.mapMenu.csvDesc, testId: 'export-csv', run: (m) => download(`${base}-edges.csv`, exportCSV(m, titleOf, S.codes.citation), 'text/csv'), guarded: true },
     { id: 'md', label: C.mapMenu.md, description: C.mapMenu.mdDesc, testId: 'export-md', run: (m) => download(`${base}-loops.md`, report(m), 'text/markdown'), guarded: true },
+    ...(coreItems ?? []),
     ...(canvas
       ? [
           { id: 'png', label: C.mapMenu.png, description: C.mapMenu.pngDesc, testId: 'export-png', run: () => download(`${base}.png`, dataUrlToBlob(canvas.current!.png()), 'image/png'), guarded: true },

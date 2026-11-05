@@ -9,6 +9,8 @@ import type { SdohMap } from '../../lib/model/map';
 import { Heuristic } from '../ui/bits';
 import { CitedText } from '../evidence/CitedText';
 import { count } from '../../lib/plural';
+import { PassagesFold } from '../notebook/PassagesFold';
+import { passagesBehind } from '../../lib/model/targets';
 
 const titleOf = (c: string) => codeMap.get(c)?.title;
 export const nameOf = (map: SdohMap) => {
@@ -20,7 +22,7 @@ export const nameOf = (map: SdohMap) => {
 };
 
 // ───────────────────────── UI-09 loops
-export function LoopsPanel({ map, result, names, active, onPick, onRename, onCircle, overrides, evidenceOnly, emptyNote }: { map: SdohMap; result: LoopResult; names: Map<string, string>; active: string | null; onPick: (l: Loop | null) => void; onRename: (l: Loop, name: string) => void; onCircle: (l: Loop) => void; overrides: (l: Loop) => number; evidenceOnly: boolean; emptyNote: string | null }) {
+export function LoopsPanel({ map, result, names, active, onPick, onRename, onCircle, overrides, evidenceOnly, emptyNote, onGo }: { map: SdohMap; result: LoopResult; names: Map<string, string>; active: string | null; onPick: (l: Loop | null) => void; onRename: (l: Loop, name: string) => void; onCircle: (l: Loop) => void; overrides: (l: Loop) => number; evidenceOnly: boolean; emptyNote: string | null; /** SL28: Go to passage, for each loop's passages */ onGo?: (span: string) => void }) {
   const [kind, setKind] = useState<'all' | 'R' | 'B'>('all');
   const [through, setThrough] = useState('');
   const [editing, setEditing] = useState<string | null>(null);
@@ -94,6 +96,8 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
               )}
               <button type="button" className="bx-btn ax-tap" onClick={() => onCircle(l)}>{C.loops.arrangeCircle}</button>
             </div>
+            {/* SL28: the passages behind the loop's circumstances and links, grouped by circumstance */}
+            <PassagesFold notebook={map.notebook} groups={passagesBehind(map.notebook, map, nm, { kind: 'loop', loop: l })} onGo={onGo} testId="loop-passages" />
           </li>
         ))}
       </ul>
@@ -312,7 +316,7 @@ export function ToCodePanel({ map, onPick, onPickEdge, nm: nmE }: { map: SdohMap
     </div>
   );
 }
-export function ClustersPanel({ map, graph, show, onShow, onPick }: { map: SdohMap; graph: AGraph; show: boolean; onShow: (b: boolean) => void; onPick: (ids: string[]) => void }) {
+export function ClustersPanel({ map, graph, show, onShow, onPick, onGo }: { map: SdohMap; graph: AGraph; show: boolean; onShow: (b: boolean) => void; onPick: (ids: string[]) => void; onGo?: (span: string) => void }) {
   const id = useId();
   const cl = feedbackClusters(graph);
   const nm = nameOf(map);
@@ -322,7 +326,12 @@ export function ClustersPanel({ map, graph, show, onShow, onPick }: { map: SdohM
       <label className="mt-2 inline-flex items-center gap-2 text-sm ax-tap"><input type="checkbox" checked={show} onChange={(e) => onShow(e.target.checked)} aria-labelledby={`${id}-hulls`} /> <span id={`${id}-hulls`}>{C.clusters.hulls}</span></label>
       {!cl.length ? <p className="mt-2 text-sm bx-muted">{C.clusters.none}</p> : (
         <ul className="mt-2 space-y-1 text-sm">
-          {cl.map((c, i) => <li key={i}><button type="button" className="ax-tap w-full rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(c)}>Cluster {i + 1} ({c.length}): {c.map(nm).join(', ')}</button></li>)}
+          {cl.map((c, i) => (
+            <li key={i} data-testid="cluster-item">
+              <button type="button" className="ax-tap w-full rounded px-1 text-left hover:bg-paper-2 dark:hover:bg-night" onClick={() => onPick(c)}>Cluster {i + 1} ({c.length}): {c.map(nm).join(', ')}</button>
+              <PassagesFold notebook={map.notebook} groups={passagesBehind(map.notebook, map, nm, { kind: 'cluster', nodes: c })} onGo={onGo} testId="cluster-passages" />
+            </li>
+          ))}
         </ul>
       )}
     </div>

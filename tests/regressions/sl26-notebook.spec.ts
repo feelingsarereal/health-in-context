@@ -95,7 +95,8 @@ test('both note kinds; autosave over a reload; reorder by keyboard; search and t
   await page.reload();
   await expect(page.getByTestId('notebook')).toBeVisible();
   await expect(page.getByTestId('nb-note')).toHaveText([/Third/, /First visit/, /Contact note/]);
-  await page.getByTestId('nb-note').filter({ hasText: 'First visit' }).locator('button').click();
+  // SL28 point 6: the note left open is open again after the reload (a click on its row would collapse it)
+  await expect(page.getByTestId('nb-note').filter({ hasText: 'First visit' }).locator('button')).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByTestId('nb-body').locator('ul li')).toHaveText('food bank on Tuesdays');
   await expect(page.getByTestId('nb-tags')).toHaveValue('housing, food');
   await page.getByTestId('nb-note').filter({ hasText: 'Contact note' }).locator('button').click();

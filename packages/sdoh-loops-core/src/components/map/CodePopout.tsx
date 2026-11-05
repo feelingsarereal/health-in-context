@@ -3,6 +3,7 @@ import { S } from '../../lib/data/core';
 import { Todo } from '../ui/bits';
 import { CitedText } from '../evidence/CitedText';
 import type { XRef } from '../../lib/data/scheme';
+import { CitedInNotebook } from '../notebook/Citations';
 
 const xref = (x: string | XRef) => (typeof x === 'string' ? x : `${x.title}${x.code ? ` (${x.code})` : ''}`);
 
@@ -71,6 +72,8 @@ export function CodePopout({ code, headingLevel = 3 }: { code: string; headingLe
         <a className="underline" href={who} target="_blank" rel="noreferrer" data-testid="who-link">{S.codes.open_who}</a>
         <span className="text-xs bx-muted" data-testid="code-source">{S.codes.source}</span>
       </p>
+      {/* SL28: the notebook passages that cite this code */}
+      <CitedInNotebook t={{ kind: 'code', id: c.code }} />
       <p className="mt-2 text-[11px] leading-4 bx-muted" data-testid="icd-citation">{S.codes.citation}</p>
     </div>
   );

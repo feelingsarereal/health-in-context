@@ -43,6 +43,13 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   // SL27: the local code matcher runs on the device
   await page.getByTestId('nb-suggest').click();
   await expect(page.getByTestId('nb-proposal').first()).toBeVisible();
+  // SL28: an @ mention (the picker searches on the device)
+  await page.getByTestId('nb-body').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' @');
+  await page.getByTestId('mention-dialog').getByTestId('picker-search').fill('unemp');
+  await page.getByTestId('mention-dialog').getByTestId('picker-item').first().click();
+  await expect(page.getByTestId('nb-body').locator('.sx-chip')).toHaveCount(1);
   await page.getByTestId('nb-template').selectOption({ label: 'Intake' });
   await page.getByTestId('nb-field-asks').click();
   await page.keyboard.type(`NF ${SENTINEL}`);
@@ -95,6 +102,24 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
       await panel(page, 'map');
     }
   }
+  // SL28: Export case, and the case report in every format — made on the device, sent nowhere
+  {
+    const [d] = await Promise.all([page.waitForEvent('download'), menuItem(page, 'export-case')]);
+    const p = test.info().outputPath(d.suggestedFilename());
+    await d.saveAs(p);
+    expect(JSON.parse(fs.readFileSync(p, 'utf8')).provenance.notes).toBeGreaterThan(0);
+  }
+  for (const f of ['html', 'md', 'docx']) {
+    await menuItem(page, 'export-report');
+    await page.getByTestId(`report-format-${f}`).check();
+    const [d] = await Promise.all([page.waitForEvent('download'), page.getByTestId('report-go').click()]);
+    await d.saveAs(test.info().outputPath(d.suggestedFilename()));
+  }
+  await menuItem(page, 'export-report');
+  // the dialog keeps the last format chosen
+  await page.getByTestId('report-format-print').check();
+  await page.getByTestId('report-go').click();
+  await expect(page.locator('iframe[data-testid="report-print-frame"]')).toHaveCount(1);
   await page.getByTestId('switch-view').click();
   await expect(page.getByTestId('list-view')).toBeVisible();
   await page.reload();

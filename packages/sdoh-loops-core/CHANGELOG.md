@@ -10,6 +10,57 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.9.0] — 2026-11-04
+
+Minor (SL28, S7.1 slice 4): traceability everywhere — a notebook passage can point at every item kind and every item
+shows the passages behind it; @ mentions; the trace view; notes collapse; Export case and the complete case report. The
+notebook is available to hosts. Pack: `0.2.0` (unchanged). New props `notebookTargets` and `passage`; new optional
+map-file fields (`span.chip`); existing behavior unchanged except as listed.
+
+- **Notebook → anything (point 1).** The action bar's **Link to…** is now one picker over every kind: circumstances,
+  links, loops (by their node cycle), clusters, ICD-11 codes, references (the pack's and user-entered ones), glossary
+  terms, 101s, other notes and passages, and a host's own kinds (`notebookTargets`). Drawing a new link between two
+  circumstances (the 0.8.0 behavior) is its first choice. **@** at the start of a word opens the same picker and
+  inserts a chip — an annotation on an empty span, anchored by the text around it; typing after it leaves it in place,
+  an edit that removes its context orphans it; Esc types a plain @ (an @ inside a word, as in an email address, is just
+  an @). A click on a target opens it: on the map, in the Loops or Clusters tab, or in a dialog with WHO's text, the
+  reference card, the term or the 101.
+- **Anything → notebook (point 2).** The case summary gains a **Sources** column (n passages, Go to passage) and a
+  passages fold-out under each loop; the Loops and Clusters tabs show each loop's and cluster's passages, grouped by
+  circumstance; the selection card (Read) also lists the passages that cite the circumstance's code or the link's
+  references. References, codes, glossary terms and 101s show **Cited in your notebook (n)** wherever they open — in
+  the map, and (with `<NotebookCitations>`) on the standalone app's References, Glossary and 101 pages, linking back
+  to the passage in its map (`?passage=`).
+- **Cross-highlighting (point 3).** Selecting an item on the map rings its passages (as in 0.8.0); the caret in a passage
+  selects what it supports, through the controlled selection. **Trace** (beside Notebook) dims everything not
+  connected to the current passage or selection, on the canvas and in the notes (a muted colour, not transparency, so
+  dimmed text still meets contrast).
+- **Case export and import (point 4).** **Export case (.json)** writes the map with its notebook and a `provenance`
+  block: counts of notes, passages, mentions, annotations and comments, identifiers labelled per category (never the
+  values), and the pins. Open a map file restores both sides with their links; the block is written fresh each time.
+- **The case report (point 4).** **Export report…** makes, in the browser, the notes in order, then the case summary
+  with each circumstance's quoted sources ("In the notebook (n)", note title and page or heading) and each loop's
+  passages, then the references the notebook cites, numbered with full citations — as **Print / Save as PDF** (a print
+  stylesheet: a page break before each note, black on white), one self-contained **HTML** file, **Markdown** or
+  **Word (.docx)** (a small in-browser ZIP writer; no new dependency). Options: the notes, the map picture, the
+  annotations. The cover gives the map name, subject label, date, the pins (core, pack, ICD-11 release) and the counts,
+  and says the identifier check is a heuristic; the report goes through the identifier warning, and a flagged value is
+  in it only if the user chose to continue as it is (the cover then says so). The report's code loads on first use.
+- **Embedding (point 5).** `<SdohMap notebook>` is for hosts now. `notebookTargets` adds a host's own item kinds;
+  `passage` opens the notebook at a passage. New exports: the target model (`searchTargets`, `targetName`,
+  `passagesBehind`, `traceSet`, `loopTargetId`, `clusterTargetId`, `NotebookTargetKind`), `exportCase` /
+  `caseProvenance`, `summaryRow` / `linkSummary`, `CitedInNotebook`, `NotebookCitations`, `CitationsContext`,
+  `CORE_VERSION`.
+- **Notes collapse (point 6).** No note is open until the viewer opens one, or the one they last left open (kept with the
+  dock state, never in the map). A click on the open note's row, the ⌃ **Collapse** button beside its title, or Esc in the
+  note list collapses it; each row has `aria-expanded`; Alt+↑ / Alt+↓ still reorder; Go to passage, a search result, a
+  new note or an import opens its note as before. A free note left untitled and empty goes when it is collapsed or
+  another note opens (and any left from before when the notebook next opens), with an Undo toast.
+
+**For hosts (S4.1):** bump the pin to `0.9.0` (pack unchanged). Nothing changes until you pass `notebook`; with it on,
+add `<NotebookHelp />` to your Help page, consider `notebookTargets` for your own entries, and note that the
+notebook's per-viewer state (the open note, Trace) is kept under your store's slug.
+
 ## [0.8.0] — 2026-11-04
 
 Minor (SL27, S7.1 slice 3): select, annotate and create circumstances from notebook text, with suggested codes and the

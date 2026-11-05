@@ -15,7 +15,8 @@ fallback). The health-profile invariants are tested inside a consumer: `fixtures
 - **Association menu** and **Link to…** with the evidence gate and overrides (UI-17, UI-18).
 - **Side panel**: Inspect, Loops, Links, Paths, Leverage, What-if, To code, Clusters, Legend, Map; analyses A1–A8.
 - **Exports and import**: JSON, CSV, Markdown loop report, PNG, SVG; import of `.json` / `.csv` into a new map.
-- **The notebook** (0.5.0, opt-in): free and structured notes beside the map, with the identifier check and its labels.
+- **The notebook** (0.5.0, opt-in; for hosts from 0.9.0): free and structured notes beside the map, with the identifier
+  check and its labels; spans and @ mentions tied to every item kind, case export and the case report (0.9.0).
 - **The pack loader**: the pinned content pack's data (`@feelingsarereal/sdoh-loops-pack`) and its pin check.
 
 ## Using it
@@ -60,10 +61,12 @@ const storage = await browserStore('sdoh-interrogator'); // your own slug: your 
 | `panel` / `onPanelChange` | The Whole map card's tab (`PANELS`: loops, links, paths, leverage, pulse, clusters, legend, needsCode, about; 0.4.0 dropped `inspect`, `tocode` and `map`); uncontrolled when left out. |
 | `mapMenuItems` | 0.4.0 (SL23). `{ id, label, description?, onSelect, exports? }[]`: your own file actions (e.g. "Reset to the built map") at the end of the toolbar's Map menu, instead of buttons beside the canvas. Since 0.5.0, `exports: true` marks an item that sends the map somewhere (e.g. "Open in SDOH Loops"): with the notebook on, it warns first while possible identifiers remain. |
 | `missing` | What to show when `map` is an id that is not in `storage`. |
-| `notebook` | 0.5.0 (SL26). `true` shows the case manager notebook: a toggle beside List view (a column with its own resize handle from lg up; Map / Notebook tabs below). Off by default; embedding apps keep it off until SL28. Notes live in the map's `notebook` block (schema 3). |
+| `notebook` | 0.5.0 (SL26). `true` shows the case manager notebook: a toggle beside List view (a column with its own resize handle from lg up; Map / Notebook tabs below). Off by default; from 0.9.0 (SL28) it is available to hosts — see "Traceability, case file and report" below. Notes live in the map's `notebook` block (schema 3). |
 | `notebookTemplates` | 0.5.0 (SL26). `NoteTemplate[]` (`{ id, name, fields: { key, label }[] }`): your templates, after the core's Intake, Contact note, Case conference and Plan review. Each note from one starts with a Date field (a year by default). |
 | `quickEdit` | 0.6.0 (SL31). Default `true` wherever the map is editable: in the selection card's Read mode a ✎ edits the label, the description, the notes and a link's description in place (Enter or a click away saves as one Undo step, Esc cancels), and "Pinned in place" and a link's delay are switches. Codes, code status, polarity, weight, confidence, overrides and delete stay in Edit mode. `false` turns it off; a read-only map never shows it. |
 | `notebookImport` | 0.7.0 (SL29). `{ maxMB?, maxPages? }` (defaults 20 and 300): limits for importing files into the notebook. |
+| `notebookTargets` | 0.9.0 (SL28). `NotebookTargetKind[]` (`{ kind, label, search(q) → { id, label, detail? }[], open(id), name?(id) }`): your own item kinds for the notebook's Link to… and @ mentions (e.g. an Interrogator app's `/code` entries and sections). `kind` must not be one of the core's (`node`, `edge`, `loop`, `cluster`, `code`, `reference`, `glossary`, `concept`, `note`, `span`); a click on such a target calls `open(id)`. |
+| `passage` | 0.9.0 (SL28). A span id: once the map loads, the notebook opens at that passage (for "Cited in your notebook" links from pages outside the map). |
 | `extractors` / `allowRemoteExtractors` | 0.8.0 (SL27). `NotebookExtractor[]` (`{ id, label, kind: 'local' \| 'remote', describe, run(note, context) → Promise<Proposal[]> }`), after the core's local code matcher; an engine picker appears with more than one. A `remote` extractor runs only with `allowRemoteExtractors` and only on a note with no unresolved identifier flags; keep it off under the health profile until a SAFETY ruling (S7.2). |
 
 The keyboard map listens on `window` while the component is mounted, and ignores keys typed into fields and dialogs.
@@ -103,6 +106,29 @@ focus ring. Create circumstance offers the local code suggester's top five (pack
 Chapter 24 only, "suggested", nothing chosen). The selection card (Read and Edit) lists an item's passages ("In the
 notebook (n)", Go to passage, Remove as evidence), and the peek counts them. **Suggest circumstances in this note** runs
 the extractors (`extractors` prop) into a proposal queue; accepted items keep `suggested_by` in the map file.
+
+### Traceability, case file and report (0.9.0, SL28)
+
+**Notebook → anything.** A selection's **Link to…** opens one picker over every item kind — circumstances, links,
+loops (by their node cycle: target id `nodeA>nodeB>…`), clusters (`a+b+…`, sorted), ICD-11 codes, references (the
+pack's `n`, or `map:<nodeId>` for a user-entered one), glossary terms, 101s, other notes and passages, and your
+`notebookTargets`; "Draw a new link between two circumstances…" is its first choice. Typing **@** at the start of a word
+opens the same picker and inserts a chip: an empty span (`chip: true`, `quote: ''`, start = end) anchored by the text
+around it, with an annotation naming its target; Esc types the @. **Anything → notebook.** The case summary has a
+**Sources** column and each loop a passages fold-out; the Loops and Clusters tabs show each one's passages, grouped by
+circumstance; the selection card lists a circumstance's, its code's and a link's references' passages; references,
+codes, glossary terms and 101s show **Cited in your notebook (n)** wherever they open (inside the map from the map's
+notebook; on your own pages wrap them in `<NotebookCitations store href>` and place `<CitedInNotebook t>`). The caret in
+a passage selects what it supports (the controlled `selection`), and **Trace** dims everything not connected to the
+current passage or selection, on the canvas and in the notes. **Notes collapse:** no note is open until the viewer opens
+one; a click on the open row, the ⌃ Collapse button or Esc in the list closes it (kept with the dock state); a free note
+left untitled and empty goes when it is collapsed, with an Undo. **Export case (.json)** writes the map file with its
+notebook and a `provenance` block (counts of notes, passages, mentions, annotations, labels by category, and the pins);
+Open a map file restores both sides. **Export report…** makes the case report — the notes in order, the case summary with
+each circumstance's quoted sources and each loop's passages, the references the notebook cites — as Print / Save as PDF,
+one HTML file, Markdown or Word, in the browser (loaded on first use), with options for the notes, the map picture and
+the annotations; the cover gives the map, subject label, date, pins and counts, and says the identifier check is a
+heuristic. Both go through the identifier warning.
 
 ### Importing files into the notebook (0.7.0, SL29)
 

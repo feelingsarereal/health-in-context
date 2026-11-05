@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { conceptMap, termMap, Popover } from '@feelingsarereal/sdoh-loops-core';
+import { conceptMap, termMap, Popover, CitedInNotebook } from '@feelingsarereal/sdoh-loops-core';
+import NotebookCites from '@/components/NotebookCites';
 import Md from '@/components/ui/Md';
 import NotFound from './NotFound';
 
@@ -13,6 +14,9 @@ export default function Concept() {
       <h1 className="mt-1 text-3xl sm:text-4xl font-semibold">{c.title}</h1>
       <p className="mt-2 text-[17px]">{c.one_liner}</p>
       <p className="mt-1 text-sm bx-muted">{c.why_here}</p>
+      <NotebookCites>
+        <CitedInNotebook t={{ kind: 'concept', id: c.id }} />
+      </NotebookCites>
       {c.prerequisites.length > 0 && (
         <p className="mt-2 text-sm">
           Read first:{' '}

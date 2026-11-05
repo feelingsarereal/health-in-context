@@ -1,6 +1,7 @@
 import { refMap, type Ref } from '../../lib/data/refs';
 import { C } from '../../lib/copy';
 import { Todo } from '../ui/bits';
+import { CitedInNotebook } from '../notebook/Citations';
 
 const tierLabel: Record<string, string> = { seminal: 'Seminal', classic: 'Classic', current: 'Current', background: 'Background' };
 
@@ -59,6 +60,8 @@ export function RefCard({ n, r: given, showUsedBy }: { n?: number; r?: Ref; show
           </a>
         )}
       </div>
+      {/* SL28: the notebook passages that cite this reference */}
+      <CitedInNotebook t={{ kind: 'reference', id: String(r.n) }} />
       {showUsedBy && r.used_by.length > 0 && (
         <p className="mt-1 text-xs bx-muted">
           {C.ref.usedBy}: {r.used_by.join(' · ')}

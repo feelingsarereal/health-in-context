@@ -7,6 +7,9 @@ import { leverage, type AGraph, type Loop, type LoopResult } from '../../lib/ana
 import { CODE_STATUSES, type MapNode, type SdohMap } from '../../lib/model/map';
 import { Heuristic } from '../ui/bits';
 import { NodesTable } from '../map/NodesTable';
+import { PassagesFold } from './PassagesFold';
+import { isOrphaned, spansFor, type Notebook } from '../../lib/model/notebook';
+import { passagesBehind } from '../../lib/model/targets';
 
 type Sort = 'map' | 'name' | 'code' | 'status' | 'links';
 
@@ -15,10 +18,12 @@ type Sort = 'map' | 'name' | 'code' | 'status' | 'links';
  * circumstances table (the list view's NodesTable, so the two stay identical), the loops, and the top 5 by leverage.
  * It works on the map as shown, so circumstances the host hides (hideNode) are left out, and it says how many.
  */
-export function CaseSummary({ map, graph, loops, loopNames, nm, flags, hidden, selected, onSelect, onLoop }: {
+export function CaseSummary({ map, graph, loops, loopNames, nm, flags, hidden, selected, onSelect, onLoop, notebook, onGo }: {
   /** the map as shown (hideNode applied) */
   map: SdohMap; graph: AGraph; loops: LoopResult; loopNames: Map<string, string>; nm: (id: string) => string;
   flags: number; hidden: number; selected: { nodes: string[] }; onSelect: (id: string) => void; onLoop: (l: Loop) => void;
+  /** SL28: the notebook (its passages: the Sources column and each loop's Passages) and Go to passage */
+  notebook?: Notebook; onGo?: (span: string) => void;
 }) {
   const [sort, setSort] = useState<Sort>('map');
   const [filter, setFilter] = useState('');
@@ -100,8 +105,21 @@ export function CaseSummary({ map, graph, loops, loopNames, nm, flags, hidden, s
           </select>
         </label>
       </div>
-      <div className="mt-2 overflow-x-auto">
-        <NodesTable map={map} nodes={rows} nm={nm} selected={selected} onSelect={onSelect} testId="summary-table" caption={C.notebook.summary.title} />
+      {/* a scrolling region a keyboard can reach (the table is wider than a phone) */}
+      <div className="mt-2 overflow-x-auto" tabIndex={0} role="region" aria-label={`${C.list.nodes}: ${C.notebook.summary.title}`} data-testid="summary-table-wrap">
+        <NodesTable
+          map={map} nodes={rows} nm={nm} selected={selected} onSelect={onSelect} testId="summary-table" caption={C.notebook.summary.title}
+          sources={(n) => {
+            const list = spansFor(notebook, { kind: 'node', id: n.id }).filter((x) => !isOrphaned(notebook, x));
+            if (!list.length) return <span className="bx-muted">—</span>;
+            return (
+              <div data-testid="summary-sources" data-count={list.length}>
+                <span>{count(list.length, 'passage')}</span>
+                {onGo && <button type="button" className="ax-tap ml-1 block text-xs underline" onClick={() => onGo(list[0].id)} data-testid="summary-source-go">{C.notebook.passages.goTo}</button>}
+              </div>
+            );
+          }}
+        />
         {!rows.length && <p className="mt-2 text-sm bx-muted">{C.list.none}</p>}
       </div>
 
@@ -109,10 +127,11 @@ export function CaseSummary({ map, graph, loops, loopNames, nm, flags, hidden, s
       {loops.loops.length ? (
         <ul className="mt-1 space-y-1 text-sm" data-testid="summary-loops">
           {loops.loops.map((l) => (
-            <li key={l.key}>
+            <li key={l.key} data-testid="summary-loop-item">
               <button type="button" className="text-left underline-offset-2 hover:underline" onClick={() => onLoop(l)} data-testid="summary-loop">
                 <span className="font-semibold">{loopNames.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}: {l.nodes.map(nm).join(' → ')} → ↺
               </button>
+              <PassagesFold notebook={notebook} groups={passagesBehind(notebook, map, nm, { kind: 'loop', loop: l })} onGo={onGo} testId="summary-loop-passages" />
             </li>
           ))}
         </ul>

@@ -33,6 +33,8 @@ export function importJSON(text: string): SdohMap {
   }
   // the export's `meta` (the licence citation) is written fresh on every export, so it is not stored with the map
   if (raw && typeof raw === 'object' && 'meta' in raw) delete (raw as Record<string, unknown>).meta;
+  // SL28: a case file's provenance block is written fresh on every export too
+  if (raw && typeof raw === 'object' && 'provenance' in raw) delete (raw as Record<string, unknown>).provenance;
   return migrate(raw);
 }
 

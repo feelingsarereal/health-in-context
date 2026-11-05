@@ -2,25 +2,20 @@ import type { ReactNode } from 'react';
 import { codeMap } from '../../lib/data/scheme';
 import { S } from '../../lib/data/core';
 import { C } from '../../lib/copy';
-import type { MapEdge, MapNode, SdohMap } from '../../lib/model/map';
+import type { MapNode, SdohMap } from '../../lib/model/map';
 import { RichView } from './RichView';
+import { linkSummary } from '../../lib/model/summary';
 
-/** One circumstance's links in or out, as text: "+ Low income (L03 [1][2])", "− Support ⚑ override". */
-export function linkSummary(map: SdohMap, nm: (id: string) => string, n: MapNode, dir: 'in' | 'out'): { edge: MapEdge; text: string }[] {
-  return map.edges
-    .filter((e) => (dir === 'out' ? e.from : e.to) === n.id)
-    .map((e) => ({
-      edge: e,
-      text: `${e.polarity} ${nm(dir === 'out' ? e.to : e.from)} (${e.basis === 'evidence' ? `${e.link}${e.evidence.length ? ` ${e.evidence.map((r) => `[${r}]`).join('')}` : ''}` : e.basis === 'override' ? '⚑ override' : '⚑ needs review'})`,
-    }));
-}
+export { linkSummary };
 
 /**
  * SL26: the circumstances table, shared by the list view and the notebook's case summary so the two stay identical:
  * circumstance (its label or WHO title), code and WHO title, code status and type, description, and links in and out
  * with polarity and evidence. `actions` adds the list view's edit column; the summary passes none (read only).
  */
-export function NodesTable({ map, nodes, nm, selected, onSelect, actions, testId, caption, rowState }: {
+export function NodesTable({ map, nodes, nm, selected, onSelect, actions, testId, caption, rowState, sources }: {
+  /** SL28: the case summary's Sources column (n passages, with Go to passage) */
+  sources?: (n: MapNode) => ReactNode;
   map: SdohMap; nodes: MapNode[]; nm: (id: string) => string; selected: { nodes: string[] }; onSelect: (id: string) => void;
   actions?: (n: MapNode) => ReactNode; testId: string; caption?: string;
   /** a row's dimmed or highlighted state (the list view's analysis highlight) */
@@ -36,6 +31,7 @@ export function NodesTable({ map, nodes, nm, selected, onSelect, actions, testId
           <th scope="col" className="py-1 pr-2">{C.table.status}</th>
           <th scope="col" className="py-1 pr-2">{C.table.description}</th>
           <th scope="col" className="py-1 pr-2">{C.table.links}</th>
+          {sources && <th scope="col" className="py-1 pr-2">{C.notebook.passages.sources}</th>}
           {actions && <th scope="col" className="py-1">Actions</th>}
         </tr>
       </thead>
@@ -62,6 +58,7 @@ export function NodesTable({ map, nodes, nm, selected, onSelect, actions, testId
                   </ul>
                 )}
               </td>
+              {sources && <td className="py-1 pr-2" data-cell="sources">{sources(n)}</td>}
               {actions && <td className="py-1">{actions(n)}</td>}
             </tr>
           );

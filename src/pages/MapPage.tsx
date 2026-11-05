@@ -7,7 +7,8 @@ import Maps from './Maps';
 /**
  * /map and /map/list: the standalone app's frame around <SdohMap> from sdoh-loops-core (K13). The URL carries only the
  * map id and the panel (?id=…&view=loops), never map text; the last map opened comes back when /map has no id.
- * SL26: the standalone app turns the case manager notebook on (embedding apps keep it off until SL28).
+ * SL26: the standalone app turns the case manager notebook on. SL28: `?passage=` (a span id, from a "Cited in your
+ * notebook" link) opens the notebook at that passage.
  */
 export default function MapPage({ view }: { view: MapView }) {
   const [sp, setSp] = useSearchParams();
@@ -59,6 +60,7 @@ export default function MapPage({ view }: { view: MapView }) {
       onLoad={(m) => m && setPref('last-map', m.id)}
       onOpenMap={(id) => nav(`/map?id=${id}`)}
       notebook
+      passage={sp.get('passage') ?? undefined}
       missing={
         <div className="mx-auto max-w-3xl">
           <p className="bx-banner" role="alert">That map is not in this browser.</p>

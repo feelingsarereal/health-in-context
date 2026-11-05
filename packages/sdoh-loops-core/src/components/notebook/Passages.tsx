@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ReactNode } from 'react';
 import { C } from '../../lib/copy';
 import { codeMap } from '../../lib/data/scheme';
-import { annotationOf, anchorOf, isOrphaned, type Notebook as NotebookDoc, type Note, type Span, type Target } from '../../lib/model/notebook';
+import { annotationOf, anchorOf, isChip, isOrphaned, type Notebook as NotebookDoc, type Note, type Span, type Target } from '../../lib/model/notebook';
 import { mayRun, runExtractor, RefusedError, type NotebookExtractor, type Proposal } from '../../lib/model/extract';
 import type { TextSelection } from './spanMarks';
 
@@ -126,7 +126,9 @@ export function SpanChooser({ at, items, name, onPick, onClose }: { at: DOMRect;
  * who suggested it; then the "Orphaned selections" whose text was edited away. On a wide notebook this list is the
  * margin beside the text; on a narrow one it follows the text.
  */
-export function PassageList({ nb, note, fieldLabel, name, selected, onShow, onComment, onRemove }: {
+export function PassageList({ nb, note, fieldLabel, name, selected, onShow, onComment, onRemove, dim }: {
+  /** SL28 trace view: dimmed passages */
+  dim?: (span: string) => boolean;
   nb: NotebookDoc | undefined;
   note: Note;
   fieldLabel: (where: string) => string;
@@ -146,9 +148,13 @@ export function PassageList({ nb, note, fieldLabel, name, selected, onShow, onCo
     const pressed = targets.some((t) => selected.some((s) => s.kind === t.kind && s.id === t.id));
     const where = note.kind === 'imported' ? anchorOf(note, blockAt(note, x)).label : x.where === 'body' ? '' : fieldLabel(x.where);
     return (
-      <li key={x.id} className={`rounded border p-2 text-sm ${pressed ? 'border-[color:var(--sx-selected)]' : 'border-[color:var(--bx-line)]'}`} data-testid={orphan ? 'nb-orphan' : 'nb-passage'} data-span={x.id} data-pressed={pressed ? 'true' : 'false'}>
+      <li key={x.id} className={`rounded border p-2 text-sm ${pressed ? 'border-[color:var(--sx-selected)]' : 'border-[color:var(--bx-line)]'} ${dim?.(x.id) ? 'sx-dim' : ''}`} data-testid={orphan ? 'nb-orphan' : 'nb-passage'} data-span={x.id} data-pressed={pressed ? 'true' : 'false'} data-dim={dim?.(x.id) ? 'true' : undefined} data-chip={isChip(x) ? 'true' : undefined}>
         <p className="m-0">
+          {isChip(x) ? (
+            <span className="sx-chip" data-testid="nb-passage-chip">@ {P().mention}</span>
+          ) : (
           <span className={x.by?.inferred ? (x.by.confidence === 'low' ? 'sx-span-low' : 'sx-span-inferred') : targets.length ? 'sx-span' : 'sx-span-plain'}>“{short(x.quote)}”</span>
+          )}
           {x.by?.inferred && <span className="sx-approx" aria-hidden="true">≈</span>}
           {x.by?.inferred && <span className="sr-only"> ({P().inferred})</span>}
         </p>

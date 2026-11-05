@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { glossary, termMap, conceptMap, PageHead } from '@feelingsarereal/sdoh-loops-core';
+import { glossary, termMap, conceptMap, PageHead, CitedInNotebook } from '@feelingsarereal/sdoh-loops-core';
+import NotebookCites from '@/components/NotebookCites';
 import Md from '@/components/ui/Md';
 
 export default function Glossary() {
   const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
   return (
+    <NotebookCites>
     <div>
       <PageHead title="Glossary" lead="The terms the app and its primers use." />
       <dl className="space-y-4">
@@ -22,10 +24,12 @@ export default function Glossary() {
                   <>See also: {t.see.map((s, i) => <span key={s}>{i > 0 && ', '}<a className="underline" href={`#${s}`}>{termMap.get(s)?.term ?? s}</a></span>)}.</>
                 )}
               </p>
+              <CitedInNotebook t={{ kind: 'glossary', id: t.id }} />
             </dd>
           </div>
         ))}
       </dl>
     </div>
+    </NotebookCites>
   );
 }

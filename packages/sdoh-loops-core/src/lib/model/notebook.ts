@@ -182,6 +182,11 @@ export interface Span {
   start: number;
   end: number;
   orphaned?: boolean;
+  /**
+   * SL28: an inline mention ("@ chip") — an empty span (quote '', start = end) at a place in the text, anchored by the
+   * text before and after it; its annotation's targets are what it mentions
+   */
+  chip?: boolean;
   /** made by accepting an extractor's proposal: who suggested it, and whether the reading was inferred */
   by?: SuggestedBy & { inferred?: boolean; confidence?: 'high' | 'medium' | 'low' };
 }
@@ -604,12 +609,50 @@ export function makeSpan(n: Note, where: SpanWhere, start: number, end: number, 
   return { id: sid('span'), note: n.id, where, quote: text.slice(a, b), prefix: text.slice(Math.max(0, a - CONTEXT), a), suffix: text.slice(b, b + CONTEXT), start: a, end: b, ...(by ? { by } : {}) };
 }
 
+/** SL28: an inline mention at offset `at` of a field's text — an empty span anchored by the text around it. */
+export function makeChip(n: Note, where: SpanWhere, at: number): Span {
+  const text = fieldText(n, where);
+  const a = Math.max(0, Math.min(at, text.length));
+  return { id: sid('chip'), note: n.id, where, quote: '', prefix: text.slice(Math.max(0, a - CONTEXT), a), suffix: text.slice(a, a + CONTEXT), start: a, end: a, chip: true };
+}
+export const isChip = (x: Pick<Span, 'chip' | 'quote'>) => !!x.chip && !x.quote;
+
+/**
+ * SL28: where a chip sits now — where it was if the text just before it is unchanged (typing after a chip leaves it in
+ * place), else the one place its text before and after meet, else the one place its text before ends. Null when that is
+ * gone or not clear: the chip is orphaned, never moved to a guess.
+ */
+function locateChip(sp: Pick<Span, 'prefix' | 'suffix' | 'start'>, text: string): { start: number; end: number } | null {
+  const at = (i: number) => ({ start: i, end: i });
+  const p = sp.prefix;
+  const s = sp.suffix;
+  if (!p && !s) return text.length === 0 || sp.start <= text.length ? at(Math.min(sp.start, text.length)) : null;
+  if (p ? sp.start >= p.length && sp.start <= text.length && text.slice(sp.start - p.length, sp.start) === p : text.slice(sp.start, sp.start + s.length) === s) return at(sp.start);
+  const all = (needle: string) => {
+    const out: number[] = [];
+    for (let i = text.indexOf(needle); i >= 0; i = text.indexOf(needle, i + 1)) out.push(i);
+    return out;
+  };
+  const both = all(p + s);
+  if (both.length === 1) return at(both[0] + p.length);
+  if (!both.length && p) {
+    const only = all(p);
+    if (only.length === 1) return at(only[0] + p.length);
+  }
+  if (!both.length && !p) {
+    const only = all(s);
+    if (only.length === 1) return at(only[0]);
+  }
+  return null;
+}
+
 /**
  * Where a span's quote is in the text now: where it was, if it is still there; else the one occurrence of the quote,
  * or among several the one whose text before and after still matches. Null when the quote is gone or the choice is
  * not clear — the span is then orphaned, never re-pointed to a guess.
  */
-export function locate(sp: Pick<Span, 'quote' | 'prefix' | 'suffix' | 'start' | 'end'>, text: string): { start: number; end: number } | null {
+export function locate(sp: Pick<Span, 'quote' | 'prefix' | 'suffix' | 'start' | 'end' | 'chip'>, text: string): { start: number; end: number } | null {
+  if (sp.chip && !sp.quote) return locateChip(sp, text);
   if (!sp.quote) return null;
   if (text.slice(sp.start, sp.end) === sp.quote) return { start: sp.start, end: sp.end };
   const at: number[] = [];
@@ -688,7 +731,8 @@ export function spansFor(nb: Notebook | undefined, t: Target): Span[] {
 export function addPassage(nb: Notebook | undefined, sp: Span, opts: { text?: string; target?: Target } = {}): { notebook: Notebook; span: string } {
   const b = nb0(nb);
   const spans = b.spans ?? [];
-  const same = spans.find((x) => !x.orphaned && x.note === sp.note && x.where === sp.where && x.start === sp.start && x.end === sp.end && x.quote === sp.quote);
+  // SL28: a chip is its own mention, never merged with another at the same place
+  const same = sp.chip ? undefined : spans.find((x) => !x.orphaned && !x.chip && x.note === sp.note && x.where === sp.where && x.start === sp.start && x.end === sp.end && x.quote === sp.quote);
   const id = same?.id ?? sp.id;
   const anns = b.annotations ?? [];
   const ann = anns.find((a) => a.span === id);
@@ -787,11 +831,16 @@ export function sanitizeNotebook(input: unknown): Notebook | undefined {
   const sstr = (v: unknown) => (typeof v === 'string' ? v : '');
   const int = (v: unknown) => (Number.isInteger(v) && (v as number) >= 0 ? (v as number) : 0);
   const spans: Span[] = (Array.isArray(raw.spans) ? (raw.spans as Record<string, unknown>[]) : [])
-    .filter((x) => x && typeof x.id === 'string' && typeof x.note === 'string' && typeof x.quote === 'string' && x.quote)
+    // a chip (SL28) is the one span with no quote
+    .filter((x) => x && typeof x.id === 'string' && typeof x.note === 'string' && typeof x.quote === 'string' && (x.quote || x.chip === true))
     .map((x) => {
       const by = x.by as Record<string, unknown> | undefined;
       const sp: Span = { id: x.id as string, note: x.note as string, where: typeof x.where === 'string' && x.where ? x.where : 'body', quote: x.quote as string, prefix: sstr(x.prefix), suffix: sstr(x.suffix), start: int(x.start), end: Math.max(int(x.start), int(x.end)) };
       if (x.orphaned === true) sp.orphaned = true;
+      if (x.chip === true && !sp.quote) {
+        sp.chip = true;
+        sp.end = sp.start;
+      }
       if (by && typeof by.extractor === 'string' && typeof by.label === 'string')
         sp.by = { extractor: by.extractor, label: by.label, ...(by.inferred === true ? { inferred: true } : {}), ...(['high', 'medium', 'low'].includes(by.confidence as string) ? { confidence: by.confidence as 'high' | 'medium' | 'low' } : {}) };
       return sp;

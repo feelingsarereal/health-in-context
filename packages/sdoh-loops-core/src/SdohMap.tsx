@@ -41,6 +41,18 @@ import { SourcesCount, SourcesList } from './components/map/SourcesList';
 import { localCodeMatcher, type NotebookExtractor, type Proposal } from './lib/model/extract';
 import { EvidencePicker, SuggestPanel, type FromChoice } from './components/notebook/FromText';
 import { hasNotebook } from './lib/model/map';
+import { addPassage, makeChip, notebookFlags as flagsOf } from './lib/model/notebook';
+import { clusterTargetId, loopTargetId, targetName as nameOfTarget, traceSet, type NotebookTargetKind, type TargetContext } from './lib/model/targets';
+import { TargetPicker } from './components/notebook/TargetPicker';
+import { CitationsContext, citationsIn, type CitationsValue } from './components/notebook/Citations';
+import { ItemView } from './components/notebook/ItemView';
+import type { MentionRequest } from './components/notebook/Notebook';
+import { ReportDialog, type ReportChoice } from './components/notebook/ReportDialog';
+import { exportCase } from './lib/model/caseFile';
+import { CORE_VERSION } from './lib/version';
+import { loadedPack } from './lib/data/pack';
+import { scheme } from './lib/data/scheme';
+import { safety } from './lib/data/core';
 
 const Canvas = lazy(() => import('./components/map/Canvas'));
 const titleOf = (c: string) => codeMap.get(c)?.title;
@@ -74,6 +86,10 @@ interface DockPref {
   nbWidth?: number;
   /** SL30: the dock was folded once, the first time the notebook opened on a screen under 1600 px */
   nbAutoFolded?: boolean;
+  /** SL28 point 6: the note left open (none: every note collapsed) */
+  nbNote?: string;
+  /** SL28 point 3: the trace view is on */
+  trace?: boolean;
 }
 /** SL30: under this width, the notebook's first opening folds the dock to its rail (once per viewer) */
 const NB_AUTOFOLD_BELOW = 1600;
@@ -169,8 +185,8 @@ export interface SdohMapProps {
   /** shown when the map is not in `storage` */
   missing?: ReactNode;
   /**
-   * SL26: the case manager notebook beside the map (a view toggle; tabs on a phone). Off by default: embedding apps
-   * keep it off until SL28. The standalone SDOH Loops app turns it on.
+   * SL26: the case manager notebook beside the map (a view toggle; tabs on a phone). Off by default; from SL28 (0.9.0)
+   * available to hosts, with spans and mentions tied to every item kind, case export and the case report.
    */
   notebook?: boolean;
   /** SL26: the host's own note templates, offered after the core's four (Intake, Contact note, Case conference, Plan review) */
@@ -187,6 +203,13 @@ export interface SdohMapProps {
    */
   extractors?: NotebookExtractor[];
   allowRemoteExtractors?: boolean;
+  /**
+   * SL28: the host's own item kinds for the notebook's Link to… and @ mentions (e.g. an Interrogator app's `/code`
+   * entries and sections): each with a search, an open and (optionally) a name. Its kind must not be one of the core's.
+   */
+  notebookTargets?: NotebookTargetKind[];
+  /** SL28: open the notebook at this passage (a span id) once the map has loaded, e.g. from a "Cited in your notebook" link */
+  passage?: string;
 }
 
 /**
@@ -404,6 +427,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         if (typeof v.notebook === 'boolean') d.notebook = v.notebook;
         if (typeof v.nbWidth === 'number' && Number.isFinite(v.nbWidth)) d.nbWidth = Math.max(NB_MIN, Math.round(v.nbWidth));
         if (v.nbAutoFolded === true) d.nbAutoFolded = true;
+        if (typeof v.nbNote === 'string') d.nbNote = v.nbNote;
+        if (v.trace === true) d.trace = true;
         return d;
       }
     } catch {
@@ -415,6 +440,14 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     setDock(d);
     setViewPref(storage, 'dock', JSON.stringify(d));
   };
+  /** SL28: one field of the dock's state, from the latest state (two changes in one tick both stick) */
+  const patchDock = (patch: Partial<DockPref>) =>
+    setDock((prev) => {
+      const next: DockPref = { ...prev, ...patch };
+      for (const k of Object.keys(patch) as (keyof DockPref)[]) if (patch[k] === undefined) delete next[k];
+      setViewPref(storage, 'dock', JSON.stringify(next));
+      return next;
+    });
   const dockOpen = dock.open || !wide;
   const foldBtn = useRef<HTMLButtonElement>(null);
   const unfoldBtn = useRef<HTMLButtonElement>(null);
@@ -535,6 +568,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // between the canvas and the dock with its own resize handle; below lg it is the second of two tabs (Map, Notebook).
   const nbEnabled = !!props.notebook;
   const nbOn = nbEnabled && dock.notebook === true;
+  /** SL28 point 3: the trace view (with the notebook) */
+  const traceOn = nbOn && dock.trace === true;
   const setNbOn = (on: boolean) => {
     // SL30 point 4: on a screen under 1600 px the first opening folds the dock to its rail, once; unfolding it again sticks
     if (on && wide && !dock.nbAutoFolded && window.innerWidth < NB_AUTOFOLD_BELOW) {
@@ -986,11 +1021,63 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const selEdge = selected.edges.length === 1 && !selected.nodes.length ? map.edges.find((e) => e.id === selected.edges[0]) : undefined;
   const clusters = useMemo(() => (hulls ? feedbackClusters(graph) : null), [hulls, graph]);
 
+  // ── SL28 point 4: Export case, and the case report
+  const pins = { core: CORE_VERSION, pack: loadedPack.version, icd11: `${scheme.name} ${scheme.release}` };
+  const fileBase = map.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'map';
+  const [reportOpen, setReportOpen] = useState(false);
+  const caseItems = nbEnabled
+    ? [
+        { id: 'case', label: C.notebook.caseFile.menu, description: C.notebook.caseFile.menuDesc, testId: 'export-case', guarded: true, run: (m: SdohMapDoc) => {
+          download(`${fileBase}.sdohcase.json`, exportCase(m, pins, S.codes.citation), 'application/json');
+          announce(C.mapMenu.saved);
+        } },
+        { id: 'report', label: C.notebook.caseFile.report, description: C.notebook.caseFile.reportDesc, testId: 'export-report', guarded: false, run: () => setReportOpen(true) },
+      ]
+    : undefined;
+  const printFrame = useRef<HTMLIFrameElement | null>(null);
+  useEffect(() => () => printFrame.current?.remove(), []);
+  /** Print / Save as PDF: the report's own page (its print stylesheet) in a hidden frame, so the workspace is untouched */
+  const printReport = (html: string) => {
+    printFrame.current?.remove();
+    const f = document.createElement('iframe');
+    f.setAttribute('aria-hidden', 'true');
+    f.tabIndex = -1;
+    f.title = C.notebook.caseFile.reportTitle;
+    f.dataset.testid = 'report-print-frame';
+    f.style.cssText = 'position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none';
+    f.onload = () => {
+      f.contentWindow?.focus();
+      f.contentWindow?.print();
+    };
+    f.srcdoc = html;
+    document.body.appendChild(f);
+    printFrame.current = f;
+  };
+  const exportReport = (choice: ReportChoice) => {
+    setReportOpen(false);
+    const png = choice.options.image && view === 'canvas' ? canvas.current?.png() : undefined;
+    guard(async (m) => {
+      const [{ buildReport }, R] = await Promise.all([import('./lib/model/report'), import('./lib/model/report-render')]);
+      const templates = new Map([...CORE_TEMPLATES, ...(props.notebookTemplates ?? [])].map((t) => [t.id, t.name]));
+      const report = buildReport({
+        map: m, shown: { ...map, notebook: m.notebook }, graph, loops, loopNames, nm, clusters: allClusters, host: props.notebookTargets,
+        options: choice.options, pins, flaggedKept: flagsOf(m.notebook).length,
+        copy: { heuristic: C.notebook.heuristic, notice: safety.notice, citation: S.codes.citation, templates, kinds: { free: C.notebook.free, structured: C.notebook.structured, imported: C.notebook.importing.kind } },
+      });
+      const image = png ? { png, alt: `The map “${m.name}”: ${count(map.nodes.filter((n) => n.kind !== 'note').length, 'circumstance')} and ${count(map.edges.length, 'link')}.` } : undefined;
+      if (choice.format === 'md') download(`${fileBase}-report.md`, R.reportMarkdown(report, image), 'text/markdown');
+      else if (choice.format === 'html') download(`${fileBase}-report.html`, R.reportHTML(report, image), 'text/html');
+      else if (choice.format === 'docx') download(`${fileBase}-report.docx`, new Blob([R.reportDocx(report, image)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      else printReport(R.reportHTML(report, image));
+      announce(C.notebook.caseFile.made);
+    });
+  };
+
   const toolbar = (
     <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
       <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
       {/* SL23: the map file actions — open (import) first, save a copy, the exports, print, the host's items */}
-      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={importItem ? [importItem, ...(props.mapMenuItems ?? [])] : props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} />
+      <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={importItem ? [importItem, ...(props.mapMenuItems ?? [])] : props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} coreItems={caseItems} />
       <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
         {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
       </span>
@@ -1033,6 +1120,10 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           {C.notebook.toggle}
           {flags.length > 0 && <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span>}
         </button>
+      )}
+      {/* SL28 point 3: the trace view, with the notebook */}
+      {nbEnabled && nbOn && (
+        <button type="button" className={`bx-btn ax-tap ${traceOn ? 'bx-btn-on' : ''}`} aria-pressed={traceOn} title={C.notebook.trace.tip} onClick={toggleTrace} data-testid="trace-toggle">{C.notebook.trace.toggle}</button>
       )}
       <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
       <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
@@ -1154,6 +1245,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         emptyNote={evidenceOnly ? (evidenceCanCloseALoop() ? C.evidence.toggleOnNoneMaybe : C.evidence.toggleOnNone) : null}
         active={activeLoop}
         onPick={pickLoop}
+        onGo={nbEnabled ? goToPassage : undefined}
         onRename={(l, name) => apply((m) => renameLoop(m, l.key, name, l.nodes))}
         onCircle={(l) => {
           if (view === 'canvas') canvas.current?.circle(l.nodes);
@@ -1167,7 +1259,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     leverage: <LeveragePanel map={map} graph={graph} loops={loops} onPick={selectNode} />,
     pulse: <PulsePanel map={map} graph={graph} announce={announce} />,
     needsCode: <ToCodePanel map={map} onPick={selectNode} onPickEdge={(id) => setSelected({ nodes: [], edges: [id] })} nm={nm} />,
-    clusters: <ClustersPanel map={map} graph={graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} />,
+    clusters: <ClustersPanel map={map} graph={graph} show={hulls} onShow={setHulls} onPick={(ids) => setSelected({ nodes: ids, edges: [] })} onGo={nbEnabled ? goToPassage : undefined} />,
     legend: <LegendPanel />,
     // SL23: the map's name, subject and notes; editable in Edit mode only. The file actions are in the Map menu.
     about: <AboutMap map={full} apply={apply} editing={editing} />,
@@ -1328,17 +1420,46 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const nbTab = nbOn && !wide;
   // ── SL27: spans in the notebook ↔ the map
   const selectedTargets: Target[] = useMemo(() => [...selected.nodes.map((id) => ({ kind: 'node', id })), ...selected.edges.map((id) => ({ kind: 'edge', id }))], [selected]);
-  const targetName = (t: Target) => {
-    if (t.kind === 'node') return byId.has(t.id) ? nm(t.id) : t.id;
-    if (t.kind === 'edge') {
-      const e = map.edges.find((x) => x.id === t.id);
-      return e ? `${nm(e.from)} → ${nm(e.to)}` : t.id;
-    }
-    return `${t.kind} ${t.id}`;
-  };
-  /** a click on a highlight: its circumstance or link becomes the map selection, its card opens, the canvas shows it */
+  // SL28: every item kind a passage can point at, with names; loops and clusters as they are computed now
+  const allClusters = useMemo(() => feedbackClusters(graph), [graph]);
+  const targetCtx: TargetContext = useMemo(() => ({ map: { ...map, notebook: full.notebook }, nm, loops: loops.loops, loopNames, clusters: allClusters, host: props.notebookTargets }), [map, full.notebook, nm, loops, loopNames, allClusters, props.notebookTargets]);
+  const targetName = (t: Target) => nameOfTarget(t, targetCtx) ?? `${t.kind} ${t.id}`;
+  // SL28: a code, reference, term or 101 a passage points at opens in a dialog of its own
+  const [itemOpen, setItemOpen] = useState<Target | null>(null);
+  /** a click on a highlight (or a target in the passages list): show the item — on the map, in a panel, or in a dialog */
   const showTarget = (t: Target) => {
-    if (t.kind !== 'node' && t.kind !== 'edge') return;
+    if (t.kind === 'loop') {
+      const l = loops.loops.find((x) => loopTargetId(x) === t.id);
+      if (!l) return announce(C.notebook.passages.linkNone);
+      if (!wide) setNbOn(false);
+      if (wide && (!dock.open || !cardOpen('whole'))) saveDock({ ...dock, open: true, closed: dock.closed.filter((x) => x !== 'whole') });
+      setPanel('loops');
+      setTimeout(() => pickLoop(l), wide ? 0 : 120);
+      return;
+    }
+    if (t.kind === 'cluster') {
+      const c = allClusters.find((x) => clusterTargetId(x) === t.id);
+      if (!c) return announce(C.notebook.passages.linkNone);
+      if (!wide) setNbOn(false);
+      setSelected({ nodes: c, edges: [] });
+      setPanel('clusters');
+      if (view === 'canvas') setTimeout(() => canvas.current?.fitTo(c), wide ? 0 : 120);
+      announce(`Selected ${targetName(t)}.`);
+      return;
+    }
+    if (t.kind === 'code' || t.kind === 'reference' || t.kind === 'glossary' || t.kind === 'concept') return setItemOpen(t);
+    if (t.kind === 'note') {
+      if (!full.notebook?.notes.some((n) => n.id === t.id)) return;
+      if (!nbOn) setNbOn(true);
+      setNbFocus((f) => ({ id: t.id, n: (f?.n ?? 0) + 1 }));
+      return;
+    }
+    if (t.kind === 'span') return goToPassage(t.id);
+    if (t.kind !== 'node' && t.kind !== 'edge') {
+      const h = props.notebookTargets?.find((k) => k.kind === t.kind);
+      h?.open(t.id);
+      return;
+    }
     if (t.kind === 'node' && !byId.has(t.id)) return;
     setSelected(t.kind === 'node' ? { nodes: [t.id], edges: [] } : { nodes: [], edges: [t.id] });
     if (wide && (!dock.open || !cardOpen('selection'))) saveDock({ ...dock, open: true, closed: dock.closed.filter((x) => x !== 'selection') });
@@ -1347,6 +1468,71 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     if (view === 'canvas') setTimeout(() => canvas.current?.reveal(ids), wide ? 0 : 120);
     announce(`Selected ${targetName(t)}.`);
   };
+  // ── SL28 point 1: Link to… over every kind, and @ mentions
+  const [linkAny, setLinkAny] = useState<Span | null>(null);
+  const [mention, setMention] = useState<MentionRequest | null>(null);
+  const mentionDone = useRef(false);
+  /** attach a passage (or a mention) to any target: a circumstance or link gets it as a source too */
+  const attachAny = (m: SdohMapDoc, sp: Span, t: Target): SdohMapDoc =>
+    t.kind === 'node' || t.kind === 'edge' ? attachSpan(m, sp, { kind: t.kind as 'node' | 'edge', id: t.id }).map : { ...m, notebook: addPassage(m.notebook, sp, { target: t }).notebook, updated: new Date().toISOString() };
+  const linkTo = (sp: Span, t: Target) => {
+    apply((m) => attachAny(m, sp, t));
+    setLinkAny(null);
+    announce(`${C.notebook.passages.linked} ${targetName(t)}.`);
+  };
+  const mentionPick = (t: Target) => {
+    const req = mention;
+    if (!req) return;
+    mentionDone.current = true;
+    setMention(null);
+    apply((m) => {
+      const note = m.notebook?.notes.find((n) => n.id === req.note.id);
+      return note ? attachAny(m, makeChip(note, req.where, req.at), t) : m;
+    });
+    announce(`${C.notebook.passages.mentioned} ${targetName(t)}.`);
+  };
+  const closeMention = () => {
+    const req = mention;
+    setMention(null);
+    // closed without a choice: the @ is typed after all
+    if (req && !mentionDone.current) setTimeout(() => req.literal(), 0);
+    mentionDone.current = false;
+  };
+  // ── SL28 point 3: cross-highlighting — the passage the caret is in selects what it supports; the trace view
+  const [caretSpan, setCaretSpan] = useState<string | null>(null);
+  const onFocusSpan = (sp: Span | null) => {
+    setCaretSpan(sp?.id ?? null);
+    if (!sp) return;
+    const ts = full.notebook?.annotations?.find((a) => a.span === sp.id)?.targets ?? [];
+    const nodes = ts.filter((t) => t.kind === 'node' && byId.has(t.id)).map((t) => t.id);
+    const edges = ts.filter((t) => t.kind === 'edge' && map.edges.some((e) => e.id === t.id)).map((t) => t.id);
+    if (nodes.length || edges.length) {
+      setSelected({ nodes, edges });
+      if (view === 'canvas' && wide) canvas.current?.reveal([...nodes, ...map.edges.filter((e) => edges.includes(e.id)).flatMap((e) => [e.from, e.to])]);
+    }
+  };
+  const trace = useMemo(() => {
+    if (!traceOn) return null;
+    const live = caretSpan && full.notebook?.spans?.some((x) => x.id === caretSpan) ? caretSpan : null;
+    if (!live && !selected.nodes.length && !selected.edges.length) return null;
+    return traceSet({ ...map, notebook: full.notebook }, { span: live, nodes: selected.nodes, edges: selected.edges }, { loops: loops.loops, clusters: allClusters });
+  }, [traceOn, caretSpan, selected, map, full.notebook, loops, allClusters]);
+  // an analysis highlight the user just asked for (a loop, a path, a neighbourhood) wins; else the trace view
+  const shownHighlight: Highlight | null = highlight ?? (trace ? { nodes: trace.nodes, edges: trace.edges } : null);
+  function toggleTrace() {
+    patchDock({ trace: traceOn ? undefined : true });
+    announce(traceOn ? C.notebook.trace.off : C.notebook.trace.on);
+  }
+  // SL28 point 2: "Cited in your notebook (n)" wherever a reference, code, term or 101 opens inside the map
+  // (made each render: Go to passage must see the dock's state as it is now)
+  const citations: CitationsValue = { list: (t) => citationsIn(full, t), onGo: (c) => { setItemOpen(null); goToPassage(c.span.id); } };
+  // SL28: opened at a passage (a link from a page outside the map)
+  const passageDone = useRef(false);
+  useEffect(() => {
+    if (passageDone.current || !props.passage || !nbEnabled) return;
+    passageDone.current = true;
+    if (full.notebook?.spans?.some((x) => x.id === props.passage)) goToPassage(props.passage);
+  }, [props.passage]); // eslint-disable-line react-hooks/exhaustive-deps
   const extractors = useMemo(() => [localCodeMatcher, ...(props.extractors ?? []).filter((x) => x.id !== localCodeMatcher.id)], [props.extractors]);
   /** Accept (or Edit then accept) a proposal: the same path as Create circumstance, with the extractor's label kept */
   const acceptProposal = (note: Note, p: Proposal, edit: boolean) => {
@@ -1380,7 +1566,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
           selectedTargets={selectedTargets} targetName={targetName} onShow={showTarget}
           onCreateFrom={canEdit ? (sp) => setNewNodeReq({ fromSpan: sp }) : undefined}
           onEvidenceFrom={canEdit ? (sp) => setEvidenceReq(sp) : undefined}
-          onLinkFrom={canEdit ? (sp) => setLinkReq({ from: null, to: null, span: sp }) : undefined}
+          onLinkAny={canEdit ? (sp) => setLinkAny(sp) : undefined}
+          onMention={canEdit ? (req) => { mentionDone.current = false; setMention(req); } : undefined}
+          onFocusSpan={onFocusSpan}
+          trace={trace?.spans ?? null}
+          open={dock.nbNote && full.notebook?.notes.some((n) => n.id === dock.nbNote) ? dock.nbNote : null}
+          onOpen={(id) => patchDock({ nbNote: id ?? undefined })}
+          editable={canEdit}
           extractors={extractors} allowRemote={!!props.allowRemoteExtractors} onAccept={canEdit ? acceptProposal : undefined}
           summary={
             <CaseSummary
@@ -1392,6 +1584,8 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
               flags={flags.length}
               hidden={hiddenIds.length}
               selected={selected}
+              notebook={full.notebook}
+              onGo={goToPassage}
               onSelect={(id) => {
                 setSelected({ nodes: [id], edges: [] });
                 // below lg the map is the other tab: go there to show it
@@ -1424,6 +1618,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   );
 
   return (
+    <CitationsContext.Provider value={citations}>
     <div
       ref={ws}
       style={fitted ? { height: fitH! } : undefined}
@@ -1448,7 +1643,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
                 print={map.layout.theme === 'print'}
                 reducedMotion={reducedMotion}
                 selected={selected}
-                highlight={highlight}
+                highlight={shownHighlight}
                 loops={loops.loops}
                 loopNames={loopNames}
                 activeLoop={activeLoop}
@@ -1477,7 +1672,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       ) : (
         <div ref={gridEl} className={grid} style={gridStyle}>
           <div id={`${dockId}-main`} className={`min-w-0 ${nbTab ? 'hidden' : ''}`} data-print-hide>
-            <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={highlight} announce={announce} />
+            <ListView map={map} nm={nm} selected={selected} onSelect={(s) => setSelected(s)} onAddNode={() => setNewNodeReq({})} onAddEdge={() => openLink(null)} onAssoc={openAssoc} apply={apply} describeEdge={describeEdge} highlight={shownHighlight} announce={announce} />
           </div>
           {nbCol}
           <div className={`relative min-h-0 flex ${nbTab ? 'hidden' : ''}`} data-print-hide>{resizer}{side}</div>
@@ -1530,6 +1725,32 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       <Dialog open={!!evidenceReq} onClose={() => setEvidenceReq(null)} title={C.notebook.passages.evidenceTitle} wide testId="evidence-dialog">
         {evidenceReq && <EvidencePicker map={map} span={evidenceReq} nm={nm} onPick={(t) => addEvidence(evidenceReq, t)} onCancel={() => setEvidenceReq(null)} />}
       </Dialog>
+      {/* SL28 point 1: Link to… over every kind (a new map link is one choice among them) */}
+      <Dialog open={!!linkAny} onClose={() => setLinkAny(null)} title={C.notebook.passages.linkTitle} wide testId="link-any-dialog">
+        {linkAny && (
+          <TargetPicker
+            ctx={targetCtx}
+            quote={linkAny.quote}
+            lead={C.notebook.passages.linkLead}
+            note={linkAny.note}
+            onPick={(t) => linkTo(linkAny, t)}
+            onCancel={() => setLinkAny(null)}
+            top={
+              map.nodes.filter((n) => n.kind !== 'note').length >= 1 ? (
+                <button type="button" className="bx-btn ax-tap mb-2" onClick={() => { const sp = linkAny; setLinkAny(null); setLinkReq({ from: null, to: null, span: sp }); }} data-testid="link-any-new">{C.notebook.passages.linkNew}</button>
+              ) : undefined
+            }
+          />
+        )}
+      </Dialog>
+      {/* SL28 point 1: "@" in a note — the same picker; the choice becomes a chip (an empty span with its target) */}
+      <Dialog open={!!mention} onClose={closeMention} title={C.notebook.passages.mentionTitle} wide testId="mention-dialog">
+        {mention && <TargetPicker ctx={targetCtx} lead={C.notebook.passages.mentionLead} note={mention.note.id} onPick={(t) => mentionPick(t)} onCancel={closeMention} testId="mention-picker" />}
+      </Dialog>
+      <Dialog open={!!itemOpen} onClose={() => setItemOpen(null)} title={itemOpen ? targetName(itemOpen) : ''} wide testId="item-dialog">
+        {itemOpen && <ItemView t={itemOpen} map={full} />}
+      </Dialog>
+      <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} canImage={view === 'canvas'} onExport={exportReport} />
       <Dialog open={!!delAsk} onClose={() => setDelAsk(null)} title={C.notebook.passages.deleteTitle} testId="delete-spans-dialog">
         {delAsk && (
           <>
@@ -1561,6 +1782,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         <p className="mt-3 text-sm bx-muted">Right-click, Ctrl-click or long-press a circumstance or a link for a quick look. On a touch screen, tap a circumstance's ⋯ button for the association menu.</p>
       </Dialog>
     </div>
+    </CitationsContext.Provider>
   );
 }
 
