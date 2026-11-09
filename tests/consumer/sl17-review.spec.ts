@@ -5,6 +5,7 @@
  * 3. the dock's core cards split into Edit and Analyse, each collapsible on its own;
  * 4. a resize handle on the dock's left edge, by pointer and keyboard, kept per viewer.
  */
+import { openTool, tool } from '../helpers';
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -52,7 +53,7 @@ test.describe('SL17 review', () => {
     await open(page);
     // one name for the action: the toolbar's old "Hide the side panels" is gone
     await expect(page.getByRole('button', { name: /side panels/i })).toHaveCount(0);
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     const ws = page.getByTestId('map-workspace');
     await expect(ws).not.toHaveAttribute('data-fullscreen', 'off');
     const dock = page.getByTestId('side-dock');
@@ -103,16 +104,16 @@ test.describe('SL17 review', () => {
 
   test('2: the layout picker — a visible "Layout" label, Clustered and Evenly spaced with tooltips; picking one moves the unpinned boxes at once, pinned stay, Undo puts them back', async ({ page }) => {
     await open(page);
-    const group = page.getByRole('group', { name: 'Arrange' });
-    await expect(group.getByText('Layout', { exact: true })).toBeVisible();
-    const pick = group.getByRole('combobox', { name: 'Layout' });
-    await expect(pick).toHaveValue('fcose');
-    await expect(pick.locator('option')).toHaveText(['Clustered', 'Evenly spaced']);
-    await expect(pick.locator('option[value="fcose"]')).toHaveAttribute('title', /groups and loops stand out/);
-    await expect(pick.locator('option[value="elk-stress"]')).toHaveAttribute('title', /distance in links/);
-    // the picker is grouped with the three arrange buttons
-    for (const name of ['Auto-arrange', 'Re-arrange all (ignore pins)', 'Arrange selection']) await expect(group.getByRole('button', { name })).toBeVisible();
+    // SL35: the picker is in the Arrange menu, a group of radio items with the three arrange items after it
+    await page.getByTestId('arrange-menu').click();
+    const group = page.getByRole('group', { name: 'Layout' });
+    await expect(group.getByRole('menuitemradio')).toHaveText([/Clustered/, /Evenly spaced/]);
+    await expect(page.getByTestId('layout-fcose')).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByTestId('layout-fcose')).toHaveAttribute('title', /groups and loops stand out/);
+    await expect(page.getByTestId('layout-elk-stress')).toHaveAttribute('title', /distance in links/);
+    for (const name of ['Auto-arrange', 'Re-arrange all (ignore pins)', 'Arrange selection']) await expect(page.getByRole('menuitem', { name })).toBeVisible();
     await expect(page.getByTestId('toolbar').getByText(/fCoSE|ELK/)).toHaveCount(0);
+    await page.keyboard.press('Escape');
     // pin one circumstance (the first edit saves a copy)
     await page.getByTestId('fixture-select').click(); // n6-credit
     await page.getByTestId('canvas').focus();
@@ -120,8 +121,10 @@ test.describe('SL17 review', () => {
     await expect(outline(page).locator('li[data-node="n6-credit"]')).toHaveAttribute('data-pinned', 'true');
     await expect.poll(async () => (await storedPositions(page))?.['n6-credit']?.pinned).toBe(true);
     const start = (await storedPositions(page))!;
-    await pick.selectOption('elk-stress');
-    await expect(pick).toHaveValue('elk-stress');
+    await tool(page, 'layout-elk-stress');
+    await openTool(page, 'layout-elk-stress');
+    await expect(page.getByTestId('layout-elk-stress')).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('Escape');
     await expect(page.getByTestId('live')).toContainText('Layout: Evenly spaced');
     // the unpinned boxes moved, at once; the pinned one stayed
     await expect.poll(async () => {
@@ -150,6 +153,8 @@ test.describe('SL17 review', () => {
     expect(await dockPref(page)).toEqual({ open: true, closed: ['whole'] });
     await page.reload();
     await expect(page.getByTestId('dock-card-whole-body')).toBeHidden();
+    await expect(page.getByTestId('dock-card-selection-body')).toBeHidden(); // SL35: collapsed until something is selected
+    await page.getByTestId('fixture-select').click();
     await expect(page.getByTestId('dock-card-selection-body')).toBeVisible();
     expect(await axe(page, 'Whole map collapsed')).toEqual([]);
   });

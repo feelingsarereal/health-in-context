@@ -1,9 +1,12 @@
 /** SL17: the node-text modes, the peek's facts, and the Node text setting in the map file. */
 import { describe, expect, it } from 'vitest';
-import { codeLine, nodeLines, nodeTextParts } from './nodeText';
+import { codeLine, derivedLabel, nodeLines, nodeTextParts } from './nodeText';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { LoopEntryText } from './loopEntry';
 import { peekFacts } from './Peek';
 import { migrate, newEdge, newMap, newNode, type MapNode } from '../../lib/model/map';
-import { docFromText } from '../../lib/model/rich';
+import { docFromText, plainText } from '../../lib/model/rich';
 import { codeMap } from '../../lib/data/scheme';
 import { links } from '../../lib/data/scheme';
 import { S } from '../../lib/data/core';
@@ -26,21 +29,57 @@ describe('nodeTextParts (SL17)', () => {
   it('Full: the circumstance text below the title', () => {
     expect(nodeTextParts(coded({ label: docFromText('Losing the flat') }), 'full').sub).toBe('Rent went up twice this year');
   });
-  it('an empty label falls back to the code title', () => {
-    expect(nodeTextParts(coded({ code: 'QD80' })).title).toBe(codeMap.get('QD80')!.title);
+  describe('SL34: a blank Short label', () => {
+    const withoutShort = <T,>(code: string, f: () => T): T => {
+      const c = codeMap.get(code)!;
+      const was = c.short_title;
+      c.short_title = null;
+      try { return f(); } finally { c.short_title = was; }
+    };
+    it('1. shows the code\'s short title from the pack', () => {
+      const short = codeMap.get('QD71.Z')!.short_title!;
+      expect(short.length).toBeGreaterThan(0);
+      expect(short.length).toBeLessThan(codeMap.get('QD71.Z')!.title.length);
+      expect(nodeTextParts(coded()).title).toBe(short);
+    });
+    it('2. else the first 24 characters of the description with an ellipsis (a shorter one whole)', () => {
+      withoutShort('QD80', () => {
+        expect(nodeTextParts(coded({ code: 'QD80', circumstance: docFromText('Laid off from the warehouse in March') })).title).toBe('Laid off from the wareho…');
+        expect(nodeTextParts(coded({ code: 'QD80', circumstance: docFromText('Laid off') })).title).toBe('Laid off');
+      });
+    });
+    it('3. else WHO\'s title, as before', () => {
+      withoutShort('QD80', () => expect(nodeTextParts(coded({ code: 'QD80', circumstance: docFromText('') })).title).toBe(codeMap.get('QD80')!.title));
+    });
+    it('is not stored, and the label wins whenever there is one', () => {
+      const n = coded();
+      expect(plainText(n.label)).toBe('');
+      nodeTextParts(n);
+      expect(plainText(n.label)).toBe('');
+      expect(derivedLabel(n)).toBe(codeMap.get('QD71.Z')!.short_title);
+      expect(nodeTextParts(coded({ label: docFromText('Losing the flat') })).title).toBe('Losing the flat');
+    });
+    it('WHO\'s full title stays on the code line and in the peek', () => {
+      const n = coded();
+      expect(codeLine(n)).toContain(codeMap.get('QD71.Z')!.title);
+      const f = peekFacts({ kind: 'node', node: n }, { ...newMap('x'), nodes: [n] }, () => '', [], new Map());
+      expect(f.kind === 'node' && f.title).toBe(codeMap.get('QD71.Z')!.title);
+    });
   });
-  it('a long title is cut at 42 characters with "…", as 0.1.1 cut the label (the peek has it whole)', () => {
-    const t = nodeTextParts(coded()).title;
-    expect(codeMap.get('QD71.Z')!.title.length).toBeGreaterThan(42);
+  it('a long title is cut at 42 characters with "…", as 0.1.1 cut the label', () => {
+    const t = nodeTextParts(coded({ label: docFromText('A label that goes on well past the forty-two characters a box has room for') })).title;
     expect(t).toHaveLength(42);
     expect(t.endsWith('…')).toBe(true);
+  });
+  it('the peek has WHO\'s title whole', () => {
+    expect(codeMap.get('QD71.Z')!.title.length).toBeGreaterThan(42);
     const f = peekFacts({ kind: 'node', node: coded() }, { ...newMap('x'), nodes: [coded()] }, () => '', [], new Map());
     expect(f.kind === 'node' && f.title).toBe(codeMap.get('QD71.Z')!.title);
   });
   it('a title taken from the circumstance text is not repeated below it', () => {
     const n = newNode({ code_status: 'undetermined', circumstance: docFromText('Sleeping on a friend’s sofa') });
     const t = nodeTextParts(n, 'full');
-    expect(t.title).toBe('Sleeping on a friend’s sofa');
+    expect(t.title).toBe('Sleeping on a friend’s s…');
     expect(t.sub).toBeNull();
     expect(t.head).toBe(`? ${S.codes.status.undetermined}`);
   });
@@ -50,6 +89,18 @@ describe('nodeTextParts (SL17)', () => {
   });
   it('the flat export text is the parts on their own lines', () => {
     expect(nodeLines(coded({ label: docFromText('Losing the flat') }), 'full').split('\n')).toHaveLength(3);
+  });
+});
+
+describe('SL25: a loop entry\'s accessible name', () => {
+  const e = { name: 'R1', kind: 'R' as const, kindWord: 'Reinforcing', length: 3, overrides: 1, strength: 0.125, nodes: ['Low income', 'Unemployment', 'Housing'] };
+  // the name a browser computes for the entry: its text, without what is aria-hidden
+  const accessible = (entry: typeof e) => renderToStaticMarkup(createElement(LoopEntryText, { entry })).replace(/<span[^>]*aria-hidden="true"[^>]*>.*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  it('starts with the loop\'s name and reads in the order it shows', () => {
+    expect(accessible(e)).toBe('R1 · Reinforcing · 3 links · 1 override ⚑ · strength 0.125 Low income → Unemployment → Housing → ↺');
+  });
+  it('a renamed loop leads with its name', () => {
+    expect(accessible({ ...e, name: 'Rent spiral', length: 1, overrides: 0 })).toMatch(/^Rent spiral · Reinforcing · 1 link · no overrides/);
   });
 });
 

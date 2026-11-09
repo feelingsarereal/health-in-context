@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { menuItem } from '../helpers';
+import { tool, menuItem } from '../helpers';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FIXTURE = path.join(ROOT, 'packages/sdoh-loops-core/fixtures/consumer');
@@ -30,8 +30,7 @@ async function axe(page: Page, where: string, rules?: string[]) {
 test.describe('SL20', () => {
   test('on a phone, zoomed out, every loop glyph keeps a 24 × 24 px hit target while its face shrinks; axe target-size is clean', async ({ page }) => {
     await open(page, 390, 844);
-    await page.getByTestId('toolbar-more').click();
-    for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Zoom out' }).click();
+    for (let i = 0; i < 4; i++) await tool(page, 'zoom-out');
     const glyphs = page.getByTestId('loop-glyph');
     await expect(glyphs).toHaveCount(3);
     await expect.poll(async () => Number(await glyphs.first().getAttribute('data-scale'))).toBeLessThan(0.8);
@@ -81,7 +80,7 @@ test.describe('SL23', () => {
     await open(page);
     const title = page.getByTestId('dock-card-selection-toggle');
     await expect(title).toHaveText(/Nothing selected$/);
-    await expect(page.getByTestId('inspector-empty')).toBeVisible();
+    await expect(page.getByTestId('inspector-empty')).toBeAttached(); // SL35: inside the collapsed Selected card
     await expect(page.getByTestId('mode-toggle')).toHaveCount(0);
     await page.getByTestId('fixture-select').click();
     await expect(title).toHaveText(/Selected circumstance$/);

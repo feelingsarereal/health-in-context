@@ -7,7 +7,7 @@ import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const S = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages/sdoh-loops-pack/data/strings.json'), 'utf8'));
@@ -33,8 +33,7 @@ test.describe('phone (390 px)', () => {
     await smallLoop(page);
     const glyph = page.getByTestId('loop-glyph').first();
     // zoomed out: the glyph shrinks with the boxes (it kept its desktop 30 px before)
-    await page.getByTestId('toolbar-more').click(); // on a phone the zoom buttons sit behind More (K4 D10)
-    for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Zoom out' }).click();
+    for (let i = 0; i < 4; i++) await tool(page, 'zoom-out');
     await expect.poll(async () => (await zoomOf(page)) < 0.9).toBe(true);
     await expect.poll(async () => Math.abs((await scaleOf(page)) - Math.max(0.3, await zoomOf(page)))).toBeLessThan(0.01);
     // the face shrinks; SL20: the button around it stays a 24 × 24 px hit target
@@ -51,8 +50,8 @@ test.describe('phone (390 px)', () => {
 
 test('K14.1: on a desktop the glyphs keep their size (scale 1) at any zoom', async ({ page }) => {
   await smallLoop(page);
-  await page.getByRole('button', { name: 'Zoom out' }).click();
-  await page.getByRole('button', { name: 'Zoom out' }).click();
+  await tool(page, 'zoom-out');
+  await tool(page, 'zoom-out');
   await expect.poll(() => scaleOf(page)).toBe(1);
 });
 

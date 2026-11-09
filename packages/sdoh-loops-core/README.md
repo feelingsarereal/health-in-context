@@ -175,6 +175,11 @@ The consumer fixture is built this way, and `tests/consumer/sl20-sl23.spec.ts` c
 `<Notice>` (H5) takes an optional `text` (plain text or a short node): pass your app's own `safety.yaml → notice` and
 drop the local copy of its markup. Without it, it shows the pinned pack's notice, the standalone app's wording.
 
+### `canvasHeight` (0.12.0, SL35)
+
+`canvasHeight="viewport"` makes the canvas fill the window below your header and the toolbar, with your footer below
+the fold. Leave it at the default, `"auto"`, when the map sits inside a page of your own.
+
 ### No mapping to other code sets (0.11.0, SL33)
 
 Codes are shown as WHO publishes them; no mapping to other code sets is included. WHO's reply to request 202611431

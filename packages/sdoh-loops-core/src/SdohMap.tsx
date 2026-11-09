@@ -5,7 +5,8 @@ import { pinMismatch, type PackPin } from './lib/data/pack';
 import { C } from './lib/copy';
 import { USER_COLOURS } from './lib/palette';
 import { useTheme } from './lib/theme';
-import { useCoarsePointer, useWideViewport } from './lib/pointer';
+import { useCoarsePointer, useNarrowViewport, useWideViewport } from './lib/pointer';
+import { ToolMenu, type ToolItem, type ToolSection } from './components/map/ToolMenu';
 import { count } from './lib/plural';
 import { setViewPref, viewPref, withOriginals, type MapStore } from './lib/storage';
 import { useMapDoc } from './components/map/useMapDoc';
@@ -97,6 +98,9 @@ const NB_AUTOFOLD_BELOW = 1600;
  * site footer, a host's notice), so the page itself is exactly the viewport and never scrolls. When that leaves less
  * than FIT_MIN (a map placed far down a host's page), it keeps the older height and the page scrolls to it. */
 const FIT_MIN = 480;
+/** SL35: canvasHeight 'viewport', the least the workspace (from lg up) or the canvas (below it) is given */
+const FIT_MIN_VIEWPORT = 360;
+const FIT_MIN_PHONE = 320;
 /** SL31: the most of the window that what sits below the workspace (a footer) may take before it is left to scroll */
 const FIT_BELOW_MAX = 0.15;
 /**
@@ -167,6 +171,11 @@ export interface SdohMapProps {
    * until WHO publishes its mapping agreement. Remove it from your host.
    */
   crosswalk?: boolean;
+  /**
+   * SL35: 'viewport' makes the canvas fill the window below the site header and the toolbar, with the page's footer
+   * below the fold, at every width. Default 'auto', for a map embedded in a host's own layout.
+   */
+  canvasHeight?: 'viewport' | 'auto';
   /** SL17: the host's cards in the side dock, stacked below the core's editor */
   sideCards?: SideCard[];
   /** SL17: the host's own lines in the peek, below the core's */
@@ -343,8 +352,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const [keysOpen, setKeysOpen] = useState(false);
   const coarse = useCoarsePointer();
   /** K4 D10: on a phone the secondary tools sit behind "More" (always shown from the sm breakpoint up) */
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const sec = toolsOpen ? '' : 'max-sm:hidden';
+  const narrow = useNarrowViewport();
   // SL17 review 2: the layout engine is the map's own (so Undo puts the picker back too)
   const engine = map.layout.engine;
   const [live, setLive] = useState('');
@@ -397,13 +405,20 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // ── SL17: the side dock — the core's editor card, then the host's cards; each collapses, and from lg up the whole dock
   // collapses to a rail. Per-viewer browser storage under the store's slug; never saved into the map.
   const wide = useWideViewport();
+  const viewportMode = props.canvasHeight === 'viewport';
   // SL30 point 3: the height that fills the viewport below the workspace's top (a sticky site header included), or null
   const [fitH, setFitH] = useState<number | null>(null);
   useLayoutEffect(() => {
-    if (!wide || fs !== 'off') return setFitH(null);
+    if ((!wide && !viewportMode) || fs !== 'off') return setFitH(null);
     const measure = () => {
       const el = ws.current;
       if (!el) return;
+      // SL35: below lg the panels stack under the canvas, so only the canvas is sized to the window
+      if (!wide) {
+        const main = document.getElementById(`${dockId}-main`);
+        return setFitH(main ? Math.max(FIT_MIN_PHONE, Math.floor(window.innerHeight - (main.getBoundingClientRect().top + window.scrollY))) : null);
+      }
+      if (viewportMode) return setFitH(Math.max(FIT_MIN_VIEWPORT, Math.floor(window.innerHeight - (el.getBoundingClientRect().top + window.scrollY))));
       // a footer's worth below (up to 15% of the window) gets room, so the page is exactly the window; more than
       // that is the host's page carrying on below the map, which the page scrolls to as before
       const below = spaceBelow(el);
@@ -468,8 +483,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     refocusDock.current = null;
     if (f) (f === 'fold' ? foldBtn : unfoldBtn).current?.focus();
   }, [dockOpen]);
-  const setCardOpen = (id: string, open: boolean, alsoDock = false) => saveDock({ ...dock, open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] });
-  const cardOpen = (id: string) => !dock.closed.includes(id);
+  const setCardOpen = (id: string, open: boolean, alsoDock = false) => { if (id === 'selection' && open) setSelSeen(true); return saveDock({ ...dock, open: alsoDock ? true : dock.open, closed: open ? dock.closed.filter((x) => x !== id) : [...new Set([...dock.closed, id])] }); };
+  const cardOpen = (id: string) => !dock.closed.includes(id) && (id !== 'selection' || selSeen || anySelected);
+  // SL35 point 4: the Selected card stays collapsed on a map's first open, until something has been selected
+  const [selSeen, setSelSeen] = useState(false);
+  const anySelected = selected.nodes.length + selected.edges.length > 0;
+  useEffect(() => setSelSeen(false), [map.id]);
+  useEffect(() => { if (anySelected) setSelSeen(true); }, [anySelected, map.id]);
   // ── SL23: Read / Edit for the selection card (and About this map). A read-only original is always in Read, with no
   // toggle: the first edit made elsewhere (a drag, a new circumstance) forks a copy, and the toggle appears on the copy.
   const canEdit = !doc.readOnly;
@@ -1078,60 +1098,65 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
     });
   };
 
+  // SL35: one toolbar row (from lg up) — the map, what you do, Arrange ▾, View ▾, Undo and Redo
+  const doItems: ToolItem[] = [
+    { id: 'edge', label: C.toolbar.addEdge, disabled: map.nodes.length < 2, shortcut: 'K', kbd: 'K', testId: 'add-edge', onSelect: () => openLink(linkFrom()) },
+    { id: 'assoc', label: C.toolbar.assoc, disabled: !selNode || selNode.kind === 'note', shortcut: 'A', kbd: 'A', testId: 'open-assoc', onSelect: () => openAssoc() },
+    { id: 'note', label: C.node.addNote, testId: 'add-note', onSelect: () => setNewNodeReq({ kind: 'note' }) },
+  ];
+  const hoodItem = (hops: 1 | 2): ToolItem => ({
+    id: `hood${hops}`, label: hops === 1 ? C.toolbar.hood1 : C.toolbar.hood2, role: 'menuitemcheckbox', checked: hood?.hops === hops, disabled: !selNode, shortcut: String(hops), kbd: String(hops), testId: `hood-${hops}`,
+    onSelect: () => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === hops ? null : { id: selNode!.id, hops }); },
+  });
+  const arrangeSections: ToolSection[] = [
+    ...(view === 'canvas'
+      ? [
+          { label: C.layoutPick.label, items: ENGINES.map((v): ToolItem => ({ id: `layout-${v}`, label: C.layoutPick[v], role: 'menuitemradio', checked: engine === v, title: C.layoutPick[`${v}Tip`], testId: `layout-${v}`, onSelect: () => pickEngine(v) })) },
+          { items: [
+            { id: 'arrange', label: C.toolbar.arrange, disabled: !map.nodes.length, shortcut: 'R', kbd: 'R', testId: 'arrange', onSelect: () => arrange('unpinned') },
+            { id: 'arrange-all', label: C.toolbar.arrangeAll, disabled: !map.nodes.length, testId: 'arrange-all', onSelect: () => arrange('all') },
+            { id: 'arrange-sel', label: C.toolbar.arrangeSel, disabled: selected.nodes.length < 2, testId: 'arrange-selection', onSelect: () => arrange('selection') },
+          ] as ToolItem[] },
+        ]
+      : []),
+    { sep: view === 'canvas', items: [hoodItem(1), hoodItem(2)] },
+  ];
+  const viewSections: ToolSection[] = [
+    { items: [
+      ...(view === 'canvas'
+        ? ([
+            { id: 'fit', label: C.toolbar.fit, testId: 'fit', onSelect: () => canvas.current?.fit() },
+            { id: 'zoom-in', label: C.toolbar.zoomIn, testId: 'zoom-in', onSelect: () => canvas.current?.zoom(1.25) },
+            { id: 'zoom-out', label: C.toolbar.zoomOut, testId: 'zoom-out', onSelect: () => canvas.current?.zoom(0.8) },
+          ] as ToolItem[])
+        : []),
+      { id: 'fullscreen', label: fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen, role: 'menuitemcheckbox', checked: fs !== 'off', shortcut: 'F', kbd: 'F', testId: 'fullscreen', onSelect: toggleFs },
+      { id: 'switch-view', label: view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView, href: props.viewHref?.(otherView, map.id) ?? '#', testId: 'switch-view', onSelect: (e) => switchView(e as unknown as Parameters<typeof switchView>[0]) },
+      // SL26: the notebook beside the canvas or the list (below lg, the Map / Notebook tabs instead)
+      ...(nbEnabled && wide ? ([{ id: 'notebook', label: <>{C.notebook.toggle}{flags.length > 0 && <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span>}</>, role: 'menuitemcheckbox', checked: nbOn, title: C.notebook.toggleTip, testId: 'notebook-toggle', onSelect: () => setNbOn(!nbOn) }] as ToolItem[]) : []),
+      // SL28 point 3: the trace view, with the notebook
+      ...(nbEnabled && nbOn ? ([{ id: 'trace', label: C.notebook.trace.toggle, role: 'menuitemcheckbox', checked: traceOn, title: C.notebook.trace.tip, testId: 'trace-toggle', onSelect: toggleTrace }] as ToolItem[]) : []),
+      { id: 'grayscale', label: C.toolbar.grayscale, role: 'menuitemcheckbox', checked: map.layout.theme === 'print', testId: 'view-grayscale', onSelect: () => apply((m) => ({ ...m, layout: { ...m.layout, theme: m.layout.theme === 'print' ? 'auto' : 'print' } })) },
+      { id: 'keys', label: C.toolbar.keysFull, shortcut: '?', kbd: '?', testId: 'keys-open', onSelect: () => setKeysOpen(true) },
+    ] },
+  ];
   const toolbar = (
-    <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print" role="toolbar" aria-label="Map tools" data-testid="toolbar">
-      <span className="mr-1 font-display text-lg font-semibold" data-testid="map-name">{map.name}</span>
+    <div className="mb-2 flex flex-wrap items-center gap-1.5 no-print lg:flex-nowrap lg:[&>*]:shrink-0" role="toolbar" aria-label="Map tools" data-testid="toolbar">
+      <span className="mr-1 min-w-0 truncate font-display text-lg font-semibold lg:!shrink" data-testid="map-name">{map.name}</span>
       {/* SL23: the map file actions — open (import) first, save a copy, the exports, print, the host's items */}
       <MapMenu ref={mapMenu} map={full} apply={apply} download={download} canvas={view === 'canvas' ? canvas : null} store={storage} onOpenMap={props.onOpenMap} announce={announce} hostItems={importItem ? [importItem, ...(props.mapMenuItems ?? [])] : props.mapMenuItems} guard={nbEnabled ? guard : undefined} notebook={nbEnabled && hasNotebook(full)} coreItems={caseItems} />
-      <span className="mr-1 text-sm bx-muted" data-testid="link-counts">
-        {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
-      </span>
       <button type="button" className="bx-btn-primary ax-tap" onClick={() => setNewNodeReq({})} data-testid="add-node" aria-keyshortcuts="N">{C.toolbar.addNode}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => openLink(linkFrom())} disabled={map.nodes.length < 2} data-testid="add-edge" aria-keyshortcuts="K">{C.toolbar.addEdge}</button>
-      <button type="button" className="bx-btn ax-tap" onClick={() => openAssoc()} disabled={!selNode || selNode.kind === 'note'} data-testid="open-assoc" aria-keyshortcuts="A">{C.toolbar.assoc}</button>
-      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setNewNodeReq({ kind: 'note' })}>{C.node.addNote}</button>
-      {view === 'canvas' && (
-        <>
-          {/* SL17 review 2: the layout picker sits with the three arrange buttons */}
-          <div className={`inline-flex flex-wrap items-center gap-1.5 ${sec}`} role="group" aria-label="Arrange" data-testid="arrange-group">
-            <label className="inline-flex items-center gap-1 text-sm font-semibold" title={C.layoutPick[`${engine}Tip`]}>
-              <span>{C.layoutPick.label}</span>
-              <select className="bx-input ax-tap w-auto font-normal" value={engine} onChange={(e) => pickEngine(e.target.value as Engine)} data-testid="layout-engine">
-                {ENGINES.map((v) => <option key={v} value={v} title={C.layoutPick[`${v}Tip`]}>{C.layoutPick[v]}</option>)}
-              </select>
-            </label>
-            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('unpinned')} disabled={!map.nodes.length} data-testid="arrange" aria-keyshortcuts="R">{C.toolbar.arrange}</button>
-            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('all')} disabled={!map.nodes.length}>{C.toolbar.arrangeAll}</button>
-            <button type="button" className="bx-btn ax-tap" onClick={() => arrange('selection')} disabled={selected.nodes.length < 2}>{C.toolbar.arrangeSel}</button>
-          </div>
-        </>
+      {narrow ? (
+        <ToolMenu label={C.toolbar.moreTools} ariaLabel={C.toolbar.moreTools} button={<span aria-hidden="true">＋</span>} sections={[{ items: doItems }]} testId="do-menu" />
+      ) : (
+        doItems.map((it) => <button key={it.id} type="button" className="bx-btn ax-tap" onClick={it.onSelect} disabled={it.disabled} data-testid={it.testId} aria-keyshortcuts={it.shortcut}>{it.label}</button>)
       )}
-      <button type="button" className="bx-btn ax-tap" onClick={doc.undo} disabled={!doc.canUndo} aria-keyshortcuts="Meta+Z" data-testid="undo">{C.toolbar.undo}</button>
-      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={doc.redo} disabled={!doc.canRedo} aria-keyshortcuts="Meta+Shift+Z">{C.toolbar.redo}</button>
-      <button type="button" className={`bx-btn ax-tap ${sec} ${hood?.hops === 1 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 1} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 1 ? null : { id: selNode!.id, hops: 1 }); }} aria-keyshortcuts="1">{C.toolbar.hood1}</button>
-      <button type="button" className={`bx-btn ax-tap ${sec} ${hood?.hops === 2 ? 'bx-btn-on' : ''}`} disabled={!selNode} aria-pressed={hood?.hops === 2} onClick={() => { setActiveLoop(null); setPathHl(null); setHood(hood?.hops === 2 ? null : { id: selNode!.id, hops: 2 }); }} aria-keyshortcuts="2">{C.toolbar.hood2}</button>
-      {view === 'canvas' && (
-        <>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.fit()}>{C.toolbar.fit}</button>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(1.25)} aria-label="Zoom in">＋</button>
-          <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => canvas.current?.zoom(0.8)} aria-label="Zoom out">－</button>
-        </>
-      )}
-      <button type="button" className={`bx-btn ax-tap ${fs !== 'off' ? 'bx-btn-on' : ''}`} aria-pressed={fs !== 'off'} onClick={toggleFs} aria-keyshortcuts="F" data-testid="fullscreen">{fs !== 'off' ? C.dock.exitFullscreen : C.dock.fullscreen}</button>
-      <a className="bx-btn ax-tap" href={props.viewHref?.(otherView, map.id) ?? '#'} onClick={switchView} data-testid="switch-view">{view === 'canvas' ? C.toolbar.listView : C.toolbar.canvasView}</a>
-      {/* SL26: the notebook beside the canvas or the list (below lg, the Map / Notebook tabs instead) */}
-      {nbEnabled && wide && (
-        <button type="button" className={`bx-btn ax-tap ${nbOn ? 'bx-btn-on' : ''}`} aria-pressed={nbOn} title={C.notebook.toggleTip} onClick={() => setNbOn(!nbOn)} data-testid="notebook-toggle">
-          {C.notebook.toggle}
-          {flags.length > 0 && <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span>}
-        </button>
-      )}
-      {/* SL28 point 3: the trace view, with the notebook */}
-      {nbEnabled && nbOn && (
-        <button type="button" className={`bx-btn ax-tap ${traceOn ? 'bx-btn-on' : ''}`} aria-pressed={traceOn} title={C.notebook.trace.tip} onClick={toggleTrace} data-testid="trace-toggle">{C.notebook.trace.toggle}</button>
-      )}
-      <button type="button" className={`bx-btn ax-tap ${sec}`} onClick={() => setKeysOpen(true)} aria-keyshortcuts="?">{C.toolbar.keys} <span className="bx-kbd">?</span></button>
-      <button type="button" className="bx-btn ax-tap sm:hidden" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)} data-testid="toolbar-more">{C.toolbar.moreTools} {toolsOpen ? '▴' : '▾'}</button>
+      <ToolMenu label={C.toolbar.arrangeMenu} button={C.toolbar.arrangeMenu} sections={arrangeSections} testId="arrange-menu" />
+      <ToolMenu label={C.toolbar.viewMenu} button={C.toolbar.viewMenu} sections={viewSections} testId="view-menu" chip={nbEnabled && wide && flags.length > 0 ? <span className="bx-chip ml-1 px-1.5 text-xs" aria-label={count(flags.length, C.notebook.identifier)}>⚠ {flags.length}</span> : undefined} />
+      <span className="inline-flex items-center gap-1 lg:ml-auto">
+        <button type="button" className="bx-btn ax-tap justify-center" onClick={doc.undo} disabled={!doc.canUndo} aria-keyshortcuts="Meta+Z" aria-label={C.toolbar.undo} title={`${C.toolbar.undo} (⌘Z)`} data-testid="undo"><span aria-hidden="true">↶</span></button>
+        <button type="button" className="bx-btn ax-tap justify-center" onClick={doc.redo} disabled={!doc.canRedo} aria-keyshortcuts="Meta+Shift+Z" aria-label={C.toolbar.redo} title={`${C.toolbar.redo} (⌘⇧Z)`} data-testid="redo"><span aria-hidden="true">↷</span></button>
+      </span>
     </div>
   );
 
@@ -1281,6 +1306,10 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
         <input type="checkbox" checked={evidenceOnly} onChange={(e) => { setEvidenceOnly(e.target.checked); setActiveLoop(null); setPathHl(null); announce(e.target.checked ? `Analyses now use evidence-backed links only (${counts.evidence} of ${counts.all}).` : 'Analyses use every link again.'); }} data-testid="evidence-toggle" aria-labelledby="evidence-toggle-label" />
         <span id="evidence-toggle-label">{C.evidence.toggle}</span>
       </label>
+      {/* SL35: moved from the toolbar; a live region, so a new link is announced */}
+      <p className="border-b border-[color:var(--bx-line)] px-3 py-1.5 text-sm bx-muted" role="status" aria-live="polite" data-testid="link-counts">
+        {counts.all} {counts.all === 1 ? 'link' : 'links'}: {counts.evidence} evidence · {counts.all - counts.evidence} override{counts.review ? ` (${counts.review} to review)` : ''}
+      </p>
       <div className="flex flex-wrap gap-1 border-b border-[color:var(--bx-line)] p-2" role="group" aria-label="Panels">
         {PANELS.map((p) => {
           const off = p === 'needsCode' && needsCodeEmpty && panel !== p;
@@ -1326,8 +1355,13 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   // the dock's cards, top to bottom: the selection, the whole map, then the host's; each scrolls inside itself, so one
   // card never pushes the others off screen
   const cards: { id: string; title: string; body: ReactNode; kind: 'selection' | 'core' | 'host' }[] = [
-    { id: 'selection', title: selTitle, body: selectionCard, kind: 'selection' },
-    { id: 'whole', title: C.dock.wholeMap, body: wholeCard, kind: 'core' },
+    // SL35 point 4: an empty map has only the add-the-first-circumstance hint (K14)
+    ...(map.nodes.length
+      ? ([
+          { id: 'selection', title: selTitle, body: selectionCard, kind: 'selection' },
+          { id: 'whole', title: C.dock.wholeMap, body: wholeCard, kind: 'core' },
+        ] as const)
+      : ([{ id: 'whole', title: C.dock.wholeMap, body: <div className="p-3 text-sm bx-muted"><p data-testid="inspector-empty">{emptyHint}</p></div>, kind: 'core' }] as const)),
     ...(props.sideCards ?? []).map((c) => ({ id: `host:${c.id}`, title: c.title, body: <div className="p-3">{c.render(selected)}</div>, kind: 'host' as const })),
   ];
   const modeToggle = canEdit && (
@@ -1416,7 +1450,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
   const fsOn = fs !== 'off';
   // SL30 point 3: from lg up, on the canvas, the workspace (toolbar, canvas, notebook, dock) fills the viewport below
   // where it starts, so the page does not scroll while you work; the notebook and the dock scroll inside themselves
-  const fitted = !fsOn && fitH !== null && view === 'canvas';
+  const fitted = wide && !fsOn && fitH !== null && view === 'canvas';
   const grid = `grid grid-cols-[minmax(0,1fr)] gap-3 ${fsOn || fitted ? 'min-h-0 flex-1 lg:grid-rows-[minmax(0,1fr)]' : ''}`;
   // from lg up the dock column takes its stored width (review 4), or the rail's
   const tall = fsOn || fitted ? 'lg:h-full' : 'lg:h-[calc(100vh-11rem)]';
@@ -1639,7 +1673,7 @@ function MapWorkspace({ doc, storage, ...props }: SdohMapProps & { doc: ReturnTy
       {nbImport}
       {view === 'canvas' ? (
         <div ref={gridEl} className={grid} style={gridStyle}>
-          <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} overscroll-contain rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} data-print-hide>
+          <div id={`${dockId}-main`} className={`relative h-[60vh] min-h-[22rem] ${tall} overscroll-contain rounded-xl border border-[color:var(--bx-line)] overflow-hidden ${nbTab ? 'hidden' : ''}`} style={!wide && !fsOn && fitH !== null ? { height: fitH } : undefined} data-print-hide>
             <Suspense fallback={<p role="status" className="p-4 bx-muted">Loading the canvas…</p>}>
               <Canvas
                 ref={canvas}
@@ -1831,10 +1865,14 @@ function NewNodeDialog({ req, onClose, onCreate, anchorName }: { req: NewNodeReq
 
 /** Mounted fresh for each request, so a quick submit never reuses the previous draft. */
 function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; onClose: () => void; onCreate: (d: NodeDraft, req: NewNodeReq) => void; anchorName: string }) {
-  const [draft, setDraft] = useState<NodeDraft>(() => ({
+  // SL34 point 2: opened from a link proposal, the code the pack suggests is already chosen (the person can change it)
+  const [draft, setDraft] = useState<NodeDraft>(() => {
+    const l = req.follow?.link;
+    const pre = (l ? (req.follow!.direction === 'out' ? l.suggest : l.codes.from) : []).find((c) => codeMap.has(c)) ?? null;
+    return {
     kind: req.kind === 'note' ? 'note' : 'circumstance',
-    code_status: req.preset?.code_status ?? 'undetermined',
-    code: req.preset?.code ?? null,
+    code_status: req.preset?.code_status ?? (pre ? 'sdoh' : 'undetermined'),
+    code: req.preset?.code ?? pre,
     type: req.preset?.type ?? null,
     ref: null,
     // SL27: made from a selection, the label starts as the selected words (editable)
@@ -1845,7 +1883,9 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
     notes: emptyDoc(),
     style: {},
     pinned: false,
-  }));
+    };
+  });
+  const form = useRef<HTMLFormElement>(null);
   // SL27: from a selection nothing is chosen for the user: a suggested code, Not sure yet, Other, or a search first
   const [choice, setChoice] = useState<FromChoice | null>(req.preset ? (req.preset.code ? { kind: 'code', code: req.preset.code } : req.preset.code_status === 'other' ? { kind: 'other' } : { kind: 'undetermined' }) : null);
   const pick = (c: FromChoice) => {
@@ -1860,8 +1900,10 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
   // K3: 'Add new' offers only codes the link's evidence names — its `suggest` codes downstream, its `codes.from` upstream
   const offered = link ? (req.follow!.direction === 'out' ? link.suggest : link.codes.from) : undefined;
   const only = offered ? codesUnder(offered) : undefined;
+  const submitOff = (fromText && !choice) || (draft.code_status === 'sdoh' && !draft.code);
   return (
         <form
+          ref={form}
           onSubmit={(e) => {
             e.preventDefault();
             onCreate(draft, req);
@@ -1886,11 +1928,11 @@ function NewNodeForm({ req, onClose, onCreate, anchorName }: { req: NewNodeReq; 
             </>
           )}
           {(!fromText || choice) && (
-            <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen={!fromText || choice?.kind === 'search'} only={only} suggested={offered} compact />
+            <NodeFields draft={draft} onChange={(p) => setDraft((d) => ({ ...d, ...p, ...(p.code_status && p.code_status !== 'sdoh' && !p.code ? { code: null } : {}) }))} pickerOpen={!fromText || choice?.kind === 'search'} only={only} suggested={offered} compact onEnter={() => { if (!submitOff) form.current?.requestSubmit(); }} onEscape={onClose} />
           )}
           {fromText && !choice && <p className="text-sm bx-muted" data-testid="from-pick-first">{C.notebook.passages.pickFirst}</p>}
           <div className="mt-2 flex flex-wrap gap-2">
-            <button type="submit" className="bx-btn-primary ax-tap" data-testid="node-submit" disabled={(fromText && !choice) || (draft.code_status === 'sdoh' && !draft.code)}>
+            <button type="submit" className="bx-btn-primary ax-tap" data-testid="node-submit" disabled={submitOff}>
               {req.kind === 'note' ? C.node.addNote : C.node.add}
             </button>
             <button type="button" className="bx-btn ax-tap" onClick={onClose}>Cancel</button>

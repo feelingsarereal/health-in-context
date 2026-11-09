@@ -51,6 +51,7 @@ export default function MapPage({ view }: { view: MapView }) {
     <SdohMap
       map={resolved}
       pack={pin}
+      canvasHeight="viewport"
       storage={store!}
       view={view}
       onViewChange={(v) => nav(`${v === 'list' ? '/map/list' : '/map'}?id=${resolved}`)}

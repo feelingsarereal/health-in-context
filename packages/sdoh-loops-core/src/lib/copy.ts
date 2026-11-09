@@ -35,6 +35,9 @@ const FALLBACK = {
   },
   node: {
     variableHint: "Read this box as 'how much of this is present'.",
+    /** SL34: the one line of help on the Add circumstance dialog's first field */
+    whatHint: 'Say it as something that can go up or down',
+    thisIs: 'This is',
     status: 'Code status',
     code: 'ICD-11 code',
     chooseCode: 'Choose a code',
@@ -136,6 +139,8 @@ const FALLBACK = {
   clusters: { lead: 'Groups of circumstances that sit inside shared feedback (strongly connected components).', none: 'No feedback clusters yet.', hulls: 'Show clusters on the canvas' },
   toolbar: {
     addNode: 'New circumstance', addEdge: 'Link to…', assoc: 'Associations', arrange: 'Auto-arrange', arrangeAll: 'Re-arrange all (ignore pins)', arrangeSel: 'Arrange selection',
+    /** SL35: the toolbar's menus */
+    arrangeMenu: 'Arrange', viewMenu: 'View', zoomIn: 'Zoom in', zoomOut: 'Zoom out', grayscale: 'Grayscale', keysFull: 'Keyboard shortcuts', showCodes: 'Show the list of codes',
     engine: 'Layout', undo: 'Undo', redo: 'Redo', hood1: '1st-degree', hood2: '2nd-degree', fit: 'Fit', listView: 'List view', canvasView: 'Canvas view', keys: 'Keyboard', more: 'More actions for the selected circumstance', moreTools: 'More', print: 'Print / grayscale',
   },
   canvas: { label: 'Map canvas. Use the arrow keys to move between circumstances, Enter to edit, A for associations, N for a new circumstance, and ? for every key.', empty: 'Double-click the canvas or press N to add the first circumstance.', emptyTouch: 'Tap New circumstance to add the first circumstance.', outline: 'Everything on the canvas' },
@@ -261,7 +266,7 @@ const FALLBACK = {
   } as Record<string, string>,
   nodeText: { label: 'Node text', title: 'Title', 'title-code': 'Title + code', full: 'Full' } as Record<string, string>,
   /** SL17: keys added in this release; the pack's own list (keys) shows first */
-  keysMore: [['E', 'read / edit the selection'], ['K', 'new link from the selection'], ['⌘O / ⌘S', 'open a map file / save a copy'], ['F', 'full screen (Esc leaves)'], [']', 'fold / open the side dock'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
+  keysMore: [['Arrange ▾ / View ▾', 'the toolbar menus: Enter or ↓ opens, ↑ ↓ move, Esc closes'], ['E', 'read / edit the selection'], ['K', 'new link from the selection'], ['⌘O / ⌘S', 'open a map file / save a copy'], ['F', 'full screen (Esc leaves)'], [']', 'fold / open the side dock'], ['Shift+F10 / Menu', 'quick look at the selection']] as [string, string][],
   keys: [
     ['N', 'new circumstance'], ['E', 'new link from the selection'], ['A', 'association menu'], ['1 / 2', '1st / 2nd-degree neighborhood'], ['L', 'loops panel'],
     ['R', 'auto-arrange'], ['P', 'pin / unpin'], ['Del', 'delete'], ['⌘Z / ⌘⇧Z', 'undo / redo'], ['⌘B / ⌘I / ⌘U', 'bold / italic / underline while editing text'],

@@ -6,7 +6,7 @@
   "source": "World Health Organization",
   "official_browser": "https://icd.who.int/browse/2026-01/mms/en",
   "verified_on": "2026-10-23",
-  "text_source": "Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder additions — tiers, links, search aliases — are marked as not from WHO.",
+  "text_source": "Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder additions — tiers, links, search aliases, short titles — are marked as not from WHO.",
   "licence": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO)."
  },
  "tiers": {
@@ -23,21 +23,24 @@
    "title": "Problems associated with finances",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/824927288",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288",
+   "short_title": "Finances"
   },
   {
    "id": "QD60-QD6Z",
    "title": "Problems associated with drinking water or nutrition",
    "tier": "intermediary_material",
    "uri": "http://id.who.int/icd/entity/76222516",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#76222516"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#76222516",
+   "short_title": "Water or food"
   },
   {
    "id": "QD70-QD7Z",
    "title": "Problems associated with the environment",
    "tier": "intermediary_material",
    "uri": "http://id.who.int/icd/entity/266601618",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618",
+   "short_title": "Environment"
   },
   {
    "id": "QD80-QD8Z",
@@ -45,6 +48,7 @@
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/1440218064",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064",
+   "short_title": "Work and jobs",
    "exclusions": [
     {
      "title": "problems related to housing and economic circumstances",
@@ -64,6 +68,7 @@
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/561687345",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345",
+   "short_title": "Education",
    "exclusions": [
     {
      "title": "factors associated with psychological development",
@@ -83,6 +88,7 @@
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/462621464",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464",
+   "short_title": "Social or cultural setting",
    "coded_elsewhere": [
     {
      "title": "Acute stress reaction",
@@ -96,6 +102,7 @@
    "tier": "intermediary_behavioural",
    "uri": "http://id.who.int/icd/entity/48322409",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409",
+   "short_title": "Health behaviours",
    "exclusions": [
     {
      "title": "Difficulty or need for assistance with general life tasks or life management",
@@ -108,28 +115,32 @@
    "title": "Problems associated with social insurance or welfare",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/566804336",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336",
+   "short_title": "Social insurance or welfare"
   },
   {
    "id": "QE40-QE4Z",
    "title": "Problems associated with the justice system",
    "tier": "structural",
    "uri": "http://id.who.int/icd/entity/560926494",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494",
+   "short_title": "Justice system"
   },
   {
    "id": "QE50-QE5Z",
    "title": "Problems associated with relationships",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1509667156",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156",
+   "short_title": "Relationships"
   },
   {
    "id": "QE60-QE6Z",
    "title": "Problems associated with absence, loss or death of others",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1399046120",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120",
+   "short_title": "Absence, loss or death"
   },
   {
    "id": "QE70",
@@ -137,6 +148,7 @@
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/812634854",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854",
+   "short_title": "Family circumstances",
    "exclusions": [
     {
      "title": "Problems associated with upbringing",
@@ -154,6 +166,7 @@
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/675461815",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815",
+   "short_title": "Harmful or traumatic events",
    "exclusions": [
     {
      "title": "Disorders specifically associated with stress",
@@ -176,7 +189,8 @@
    "title": "Problems associated with upbringing",
    "tier": "intermediary_psychosocial",
    "uri": "http://id.who.int/icd/entity/1428430704",
-   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704"
+   "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704",
+   "short_title": "Upbringing"
   },
   {
    "id": "QF20-QF2Z",
@@ -185,6 +199,7 @@
    "uri": "http://id.who.int/icd/entity/340003177",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177",
    "functioning": true,
+   "short_title": "Help with activities",
    "definition": "Identifies activities for which the person needs assistance or has such difficulty with, that it affects their need for health services or their treatment.",
    "exclusions": [
     {
@@ -201,6 +216,7 @@
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550",
    "subgroup_of": "QD70-QD7Z",
    "note": "A category, exposed as a link target",
+   "short_title": "Housing problems",
    "exclusions": [
     {
      "title": "Problems associated with inadequate drinking-water",
@@ -229,6 +245,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#755867815",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#755867815",
    "verified_on": "2026-10-23",
+   "short_title": "Poverty",
    "residual": null
   },
   {
@@ -253,6 +270,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1503719512",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1503719512",
    "verified_on": "2026-10-23",
+   "short_title": "Low income",
    "residual": null
   },
   {
@@ -280,6 +298,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1163409625",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1163409625",
    "verified_on": "2026-10-23",
+   "short_title": "Inadequate drinking water",
    "residual": null
   },
   {
@@ -314,6 +333,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1212575027",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1212575027",
    "verified_on": "2026-10-23",
+   "short_title": "Inadequate food",
    "residual": null
   },
   {
@@ -342,6 +362,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1307910936",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1307910936",
    "verified_on": "2026-10-23",
+   "short_title": "Environmental problems",
    "residual": null
   },
   {
@@ -364,6 +385,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1409115865",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1409115865",
    "verified_on": "2026-10-23",
+   "short_title": "Noise exposure",
    "residual": null
   },
   {
@@ -390,6 +412,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#917941069",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#917941069",
    "verified_on": "2026-10-23",
+   "short_title": "Air pollution exposure",
    "residual": null
   },
   {
@@ -415,6 +438,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1109130164",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1109130164",
    "verified_on": "2026-10-23",
+   "short_title": "Water pollution exposure",
    "residual": null
   },
   {
@@ -435,6 +459,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#659568166",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#659568166",
    "verified_on": "2026-10-23",
+   "short_title": "Soil pollution exposure",
    "residual": null
   },
   {
@@ -455,6 +480,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1421780402",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1421780402",
    "verified_on": "2026-10-23",
+   "short_title": "Radiation exposure",
    "residual": null
   },
   {
@@ -494,6 +520,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#538178893",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#538178893",
    "verified_on": "2026-10-23",
+   "short_title": "Tobacco smoke exposure",
    "residual": null
   },
   {
@@ -514,6 +541,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#201495283",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#201495283",
    "verified_on": "2026-10-23",
+   "short_title": "No reliable electricity",
    "residual": null
   },
   {
@@ -537,6 +565,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#683601550",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550",
    "verified_on": "2026-10-23",
+   "short_title": "Housing problems",
    "residual": null
   },
   {
@@ -565,6 +594,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1325772378",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1325772378",
    "verified_on": "2026-10-23",
+   "short_title": "Homelessness",
    "residual": null
   },
   {
@@ -596,6 +626,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#709780428",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#709780428",
    "verified_on": "2026-10-23",
+   "short_title": "Inadequate housing",
    "residual": null
   },
   {
@@ -623,6 +654,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1000930983",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1000930983",
    "verified_on": "2026-10-23",
+   "short_title": "Living in an institution",
    "residual": null
   },
   {
@@ -645,6 +677,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#25263588",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#25263588",
    "verified_on": "2026-10-23",
+   "short_title": "Unemployment",
    "residual": null
   },
   {
@@ -666,6 +699,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1691005042",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1691005042",
    "verified_on": "2026-10-23",
+   "short_title": "Change of job",
    "residual": null
   },
   {
@@ -687,6 +721,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#275243151",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#275243151",
    "verified_on": "2026-10-23",
+   "short_title": "Threat of job loss",
    "residual": null
   },
   {
@@ -705,6 +740,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334",
    "verified_on": "2026-10-23",
+   "short_title": "Employment conditions",
    "residual": null
   },
   {
@@ -726,6 +762,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1669952283",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1669952283",
    "verified_on": "2026-10-23",
+   "short_title": "Uncongenial work",
    "residual": null
   },
   {
@@ -748,6 +785,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1965829403",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1965829403",
    "verified_on": "2026-10-23",
+   "short_title": "Stressful work schedule",
    "residual": null
   },
   {
@@ -766,6 +804,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898",
    "verified_on": "2026-10-23",
+   "short_title": "Occupational exposure",
    "residual": null
   },
   {
@@ -787,6 +826,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#211757070",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#211757070",
    "verified_on": "2026-10-23",
+   "short_title": "Dust at work",
    "residual": null
   },
   {
@@ -809,6 +849,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#440038928",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#440038928",
    "verified_on": "2026-10-23",
+   "short_title": "Farm toxic agents at work",
    "residual": null
   },
   {
@@ -830,6 +871,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2138160026",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2138160026",
    "verified_on": "2026-10-23",
+   "short_title": "Toxic agents at work",
    "residual": null
   },
   {
@@ -850,6 +892,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1855399665",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1855399665",
    "verified_on": "2026-10-23",
+   "short_title": "Vibration at work",
    "residual": null
   },
   {
@@ -870,6 +913,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#473240871",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#473240871",
    "verified_on": "2026-10-23",
+   "short_title": "Ergonomic risk at work",
    "residual": null
   },
   {
@@ -907,6 +951,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#129180281",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#129180281",
    "verified_on": "2026-10-23",
+   "short_title": "Burnout",
    "residual": null
   },
   {
@@ -931,6 +976,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#450012",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#450012",
    "verified_on": "2026-10-23",
+   "short_title": "Low literacy",
    "residual": null
   },
   {
@@ -953,6 +999,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1699549262",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1699549262",
    "verified_on": "2026-10-23",
+   "short_title": "Education out of reach",
    "residual": null
   },
   {
@@ -984,6 +1031,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#299909297",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#299909297",
    "verified_on": "2026-10-23",
+   "short_title": "Educational progress",
    "residual": null
   },
   {
@@ -1015,6 +1063,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1652814217",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1652814217",
    "verified_on": "2026-10-23",
+   "short_title": "Acculturation difficulty",
    "residual": null
   },
   {
@@ -1042,6 +1091,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1931375240",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1931375240",
    "verified_on": "2026-10-23",
+   "short_title": "Stress (not elsewhere)",
    "residual": null
   },
   {
@@ -1062,6 +1112,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1706765446",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1706765446",
    "verified_on": "2026-10-23",
+   "short_title": "Social role conflict",
    "residual": null
   },
   {
@@ -1091,6 +1142,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#292381213",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#292381213",
    "verified_on": "2026-10-23",
+   "short_title": "Exclusion or rejection",
    "residual": null
   },
   {
@@ -1127,6 +1179,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1948692361",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1948692361",
    "verified_on": "2026-10-23",
+   "short_title": "Discrimination or persecution",
    "residual": null
   },
   {
@@ -1152,6 +1205,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#499098434",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#499098434",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous alcohol use",
    "residual": null
   },
   {
@@ -1175,6 +1229,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous drug use",
    "residual": null
   },
   {
@@ -1207,6 +1262,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#603861372",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#603861372",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous use of opioids",
    "residual": null
   },
   {
@@ -1234,6 +1290,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1389430127",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1389430127",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous use of cannabis",
    "residual": null
   },
   {
@@ -1265,6 +1322,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#756014816",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#756014816",
    "verified_on": "2026-10-23",
+   "short_title": "Sedative or hypnotic use",
    "residual": null
   },
   {
@@ -1294,6 +1352,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1385385359",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1385385359",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous use of cocaine",
    "residual": null
   },
   {
@@ -1319,6 +1378,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#154205648",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#154205648",
    "verified_on": "2026-10-23",
+   "short_title": "Stimulant use",
    "residual": null
   },
   {
@@ -1344,6 +1404,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#656164398",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#656164398",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous use of caffeine",
    "residual": null
   },
   {
@@ -1369,6 +1430,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#113982884",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#113982884",
    "verified_on": "2026-10-23",
+   "short_title": "MDMA use",
    "residual": null
   },
   {
@@ -1394,6 +1456,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1235812153",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1235812153",
    "verified_on": "2026-10-23",
+   "short_title": "Dissociative drug use",
    "residual": null
   },
   {
@@ -1419,6 +1482,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#688207252",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#688207252",
    "verified_on": "2026-10-23",
+   "short_title": "Other substance use",
    "residual": null
   },
   {
@@ -1444,6 +1508,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1240119257",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1240119257",
    "verified_on": "2026-10-23",
+   "short_title": "Unknown substance use",
    "residual": null
   },
   {
@@ -1473,6 +1538,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#63012279",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#63012279",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous nicotine use",
    "residual": null
   },
   {
@@ -1514,6 +1580,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#457960184",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#457960184",
    "verified_on": "2026-10-23",
+   "short_title": "Tobacco use",
    "residual": null
   },
   {
@@ -1535,6 +1602,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1877391879",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1877391879",
    "verified_on": "2026-10-23",
+   "short_title": "Lack of physical exercise",
    "residual": null
   },
   {
@@ -1562,6 +1630,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#233747706",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#233747706",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous gambling",
    "residual": null
   },
   {
@@ -1587,6 +1656,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1586542716",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1586542716",
    "verified_on": "2026-10-23",
+   "short_title": "Hazardous gaming",
    "residual": null
   },
   {
@@ -1623,6 +1693,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#470296979",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#470296979",
    "verified_on": "2026-10-23",
+   "short_title": "Diet or eating habits",
    "residual": null
   },
   {
@@ -1644,6 +1715,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#515575378",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#515575378",
    "verified_on": "2026-10-23",
+   "short_title": "Hygiene behaviours",
    "residual": null
   },
   {
@@ -1665,6 +1737,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2064361961",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2064361961",
    "verified_on": "2026-10-23",
+   "short_title": "Oral health behaviours",
    "residual": null
   },
   {
@@ -1685,6 +1758,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1261978211",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1261978211",
    "verified_on": "2026-10-23",
+   "short_title": "Sun exposure behaviour",
    "residual": null
   },
   {
@@ -1705,6 +1779,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#453104436",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#453104436",
    "verified_on": "2026-10-23",
+   "short_title": "Psychological wellbeing habits",
    "residual": null
   },
   {
@@ -1725,6 +1800,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#86445206",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#86445206",
    "verified_on": "2026-10-23",
+   "short_title": "Problem with health literacy",
    "residual": null
   },
   {
@@ -1743,6 +1819,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1022049742",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1022049742",
    "verified_on": "2026-10-23",
+   "short_title": "Too little social insurance",
    "residual": null
   },
   {
@@ -1765,6 +1842,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#707116764",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#707116764",
    "verified_on": "2026-10-23",
+   "short_title": "Too little insurance: aged",
    "residual": null
   },
   {
@@ -1787,6 +1865,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#549655480",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#549655480",
    "verified_on": "2026-10-23",
+   "short_title": "Too little insurance: disability",
    "residual": null
   },
   {
@@ -1809,6 +1888,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1435529051",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1435529051",
    "verified_on": "2026-10-23",
+   "short_title": "Too little insurance: unemployed",
    "residual": null
   },
   {
@@ -1831,6 +1911,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1895465705",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1895465705",
    "verified_on": "2026-10-23",
+   "short_title": "Too little insurance: family",
    "residual": null
   },
   {
@@ -1849,6 +1930,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#722188140",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#722188140",
    "verified_on": "2026-10-23",
+   "short_title": "Too little welfare support",
    "residual": null
   },
   {
@@ -1871,6 +1953,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#63010289",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#63010289",
    "verified_on": "2026-10-23",
+   "short_title": "Child protection gap",
    "residual": null
   },
   {
@@ -1893,6 +1976,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#966443399",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#966443399",
    "verified_on": "2026-10-23",
+   "short_title": "Domestic-violence protection gap",
    "residual": null
   },
   {
@@ -1915,6 +1999,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1018097273",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1018097273",
    "verified_on": "2026-10-23",
+   "short_title": "Homelessness protection gap",
    "residual": null
   },
   {
@@ -1937,6 +2022,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1495157188",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1495157188",
    "verified_on": "2026-10-23",
+   "short_title": "Post-prison services gap",
    "residual": null
   },
   {
@@ -1958,6 +2044,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#807975049",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#807975049",
    "verified_on": "2026-10-23",
+   "short_title": "Conviction without prison",
    "residual": null
   },
   {
@@ -1980,6 +2067,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1432581405",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1432581405",
    "verified_on": "2026-10-23",
+   "short_title": "Imprisonment",
    "residual": null
   },
   {
@@ -2001,6 +2089,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#567158242",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#567158242",
    "verified_on": "2026-10-23",
+   "short_title": "Release from prison",
    "residual": null
   },
   {
@@ -2022,6 +2111,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1765280656",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1765280656",
    "verified_on": "2026-10-23",
+   "short_title": "Interpersonal problems",
    "residual": null
   },
   {
@@ -2042,6 +2132,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#970113767",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#970113767",
    "verified_on": "2026-10-23",
+   "short_title": "Relationship with a friend",
    "residual": null
   },
   {
@@ -2060,6 +2151,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353",
    "verified_on": "2026-10-23",
+   "short_title": "Teachers or classmates",
    "residual": null
   },
   {
@@ -2081,6 +2173,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2088979863",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2088979863",
    "verified_on": "2026-10-23",
+   "short_title": "School environment",
    "residual": null
   },
   {
@@ -2102,6 +2195,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#113426063",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#113426063",
    "verified_on": "2026-10-23",
+   "short_title": "Relationships at work",
    "residual": null
   },
   {
@@ -2128,6 +2222,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1591948083",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1591948083",
    "verified_on": "2026-10-23",
+   "short_title": "Neighbours or landlord",
    "residual": null
   },
   {
@@ -2166,6 +2261,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1927466204",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1927466204",
    "verified_on": "2026-10-23",
+   "short_title": "Parents, in-laws or family",
    "residual": null
   },
   {
@@ -2191,6 +2287,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#731100003",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#731100003",
    "verified_on": "2026-10-23",
+   "short_title": "Discord with counsellors",
    "residual": null
   },
   {
@@ -2216,6 +2313,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#15786260",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#15786260",
    "verified_on": "2026-10-23",
+   "short_title": "Inadequate social skills",
    "residual": null
   },
   {
@@ -2241,6 +2339,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#853711607",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#853711607",
    "verified_on": "2026-10-23",
+   "short_title": "Personality difficulty",
    "residual": null
   },
   {
@@ -2259,6 +2358,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882",
    "verified_on": "2026-10-23",
+   "short_title": "Spouse or partner problems",
    "residual": null
   },
   {
@@ -2291,6 +2391,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#848664338",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#848664338",
    "verified_on": "2026-10-23",
+   "short_title": "Partner relationship distress",
    "residual": null
   },
   {
@@ -2357,6 +2458,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1233531556",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1233531556",
    "verified_on": "2026-10-23",
+   "short_title": "Past partner violence",
    "residual": null
   },
   {
@@ -2375,6 +2477,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346",
    "verified_on": "2026-10-23",
+   "short_title": "Childhood relationships",
    "residual": null
   },
   {
@@ -2398,6 +2501,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#547677013",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#547677013",
    "verified_on": "2026-10-23",
+   "short_title": "Caregiver–child relationship",
    "residual": null
   },
   {
@@ -2421,6 +2525,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#181823991",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#181823991",
    "verified_on": "2026-10-23",
+   "short_title": "Lost love in childhood",
    "residual": null
   },
   {
@@ -2441,6 +2546,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1661227447",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1661227447",
    "verified_on": "2026-10-23",
+   "short_title": "Absence of family member",
    "residual": null
   },
   {
@@ -2469,6 +2575,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#283820579",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#283820579",
    "verified_on": "2026-10-23",
+   "short_title": "Family member gone or died",
    "residual": null
   },
   {
@@ -2496,6 +2603,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#144715807",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#144715807",
    "verified_on": "2026-10-23",
+   "short_title": "Loss or death of child",
    "residual": null
   },
   {
@@ -2518,6 +2626,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2009949293",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2009949293",
    "verified_on": "2026-10-23",
+   "short_title": "Uncomplicated bereavement",
    "residual": null
   },
   {
@@ -2545,6 +2654,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#812634854",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854",
    "verified_on": "2026-10-23",
+   "short_title": "Family circumstances",
    "residual": null
   },
   {
@@ -2566,6 +2676,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#105880611",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#105880611",
    "verified_on": "2026-10-23",
+   "short_title": "Inadequate family support",
    "residual": null
   },
   {
@@ -2592,6 +2703,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1973489591",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1973489591",
    "verified_on": "2026-10-23",
+   "short_title": "Separation or divorce",
    "residual": null
   },
   {
@@ -2615,6 +2727,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#17588040",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#17588040",
    "verified_on": "2026-10-23",
+   "short_title": "Relative needing home care",
    "residual": null
   },
   {
@@ -2640,6 +2753,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#929790948",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#929790948",
    "verified_on": "2026-10-23",
+   "short_title": "Victim of crime or terrorism",
    "residual": null
   },
   {
@@ -2669,6 +2783,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1377875574",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1377875574",
    "verified_on": "2026-10-23",
+   "short_title": "Disaster, war or hostilities",
    "residual": null
   },
   {
@@ -2692,6 +2807,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220",
    "verified_on": "2026-10-23",
+   "short_title": "Past maltreatment",
    "residual": null
   },
   {
@@ -2719,6 +2835,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#360494969",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#360494969",
    "verified_on": "2026-10-23",
+   "short_title": "Past physical abuse",
    "residual": null
   },
   {
@@ -2745,6 +2862,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1206394097",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1206394097",
    "verified_on": "2026-10-23",
+   "short_title": "Past sexual abuse",
    "residual": null
   },
   {
@@ -2777,6 +2895,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1334495652",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1334495652",
    "verified_on": "2026-10-23",
+   "short_title": "Past psychological abuse",
    "residual": null
   },
   {
@@ -2798,6 +2917,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1172477528",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1172477528",
    "verified_on": "2026-10-23",
+   "short_title": "Past neglect",
    "residual": null
   },
   {
@@ -2820,6 +2940,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2033777251",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2033777251",
    "verified_on": "2026-10-23",
+   "short_title": "Frightening childhood event",
    "residual": null
   },
   {
@@ -2866,6 +2987,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#505909942",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#505909942",
    "verified_on": "2026-10-23",
+   "short_title": "Acute stress reaction",
    "residual": null
   },
   {
@@ -2889,6 +3011,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#189909449",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#189909449",
    "verified_on": "2026-10-23",
+   "short_title": "Too little parental supervision",
    "residual": null
   },
   {
@@ -2910,6 +3033,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1847198813",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1847198813",
    "verified_on": "2026-10-23",
+   "short_title": "Parental overprotection",
    "residual": null
   },
   {
@@ -2934,6 +3058,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#456193180",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#456193180",
    "verified_on": "2026-10-23",
+   "short_title": "Altered childhood family",
    "residual": null
   },
   {
@@ -2955,6 +3080,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1872602211",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1872602211",
    "verified_on": "2026-10-23",
+   "short_title": "Removed from home as a child",
    "residual": null
   },
   {
@@ -2976,6 +3102,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#448222372",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#448222372",
    "verified_on": "2026-10-23",
+   "short_title": "Institutional upbringing",
    "residual": null
   },
   {
@@ -2997,6 +3124,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#502568905",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#502568905",
    "verified_on": "2026-10-23",
+   "short_title": "Parental pressure",
    "residual": null
   },
   {
@@ -3018,6 +3146,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2122004746",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2122004746",
    "verified_on": "2026-10-23",
+   "short_title": "Childhood loss of self-esteem",
    "residual": null
   },
   {
@@ -3040,6 +3169,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1539042104",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1539042104",
    "verified_on": "2026-10-23",
+   "short_title": "Help with learning",
    "residual": null
   },
   {
@@ -3067,6 +3197,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#2127627914",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#2127627914",
    "verified_on": "2026-10-23",
+   "short_title": "Help with life management",
    "residual": null
   },
   {
@@ -3089,6 +3220,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1349734380",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1349734380",
    "verified_on": "2026-10-23",
+   "short_title": "Help with communication",
    "residual": null
   },
   {
@@ -3124,6 +3256,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1019892537",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1019892537",
    "verified_on": "2026-10-23",
+   "short_title": "Help with mobility",
    "residual": null
   },
   {
@@ -3150,6 +3283,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1501666989",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1501666989",
    "verified_on": "2026-10-23",
+   "short_title": "Help with self-care",
    "residual": null
   },
   {
@@ -3175,6 +3309,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1079783118",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1079783118",
    "verified_on": "2026-10-23",
+   "short_title": "Help with relationships",
    "residual": null
   },
   {
@@ -3198,6 +3333,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#4906683",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#4906683",
    "verified_on": "2026-10-23",
+   "short_title": "Help with household tasks",
    "residual": null
   },
   {
@@ -3222,6 +3358,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#757911124",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#757911124",
    "verified_on": "2026-10-23",
+   "short_title": "Care needed, no one at home",
    "residual": null
   },
   {
@@ -3244,6 +3381,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#402200913",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#402200913",
    "verified_on": "2026-10-23",
+   "short_title": "Help with work activities",
    "residual": null
   },
   {
@@ -3268,6 +3406,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#874042445",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#874042445",
    "verified_on": "2026-10-23",
+   "short_title": "Help with major life areas",
    "residual": null
   },
   {
@@ -3297,6 +3436,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1580775818",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1580775818",
    "verified_on": "2026-10-23",
+   "short_title": "Help taking part in community",
    "residual": null
   },
   {
@@ -3322,6 +3462,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1214710726",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1214710726",
    "verified_on": "2026-10-23",
+   "short_title": "Needs continuous supervision",
    "residual": null
   },
   {
@@ -3347,6 +3488,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Housing problems (unspecified)",
    "residual": "unspecified"
   },
   {
@@ -3365,6 +3507,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#824927288/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288/other",
    "verified_on": "2026-10-23",
+   "short_title": "Finances (other)",
    "residual": "other",
    "parent_title": "Problems associated with finances"
   },
@@ -3384,6 +3527,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#824927288/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#824927288/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Finances (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with finances"
   },
@@ -3403,6 +3547,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#76222516/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#76222516/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Water or food (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with drinking water or nutrition"
   },
@@ -3422,6 +3567,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1307910936/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1307910936/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Environmental problems (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with the natural environment or human-made changes to the environment"
   },
@@ -3441,6 +3587,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#266601618/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618/other",
    "verified_on": "2026-10-23",
+   "short_title": "Environment (other)",
    "residual": "other",
    "parent_title": "Problems associated with the environment"
   },
@@ -3460,6 +3607,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#266601618/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#266601618/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Environment (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with the environment"
   },
@@ -3479,6 +3627,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334/other",
    "verified_on": "2026-10-23",
+   "short_title": "Employment conditions (other)",
    "residual": "other",
    "parent_title": "Problem with employment conditions"
   },
@@ -3498,6 +3647,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1756207334/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1756207334/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Employment conditions (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problem with employment conditions"
   },
@@ -3517,6 +3667,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898/other",
    "verified_on": "2026-10-23",
+   "short_title": "Occupational exposure (other)",
    "residual": "other",
    "parent_title": "Occupational exposure to risk-factors"
   },
@@ -3536,6 +3687,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#815543898/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#815543898/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Occupational exposure (unspecified)",
    "residual": "unspecified",
    "parent_title": "Occupational exposure to risk-factors"
   },
@@ -3555,6 +3707,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1440218064/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064/other",
    "verified_on": "2026-10-23",
+   "short_title": "Work and jobs (other)",
    "residual": "other",
    "parent_title": "Problems associated with employment or unemployment"
   },
@@ -3574,6 +3727,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1440218064/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1440218064/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Work and jobs (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with employment or unemployment"
   },
@@ -3593,6 +3747,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#561687345/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345/other",
    "verified_on": "2026-10-23",
+   "short_title": "Education (other)",
    "residual": "other",
    "parent_title": "Problems associated with education"
   },
@@ -3612,6 +3767,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#561687345/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#561687345/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Education (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with education"
   },
@@ -3631,6 +3787,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#462621464/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464/other",
    "verified_on": "2026-10-23",
+   "short_title": "Social or cultural setting (other)",
    "residual": "other",
    "parent_title": "Problems associated with social or cultural environment"
   },
@@ -3650,6 +3807,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#462621464/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#462621464/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Social or cultural setting (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with social or cultural environment"
   },
@@ -3669,6 +3827,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499/other",
    "verified_on": "2026-10-23",
+   "short_title": "Drug use (other)",
    "residual": "other",
    "parent_title": "Hazardous drug use"
   },
@@ -3688,6 +3847,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#179140499/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#179140499/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Drug use (unspecified)",
    "residual": "unspecified",
    "parent_title": "Hazardous drug use"
   },
@@ -3707,6 +3867,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1466350777/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1466350777/other",
    "verified_on": "2026-10-23",
+   "short_title": "Substance use (other)",
    "residual": "other",
    "parent_title": null
   },
@@ -3726,6 +3887,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1466350777/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1466350777/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Substance use (unspecified)",
    "residual": "unspecified",
    "parent_title": null
   },
@@ -3745,6 +3907,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#48322409/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409/other",
    "verified_on": "2026-10-23",
+   "short_title": "Health behaviours (other)",
    "residual": "other",
    "parent_title": "Problems associated with health behaviours"
   },
@@ -3764,6 +3927,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#48322409/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#48322409/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Health behaviours (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with health behaviours"
   },
@@ -3783,6 +3947,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1022049742/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1022049742/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Too little social insurance (unspecified)",
    "residual": "unspecified",
    "parent_title": "Insufficient social insurance support"
   },
@@ -3802,6 +3967,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#722188140/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#722188140/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Too little welfare support (unspecified)",
    "residual": "unspecified",
    "parent_title": "Insufficient social welfare support"
   },
@@ -3821,6 +3987,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#566804336/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336/other",
    "verified_on": "2026-10-23",
+   "short_title": "Social insurance or welfare (other)",
    "residual": "other",
    "parent_title": "Problems associated with social insurance or welfare"
   },
@@ -3840,6 +4007,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#566804336/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#566804336/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Social insurance or welfare (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with social insurance or welfare"
   },
@@ -3859,6 +4027,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#560926494/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494/other",
    "verified_on": "2026-10-23",
+   "short_title": "Justice system (other)",
    "residual": "other",
    "parent_title": "Problems associated with the justice system"
   },
@@ -3878,6 +4047,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#560926494/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#560926494/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Justice system (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with the justice system"
   },
@@ -3897,6 +4067,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353/other",
    "verified_on": "2026-10-23",
+   "short_title": "Teachers or classmates (other)",
    "residual": "other",
    "parent_title": "Relationships with teachers or classmates"
   },
@@ -3916,6 +4087,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#121970353/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#121970353/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Teachers or classmates (unspecified)",
    "residual": "unspecified",
    "parent_title": "Relationships with teachers or classmates"
   },
@@ -3935,6 +4107,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1765280656/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1765280656/other",
    "verified_on": "2026-10-23",
+   "short_title": "Interpersonal problems (other)",
    "residual": "other",
    "parent_title": "Problem associated with interpersonal interactions"
   },
@@ -3954,6 +4127,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882/other",
    "verified_on": "2026-10-23",
+   "short_title": "Spouse or partner problems (other)",
    "residual": "other",
    "parent_title": "Problem associated with interactions with spouse or partner"
   },
@@ -3973,6 +4147,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#396951882/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#396951882/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Spouse or partner problems (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problem associated with interactions with spouse or partner"
   },
@@ -3992,6 +4167,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346/other",
    "verified_on": "2026-10-23",
+   "short_title": "Childhood relationships (other)",
    "residual": "other",
    "parent_title": "Problem associated with interpersonal interactions in childhood"
   },
@@ -4011,6 +4187,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#901608346/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#901608346/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Childhood relationships (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problem associated with interpersonal interactions in childhood"
   },
@@ -4030,6 +4207,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1509667156/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156/other",
    "verified_on": "2026-10-23",
+   "short_title": "Relationships (other)",
    "residual": "other",
    "parent_title": "Problems associated with relationships"
   },
@@ -4049,6 +4227,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1509667156/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1509667156/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Relationships (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with relationships"
   },
@@ -4068,6 +4247,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#283820579/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#283820579/other",
    "verified_on": "2026-10-23",
+   "short_title": "Other family member gone or died",
    "residual": "other",
    "parent_title": "Disappearance or death of family member"
   },
@@ -4087,6 +4267,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1399046120/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120/other",
    "verified_on": "2026-10-23",
+   "short_title": "Absence, loss or death (other)",
    "residual": "other",
    "parent_title": "Problems associated with absence, loss or death of others"
   },
@@ -4106,6 +4287,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1399046120/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1399046120/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Absence, loss or death (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with absence, loss or death of others"
   },
@@ -4125,6 +4307,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#812634854/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#812634854/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Family circumstances (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems related to primary support group, including family circumstances"
   },
@@ -4144,6 +4327,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220/other",
    "verified_on": "2026-10-23",
+   "short_title": "Past maltreatment (other)",
    "residual": "other",
    "parent_title": "Personal history of maltreatment"
   },
@@ -4163,6 +4347,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1703296220/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1703296220/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Past maltreatment (unspecified)",
    "residual": "unspecified",
    "parent_title": "Personal history of maltreatment"
   },
@@ -4182,6 +4367,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#675461815/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815/other",
    "verified_on": "2026-10-23",
+   "short_title": "Harmful or traumatic events (other)",
    "residual": "other",
    "parent_title": "Problems associated with harmful or traumatic events"
   },
@@ -4201,6 +4387,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#675461815/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#675461815/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Harmful or traumatic events (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with harmful or traumatic events"
   },
@@ -4220,6 +4407,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1428430704/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704/other",
    "verified_on": "2026-10-23",
+   "short_title": "Upbringing (other)",
    "residual": "other",
    "parent_title": "Problems associated with upbringing"
   },
@@ -4239,6 +4427,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#1428430704/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#1428430704/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Upbringing (unspecified)",
    "residual": "unspecified",
    "parent_title": "Problems associated with upbringing"
   },
@@ -4258,6 +4447,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#340003177/other",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177/other",
    "verified_on": "2026-10-23",
+   "short_title": "Help with activities (other)",
    "residual": "other",
    "parent_title": "Difficulty or need for assistance with activities"
   },
@@ -4277,6 +4467,7 @@
    "who_browser": "https://icd.who.int/browse/2026-01/mms/en#340003177/unspecified",
    "source_url": "https://icd.who.int/browse/2026-01/mms/en#340003177/unspecified",
    "verified_on": "2026-10-23",
+   "short_title": "Help with activities (unspecified)",
    "residual": "unspecified",
    "parent_title": "Difficulty or need for assistance with activities"
   }

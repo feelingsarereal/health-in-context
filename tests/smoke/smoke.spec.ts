@@ -1,7 +1,7 @@
 /** Smoke: every route renders its h1; dark mode persists; 375 px; keyboard-only main surface; list-view CRUD; axe. */
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
+import { doTool, tool, addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
 
 const ROUTES = ['/', '/maps', '/map', '/evidence', '/references', '/glossary', '/concepts', '/concepts/reading-clds', '/help', '/methods', '/about'];
 const NAV = ['Map', 'My maps', 'Evidence', 'References', 'Glossary', 'Primers', 'Help', 'Methods', 'About'];
@@ -44,7 +44,7 @@ test.describe('375 px', () => {
     await addNode(page, { code: 'QD71.Z', search: 'evict', circumstance: 'Behind on rent; landlord filed for eviction' });
     await addNode(page, { code: 'QD80', search: 'unemployment' });
     await addEdge(page, 'Problems associated with housing, unspecified', 'Problem associated with unemployment');
-    await page.getByTestId('switch-view').click();
+    await tool(page, 'switch-view');
     await expect(page.getByTestId('edges-table').locator('tbody tr')).toHaveCount(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(376);
     await expect(page.getByTestId('list-view').locator('p').first()).toBeInViewport({ ratio: 1 });
@@ -59,16 +59,23 @@ test('keyboard-only path through the main surface (p-navigator)', async ({ page 
   // N → dialog; type a search, Enter on a code, Tab to the submit
   await page.keyboard.press('n');
   await expect(page.getByTestId('node-dialog')).toBeVisible();
+  // SL34: the dialog opens on the description; the search box is next, past More formatting
+  await expect(page.getByTestId('node-dialog').getByRole('textbox', { name: 'Describe the circumstance', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
   await expect(page.getByTestId('code-search')).toBeFocused();
   await page.keyboard.type('unemployment');
-  await page.keyboard.press('Tab');
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter'); // the first code row
   await page.getByTestId('node-submit').focus();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('node-dialog')).toBeHidden();
   await page.keyboard.press('n');
-  await page.keyboard.type('low income');
+  await expect(page.getByTestId('node-dialog').getByRole('textbox', { name: 'Describe the circumstance', exact: true })).toBeFocused();
   await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type('low income');
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.getByTestId('node-submit').focus();
   await page.keyboard.press('Enter');
@@ -121,7 +128,7 @@ test('accessible view: create, edit and delete nodes and links by keyboard', asy
   await page.goto('/');
   await dismissFirstRun(page);
   await newMap(page, 'List');
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
   const lv = page.getByTestId('list-view');
   await lv.getByTestId('list-add-node').click();
   await page.getByTestId('node-dialog').getByTestId('code-search').fill('stress');
@@ -194,13 +201,13 @@ test.describe('axe (WCAG 2.1 AA)', () => {
       await page.getByTestId('add-node').click();
       all.push(...(await scan('/map node dialog')));
       await page.keyboard.press('Escape');
-      await page.getByTestId('add-edge').click();
+      await doTool(page, 'add-edge');
       // an unsupported pair, so the override block is on screen for the scan
       await page.getByTestId('edge-dialog').getByTestId('edge-from').selectOption({ label: 'Q' });
       await page.getByTestId('edge-dialog').getByTestId('override-checkbox').check();
       all.push(...(await scan('/map link form')));
       await page.keyboard.press('Escape');
-      await page.getByTestId('switch-view').click();
+      await tool(page, 'switch-view');
       all.push(...(await scan('/map/list')));
       await page.getByTestId('list-edit-edge').first().click();
       all.push(...(await scan('/map/list edge dialog')));

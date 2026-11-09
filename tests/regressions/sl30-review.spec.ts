@@ -8,7 +8,7 @@ import { test, expect, type Locator, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { addNode, dismissFirstRun, editMode, newMap } from '../helpers';
+import { openTool, tool, addNode, dismissFirstRun, newMap } from '../helpers';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const PACK_CODES = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages/sdoh-loops-pack/data/situations.json'), 'utf8')).codes as { code: string; title: string }[];
@@ -23,8 +23,10 @@ async function start(page: Page, name: string, dock?: object) {
   await newMap(page, name);
 }
 async function openNotebook(page: Page) {
+  await openTool(page, 'notebook-toggle');
   const t = page.getByTestId('notebook-toggle');
-  if ((await t.getAttribute('aria-pressed')) !== 'true') await t.click();
+  if ((await t.getAttribute('aria-checked')) !== 'true') await t.click();
+  else await page.keyboard.press('Escape');
   await expect(page.getByTestId('notebook')).toBeVisible();
 }
 /** every visible text, aria-label and option text on the page that matches the denylist */
@@ -66,7 +68,6 @@ async function oneLineEllipsis(l: Locator) {
 
 test('point 1: no "colour", "analyse" or "grey" in visible text or aria-labels — map page, notebook, Add circumstance and Link to…', async ({ page }) => {
   await start(page, 'SL30 spelling');
-  await editMode(page);
   await addNode(page, { code: 'QD80', search: 'unemployment', label: 'Lost the job' });
   await addNode(page, { code: 'QD71.Z', search: 'housing' });
   const hits = [...(await british(page))];
@@ -78,6 +79,7 @@ test('point 1: no "colour", "analyse" or "grey" in visible text or aria-labels �
   await page.getByTestId('add-node').click();
   const d = page.getByTestId('node-dialog');
   await expect(d).toBeVisible();
+  await d.getByTestId('more-formatting').first().click(); // SL34: the toolbar is tucked away
   await expect(d.getByRole('combobox', { name: 'Text color' }).first()).toBeVisible();
   await expect(d.getByRole('combobox', { name: 'Text color' }).first().locator('option').first()).toHaveText('Color');
   await expect(d.getByLabel('Custom text color').first()).toBeAttached();
@@ -141,10 +143,9 @@ test('point 3: at 1440×900 the workspace fills the viewport; typing in a note n
   await last.click();
   for (let i = 0; i < 6; i++) await page.keyboard.press('Tab');
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
-  // the document is no taller than the window, footer included
-  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(900);
-  await expect(page.getByRole('contentinfo')).toBeInViewport();
-  await expect(page.getByTestId('notebook-toggle')).toBeInViewport({ ratio: 1 });
+  // SL35: the workspace is exactly the window's height below the header, and the footer is below the fold
+  expect((await page.getByRole('contentinfo').boundingBox())!.y).toBeGreaterThanOrEqual(898);
+  await expect(page.getByTestId('view-menu')).toBeInViewport({ ratio: 1 });
   await expect(page.getByTestId('map-menu')).toBeInViewport({ ratio: 1 });
   // the canvas keeps the full workspace height, not half the screen
   const cv = (await page.getByTestId('canvas').boundingBox())!;
@@ -160,7 +161,7 @@ test('point 4: under 1600 px the notebook\'s first opening folds the dock to its
   expect(JSON.parse((await page.evaluate((k) => localStorage.getItem(k), DOCK_KEY))!)).toMatchObject({ open: false, nbAutoFolded: true, notebook: true });
   // unfolded again, it stays open: closing and reopening the notebook does not fold it a second time
   await page.getByTestId('dock-unfold').click();
-  await page.getByTestId('notebook-toggle').click();
+  await tool(page, 'notebook-toggle');
   await openNotebook(page);
   await expect(page.getByTestId('side-dock')).toBeVisible();
   await expect(page.getByTestId('dock-rail')).toHaveCount(0);

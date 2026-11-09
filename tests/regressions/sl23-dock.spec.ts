@@ -29,9 +29,10 @@ async function click(page: Page, label: string) {
 test('Read by default, with no edit control in the DOM; Edit adds them; the mode persists over a reload; E toggles it', async ({ page }) => {
   await start(page, 'SL23 modes');
   const title = page.getByTestId('dock-card-selection-toggle');
-  await expect(title).toHaveText(/Nothing selected$/);
-  await expect(page.getByTestId('mode-read')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('inspector-empty')).toBeVisible(); // SL35: an empty map's dock is the hint only
+  await expect(title).toHaveCount(0);
   await addNode(page, { code: 'QD80', search: 'unemployment', label: 'Lost the job' });
+  await expect(page.getByTestId('mode-read')).toHaveAttribute('aria-pressed', 'true');
   await expect(title).toHaveText(/Selected circumstance$/);
   const body = page.getByTestId('selection-body');
   await expect(body.getByTestId('selection-read')).toHaveAttribute('data-kind', 'node');
@@ -98,6 +99,7 @@ test('titles: Selected link, Selected: 2 circumstances; K opens Link to…; the 
 
 test('Needs a code: the badge counts "Not sure yet" circumstances and the panel lists them; at zero greyed out with its tooltip', async ({ page }) => {
   await start(page, 'SL23 needs a code');
+  await addNode(page, { code: 'QD80', search: 'unemployment', label: 'Coded' }); // SL35: an empty map's dock has only the hint
   const tab = page.getByTestId('panel-needsCode');
   await expect(tab).toHaveAttribute('aria-disabled', 'true');
   await expect(tab).toHaveAttribute('title', 'Every circumstance has a code status');
@@ -113,6 +115,7 @@ test('Needs a code: the badge counts "Not sure yet" circumstances and the panel 
 
 test('About this map edits only in Edit mode', async ({ page }) => {
   await start(page, 'SL23 about');
+  await addNode(page, { code: 'QD80', search: 'unemployment', label: 'Coded' });
   await page.getByTestId('panel-about').click();
   const about = page.getByTestId('about-map');
   await expect(about).toHaveAttribute('data-mode', 'read');

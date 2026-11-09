@@ -1,6 +1,6 @@
 /** w3 · p-caregiver · "Sketch a relative's situation on a phone without knowing the codes" — 375×812, touch. */
 import { test, expect } from '@playwright/test';
-import { dismissFirstRun, fillNodeDialog, offOrigin, recordRequests } from '../helpers';
+import { tool, presetMode, dismissFirstRun, fillNodeDialog, offOrigin, recordRequests } from '../helpers';
 import { h1Violations } from '../lint';
 
 test.use({ viewport: { width: 375, height: 812 }, hasTouch: true, isMobile: true });
@@ -14,9 +14,9 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   // 1 — new map; one node left 'undetermined', described; no code forced; '?' badge
   await page.goto('/maps');
   await page.getByTestId('new-map-name').fill('Mom');
+  await presetMode(page, 'edit'); // SL23: the selection card opens in Read; SL35: an empty map's dock has no toggle
   await page.getByTestId('create-map').tap();
   await expect(page.getByTestId('map-name')).toHaveText('Mom');
-  await page.getByTestId('mode-edit').tap(); // SL23: the selection card opens in Read
   await noHScroll();
   await page.getByTestId('add-node').tap();
   await fillNodeDialog(page, { circumstance: 'Mom was laid off' });
@@ -55,7 +55,7 @@ test("w3: a relative's situation on a phone, no codes needed", async ({ page, ba
   await expect(edge).toContainText('cites [23]');
 
   // 4 — list view: both nodes and the edge; edit the second node's description; saved
-  await page.getByTestId('switch-view').tap();
+  await tool(page, 'switch-view');
   const list = page.getByTestId('list-view');
   await expect(list.getByTestId('nodes-table').locator('tbody tr')).toHaveCount(2);
   await expect(list.getByTestId('edges-table').locator('tbody tr')).toHaveCount(1);
@@ -103,8 +103,10 @@ test('w3: long-press on a node opens the peek, and its Associations… the assoc
   await fillNodeDialog(page, { code: 'QD82', search: 'job' });
   const canvas = page.getByTestId('canvas');
   const b = (await canvas.boundingBox())!;
-  const x = b.x + b.width / 2;
-  const y = b.y + b.height / 2;
+  // SL35: on a phone the map is framed from the top of the canvas
+  const li = page.getByTestId('canvas-outline').locator('li[data-node]').first();
+  const x = b.x + Number(await li.getAttribute('data-rx'));
+  const y = b.y + Number(await li.getAttribute('data-ry'));
   // a long press: touchstart, hold > 600 ms, touchend (cytoscape's taphold)
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });

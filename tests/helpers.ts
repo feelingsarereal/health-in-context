@@ -15,14 +15,46 @@ export async function dismissFirstRun(page: Page) {
   await page.evaluate(() => localStorage.setItem('sdoh-loops:first-run', 'ok'));
 }
 
-export async function newMap(page: Page, name: string, subject = '') {
+export async function newMap(page: Page, name: string, subject = '', mode: 'read' | 'edit' = 'edit') {
   await page.goto('./maps');
   await page.getByTestId('new-map-name').fill(name);
   if (subject) await page.getByTestId('new-map-subject').fill(subject);
+  // SL23: the selection card opens in Read; these flows edit, so they switch to Edit (remembered per viewer).
+  // SL35: an empty map's dock has no selection card to switch it on, so the preference is set before the map opens
+  await presetMode(page, mode);
   await page.getByTestId('create-map').click();
   await expect(page.getByTestId('map-name')).toHaveText(name);
-  // SL23: the selection card opens in Read; these flows edit, so they switch to Edit (remembered per viewer)
-  await editMode(page);
+}
+
+/** SL35: the Read / Edit preference, set before a map opens (an empty map's dock has no toggle) */
+export async function presetMode(page: Page, mode: 'read' | 'edit') {
+  await page.evaluate((m) => {
+    const k = 'sdoh-loops:view:dock';
+    localStorage.setItem(k, JSON.stringify({ open: true, closed: [], ...JSON.parse(localStorage.getItem(k) ?? '{}'), mode: m }));
+  }, mode);
+}
+
+/** SL35: Link to…, Associations and Add a canvas note are under ＋ below 768 px */
+export async function doTool(page: Page, testId: string) {
+  const plus = page.getByTestId('do-menu');
+  if ((await plus.count()) && (await plus.getAttribute('aria-expanded')) !== 'true') await plus.click();
+  await page.getByTestId(testId).click();
+}
+
+/** SL35: which toolbar menu holds a control that used to be a toolbar button */
+const TOOL_MENU: Record<string, string> = Object.fromEntries([
+  ...['fit', 'zoom-in', 'zoom-out', 'fullscreen', 'switch-view', 'notebook-toggle', 'trace-toggle', 'view-grayscale', 'keys-open'].map((t) => [t, 'view-menu']),
+  ...['arrange', 'arrange-all', 'arrange-selection', 'layout-fcose', 'layout-elk-stress', 'hood-1', 'hood-2'].map((t) => [t, 'arrange-menu']),
+]);
+/** SL35: open a control's toolbar menu and pick it */
+export async function tool(page: Page, testId: string) {
+  await openTool(page, testId);
+  await page.getByTestId(testId).click();
+}
+/** SL35: open the toolbar menu a control is in, to read it */
+export async function openTool(page: Page, testId: string) {
+  const m = page.getByTestId(TOOL_MENU[testId]);
+  if ((await m.getAttribute('aria-expanded')) !== 'true') await m.click();
 }
 
 /** SL23: the selection card in Edit mode (the toggle is in its header; E toggles it too) */
@@ -60,8 +92,10 @@ export async function fillNodeDialog(page: Page, n: NodeSpec) {
   if (n.status && n.status !== 'sdoh') await d.getByTestId(`status-${n.status}`).check({ force: true });
   if (n.code) {
     const sug = d.locator(`[data-suggest="${n.code}"]`);
+    const chosen = d.getByTestId('chosen-code');
     if (await sug.count()) await sug.click();
-    else {
+    else if (!(await chosen.count()) || !(await chosen.innerText()).includes(n.code)) {
+      if (await d.getByTestId('change-code').count()) await d.getByTestId('change-code').click();
       await d.getByTestId('code-search').fill(n.search ?? n.code);
       await d.locator(`[data-code="${n.code}"]`).first().click();
     }
@@ -110,7 +144,7 @@ export async function fillLinkForm(page: Page, to: string | null, opts: EdgeOpts
   await expect(d).toBeHidden();
 }
 export async function addEdge(page: Page, from: string, to: string, opts: EdgeOpts = {}) {
-  await page.getByTestId('add-edge').click();
+  await doTool(page, 'add-edge');
   await page.getByTestId('edge-dialog').getByTestId('edge-from').selectOption({ label: from });
   await fillLinkForm(page, to, opts);
 }

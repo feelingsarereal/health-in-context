@@ -10,6 +10,34 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.12.0] — 2026-11-09
+
+Minor (SL34, SL35, SL25; the v1 first-run and canvas work): a lighter Add circumstance dialog, one grouped toolbar, a
+canvas that can take the window, and loop entries named as they read. Existing maps are unchanged. Pack: `0.5.0`.
+
+- **Add circumstance dialog (SL34).** It opens on **Describe the circumstance**; the code comes second, as one row
+  whose 175-code list opens only from the search box or its ▾; **This is** (SDOH code · Other · Not sure yet) sits
+  under it. A link proposal's suggested code is already chosen. Formatting is behind **More formatting** per field
+  (⌘B, ⌘I, ⌘U still work; a field that holds formatting opens with it). The identifier hint shows once, under the
+  label, and describes both fields. Enter adds the circumstance, Shift+Enter starts a new line.
+- **Derived labels (SL34).** A box with a blank label shows the code's `short_title`, else the first 24 characters of
+  the description, else WHO's title. Worked out when shown, never stored. WHO's full title stays on the card's code
+  line, in the peek and in the JSON, CSV and report exports. A PNG or SVG picture shows what the box shows.
+- **Toolbar (SL35).** One row from 1024 px up: the map and its Map menu, New circumstance, Link to…, Associations,
+  Add a canvas note, **Arrange ▾**, **View ▾**, Undo and Redo as icons. Below 768 px the last three Do actions are a ＋
+  menu. Every control keeps its name and shortcut. The link counts moved into the Whole map card, as a live region.
+- **`canvasHeight`** (`'viewport' | 'auto'`, default `'auto'`, so embedding hosts see no change): `'viewport'` fills
+  the window below the header and toolbar, with the footer below the fold.
+- **Phone framing (SL35).** Under 768 px, Fit sets the map at the top of the canvas, scaled to its width, with titles
+  no smaller than 11 px.
+- **Dock (SL35).** Selected stays collapsed on a map's first open until something is selected. An empty map's dock
+  shows only the add-the-first-circumstance hint.
+- **Loop entries (SL25, WCAG 2.5.3).** Each accessible name is the visible text from the start; the visible line now
+  starts with the loop's name.
+
+**For hosts:** bump the core and the pack together. No prop is required. Tests that clicked Fit, Zoom, Full screen,
+List view, Notebook or Auto-arrange need to open **View ▾** or **Arrange ▾** first.
+
 ## [0.11.0] — 2026-11-09
 
 Minor (SL33, T-LIC-01, WHO's reply to request 202611431): the code card no longer shows a crosswalk or a **Topic**

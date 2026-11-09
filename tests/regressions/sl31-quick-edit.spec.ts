@@ -5,7 +5,7 @@
  */
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { addEdge, addNode, dismissFirstRun, newMap } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap } from '../helpers';
 
 const scan = async (page: Page, where: string) =>
   (await new AxeBuilder({ page: page as never }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()).violations.map((v) => `${where}: ${v.id} — ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
@@ -21,7 +21,7 @@ const body = (page: Page) => page.getByTestId('selection-body');
 
 test('a label edited from Read mode: the card stays in Read, the box and the case summary follow, "Label saved.", one Undo restores it', async ({ page }) => {
   await start(page, 'SL31 label');
-  await page.getByTestId('notebook-toggle').click();
+  await tool(page, 'notebook-toggle');
   await page.getByTestId('dock-unfold').click();
   const row = body(page).getByTestId('qe-label-row');
   await row.hover();

@@ -6,7 +6,7 @@
  */
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { dismissFirstRun, menuItem, newMap, offOrigin, recordRequests } from '../helpers';
+import { openTool, dismissFirstRun, menuItem, newMap, offOrigin, recordRequests } from '../helpers';
 import { makeDocx, makePdf } from '../fixtures/import-files';
 
 const SECRET = 'Spoke with Mrs. Jane Doe on 03/14/2026. She lives in Huntsville, AL 35801 and her phone is (256) 555-0142.';
@@ -19,8 +19,10 @@ async function start(page: Page, name: string) {
   await newMap(page, name);
 }
 async function openNotebook(page: Page) {
+  await openTool(page, 'notebook-toggle');
   const t = page.getByTestId('notebook-toggle');
-  if ((await t.getAttribute('aria-pressed')) !== 'true') await t.click();
+  if ((await t.getAttribute('aria-checked')) !== 'true') await t.click();
+  else await page.keyboard.press('Escape');
   await expect(page.getByTestId('notebook')).toBeVisible();
 }
 const stored = (page: Page) =>

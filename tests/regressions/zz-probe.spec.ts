@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, panel } from '../helpers';
 const bb = async (page: any) => (await page.getByTestId('canvas-outline').locator('li[data-node]').first().getAttribute('data-bb'));
 test('probe', async ({ page }) => {
   await page.goto('/'); await dismissFirstRun(page); await newMap(page, 'P');
@@ -11,9 +11,9 @@ test('probe', async ({ page }) => {
   await addEdge(page, 'Low income', 'Problems associated with housing, unspecified');
   await page.waitForTimeout(500);
   console.log('start', await bb(page));
-  await page.getByRole('button', { name: 'Zoom in' }).click(); await page.waitForTimeout(300);
+  await tool(page, 'zoom-in'); await page.waitForTimeout(300);
   console.log('zoom in', await bb(page));
-  await page.getByRole('button', { name: 'Zoom out' }).click(); await page.waitForTimeout(300);
+  await tool(page, 'zoom-out'); await page.waitForTimeout(300);
   console.log('zoom out', await bb(page));
   await panel(page, 'loops');
   await page.getByTestId('loop-pick').first().click(); await page.waitForTimeout(800);

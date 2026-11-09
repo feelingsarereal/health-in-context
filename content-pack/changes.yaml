@@ -252,3 +252,14 @@
   - manifest
   source: SL33, WHO reply 2026-11-09
   by: claude-code
+- date: '2026-11-09'
+  what: 'SL34: a builder short title (short_title) on situations items, groups and residuals, for canvas labels; WHO''s full
+    title stays on the card, the peek and the exports'
+  why: 'First-run walk of the prototype: a box with no label showed WHO''s title cut off'
+  records:
+  - situations.items[].short_title
+  - situations.groups[].short_title
+  - situations.residuals[].short_title
+  - manifest
+  source: SL34, source/pack-src/short_titles.yaml (cowork, 2026-11-09)
+  by: claude-code

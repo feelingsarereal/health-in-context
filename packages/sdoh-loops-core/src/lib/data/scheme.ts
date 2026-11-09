@@ -4,7 +4,10 @@ import linksJson from '@feelingsarereal/sdoh-loops-pack/data/links.json';
 
 export interface XRef { title: string; code?: string | null }
 export interface Code {
-  code: string; title: string; group: string; parent: string | null; subgroup: string | null;
+  code: string; title: string;
+  /** SL34 (pack 0.5.0): the builder's short title for a canvas label; never WHO's text */
+  short_title?: string | null;
+  group: string; parent: string | null; subgroup: string | null;
   definition: string | null; definition_check: string | null;
   inclusions: (string | XRef)[]; exclusions: (string | XRef)[]; coded_elsewhere: (string | XRef)[];
   index_terms: string[]; uri: string | null; who_browser: string | null; source_url: string; verified_on: string;

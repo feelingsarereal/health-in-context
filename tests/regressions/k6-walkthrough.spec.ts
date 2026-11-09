@@ -4,7 +4,7 @@
  */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName, menuItem } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName, menuItem } from '../helpers';
 
 const HOUSING = 'Problems associated with housing, unspecified';
 const UNEMP = 'Problem associated with unemployment';
@@ -34,7 +34,7 @@ async function w1Loop(page: Page) {
 test('D1: after Fit on a 6-node map, a selected node still has its ⋯ and connector handle, at 44 px or more', async ({ page }) => {
   await start(page, 'D1');
   for (const [code, search] of [['QD71.Z', 'evict'], ['QD80', 'unemployment'], ['QD51', 'low income'], ['QE01', 'stress'], ['QD71.0', 'homeless'], ['QD82', 'job']]) await addNode(page, { code, search });
-  await page.getByRole('button', { name: 'Fit' }).click();
+  await tool(page, 'fit');
   await selectNodeByName(page, UNEMP);
   for (const id of ['node-more', 'connect-handle']) {
     await expect(page.getByTestId(id)).toBeVisible();
@@ -46,9 +46,9 @@ test('D2: the toolbar ＋/－ change the zoom, and one wheel tick is a small ste
   await start(page, 'D2');
   await addNode(page, { code: 'QD80', search: 'unemployment' });
   const z0 = await zoom(page);
-  await page.getByRole('button', { name: 'Zoom in' }).click();
+  await tool(page, 'zoom-in');
   await expect.poll(() => zoom(page)).toBeCloseTo(z0 * 1.25, 2);
-  await page.getByRole('button', { name: 'Zoom out' }).click();
+  await tool(page, 'zoom-out');
   await expect.poll(() => zoom(page)).toBeCloseTo(z0, 2);
   const c = (await page.getByTestId('canvas').boundingBox())!;
   await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2);
@@ -64,7 +64,7 @@ test('D2: the toolbar ＋/－ change the zoom, and one wheel tick is a small ste
 test('D3: choosing a loop fits the whole loop with padding, never past the 1.2× cap', async ({ page }) => {
   await start(page, 'D3');
   await w1Loop(page);
-  for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'Zoom in' }).click();
+  for (let i = 0; i < 6; i++) await tool(page, 'zoom-in');
   const c = (await page.getByTestId('canvas').boundingBox())!;
   const allIn = async () => (await boxes(page)).every((b) => b.x1 >= 0 && b.y1 >= 0 && b.x2 <= c.width && b.y2 <= c.height);
   expect(await allIn()).toBe(false);
@@ -73,7 +73,7 @@ test('D3: choosing a loop fits the whole loop with padding, never past the 1.2×
   await expect.poll(allIn).toBe(true);
   expect(await zoom(page)).toBeLessThanOrEqual(1.2);
   // the same from the canvas glyph
-  for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'Zoom in' }).click();
+  for (let i = 0; i < 6; i++) await tool(page, 'zoom-in');
   await page.getByTestId('loop-pick').first().click(); // clear
   await page.getByTestId('loop-glyph').first().click();
   await expect.poll(allIn).toBe(true);
@@ -101,7 +101,7 @@ test('D5: a loop entry has one accessible name with its name, kind, links, overr
   await start(page, 'D5');
   await w1Loop(page);
   await panel(page, 'loops');
-  await expect(page.getByTestId('loop-pick').first()).toHaveAccessibleName(/^R1, Reinforcing, 3 links, no overrides, strength 0\.125: /);
+  await expect(page.getByTestId('loop-pick').first()).toHaveAccessibleName(/^R1 · Reinforcing · 3 links · no overrides · strength 0\.125 /);
 });
 
 test('D6: the variable hint sits under "Describe the circumstance", in the add dialog and in the side panel', async ({ page }) => {
@@ -110,8 +110,8 @@ test('D6: the variable hint sits under "Describe the circumstance", in the add d
   await page.getByTestId('add-node').click();
   const d = page.getByTestId('node-dialog');
   const box = d.getByRole('textbox', { name: 'Describe the circumstance', exact: true });
-  await expect(box).toHaveAccessibleDescription(new RegExp(`^${HINT.replace(/[.?()']/g, '.')}`));
-  await expect(d.locator('fieldset', { hasText: 'Code status' })).not.toContainText('how much of this is present');
+  // SL34: the dialog's one line of help; the side panel keeps its own
+  await expect(box).toHaveAccessibleDescription(/^Say it as something that can go up or down/);
   await d.getByTestId('code-search').fill('unemployment');
   await d.locator('[data-code="QD80"]').click();
   await d.getByTestId('node-submit').click();

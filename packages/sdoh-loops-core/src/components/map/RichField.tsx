@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useEditor, EditorContent, Extension } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -8,6 +8,7 @@ import { EditorState } from '@tiptap/pm/state';
 import { FONT_SIZES, sanitizeRich, type RichDoc } from '../../lib/model/rich';
 import { sanitizeNote, type NoteDoc } from '../../lib/model/notebook';
 import { USER_COLOURS } from '../../lib/palette';
+import { C } from '../../lib/copy';
 import { IdentifierFlags, flagsKey, type FlagsOptions } from '../notebook/flagsExtension';
 import { PageMarks } from '../notebook/pageMarks';
 import { SpanMarks, spanMarksKey, type SpanDeco, type TextSelection } from '../notebook/spanMarks';
@@ -40,7 +41,7 @@ export type RichFieldFlags = Omit<FlagsOptions, 'tip'> & { tip: string; version:
  * SL26: `blocks` adds headings (2, 3) and bullet and numbered lists, for the notebook's free notes (a NoteDoc), and
  * `flags` underlines possible identifiers as the user types.
  */
-export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd, readOnly, pages, spans }: {
+export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, value, onChange, label, describedBy, singleLine, minRows = 2, blocks, flags, testId, compact, onKey, autoFocus, toolbarEnd, readOnly, pages, spans, tucked, placeholder, dialogFocus }: {
   id: string; value: D; onChange: (d: D) => void; label: string; describedBy?: string; singleLine?: boolean; minRows?: number; blocks?: boolean; flags?: RichFieldFlags; testId?: string;
   /** SL31 quick edit: bold, italic and underline only in the toolbar (other formatting already in the text is kept) */
   compact?: boolean;
@@ -49,6 +50,12 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   autoFocus?: boolean;
   /** SL31 quick edit: after the style buttons (the "More formatting" link) */
   toolbarEnd?: ReactNode;
+  /** SL34: the toolbar stays behind a More formatting link (⌘B, ⌘I, ⌘U still work), unless the field already holds formatting */
+  tucked?: boolean;
+  /** SL34: greyed text while the field is empty; never stored */
+  placeholder?: string;
+  /** SL34: the field a Dialog focuses when it opens */
+  dialogFocus?: boolean;
   /** SL29: an imported note's text — shown, selectable and flagged, never edited (no toolbar) */
   readOnly?: boolean;
   /** SL29: an imported PDF's page starts, drawn as "p. N" before their block */
@@ -64,6 +71,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   const fl = useRef(flags);
   fl.current = flags;
   const clean = (d: unknown) => (blocks ? sanitizeNote(d) : sanitizeRich(d)) as D;
+  const [barOpen, setBarOpen] = useState(() => !tucked || JSON.stringify(value).includes('"marks"'));
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ heading: blocks ? { levels: [2, 3] } : false, blockquote: false, ...(blocks ? {} : { bulletList: false, orderedList: false, listItem: false }), codeBlock: false, code: false, horizontalRule: false, strike: false }),
@@ -85,6 +93,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
         'aria-label': label,
         ...(readOnly ? { 'aria-readonly': 'true', tabindex: '0' } : {}),
         ...(testId ? { 'data-testid': testId } : {}),
+        ...(dialogFocus ? { 'data-autofocus': '' } : {}),
         ...(describedBy ? { 'aria-describedby': describedBy } : {}),
         class: `bx-input ax-rt min-h-[2.5rem] focus:outline-none ${blocks ? 'nb-doc' : ''}`,
         style: `min-height: ${singleLine ? 2.4 : 1.6 * minRows + 0.8}rem`,
@@ -121,6 +130,11 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
     }
   }, [value, editor]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
+    if (!editor) return;
+    if (placeholder) editor.view.dom.setAttribute('aria-placeholder', placeholder);
+    else editor.view.dom.removeAttribute('aria-placeholder');
+  }, [editor, placeholder]);
+  useEffect(() => {
     if (!editor || !autoFocus || editor.view.hasFocus()) return;
     // at once, not a frame later: the first key typed after the ✎ lands in the field (and a later, deferred focus can
     // never undo a selection the user has already made)
@@ -139,7 +153,7 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
   const keepFocus = (e: { preventDefault: () => void }) => e.preventDefault();
   return (
     <div>
-      {editor && !readOnly && (
+      {editor && !readOnly && barOpen && (
         <div className="mb-1 flex flex-wrap items-center gap-1" role="toolbar" aria-label={`${label}: text style`}>
           <button type="button" onMouseDown={keepFocus} className={`bx-btn px-2 py-0.5 ${editor.isActive('bold') ? 'bx-btn-on' : ''}`} aria-pressed={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} aria-label="Bold">
             <b>B</b>
@@ -193,7 +207,15 @@ export default function RichField<D extends RichDoc | NoteDoc = RichDoc>({ id, v
           {toolbarEnd}
         </div>
       )}
-      <EditorContent editor={editor} />
+      <div className="relative">
+        <EditorContent editor={editor} />
+        {placeholder && editor?.isEmpty && (
+          <span className="pointer-events-none absolute inset-x-0 top-0 truncate px-3 py-2 bx-muted" aria-hidden="true" data-testid="field-placeholder">{placeholder}</span>
+        )}
+      </div>
+      {editor && !readOnly && !barOpen && (
+        <button type="button" className="mt-0.5 text-xs underline ax-tap" aria-label={`${C.quick.more}: ${label}`} onClick={() => setBarOpen(true)} data-testid="more-formatting">{C.quick.more}</button>
+      )}
     </div>
   );
 }

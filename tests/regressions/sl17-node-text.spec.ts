@@ -6,7 +6,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
-import { addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
+import { tool, addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
 
 const text = (page: Page) => page.getByTestId('node-text-layer').locator('[data-node-text]').first();
 async function start(page: Page) {
@@ -108,7 +108,7 @@ for (const theme of ['light', 'dark'] as const) {
     await page.getByTestId('dock-fold').click();
     await expect(page.getByTestId('dock-rail')).toBeVisible();
     all.push(...(await scan('dock collapsed')));
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     all.push(...(await scan('full screen')));
     expect(all).toEqual([]);
   });

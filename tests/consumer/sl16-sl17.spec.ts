@@ -3,6 +3,7 @@
  * will: the host sets the selection and hides circumstances by a predicate (SL16); full screen, the peek with the
  * host's lines, and the stacked, collapsible side dock with the host's card (SL17).
  */
+import { openTool, tool } from '../helpers';
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
@@ -58,12 +59,12 @@ test.describe('SL16', () => {
     await expect(outline(page).locator('li[data-edge]')).toHaveCount(6);
     await expect(page.getByTestId('link-counts')).toHaveText('6 links: 6 evidence · 0 override');
     await expect(page.getByTestId('loops-count')).toHaveText('3');
-    await page.getByTestId('switch-view').click();
+    await tool(page, 'switch-view');
     await expect(page.getByTestId('nodes-table').locator('tbody tr')).toHaveCount(4);
-    await page.getByTestId('switch-view').click();
+    await tool(page, 'switch-view');
     // a host selection of a hidden circumstance is ignored
     await page.getByTestId('fixture-select').click();
-    await expect(page.getByTestId('inspector-empty')).toBeVisible();
+    await expect(page.getByTestId('inspector-empty')).toBeAttached(); // SL35: inside the collapsed Selected card
     // shown again: all of it is still there, and the original was never copied
     await page.getByTestId('fixture-hide').click();
     await expect(outline(page).locator('li[data-node]')).toHaveCount(7);
@@ -79,9 +80,11 @@ test.describe('SL17', () => {
     await open(page);
     const ws = page.getByTestId('map-workspace');
     const before = (await page.getByTestId('canvas').boundingBox())!;
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     await expect(ws).not.toHaveAttribute('data-fullscreen', 'off');
-    await expect(page.getByTestId('fullscreen')).toHaveAttribute('aria-pressed', 'true');
+    await openTool(page, 'fullscreen');
+    await expect(page.getByTestId('fullscreen')).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('Escape');
     const box = (await ws.boundingBox())!;
     expect(box.x).toBeLessThanOrEqual(1);
     expect(box.y).toBeLessThanOrEqual(1);
@@ -102,7 +105,7 @@ test.describe('SL17', () => {
       const bbs = await outline(page).locator('li[data-node]').evaluateAll((ls) => ls.map((l) => l.getAttribute('data-bb')!.split(',').map(Number)));
       return bbs.every(([x1, y1, x2, y2]) => x1 >= 0 && y1 >= 0 && x2 <= cv.width && y2 <= cv.height);
     }).toBe(true);
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     await expect(ws).toHaveAttribute('data-fullscreen', 'off');
     await expect.poll(async () => (await page.getByTestId('canvas').boundingBox())!.height).toBeCloseTo(before.height, 0);
     // the key, and Esc
@@ -122,7 +125,7 @@ test.describe('SL17', () => {
     });
     await open(page);
     const ws = page.getByTestId('map-workspace');
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     await expect(ws).toHaveAttribute('data-fullscreen', 'overlay');
     expect(await page.evaluate(() => document.fullscreenElement)).toBeNull();
     const box = (await ws.boundingBox())!;

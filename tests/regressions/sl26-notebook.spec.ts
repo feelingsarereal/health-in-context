@@ -6,7 +6,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
+import { openTool, tool, addEdge, addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
 
 async function start(page: Page, name: string) {
   await page.goto('/');
@@ -14,8 +14,10 @@ async function start(page: Page, name: string) {
   await newMap(page, name);
 }
 async function openNotebook(page: Page) {
+  await openTool(page, 'notebook-toggle');
   const t = page.getByTestId('notebook-toggle');
-  if ((await t.getAttribute('aria-pressed')) !== 'true') await t.click();
+  if ((await t.getAttribute('aria-checked')) !== 'true') await t.click();
+  else await page.keyboard.press('Escape');
   await expect(page.getByTestId('notebook')).toBeVisible();
 }
 async function newFree(page: Page, title: string, body: string) {
@@ -115,7 +117,7 @@ test('flag, then label: the stored value is gone, the count drops, and Undo cann
   await newFree(page, 'Call', 'Mr. Jones called from (256) 555-0134. Jones lives at 1420 Oak Street.');
   await expect(page.getByTestId('nb-flag-count')).toHaveText(/3 possible identifiers/);
   await expect(page.getByTestId('nb-body').locator('.nb-flag')).toHaveCount(3);
-  await expect(page.getByTestId('notebook-toggle')).toContainText('3');
+  await expect(page.getByTestId('view-menu')).toContainText('3'); // SL35: the count stays visible on the closed menu
   await page.waitForTimeout(300);
   expect(await stored(page)).toContain('Mr. Jones');
   await page.getByTestId('nb-flag-count').click();
@@ -292,12 +294,12 @@ test('case summary: matches the list view row for row; updates live; a row click
   await expect(sum.getByTestId('summary-table').locator('tbody tr')).toHaveCount(4);
   await expect(sum.getByTestId('tile-circumstances')).toContainText('4');
   // row for row: the same as the list view's table (both on the page: the notebook stays open in list view)
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
   await expect(page.getByTestId('list-view')).toBeVisible();
   const list = await rowsOf(page, 'nodes-table');
   expect(list).toHaveLength(4);
   expect(await rowsOf(page, 'summary-table')).toEqual(list);
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
   // filter by status and sort
   await sum.getByTestId('summary-filter').selectOption({ label: 'Not sure yet' });
   await expect(sum.getByTestId('summary-table').locator('tbody tr')).toHaveText([/Support from sister/]);

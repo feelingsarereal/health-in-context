@@ -8,7 +8,7 @@ scheme:
   verified_on: '2026-10-23'
   text_source: Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled
     verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder
-    additions — tiers, links, search aliases — are marked as not from WHO.
+    additions — tiers, links, search aliases, short titles — are marked as not from WHO.
   licence: International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11.
     Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO).
 tiers:
@@ -35,21 +35,25 @@ groups:
   tier: structural
   uri: http://id.who.int/icd/entity/824927288
   source_url: https://icd.who.int/browse/2026-01/mms/en#824927288
+  short_title: Finances
 - id: QD60-QD6Z
   title: Problems associated with drinking water or nutrition
   tier: intermediary_material
   uri: http://id.who.int/icd/entity/76222516
   source_url: https://icd.who.int/browse/2026-01/mms/en#76222516
+  short_title: Water or food
 - id: QD70-QD7Z
   title: Problems associated with the environment
   tier: intermediary_material
   uri: http://id.who.int/icd/entity/266601618
   source_url: https://icd.who.int/browse/2026-01/mms/en#266601618
+  short_title: Environment
 - id: QD80-QD8Z
   title: Problems associated with employment or unemployment
   tier: structural
   uri: http://id.who.int/icd/entity/1440218064
   source_url: https://icd.who.int/browse/2026-01/mms/en#1440218064
+  short_title: Work and jobs
   exclusions:
   - title: problems related to housing and economic circumstances
     code: QD71
@@ -61,6 +65,7 @@ groups:
   tier: structural
   uri: http://id.who.int/icd/entity/561687345
   source_url: https://icd.who.int/browse/2026-01/mms/en#561687345
+  short_title: Education
   exclusions:
   - title: factors associated with psychological development
     code: Chapter 06
@@ -72,6 +77,7 @@ groups:
   tier: structural
   uri: http://id.who.int/icd/entity/462621464
   source_url: https://icd.who.int/browse/2026-01/mms/en#462621464
+  short_title: Social or cultural setting
   coded_elsewhere:
   - title: Acute stress reaction
     code: QE84
@@ -80,6 +86,7 @@ groups:
   tier: intermediary_behavioural
   uri: http://id.who.int/icd/entity/48322409
   source_url: https://icd.who.int/browse/2026-01/mms/en#48322409
+  short_title: Health behaviours
   exclusions:
   - title: Difficulty or need for assistance with general life tasks or life management
     code: QF21
@@ -88,26 +95,31 @@ groups:
   tier: structural
   uri: http://id.who.int/icd/entity/566804336
   source_url: https://icd.who.int/browse/2026-01/mms/en#566804336
+  short_title: Social insurance or welfare
 - id: QE40-QE4Z
   title: Problems associated with the justice system
   tier: structural
   uri: http://id.who.int/icd/entity/560926494
   source_url: https://icd.who.int/browse/2026-01/mms/en#560926494
+  short_title: Justice system
 - id: QE50-QE5Z
   title: Problems associated with relationships
   tier: intermediary_psychosocial
   uri: http://id.who.int/icd/entity/1509667156
   source_url: https://icd.who.int/browse/2026-01/mms/en#1509667156
+  short_title: Relationships
 - id: QE60-QE6Z
   title: Problems associated with absence, loss or death of others
   tier: intermediary_psychosocial
   uri: http://id.who.int/icd/entity/1399046120
   source_url: https://icd.who.int/browse/2026-01/mms/en#1399046120
+  short_title: Absence, loss or death
 - id: QE70
   title: Problems related to primary support group, including family circumstances
   tier: intermediary_psychosocial
   uri: http://id.who.int/icd/entity/812634854
   source_url: https://icd.who.int/browse/2026-01/mms/en#812634854
+  short_title: Family circumstances
   exclusions:
   - title: Problems associated with upbringing
     code: QE90-QE9Z
@@ -118,6 +130,7 @@ groups:
   tier: intermediary_psychosocial
   uri: http://id.who.int/icd/entity/675461815
   source_url: https://icd.who.int/browse/2026-01/mms/en#675461815
+  short_title: Harmful or traumatic events
   exclusions:
   - title: Disorders specifically associated with stress
     code: 6B40-6B4Z
@@ -131,12 +144,14 @@ groups:
   tier: intermediary_psychosocial
   uri: http://id.who.int/icd/entity/1428430704
   source_url: https://icd.who.int/browse/2026-01/mms/en#1428430704
+  short_title: Upbringing
 - id: QF20-QF2Z
   title: Difficulty or need for assistance with activities
   tier: functioning
   uri: http://id.who.int/icd/entity/340003177
   source_url: https://icd.who.int/browse/2026-01/mms/en#340003177
   functioning: true
+  short_title: Help with activities
   definition: Identifies activities for which the person needs assistance or has such difficulty with, that it affects their
     need for health services or their treatment.
   exclusions:
@@ -147,6 +162,7 @@ groups:
   tier: intermediary_material
   subgroup_of: QD70-QD7Z
   note: A category, exposed as a link target
+  short_title: Housing problems
   uri: http://id.who.int/icd/entity/683601550
   source_url: https://icd.who.int/browse/2026-01/mms/en#683601550
   exclusions:
@@ -169,6 +185,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#755867815
   source_url: https://icd.who.int/browse/2026-01/mms/en#755867815
   verified_on: '2026-10-23'
+  short_title: Poverty
 - code: QD51
   title: Low income
   group: QD50-QD5Z
@@ -188,6 +205,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1503719512
   source_url: https://icd.who.int/browse/2026-01/mms/en#1503719512
   verified_on: '2026-10-23'
+  short_title: Low income
 - code: QD60
   title: Problems associated with inadequate drinking-water
   group: QD60-QD6Z
@@ -207,6 +225,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1163409625
   source_url: https://icd.who.int/browse/2026-01/mms/en#1163409625
   verified_on: '2026-10-23'
+  short_title: Inadequate drinking water
 - code: QD61
   title: Inadequate food
   group: QD60-QD6Z
@@ -229,6 +248,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1212575027
   source_url: https://icd.who.int/browse/2026-01/mms/en#1212575027
   verified_on: '2026-10-23'
+  short_title: Inadequate food
 - code: QD70
   title: Problems associated with the natural environment or human-made changes to the environment
   group: QD70-QD7Z
@@ -247,6 +267,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1307910936
   source_url: https://icd.who.int/browse/2026-01/mms/en#1307910936
   verified_on: '2026-10-23'
+  short_title: Environmental problems
 - code: QD70.0
   title: Problems associated with exposure to noise
   group: QD70-QD7Z
@@ -264,6 +285,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1409115865
   source_url: https://icd.who.int/browse/2026-01/mms/en#1409115865
   verified_on: '2026-10-23'
+  short_title: Noise exposure
 - code: QD70.1
   title: Problems associated with exposure to air pollution
   group: QD70-QD7Z
@@ -282,6 +304,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#917941069
   source_url: https://icd.who.int/browse/2026-01/mms/en#917941069
   verified_on: '2026-10-23'
+  short_title: Air pollution exposure
 - code: QD70.2
   title: Problems associated with exposure to water pollution
   group: QD70-QD7Z
@@ -299,6 +322,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1109130164
   source_url: https://icd.who.int/browse/2026-01/mms/en#1109130164
   verified_on: '2026-10-23'
+  short_title: Water pollution exposure
 - code: QD70.3
   title: Problems associated with exposure to soil pollution
   group: QD70-QD7Z
@@ -314,6 +338,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#659568166
   source_url: https://icd.who.int/browse/2026-01/mms/en#659568166
   verified_on: '2026-10-23'
+  short_title: Soil pollution exposure
 - code: QD70.4
   title: Problems associated with exposure to radiation
   group: QD70-QD7Z
@@ -329,6 +354,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1421780402
   source_url: https://icd.who.int/browse/2026-01/mms/en#1421780402
   verified_on: '2026-10-23'
+  short_title: Radiation exposure
 - code: QD70.5
   title: Problems associated with exposure to tobacco smoke
   group: QD70-QD7Z
@@ -353,6 +379,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#538178893
   source_url: https://icd.who.int/browse/2026-01/mms/en#538178893
   verified_on: '2026-10-23'
+  short_title: Tobacco smoke exposure
 - code: QD70.6
   title: Problems associated with inadequate access to electricity
   group: QD70-QD7Z
@@ -368,6 +395,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#201495283
   source_url: https://icd.who.int/browse/2026-01/mms/en#201495283
   verified_on: '2026-10-23'
+  short_title: No reliable electricity
 - code: QD71
   title: Problems associated with housing
   group: QD70-QD7Z
@@ -385,6 +413,7 @@ items:
   source_url: https://icd.who.int/browse/2026-01/mms/en#683601550
   verified_on: '2026-10-23'
   subgroup: QD71
+  short_title: Housing problems
 - code: QD71.0
   title: Homelessness
   group: QD70-QD7Z
@@ -409,6 +438,7 @@ items:
   source_url: https://icd.who.int/browse/2026-01/mms/en#1325772378
   verified_on: '2026-10-23'
   subgroup: QD71
+  short_title: Homelessness
 - code: QD71.1
   title: Inadequate housing
   group: QD70-QD7Z
@@ -433,6 +463,7 @@ items:
   source_url: https://icd.who.int/browse/2026-01/mms/en#709780428
   verified_on: '2026-10-23'
   subgroup: QD71
+  short_title: Inadequate housing
 - code: QD71.2
   title: Problems related to living in residential institution
   group: QD70-QD7Z
@@ -453,6 +484,7 @@ items:
   source_url: https://icd.who.int/browse/2026-01/mms/en#1000930983
   verified_on: '2026-10-23'
   subgroup: QD71
+  short_title: Living in an institution
 - code: QD80
   title: Problem associated with unemployment
   group: QD80-QD8Z
@@ -470,6 +502,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#25263588
   source_url: https://icd.who.int/browse/2026-01/mms/en#25263588
   verified_on: '2026-10-23'
+  short_title: Unemployment
 - code: QD81
   title: Problem associated with change of job
   group: QD80-QD8Z
@@ -486,6 +519,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1691005042
   source_url: https://icd.who.int/browse/2026-01/mms/en#1691005042
   verified_on: '2026-10-23'
+  short_title: Change of job
 - code: QD82
   title: Problem associated with threat of job loss
   group: QD80-QD8Z
@@ -502,6 +536,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#275243151
   source_url: https://icd.who.int/browse/2026-01/mms/en#275243151
   verified_on: '2026-10-23'
+  short_title: Threat of job loss
 - code: QD83
   title: Problem with employment conditions
   group: QD80-QD8Z
@@ -516,6 +551,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1756207334
   source_url: https://icd.who.int/browse/2026-01/mms/en#1756207334
   verified_on: '2026-10-23'
+  short_title: Employment conditions
 - code: QD83.0
   title: Problem associated with uncongenial work
   group: QD80-QD8Z
@@ -532,6 +568,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1669952283
   source_url: https://icd.who.int/browse/2026-01/mms/en#1669952283
   verified_on: '2026-10-23'
+  short_title: Uncongenial work
 - code: QD83.1
   title: Problem associated with stressful work schedule
   group: QD80-QD8Z
@@ -549,6 +586,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1965829403
   source_url: https://icd.who.int/browse/2026-01/mms/en#1965829403
   verified_on: '2026-10-23'
+  short_title: Stressful work schedule
 - code: QD84
   title: Occupational exposure to risk-factors
   group: QD80-QD8Z
@@ -563,6 +601,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#815543898
   source_url: https://icd.who.int/browse/2026-01/mms/en#815543898
   verified_on: '2026-10-23'
+  short_title: Occupational exposure
 - code: QD84.0
   title: Occupational exposure to dust
   group: QD80-QD8Z
@@ -583,6 +622,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#211757070
   source_url: https://icd.who.int/browse/2026-01/mms/en#211757070
   verified_on: '2026-10-23'
+  short_title: Dust at work
 - code: QD84.1
   title: Occupational exposure to toxic agents in agriculture
   group: QD80-QD8Z
@@ -600,6 +640,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#440038928
   source_url: https://icd.who.int/browse/2026-01/mms/en#440038928
   verified_on: '2026-10-23'
+  short_title: Farm toxic agents at work
 - code: QD84.2
   title: Occupational exposure to toxic agents in industries other than agriculture
   group: QD80-QD8Z
@@ -616,6 +657,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2138160026
   source_url: https://icd.who.int/browse/2026-01/mms/en#2138160026
   verified_on: '2026-10-23'
+  short_title: Toxic agents at work
 - code: QD84.3
   title: Occupational exposure to vibration
   group: QD80-QD8Z
@@ -631,6 +673,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1855399665
   source_url: https://icd.who.int/browse/2026-01/mms/en#1855399665
   verified_on: '2026-10-23'
+  short_title: Vibration at work
 - code: QD84.4
   title: Occupational exposure to ergonomic risk
   group: QD80-QD8Z
@@ -646,6 +689,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#473240871
   source_url: https://icd.who.int/browse/2026-01/mms/en#473240871
   verified_on: '2026-10-23'
+  short_title: Ergonomic risk at work
 - code: QD85
   title: Burnout
   group: QD80-QD8Z
@@ -673,6 +717,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#129180281
   source_url: https://icd.who.int/browse/2026-01/mms/en#129180281
   verified_on: '2026-10-23'
+  short_title: Burnout
 - code: QD90
   title: Problem associated with illiteracy or low-level literacy
   group: QD90-QD9Z
@@ -692,6 +737,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#450012
   source_url: https://icd.who.int/browse/2026-01/mms/en#450012
   verified_on: '2026-10-23'
+  short_title: Low literacy
 - code: QD91
   title: Problem associated with education unavailable or unattainable
   group: QD90-QD9Z
@@ -709,6 +755,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1699549262
   source_url: https://icd.who.int/browse/2026-01/mms/en#1699549262
   verified_on: '2026-10-23'
+  short_title: Education out of reach
 - code: QD92
   title: Problem with educational progress
   group: QD90-QD9Z
@@ -731,6 +778,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#299909297
   source_url: https://icd.who.int/browse/2026-01/mms/en#299909297
   verified_on: '2026-10-23'
+  short_title: Educational progress
 - code: QE00
   title: Acculturation difficulty
   group: QE00-QE0Z
@@ -754,6 +802,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1652814217
   source_url: https://icd.who.int/browse/2026-01/mms/en#1652814217
   verified_on: '2026-10-23'
+  short_title: Acculturation difficulty
 - code: QE01
   title: Stress, not elsewhere classified
   group: QE00-QE0Z
@@ -773,6 +822,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1931375240
   source_url: https://icd.who.int/browse/2026-01/mms/en#1931375240
   verified_on: '2026-10-23'
+  short_title: Stress (not elsewhere)
 - code: QE02
   title: Social role conflict
   group: QE00-QE0Z
@@ -788,6 +838,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1706765446
   source_url: https://icd.who.int/browse/2026-01/mms/en#1706765446
   verified_on: '2026-10-23'
+  short_title: Social role conflict
 - code: QE03
   title: Social exclusion or rejection
   group: QE00-QE0Z
@@ -810,6 +861,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#292381213
   source_url: https://icd.who.int/browse/2026-01/mms/en#292381213
   verified_on: '2026-10-23'
+  short_title: Exclusion or rejection
 - code: QE04
   title: Target of perceived adverse discrimination or persecution
   group: QE00-QE0Z
@@ -840,6 +892,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1948692361
   source_url: https://icd.who.int/browse/2026-01/mms/en#1948692361
   verified_on: '2026-10-23'
+  short_title: Discrimination or persecution
 - code: QE10
   title: Hazardous alcohol use
   group: QE10-QE2Z
@@ -863,6 +916,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#499098434
   source_url: https://icd.who.int/browse/2026-01/mms/en#499098434
   verified_on: '2026-10-23'
+  short_title: Hazardous alcohol use
 - code: QE11
   title: Hazardous drug use
   group: QE10-QE2Z
@@ -886,6 +940,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#179140499
   source_url: https://icd.who.int/browse/2026-01/mms/en#179140499
   verified_on: '2026-10-23'
+  short_title: Hazardous drug use
 - code: QE11.0
   title: Hazardous use of opioids
   group: QE10-QE2Z
@@ -917,6 +972,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#603861372
   source_url: https://icd.who.int/browse/2026-01/mms/en#603861372
   verified_on: '2026-10-23'
+  short_title: Hazardous use of opioids
 - code: QE11.1
   title: Hazardous use of cannabis
   group: QE10-QE2Z
@@ -943,6 +999,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1389430127
   source_url: https://icd.who.int/browse/2026-01/mms/en#1389430127
   verified_on: '2026-10-23'
+  short_title: Hazardous use of cannabis
 - code: QE11.2
   title: Hazardous use of sedatives, hypnotics or anxiolytics
   group: QE10-QE2Z
@@ -974,6 +1031,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#756014816
   source_url: https://icd.who.int/browse/2026-01/mms/en#756014816
   verified_on: '2026-10-23'
+  short_title: Sedative or hypnotic use
 - code: QE11.3
   title: Hazardous use of cocaine
   group: QE10-QE2Z
@@ -1002,6 +1060,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1385385359
   source_url: https://icd.who.int/browse/2026-01/mms/en#1385385359
   verified_on: '2026-10-23'
+  short_title: Hazardous use of cocaine
 - code: QE11.4
   title: Hazardous use of stimulants including amphetamines or methamphetamine
   group: QE10-QE2Z
@@ -1028,6 +1087,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#154205648
   source_url: https://icd.who.int/browse/2026-01/mms/en#154205648
   verified_on: '2026-10-23'
+  short_title: Stimulant use
 - code: QE11.5
   title: Hazardous use of caffeine
   group: QE10-QE2Z
@@ -1052,6 +1112,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#656164398
   source_url: https://icd.who.int/browse/2026-01/mms/en#656164398
   verified_on: '2026-10-23'
+  short_title: Hazardous use of caffeine
 - code: QE11.6
   title: Hazardous use of MDMA or related drugs
   group: QE10-QE2Z
@@ -1078,6 +1139,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#113982884
   source_url: https://icd.who.int/browse/2026-01/mms/en#113982884
   verified_on: '2026-10-23'
+  short_title: MDMA use
 - code: QE11.7
   title: Hazardous use of dissociative drugs including ketamine or PCP
   group: QE10-QE2Z
@@ -1104,6 +1166,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1235812153
   source_url: https://icd.who.int/browse/2026-01/mms/en#1235812153
   verified_on: '2026-10-23'
+  short_title: Dissociative drug use
 - code: QE11.8
   title: Hazardous use of other specified psychoactive substances
   group: QE10-QE2Z
@@ -1128,6 +1191,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#688207252
   source_url: https://icd.who.int/browse/2026-01/mms/en#688207252
   verified_on: '2026-10-23'
+  short_title: Other substance use
 - code: QE11.9
   title: Hazardous use of unknown or unspecified psychoactive substances
   group: QE10-QE2Z
@@ -1153,6 +1217,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1240119257
   source_url: https://icd.who.int/browse/2026-01/mms/en#1240119257
   verified_on: '2026-10-23'
+  short_title: Unknown substance use
 - code: QE12
   title: Hazardous nicotine use
   group: QE10-QE2Z
@@ -1178,6 +1243,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#63012279
   source_url: https://icd.who.int/browse/2026-01/mms/en#63012279
   verified_on: '2026-10-23'
+  short_title: Hazardous nicotine use
 - code: QE13
   title: Tobacco use
   group: QE10-QE2Z
@@ -1209,6 +1275,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#457960184
   source_url: https://icd.who.int/browse/2026-01/mms/en#457960184
   verified_on: '2026-10-23'
+  short_title: Tobacco use
 - code: QE20
   title: Lack of physical exercise
   group: QE10-QE2Z
@@ -1225,6 +1292,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1877391879
   source_url: https://icd.who.int/browse/2026-01/mms/en#1877391879
   verified_on: '2026-10-23'
+  short_title: Lack of physical exercise
 - code: QE21
   title: Hazardous gambling or betting
   group: QE10-QE2Z
@@ -1251,6 +1319,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#233747706
   source_url: https://icd.who.int/browse/2026-01/mms/en#233747706
   verified_on: '2026-10-23'
+  short_title: Hazardous gambling
 - code: QE22
   title: Hazardous gaming
   group: QE10-QE2Z
@@ -1274,6 +1343,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1586542716
   source_url: https://icd.who.int/browse/2026-01/mms/en#1586542716
   verified_on: '2026-10-23'
+  short_title: Hazardous gaming
 - code: QE23
   title: Problems with inappropriate diet or eating habits
   group: QE10-QE2Z
@@ -1298,6 +1368,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#470296979
   source_url: https://icd.who.int/browse/2026-01/mms/en#470296979
   verified_on: '2026-10-23'
+  short_title: Diet or eating habits
 - code: QE24
   title: Problems with hygiene behaviours
   group: QE10-QE2Z
@@ -1314,6 +1385,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#515575378
   source_url: https://icd.who.int/browse/2026-01/mms/en#515575378
   verified_on: '2026-10-23'
+  short_title: Hygiene behaviours
 - code: QE25
   title: Problems with oral health behaviours
   group: QE10-QE2Z
@@ -1330,6 +1402,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2064361961
   source_url: https://icd.who.int/browse/2026-01/mms/en#2064361961
   verified_on: '2026-10-23'
+  short_title: Oral health behaviours
 - code: QE26
   title: Problem with sun exposure behaviour
   group: QE10-QE2Z
@@ -1345,6 +1418,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1261978211
   source_url: https://icd.who.int/browse/2026-01/mms/en#1261978211
   verified_on: '2026-10-23'
+  short_title: Sun exposure behaviour
 - code: QE27
   title: Problem with behaviours related to psychological health or wellbeing
   group: QE10-QE2Z
@@ -1360,6 +1434,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#453104436
   source_url: https://icd.who.int/browse/2026-01/mms/en#453104436
   verified_on: '2026-10-23'
+  short_title: Psychological wellbeing habits
 - code: QE28
   title: Problem with health literacy
   group: QE10-QE2Z
@@ -1375,6 +1450,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#86445206
   source_url: https://icd.who.int/browse/2026-01/mms/en#86445206
   verified_on: '2026-10-23'
+  short_title: Problem with health literacy
 - code: QE30
   title: Insufficient social insurance support
   group: QE30-QE3Z
@@ -1389,6 +1465,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1022049742
   source_url: https://icd.who.int/browse/2026-01/mms/en#1022049742
   verified_on: '2026-10-23'
+  short_title: Too little social insurance
 - code: QE30.0
   title: Insufficient social insurance support, aged
   group: QE30-QE3Z
@@ -1406,6 +1483,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#707116764
   source_url: https://icd.who.int/browse/2026-01/mms/en#707116764
   verified_on: '2026-10-23'
+  short_title: 'Too little insurance: aged'
 - code: QE30.1
   title: Insufficient social insurance support, disability
   group: QE30-QE3Z
@@ -1423,6 +1501,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#549655480
   source_url: https://icd.who.int/browse/2026-01/mms/en#549655480
   verified_on: '2026-10-23'
+  short_title: 'Too little insurance: disability'
 - code: QE30.2
   title: Insufficient social insurance support, unemployment
   group: QE30-QE3Z
@@ -1440,6 +1519,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1435529051
   source_url: https://icd.who.int/browse/2026-01/mms/en#1435529051
   verified_on: '2026-10-23'
+  short_title: 'Too little insurance: unemployed'
 - code: QE30.3
   title: Insufficient social insurance support, family support
   group: QE30-QE3Z
@@ -1457,6 +1537,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1895465705
   source_url: https://icd.who.int/browse/2026-01/mms/en#1895465705
   verified_on: '2026-10-23'
+  short_title: 'Too little insurance: family'
 - code: QE31
   title: Insufficient social welfare support
   group: QE30-QE3Z
@@ -1471,6 +1552,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#722188140
   source_url: https://icd.who.int/browse/2026-01/mms/en#722188140
   verified_on: '2026-10-23'
+  short_title: Too little welfare support
 - code: QE31.0
   title: Insufficient social welfare support, child protection
   group: QE30-QE3Z
@@ -1488,6 +1570,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#63010289
   source_url: https://icd.who.int/browse/2026-01/mms/en#63010289
   verified_on: '2026-10-23'
+  short_title: Child protection gap
 - code: QE31.1
   title: Insufficient social welfare support, protection against domestic violence
   group: QE30-QE3Z
@@ -1505,6 +1588,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#966443399
   source_url: https://icd.who.int/browse/2026-01/mms/en#966443399
   verified_on: '2026-10-23'
+  short_title: Domestic-violence protection gap
 - code: QE31.2
   title: Insufficient social welfare support, protection against homelessness
   group: QE30-QE3Z
@@ -1522,6 +1606,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1018097273
   source_url: https://icd.who.int/browse/2026-01/mms/en#1018097273
   verified_on: '2026-10-23'
+  short_title: Homelessness protection gap
 - code: QE31.3
   title: Insufficient social welfare support, post prison services
   group: QE30-QE3Z
@@ -1539,6 +1624,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1495157188
   source_url: https://icd.who.int/browse/2026-01/mms/en#1495157188
   verified_on: '2026-10-23'
+  short_title: Post-prison services gap
 - code: QE40
   title: Problem associated with conviction in civil or criminal proceedings without imprisonment
   group: QE40-QE4Z
@@ -1555,6 +1641,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#807975049
   source_url: https://icd.who.int/browse/2026-01/mms/en#807975049
   verified_on: '2026-10-23'
+  short_title: Conviction without prison
 - code: QE41
   title: Problem associated with imprisonment or other incarceration
   group: QE40-QE4Z
@@ -1572,6 +1659,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1432581405
   source_url: https://icd.who.int/browse/2026-01/mms/en#1432581405
   verified_on: '2026-10-23'
+  short_title: Imprisonment
 - code: QE42
   title: Problem associated with release from prison
   group: QE40-QE4Z
@@ -1588,6 +1676,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#567158242
   source_url: https://icd.who.int/browse/2026-01/mms/en#567158242
   verified_on: '2026-10-23'
+  short_title: Release from prison
 - code: QE50
   title: Problem associated with interpersonal interactions
   group: QE50-QE5Z
@@ -1604,6 +1693,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1765280656
   source_url: https://icd.who.int/browse/2026-01/mms/en#1765280656
   verified_on: '2026-10-23'
+  short_title: Interpersonal problems
 - code: QE50.0
   title: Problem associated with relationship with friend
   group: QE50-QE5Z
@@ -1619,6 +1709,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#970113767
   source_url: https://icd.who.int/browse/2026-01/mms/en#970113767
   verified_on: '2026-10-23'
+  short_title: Relationship with a friend
 - code: QE50.1
   title: Relationships with teachers or classmates
   group: QE50-QE5Z
@@ -1633,6 +1724,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#121970353
   source_url: https://icd.who.int/browse/2026-01/mms/en#121970353
   verified_on: '2026-10-23'
+  short_title: Teachers or classmates
 - code: QE50.10
   title: Dissatisfaction with school environment
   group: QE50-QE5Z
@@ -1649,6 +1741,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2088979863
   source_url: https://icd.who.int/browse/2026-01/mms/en#2088979863
   verified_on: '2026-10-23'
+  short_title: School environment
 - code: QE50.2
   title: Problem associated with relationships with people at work
   group: QE50-QE5Z
@@ -1665,6 +1758,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#113426063
   source_url: https://icd.who.int/browse/2026-01/mms/en#113426063
   verified_on: '2026-10-23'
+  short_title: Relationships at work
 - code: QE50.3
   title: Relationships with neighbours, tenant or landlord
   group: QE50-QE5Z
@@ -1686,6 +1780,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1591948083
   source_url: https://icd.who.int/browse/2026-01/mms/en#1591948083
   verified_on: '2026-10-23'
+  short_title: Neighbours or landlord
 - code: QE50.4
   title: Relationship with parents, in-laws or other family members
   group: QE50-QE5Z
@@ -1712,6 +1807,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1927466204
   source_url: https://icd.who.int/browse/2026-01/mms/en#1927466204
   verified_on: '2026-10-23'
+  short_title: Parents, in-laws or family
 - code: QE50.5
   title: Discord with counsellors
   group: QE50-QE5Z
@@ -1732,6 +1828,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#731100003
   source_url: https://icd.who.int/browse/2026-01/mms/en#731100003
   verified_on: '2026-10-23'
+  short_title: Discord with counsellors
 - code: QE50.6
   title: Inadequate social skills
   group: QE50-QE5Z
@@ -1749,6 +1846,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#15786260
   source_url: https://icd.who.int/browse/2026-01/mms/en#15786260
   verified_on: '2026-10-23'
+  short_title: Inadequate social skills
 - code: QE50.7
   title: Personality difficulty
   group: QE50-QE5Z
@@ -1772,6 +1870,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#853711607
   source_url: https://icd.who.int/browse/2026-01/mms/en#853711607
   verified_on: '2026-10-23'
+  short_title: Personality difficulty
 - code: QE51
   title: Problem associated with interactions with spouse or partner
   group: QE50-QE5Z
@@ -1786,6 +1885,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#396951882
   source_url: https://icd.who.int/browse/2026-01/mms/en#396951882
   verified_on: '2026-10-23'
+  short_title: Spouse or partner problems
 - code: QE51.0
   title: Relationship distress with spouse or partner
   group: QE50-QE5Z
@@ -1814,6 +1914,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#848664338
   source_url: https://icd.who.int/browse/2026-01/mms/en#848664338
   verified_on: '2026-10-23'
+  short_title: Partner relationship distress
 - code: QE51.1
   title: History of spouse or partner violence
   group: QE50-QE5Z
@@ -1876,6 +1977,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1233531556
   source_url: https://icd.who.int/browse/2026-01/mms/en#1233531556
   verified_on: '2026-10-23'
+  short_title: Past partner violence
 - code: QE52
   title: Problem associated with interpersonal interactions in childhood
   group: QE50-QE5Z
@@ -1890,6 +1992,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#901608346
   source_url: https://icd.who.int/browse/2026-01/mms/en#901608346
   verified_on: '2026-10-23'
+  short_title: Childhood relationships
 - code: QE52.0
   title: Caregiver-child relationship problem
   group: QE50-QE5Z
@@ -1909,6 +2012,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#547677013
   source_url: https://icd.who.int/browse/2026-01/mms/en#547677013
   verified_on: '2026-10-23'
+  short_title: Caregiver–child relationship
 - code: QE52.1
   title: Loss of love relationship in childhood
   group: QE50-QE5Z
@@ -1928,6 +2032,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#181823991
   source_url: https://icd.who.int/browse/2026-01/mms/en#181823991
   verified_on: '2026-10-23'
+  short_title: Lost love in childhood
 - code: QE60
   title: Absence of family member
   group: QE60-QE6Z
@@ -1943,6 +2048,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1661227447
   source_url: https://icd.who.int/browse/2026-01/mms/en#1661227447
   verified_on: '2026-10-23'
+  short_title: Absence of family member
 - code: QE61
   title: Disappearance or death of family member
   group: QE60-QE6Z
@@ -1963,6 +2069,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#283820579
   source_url: https://icd.who.int/browse/2026-01/mms/en#283820579
   verified_on: '2026-10-23'
+  short_title: Family member gone or died
 - code: QE61.0
   title: Loss or death of child
   group: QE60-QE6Z
@@ -1982,6 +2089,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#144715807
   source_url: https://icd.who.int/browse/2026-01/mms/en#144715807
   verified_on: '2026-10-23'
+  short_title: Loss or death of child
 - code: QE62
   title: Uncomplicated bereavement
   group: QE60-QE6Z
@@ -1999,6 +2107,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2009949293
   source_url: https://icd.who.int/browse/2026-01/mms/en#2009949293
   verified_on: '2026-10-23'
+  short_title: Uncomplicated bereavement
 - code: QE70
   title: Problems related to primary support group, including family circumstances
   group: QE70
@@ -2017,6 +2126,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#812634854
   source_url: https://icd.who.int/browse/2026-01/mms/en#812634854
   verified_on: '2026-10-23'
+  short_title: Family circumstances
 - code: QE70.0
   title: Inadequate family support
   group: QE70
@@ -2033,6 +2143,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#105880611
   source_url: https://icd.who.int/browse/2026-01/mms/en#105880611
   verified_on: '2026-10-23'
+  short_title: Inadequate family support
 - code: QE70.1
   title: Disruption of family by separation or divorce
   group: QE70
@@ -2054,6 +2165,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1973489591
   source_url: https://icd.who.int/browse/2026-01/mms/en#1973489591
   verified_on: '2026-10-23'
+  short_title: Separation or divorce
 - code: QE70.2
   title: Dependent relative needing care at home
   group: QE70
@@ -2072,6 +2184,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#17588040
   source_url: https://icd.who.int/browse/2026-01/mms/en#17588040
   verified_on: '2026-10-23'
+  short_title: Relative needing home care
 - code: QE80
   title: Victim of crime or terrorism
   group: QE80-QE8Z
@@ -2092,6 +2205,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#929790948
   source_url: https://icd.who.int/browse/2026-01/mms/en#929790948
   verified_on: '2026-10-23'
+  short_title: Victim of crime or terrorism
 - code: QE81
   title: Exposure to disaster, war or other hostilities
   group: QE80-QE8Z
@@ -2113,6 +2227,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1377875574
   source_url: https://icd.who.int/browse/2026-01/mms/en#1377875574
   verified_on: '2026-10-23'
+  short_title: Disaster, war or hostilities
 - code: QE82
   title: Personal history of maltreatment
   group: QE80-QE8Z
@@ -2131,6 +2246,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1703296220
   source_url: https://icd.who.int/browse/2026-01/mms/en#1703296220
   verified_on: '2026-10-23'
+  short_title: Past maltreatment
 - code: QE82.0
   title: Personal history of physical abuse
   group: QE80-QE8Z
@@ -2151,6 +2267,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#360494969
   source_url: https://icd.who.int/browse/2026-01/mms/en#360494969
   verified_on: '2026-10-23'
+  short_title: Past physical abuse
 - code: QE82.1
   title: Personal history of sexual abuse
   group: QE80-QE8Z
@@ -2171,6 +2288,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1206394097
   source_url: https://icd.who.int/browse/2026-01/mms/en#1206394097
   verified_on: '2026-10-23'
+  short_title: Past sexual abuse
 - code: QE82.2
   title: Personal history of psychological abuse
   group: QE80-QE8Z
@@ -2196,6 +2314,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1334495652
   source_url: https://icd.who.int/browse/2026-01/mms/en#1334495652
   verified_on: '2026-10-23'
+  short_title: Past psychological abuse
 - code: QE82.3
   title: Personal history of neglect
   group: QE80-QE8Z
@@ -2214,6 +2333,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1172477528
   source_url: https://icd.who.int/browse/2026-01/mms/en#1172477528
   verified_on: '2026-10-23'
+  short_title: Past neglect
 - code: QE83
   title: Personal frightening experience in childhood
   group: QE80-QE8Z
@@ -2231,6 +2351,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2033777251
   source_url: https://icd.who.int/browse/2026-01/mms/en#2033777251
   verified_on: '2026-10-23'
+  short_title: Frightening childhood event
 - code: QE84
   title: Acute stress reaction
   group: QE80-QE8Z
@@ -2274,6 +2395,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#505909942
   source_url: https://icd.who.int/browse/2026-01/mms/en#505909942
   verified_on: '2026-10-23'
+  short_title: Acute stress reaction
 - code: QE90
   title: Inadequate parental supervision or control
   group: QE90-QE9Z
@@ -2293,6 +2415,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#189909449
   source_url: https://icd.who.int/browse/2026-01/mms/en#189909449
   verified_on: '2026-10-23'
+  short_title: Too little parental supervision
 - code: QE91
   title: Parental overprotection
   group: QE90-QE9Z
@@ -2309,6 +2432,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1847198813
   source_url: https://icd.who.int/browse/2026-01/mms/en#1847198813
   verified_on: '2026-10-23'
+  short_title: Parental overprotection
 - code: QE92
   title: Altered pattern of family relationships in childhood
   group: QE90-QE9Z
@@ -2330,6 +2454,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#456193180
   source_url: https://icd.who.int/browse/2026-01/mms/en#456193180
   verified_on: '2026-10-23'
+  short_title: Altered childhood family
 - code: QE93
   title: Removal from home in childhood
   group: QE90-QE9Z
@@ -2346,6 +2471,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1872602211
   source_url: https://icd.who.int/browse/2026-01/mms/en#1872602211
   verified_on: '2026-10-23'
+  short_title: Removed from home as a child
 - code: QE94
   title: Institutional upbringing
   group: QE90-QE9Z
@@ -2364,6 +2490,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#448222372
   source_url: https://icd.who.int/browse/2026-01/mms/en#448222372
   verified_on: '2026-10-23'
+  short_title: Institutional upbringing
 - code: QE95
   title: Inappropriate parental pressure or other abnormal qualities of upbringing
   group: QE90-QE9Z
@@ -2382,6 +2509,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#502568905
   source_url: https://icd.who.int/browse/2026-01/mms/en#502568905
   verified_on: '2026-10-23'
+  short_title: Parental pressure
 - code: QE96
   title: Events resulting in loss of self-esteem in childhood
   group: QE90-QE9Z
@@ -2399,6 +2527,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2122004746
   source_url: https://icd.who.int/browse/2026-01/mms/en#2122004746
   verified_on: '2026-10-23'
+  short_title: Childhood loss of self-esteem
 - code: QF20
   title: Difficulty or need for assistance with learning
   group: QF20-QF2Z
@@ -2416,6 +2545,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1539042104
   source_url: https://icd.who.int/browse/2026-01/mms/en#1539042104
   verified_on: '2026-10-23'
+  short_title: Help with learning
 - code: QF21
   title: Difficulty or need for assistance with general life tasks or life management
   group: QF20-QF2Z
@@ -2437,6 +2567,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#2127627914
   source_url: https://icd.who.int/browse/2026-01/mms/en#2127627914
   verified_on: '2026-10-23'
+  short_title: Help with life management
 - code: QF22
   title: Difficulty or need for assistance with communication
   group: QF20-QF2Z
@@ -2454,6 +2585,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1349734380
   source_url: https://icd.who.int/browse/2026-01/mms/en#1349734380
   verified_on: '2026-10-23'
+  short_title: Help with communication
 - code: QF23
   title: Difficulty or need for assistance with mobility
   group: QF20-QF2Z
@@ -2481,6 +2613,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1019892537
   source_url: https://icd.who.int/browse/2026-01/mms/en#1019892537
   verified_on: '2026-10-23'
+  short_title: Help with mobility
 - code: QF24
   title: Difficulty or need for assistance with self-care
   group: QF20-QF2Z
@@ -2502,6 +2635,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1501666989
   source_url: https://icd.who.int/browse/2026-01/mms/en#1501666989
   verified_on: '2026-10-23'
+  short_title: Help with self-care
 - code: QF25
   title: Difficulty or need for assistance with relationships
   group: QF20-QF2Z
@@ -2522,6 +2656,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1079783118
   source_url: https://icd.who.int/browse/2026-01/mms/en#1079783118
   verified_on: '2026-10-23'
+  short_title: Help with relationships
 - code: QF26
   title: Difficulty or need for assistance with household tasks
   group: QF20-QF2Z
@@ -2540,6 +2675,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#4906683
   source_url: https://icd.who.int/browse/2026-01/mms/en#4906683
   verified_on: '2026-10-23'
+  short_title: Help with household tasks
 - code: QF27
   title: Difficulty or need for assistance at home and no other household member able to render care
   group: QF20-QF2Z
@@ -2559,6 +2695,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#757911124
   source_url: https://icd.who.int/browse/2026-01/mms/en#757911124
   verified_on: '2026-10-23'
+  short_title: Care needed, no one at home
 - code: QF28
   title: Difficulty or need for assistance with work activities
   group: QF20-QF2Z
@@ -2576,6 +2713,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#402200913
   source_url: https://icd.who.int/browse/2026-01/mms/en#402200913
   verified_on: '2026-10-23'
+  short_title: Help with work activities
 - code: QF29
   title: Difficulty or need for assistance with major areas of life
   group: QF20-QF2Z
@@ -2595,6 +2733,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#874042445
   source_url: https://icd.who.int/browse/2026-01/mms/en#874042445
   verified_on: '2026-10-23'
+  short_title: Help with major life areas
 - code: QF2A
   title: Difficulty or need for assistance with community participation
   group: QF20-QF2Z
@@ -2618,6 +2757,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1580775818
   source_url: https://icd.who.int/browse/2026-01/mms/en#1580775818
   verified_on: '2026-10-23'
+  short_title: Help taking part in community
 - code: QF2B
   title: Need for continuous supervision
   group: QF20-QF2Z
@@ -2635,6 +2775,7 @@ items:
   who_browser: https://icd.who.int/browse/2026-01/mms/en#1214710726
   source_url: https://icd.who.int/browse/2026-01/mms/en#1214710726
   verified_on: '2026-10-23'
+  short_title: Needs continuous supervision
 - code: QD71.Z
   title: Problems associated with housing, unspecified
   group: QD70-QD7Z
@@ -2657,6 +2798,7 @@ items:
   source_url: https://icd.who.int/browse/2026-01/mms/en#683601550/unspecified
   verified_on: '2026-10-23'
   subgroup: QD71
+  short_title: Housing problems (unspecified)
 residuals:
 - code: QD5Y
   title: Other specified problems associated with finances
@@ -2666,6 +2808,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#824927288/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Finances (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/824927288/other
 - code: QD5Z
   title: Problems associated with finances, unspecified
@@ -2675,6 +2818,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#824927288/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Finances (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/824927288/unspecified
 - code: QD6Z
   title: Problems associated with drinking water or nutrition, unspecified
@@ -2684,6 +2828,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#76222516/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Water or food (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/76222516/unspecified
 - code: QD70.Z
   title: Problems associated with the natural environment or human-made changes to the environment, unspecified
@@ -2693,6 +2838,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1307910936/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Environmental problems (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1307910936/unspecified
 - code: QD7Y
   title: Other specified problems associated with the environment
@@ -2702,6 +2848,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#266601618/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Environment (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/266601618/other
 - code: QD7Z
   title: Problems associated with the environment, unspecified
@@ -2711,6 +2858,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#266601618/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Environment (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/266601618/unspecified
 - code: QD83.Y
   title: Other specified problem with employment conditions
@@ -2720,6 +2868,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1756207334/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Employment conditions (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1756207334/other
 - code: QD83.Z
   title: Problem with employment conditions, unspecified
@@ -2729,6 +2878,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1756207334/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Employment conditions (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1756207334/unspecified
 - code: QD84.Y
   title: Other specified occupational exposure to risk-factors
@@ -2738,6 +2888,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#815543898/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Occupational exposure (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/815543898/other
 - code: QD84.Z
   title: Occupational exposure to risk-factors, unspecified
@@ -2747,6 +2898,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#815543898/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Occupational exposure (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/815543898/unspecified
 - code: QD8Y
   title: Other specified problems associated with employment or unemployment
@@ -2756,6 +2908,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1440218064/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Work and jobs (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1440218064/other
 - code: QD8Z
   title: Problems associated with employment or unemployment, unspecified
@@ -2765,6 +2918,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1440218064/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Work and jobs (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1440218064/unspecified
 - code: QD9Y
   title: Other specified problems associated with education
@@ -2774,6 +2928,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#561687345/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Education (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/561687345/other
 - code: QD9Z
   title: Problems associated with education, unspecified
@@ -2783,6 +2938,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#561687345/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Education (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/561687345/unspecified
 - code: QE0Y
   title: Other specified problems associated with social or cultural environment
@@ -2792,6 +2948,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#462621464/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Social or cultural setting (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/462621464/other
 - code: QE0Z
   title: Problems associated with social or cultural environment, unspecified
@@ -2801,6 +2958,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#462621464/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Social or cultural setting (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/462621464/unspecified
 - code: QE11.Y
   title: Other specified hazardous drug use
@@ -2810,6 +2968,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#179140499/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Drug use (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/179140499/other
 - code: QE11.Z
   title: Hazardous drug use, unspecified
@@ -2819,6 +2978,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#179140499/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Drug use (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/179140499/unspecified
 - code: QE1Y
   title: Other specified hazardous substance use
@@ -2828,6 +2988,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1466350777/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Substance use (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1466350777/other
 - code: QE1Z
   title: Hazardous substance use, unspecified
@@ -2837,6 +2998,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1466350777/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Substance use (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1466350777/unspecified
 - code: QE2Y
   title: Problems with other specified health-related behaviours
@@ -2846,6 +3008,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#48322409/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Health behaviours (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/48322409/other
 - code: QE2Z
   title: Problem with health-related behaviours, unspecified
@@ -2855,6 +3018,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#48322409/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Health behaviours (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/48322409/unspecified
 - code: QE30.Z
   title: Insufficient social insurance support, unspecified
@@ -2864,6 +3028,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1022049742/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Too little social insurance (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1022049742/unspecified
 - code: QE31.Z
   title: Insufficient social welfare support, unspecified
@@ -2873,6 +3038,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#722188140/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Too little welfare support (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/722188140/unspecified
 - code: QE3Y
   title: Other specified problems associated with social insurance or welfare
@@ -2882,6 +3048,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#566804336/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Social insurance or welfare (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/566804336/other
 - code: QE3Z
   title: Problems associated with social insurance or welfare, unspecified
@@ -2891,6 +3058,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#566804336/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Social insurance or welfare (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/566804336/unspecified
 - code: QE4Y
   title: Other specified problems associated with the justice system
@@ -2900,6 +3068,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#560926494/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Justice system (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/560926494/other
 - code: QE4Z
   title: Problems associated with the justice system, unspecified
@@ -2909,6 +3078,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#560926494/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Justice system (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/560926494/unspecified
 - code: QE50.1Y
   title: Other specified relationships with teachers or classmates
@@ -2918,6 +3088,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#121970353/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Teachers or classmates (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/121970353/other
 - code: QE50.1Z
   title: Relationships with teachers or classmates, unspecified
@@ -2927,6 +3098,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#121970353/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Teachers or classmates (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/121970353/unspecified
 - code: QE50.Y
   title: Other specified problem associated with interpersonal interactions
@@ -2936,6 +3108,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1765280656/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Interpersonal problems (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1765280656/other
 - code: QE51.Y
   title: Other specified problem associated with interactions with spouse or partner
@@ -2945,6 +3118,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#396951882/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Spouse or partner problems (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/396951882/other
 - code: QE51.Z
   title: Problem associated with interactions with spouse or partner, unspecified
@@ -2954,6 +3128,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#396951882/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Spouse or partner problems (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/396951882/unspecified
 - code: QE52.Y
   title: Other specified problem associated with interpersonal interactions in childhood
@@ -2963,6 +3138,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#901608346/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Childhood relationships (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/901608346/other
 - code: QE52.Z
   title: Problem associated with interpersonal interactions in childhood, unspecified
@@ -2972,6 +3148,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#901608346/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Childhood relationships (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/901608346/unspecified
 - code: QE5Y
   title: Other specified problems associated with relationships
@@ -2981,6 +3158,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1509667156/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Relationships (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1509667156/other
 - code: QE5Z
   title: Problems associated with relationships, unspecified
@@ -2990,6 +3168,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1509667156/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Relationships (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1509667156/unspecified
 - code: QE61.Y
   title: Disappearance or death of other family member
@@ -2999,6 +3178,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#283820579/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Other family member gone or died
   uri: http://id.who.int/icd/release/11/2026-01/mms/283820579/other
 - code: QE6Y
   title: Other specified problems associated with absence, loss or death of others
@@ -3008,6 +3188,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1399046120/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Absence, loss or death (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1399046120/other
 - code: QE6Z
   title: Problems associated with absence, loss or death of others, unspecified
@@ -3017,6 +3198,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1399046120/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Absence, loss or death (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1399046120/unspecified
 - code: QE70.Z
   title: Problems related to primary support group, including family circumstances, unspecified
@@ -3026,6 +3208,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#812634854/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Family circumstances (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/812634854/unspecified
 - code: QE82.Y
   title: Other specified personal history of maltreatment
@@ -3035,6 +3218,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1703296220/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Past maltreatment (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1703296220/other
 - code: QE82.Z
   title: Personal history of maltreatment, unspecified
@@ -3044,6 +3228,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1703296220/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Past maltreatment (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1703296220/unspecified
 - code: QE8Y
   title: Other specified problems associated with harmful or traumatic events
@@ -3053,6 +3238,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#675461815/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Harmful or traumatic events (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/675461815/other
 - code: QE8Z
   title: Problems associated with harmful or traumatic events, unspecified
@@ -3062,6 +3248,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#675461815/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Harmful or traumatic events (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/675461815/unspecified
 - code: QE9Y
   title: Other specified problems associated with upbringing
@@ -3071,6 +3258,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1428430704/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Upbringing (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1428430704/other
 - code: QE9Z
   title: Problems associated with upbringing, unspecified
@@ -3080,6 +3268,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#1428430704/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Upbringing (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/1428430704/unspecified
 - code: QF2Y
   title: Difficulty or need for assistance with other specified activity
@@ -3089,6 +3278,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#340003177/other
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Help with activities (other)
   uri: http://id.who.int/icd/release/11/2026-01/mms/340003177/other
 - code: QF2Z
   title: Difficulty or need for assistance with unspecified activity
@@ -3098,6 +3288,7 @@ residuals:
   foundation_id: null
   source_url: https://icd.who.int/browse/2026-01/mms/en#340003177/unspecified
   release: ICD-11 MMS 2026-01 (WHO ICD-API container)
+  short_title: Help with activities (unspecified)
   uri: http://id.who.int/icd/release/11/2026-01/mms/340003177/unspecified
 known_gaps:
 - 'Resolved 2026-11-02 by the WHO ICD-API pull: titles, definitions, inclusions, exclusions, coded-elsewhere notes, index

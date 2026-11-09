@@ -29,7 +29,7 @@
    "date": "2026-10-23"
   },
   "permissions": {
-   "text": "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases) are marked as not from WHO; the pack carries no mapping between ICD-11 and any other classification; abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
+   "text": "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases, short titles) are marked as not from WHO; the pack carries no mapping between ICD-11 and any other classification; abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
    "figures": "none reproduced"
   },
   "concept_self_checks": false,
@@ -325,6 +325,19 @@
  "changes": [
   {
    "date": "2026-11-09",
+   "what": "SL34: a builder short title (short_title) on situations items, groups and residuals, for canvas labels; WHO's full title stays on the card, the peek and the exports",
+   "why": "First-run walk of the prototype: a box with no label showed WHO's title cut off",
+   "records": [
+    "situations.items[].short_title",
+    "situations.groups[].short_title",
+    "situations.residuals[].short_title",
+    "manifest"
+   ],
+   "source": "SL34, source/pack-src/short_titles.yaml (cowork, 2026-11-09)",
+   "by": "claude-code"
+  },
+  {
+   "date": "2026-11-09",
    "what": "SL33: the block-level crosswalks are removed from the pack on WHO's reply: situations.items[].crosswalk is no longer emitted for any code and the proposed table is held outside the pack (T-XWALK-02); the two pairing sentences of the icd11-chapter24 primer deleted; codes.builder_topic dropped; prototype banner reworded; T-LIC-01 status brought up to date; permissions.text says the pack carries no mapping between ICD-11 and any other classification",
    "why": "WHO (request 202611431): proceed under the existing ICD-11 licence and postpone mapping to other terminologies until WHO publishes its mapping agreement",
    "records": [
@@ -444,18 +457,6 @@
     "references/hovmand2014"
    ],
    "source": "publisher PDFs and pages via UAH library; independent reviewer",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "L22 (QD80 unemployment → QE01 stress, +, S) now ships on Paul & Moser 2009, summarised from Daniel's UAH library PDF (abstract verbatim); Kivimäki 2012 (job strain → heart disease) removed from L22 as off-target; with L29 the QD80 ⇄ QE01 loop closes on evidence. Lawes 2022 note updated",
-   "why": "T-BIB-03; independent check passed with wording fixes (hedged causal claim; QE01 as an approximate reading, not a diagnosis)",
-   "records": [
-    "links/L22",
-    "references/paul_moser2009",
-    "references/lawes2022"
-   ],
-   "source": "Paul & Moser 2009 (publisher PDF via UAH library); independent reviewer",
    "by": "cowork"
   }
  ],

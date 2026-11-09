@@ -10,7 +10,7 @@ import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
 import JSZip from 'jszip';
-import { addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
+import { openTool, tool, addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
 
 const DISCUSSED = "Ms. Rivera called from 205-555-0134. We've been staying at my sister's since the eviction. I lost my job in March.";
 const QUOTE = "staying at my sister's since the eviction";
@@ -18,12 +18,13 @@ const QUOTE = "staying at my sister's since the eviction";
 async function start(page: Page, name: string) {
   await page.goto('/');
   await dismissFirstRun(page);
-  await newMap(page, name);
-  await page.getByTestId('mode-read').click();
+  await newMap(page, name, '', 'read'); // the passages show in Read
 }
 async function openNotebook(page: Page) {
+  await openTool(page, 'notebook-toggle');
   const t = page.getByTestId('notebook-toggle');
-  if ((await t.getAttribute('aria-pressed')) !== 'true') await t.click();
+  if ((await t.getAttribute('aria-checked')) !== 'true') await t.click();
+  else await page.keyboard.press('Escape');
   await expect(page.getByTestId('notebook')).toBeVisible();
   if (await page.getByTestId('dock-unfold').count()) await page.getByTestId('dock-unfold').click();
 }
@@ -181,8 +182,10 @@ test('the S7.1 walkthrough: the loop forms, Loops shows its passages, Go to pass
   await expect(hl).toBeInViewport();
   await expect.poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-testid'))).toBe('nb-field-discussed');
   // the trace view: with the caret in the Low income passage, Homelessness and its passage are dimmed
-  await page.getByTestId('trace-toggle').click();
-  await expect(page.getByTestId('trace-toggle')).toHaveAttribute('aria-pressed', 'true');
+  await tool(page, 'trace-toggle');
+  await openTool(page, 'trace-toggle');
+  await expect(page.getByTestId('trace-toggle')).toHaveAttribute('aria-checked', 'true');
+  await page.keyboard.press('Escape');
   await caretIn(page, 'I lost my job in March', 'nb-field-discussed');
   const lowId = m.nodes.find((n) => n.code === 'QD51')!.id;
   const homeId = m.nodes.find((n) => n.code !== 'QD51')!.id;
@@ -195,7 +198,7 @@ test('the S7.1 walkthrough: the loop forms, Loops shows its passages, Go to pass
   await expect(page.getByTestId('nb-passage').filter({ hasText: 'I lost my job' })).not.toHaveAttribute('data-dim', 'true');
   expect(await scan(page, 'walkthrough + trace')).toEqual([]);
   // off: nothing is dimmed
-  await page.getByTestId('trace-toggle').click();
+  await tool(page, 'trace-toggle');
   await expect(page.getByTestId('nb-field-discussed').locator('.sx-dim')).toHaveCount(0);
 });
 

@@ -1,3 +1,4 @@
+import { LoopEntryText } from './loopEntry';
 import { useMemo, useState, useId } from 'react';
 import { S } from '../../lib/data/core';
 import { C } from '../../lib/copy';
@@ -29,6 +30,7 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
   const [draft, setDraft] = useState('');
   const nm = nameOf(map);
   const id = useId();
+  const entry = (l: Loop) => ({ name: names.get(l.key) ?? '', kind: l.kind, kindWord: l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing, length: l.length, overrides: overrides(l), strength: l.strength, nodes: l.nodes.map(nm) });
   const shown = strongestLoops(result, names).filter((l) => (kind === 'all' || l.kind === kind) && (!through || l.nodes.includes(through)));
   const counts = { R: result.loops.filter((l) => l.kind === 'R').length, B: result.loops.filter((l) => l.kind === 'B').length };
   return (
@@ -69,12 +71,8 @@ export function LoopsPanel({ map, result, names, active, onPick, onRename, onCir
                 aria-pressed={active === l.key}
                 onClick={() => onPick(active === l.key ? null : l)}
                 data-testid="loop-pick"
-                // K6 D5: one name for the whole entry (the parts below are split across spans and read badly)
-                aria-label={`${names.get(l.key)}, ${l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing}, ${l.length} ${l.length === 1 ? 'link' : 'links'}, ${overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'}`}, strength ${l.strength.toFixed(3)}: ${l.nodes.map(nm).join(' to ')}`}
               >
-                <span className={`${l.kind === 'R' ? 'ax-edge-pos' : 'ax-edge-neg'} font-bold`}>{l.kind === 'R' ? '↻' : '↺'}{l.kind}</span>{' '}
-                <span className="font-semibold" data-testid="loop-name">{names.get(l.key)}</span> · {l.kind === 'R' ? S.loops.reinforcing : S.loops.balancing} · <span data-testid="loop-length">{l.length}</span> {l.length === 1 ? 'link' : 'links'} · <span data-testid="loop-overrides">{overrides(l) === 0 ? 'no overrides' : `${overrides(l)} ${overrides(l) === 1 ? 'override' : 'overrides'} ⚑`}</span> · strength {l.strength.toFixed(3)}
-                <span className="mt-0.5 block text-xs bx-muted">{l.nodes.map(nm).join(' → ')} → ↺</span>
+                <LoopEntryText entry={entry(l)} />
               </button>
             </div>
             <div className="mt-1 flex flex-wrap gap-1">

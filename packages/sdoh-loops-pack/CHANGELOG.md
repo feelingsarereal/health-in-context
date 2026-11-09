@@ -9,6 +9,16 @@ version's entry — so any change to the pack's data needs a new version here fi
 - **Minor:** codes, links, references, terms or strings are added; nothing a consumer reads is taken away.
 - **Patch:** wording, corrections, re-verification dates.
 
+## [0.5.0] — 2026-11-09
+
+Minor (SL34): an optional `short_title` on `situations` codes and groups, for canvas labels. Nothing a consumer reads
+is taken away. Logged in `content-pack/changes.yaml`.
+
+- sha256: `03031d371313b8cd0487cd902cffe354ba25cc76c14879f0551d5e23972d133d`
+- **`short_title`:** 191 entries (16 groups, 126 codes, 49 residuals) from `source/pack-src/short_titles.yaml`. These
+  are the builder's, not WHO's text, and `scheme.text_source` and `permissions.text` say so. WHO's full `title` is
+  unchanged.
+
 ## [0.4.0] — 2026-11-09
 
 Minor by Daniel's decision, 2026-11-09: the `crosswalk` field is removed; hosts at core 0.10.0 or earlier that still read it get `undefined`, which the code card already tolerates.

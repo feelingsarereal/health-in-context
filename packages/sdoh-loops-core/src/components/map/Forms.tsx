@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import { derivedLabel } from './nodeText';
 import { S } from '../../lib/data/core';
 import { codeMap, type Code } from '../../lib/data/scheme';
 import { C } from '../../lib/copy';
@@ -12,9 +13,9 @@ import { CodePicker } from './CodePicker';
 export type NodeDraft = Pick<MapNode, 'code_status' | 'code' | 'type' | 'ref' | 'label' | 'circumstance' | 'severity' | 'since' | 'notes' | 'style' | 'pinned' | 'kind'>;
 
 /** The circumstance fields (UI-01, UI-04, UI-16). Used by the new-node dialog, the inspector and the list view. */
-export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compact }: { draft: NodeDraft; onChange: (p: Partial<NodeDraft>, key?: string) => void; pickerOpen?: boolean; only?: Code[]; suggested?: string[]; compact?: boolean }) {
+export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compact, onEnter, onEscape }: { draft: NodeDraft; onChange: (p: Partial<NodeDraft>, key?: string) => void; pickerOpen?: boolean; only?: Code[]; suggested?: string[]; compact?: boolean; onEnter?: () => void; onEscape?: () => void }) {
   const id = useId();
-  const [picking, setPicking] = useState(!!pickerOpen);
+  const [picking, setPicking] = useState(!compact && !!pickerOpen);
   if (draft.kind === 'note') {
     return (
       <Field label={C.node.note} htmlFor={`${id}-note`} nudgeId={`${id}-note-n`}>
@@ -23,6 +24,78 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
     );
   }
   const code = draft.code ? codeMap.get(draft.code) : undefined;
+  const otherFields = (
+    <div className="mb-3 grid gap-2 sm:grid-cols-2">
+      <Field label={C.node.type} htmlFor={`${id}-type`}>
+        <select id={`${id}-type`} className="bx-input ax-tap" value={draft.type ?? ''} onChange={(e) => onChange({ type: (e.target.value || null) as NodeDraft['type'] })} data-testid="other-type">
+          <option value="">—</option>
+          {OTHER_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+        </select>
+      </Field>
+      <Field label={C.node.ref} htmlFor={`${id}-ref`}>
+        <input id={`${id}-ref`} className="bx-input ax-tap" value={draft.ref ?? ''} onChange={(e) => onChange({ ref: e.target.value || null }, 'ref')} />
+      </Field>
+    </div>
+  );
+  // SL34: the Add circumstance dialog — what happened first, the code second, formatting out of the way
+  if (compact) {
+    // ProseMirror swallows Esc, so the native dialog would never hear it
+    const enter = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onEscape) { onEscape(); return true; }
+      if (e.key !== 'Enter' || e.shiftKey || !onEnter) return false;
+      onEnter();
+      return true;
+    };
+    const showPicker = !code || picking;
+    return (
+      <div>
+        <Field label={C.node.circumstance} htmlFor={`${id}-circ`} hint={C.node.whatHint} hintId={`${id}-circ-h`}>
+          <RichField id={`${id}-circ`} label={C.node.circumstance} value={draft.circumstance} onChange={(d) => onChange({ circumstance: d }, 'circumstance')} describedBy={`${id}-circ-h ${id}-label-n`} tucked dialogFocus onKey={enter} />
+        </Field>
+        {draft.code_status !== 'other' && (
+          <div className="mb-2" data-testid="code-row">
+            {code && !picking && (
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="min-w-0 flex-1 text-sm" data-testid="chosen-code"><span className="font-mono">{code.code}</span> {code.title}</p>
+                <button type="button" className="bx-btn ax-tap" onClick={() => setPicking(true)} data-testid="change-code">{C.node.changeCode}</button>
+              </div>
+            )}
+            {suggested && suggested.length > 1 && (
+              <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={C.assoc.suggested}>
+                {suggested.map((c) => (
+                  <button key={c} type="button" className={`bx-btn ax-tap ${draft.code === c ? 'bx-btn-on' : ''}`} aria-pressed={draft.code === c} onClick={() => { onChange({ code: c, code_status: 'sdoh' }); setPicking(false); }} data-suggest={c}>
+                    <span className="font-mono text-xs">{c}</span> {codeMap.get(c)?.title}
+                  </button>
+                ))}
+              </div>
+            )}
+            {showPicker && (
+              <>
+                <p className="mb-1 text-sm font-semibold">{C.node.chooseCode}</p>
+                {only && <p className="mb-1 text-xs bx-muted">{C.assoc.inBlock}</p>}
+                <CodePicker key={picking ? 'change' : 'choose'} value={draft.code} only={only} collapsible focusOnMount={picking} onPick={(c) => { onChange({ code: c, code_status: 'sdoh' }); setPicking(false); requestAnimationFrame(() => document.getElementById(`${id}-circ`)?.focus()); }} />
+              </>
+            )}
+          </div>
+        )}
+        <fieldset className="mb-3 flex flex-wrap items-center gap-2" data-testid="status-control">
+          <legend className="float-left mr-2 text-sm font-semibold">{C.node.thisIs}</legend>
+          <div className="flex flex-wrap gap-1" role="radiogroup" aria-label={C.node.thisIs}>
+            {CODE_STATUSES.map((st) => (
+              <label key={st} className={`bx-btn ax-tap cursor-pointer px-2 py-0.5 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[color:var(--bx-accent)] ${draft.code_status === st ? 'bx-btn-on' : ''}`}>
+                <input type="radio" className="sr-only" name={`${id}-status`} value={st} checked={draft.code_status === st} onChange={() => onChange({ code_status: st })} data-testid={`status-${st}`} aria-labelledby={`${id}-st-${st}`} />
+                <span id={`${id}-st-${st}`}>{st === 'other' ? S.codes.status.other.split(' ')[0] : S.codes.status[st]}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        {draft.code_status === 'other' && otherFields}
+        <Field label={C.node.label} htmlFor={`${id}-label`} nudgeId={`${id}-label-n`}>
+          <RichField id={`${id}-label`} label={C.node.label} value={draft.label} onChange={(d) => onChange({ label: d }, 'label')} describedBy={`${id}-label-n`} singleLine tucked placeholder={derivedLabel(draft) || undefined} onKey={enter} />
+        </Field>
+      </div>
+    );
+  }
   return (
     <div>
       <fieldset className="mb-3">
@@ -75,19 +148,7 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
         </div>
       )}
 
-      {draft.code_status === 'other' && (
-        <div className="mb-3 grid gap-2 sm:grid-cols-2">
-          <Field label={C.node.type} htmlFor={`${id}-type`}>
-            <select id={`${id}-type`} className="bx-input ax-tap" value={draft.type ?? ''} onChange={(e) => onChange({ type: (e.target.value || null) as NodeDraft['type'] })} data-testid="other-type">
-              <option value="">—</option>
-              {OTHER_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </Field>
-          <Field label={C.node.ref} htmlFor={`${id}-ref`}>
-            <input id={`${id}-ref`} className="bx-input ax-tap" value={draft.ref ?? ''} onChange={(e) => onChange({ ref: e.target.value || null }, 'ref')} />
-          </Field>
-        </div>
-      )}
+      {draft.code_status === 'other' && otherFields}
 
       <Field label={C.node.label} htmlFor={`${id}-label`} nudgeId={`${id}-label-n`}>
         <RichField id={`${id}-label`} label={C.node.label} value={draft.label} onChange={(d) => onChange({ label: d }, 'label')} describedBy={`${id}-label-n`} singleLine />
@@ -96,8 +157,7 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
       <Field label={C.node.circumstance} htmlFor={`${id}-circ`} nudgeId={`${id}-circ-n`} hint={C.node.variableHint} hintId={`${id}-circ-h`}>
         <RichField id={`${id}-circ`} label={C.node.circumstance} value={draft.circumstance} onChange={(d) => onChange({ circumstance: d }, 'circumstance')} describedBy={`${id}-circ-h ${id}-circ-n`} />
       </Field>
-      {!compact && (
-        <>
+      <>
           <div className="grid gap-2 sm:grid-cols-2">
             <Field label={C.node.severity} htmlFor={`${id}-sev`}>
               <select id={`${id}-sev`} className="bx-input ax-tap" value={draft.severity ?? ''} onChange={(e) => onChange({ severity: e.target.value === '' ? null : (+e.target.value as 0) })}>
@@ -123,8 +183,7 @@ export function NodeFields({ draft, onChange, pickerOpen, only, suggested, compa
               <input type="checkbox" checked={draft.pinned} onChange={(e) => onChange({ pinned: e.target.checked })} aria-labelledby={`${id}-pin`} /> <span id={`${id}-pin`}>{C.node.pinned}</span>
             </label>
           </div>
-        </>
-      )}
+      </>
     </div>
   );
 }

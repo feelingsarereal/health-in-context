@@ -8,7 +8,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
-import { addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
+import { openTool, addNode, dismissFirstRun, menuItem, newMap } from '../helpers';
 
 const TEXT = "We've been staying at my sister's since the eviction. I lost my job in March.";
 const QUOTE = "staying at my sister's since the eviction";
@@ -16,13 +16,13 @@ const QUOTE = "staying at my sister's since the eviction";
 async function start(page: Page, name: string) {
   await page.goto('/');
   await dismissFirstRun(page);
-  await newMap(page, name);
-  // newMap leaves the card in Edit; the passages show in Read
-  await page.getByTestId('mode-read').click();
+  await newMap(page, name, '', 'read'); // the passages show in Read
 }
 async function openNotebook(page: Page) {
+  await openTool(page, 'notebook-toggle');
   const t = page.getByTestId('notebook-toggle');
-  if ((await t.getAttribute('aria-pressed')) !== 'true') await t.click();
+  if ((await t.getAttribute('aria-checked')) !== 'true') await t.click();
+  else await page.keyboard.press('Escape');
   await expect(page.getByTestId('notebook')).toBeVisible();
   if (await page.getByTestId('dock-unfold').count()) await page.getByTestId('dock-unfold').click();
 }

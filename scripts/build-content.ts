@@ -67,6 +67,7 @@ const codes = s
         who_browser: i.who_browser,
         source_url: i.source_url,
         verified_on: i.verified_on,
+        short_title: (i as { short_title?: string }).short_title ?? null,
         // K5: a residual promoted to an item (QD71.Z) keeps its kind, so it sorts after the block's specific codes
         residual: (i.residual ? (i.code.endsWith('Y') ? 'other' : 'unspecified') : null) as null | string,
       })),
@@ -90,6 +91,7 @@ const codes = s
           who_browser: r.source_url.startsWith('https://icd.who.int/') ? r.source_url : null,
           source_url: r.source_url,
           verified_on: s.scheme.verified_on,
+          short_title: (r as { short_title?: string }).short_title ?? null,
           residual: r.kind,
           parent_title: r.parent_title,
         };

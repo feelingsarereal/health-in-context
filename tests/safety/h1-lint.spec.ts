@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
+import { tool, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
 import { h1Violations, PHRASES, ALLOWED_PHRASES } from '../lint';
 import { lintText } from '../../scripts/lib/lint';
 
@@ -49,7 +49,7 @@ test('H1: the map surface — pop-out, association menu (with 2nd degree), every
   await page.keyboard.press('?');
   all.push(...h1Violations(await page.locator('body').innerText(), '/map keys'));
   await page.keyboard.press('Escape');
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
   all.push(...h1Violations(await page.locator('body').innerText(), '/map/list'));
   expect(all).toEqual([]);
 });

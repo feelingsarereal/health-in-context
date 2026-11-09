@@ -289,6 +289,27 @@ function withLabels<T>(cy: Core, f: (cy: Core) => T): T {
   }
 }
 
+/** SL35: under 768 px, Fit frames the map from the top of the canvas */
+const PHONE_MAX = 768;
+const PHONE_MARGIN = 16;
+/** the box title's size at zoom 1 (styles.css .ax-nt-title) and the least it may render at on a phone */
+const TITLE_PX = 15;
+const MIN_LABEL_PX = 11;
+const isPhone = () => window.innerWidth < PHONE_MAX;
+
+/**
+ * SL35 point 3: the map's bounding box at the top of the canvas with a 16 px margin, scaled to the canvas width and
+ * clamped so the box titles stay at least 11 px; any empty area is below. Elsewhere, the usual centred fit.
+ */
+function frame(cy: Core) {
+  if (!isPhone()) return fitCapped(cy);
+  if (!cy.nodes().length) return;
+  const bb = cy.nodes().boundingBox({ includeLabels: false, includeOverlays: false });
+  const w = cy.width();
+  const z = Math.max(MIN_LABEL_PX / TITLE_PX, Math.min(1.2, (w - 2 * PHONE_MARGIN) / bb.w));
+  cy.viewport({ zoom: z, pan: { x: (w - bb.w * z) / 2 - bb.x1 * z, y: PHONE_MARGIN - bb.y1 * z } });
+}
+
 function fitCapped(cy: Core, eles = cy.nodes(), pad = 50) {
   if (!eles.length) return;
   cy.fit(eles, pad);
@@ -614,7 +635,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       wheelSensitivity: 0.2,
     });
     cyRef.current = cy;
-    if (P.current.map.nodes.length) fitCapped(cy);
+    if (P.current.map.nodes.length) frame(cy);
     else cy.zoom(1).center();
     let raf = 0;
     const schedule = () => {
@@ -726,7 +747,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
         const b = n.boundingBox({});
         return b.x1 < ext.x1 || b.x2 > ext.x2 || b.y1 < ext.y1 || b.y2 > ext.y2;
       });
-      if (outside) fitCapped(cy);
+      if (outside) frame(cy);
     }
     routeEdges(cy);
     fitMarks(cy);
@@ -793,14 +814,14 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const pinnedPos = new Map(pinned.map((n) => [n.id(), { ...n.position() }]));
       const opts: Record<string, unknown> =
         engine === 'elk-stress'
-          ? { name: 'elk', elk: { algorithm: 'stress', 'stress.desiredEdgeLength': 160 }, nodeDimensionsIncludeLabels: true, fit: scope !== 'selection', padding: 40, animate: anim, animationDuration: 450 }
+          ? { name: 'elk', elk: { algorithm: 'stress', 'stress.desiredEdgeLength': 160 }, nodeDimensionsIncludeLabels: true, fit: scope !== 'selection' && !isPhone(), padding: 40, animate: anim, animationDuration: 450 }
           : {
               name: 'fcose',
               quality: 'proof',
               randomize: scope === 'all',
               animate: anim,
               animationDuration: 500,
-              fit: scope !== 'selection',
+              fit: scope !== 'selection' && !isPhone(),
               padding: 40,
               nodeDimensionsIncludeLabels: true,
               nodeSeparation: 90,
@@ -819,6 +840,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
           pos[n.id()] = { ...n.position() };
         });
         P.current.onMove(pos, undefined, 'layout');
+        if (scope !== 'selection' && isPhone()) frame(cy);
       });
       l.run();
       };
@@ -841,7 +863,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       P.current.onMove(pos, true, 'layout');
     },
     fit() {
-      if (cyRef.current) fitCapped(cyRef.current);
+      if (cyRef.current) frame(cyRef.current);
     },
     fitTo(ids) {
       const cy = cyRef.current;
@@ -875,7 +897,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(props, ref) {
       const cy = cyRef.current;
       if (!cy) return;
       cy.resize();
-      if (cy.nodes().length) fitCapped(cy);
+      if (cy.nodes().length) frame(cy);
     },
     where(id) {
       const cy = cyRef.current;

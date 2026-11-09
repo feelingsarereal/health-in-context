@@ -3,7 +3,7 @@
  * own specs (k4-control-names, and the 375 px smoke test).
  */
 import { test, expect, type Page } from '@playwright/test';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, panel, selectNodeByName } from '../helpers';
 
 async function start(page: Page, name: string) {
   await page.goto('/');
@@ -66,6 +66,7 @@ test('D7: the Paths summary pluralises', async ({ page }) => {
 
 test('D8: the Leverage panel shows one heuristic label', async ({ page }) => {
   await start(page, 'D8');
+  await addNode(page, { code: 'QD80', search: 'unemployment' }); // SL35: an empty map's dock has only the hint
   await panel(page, 'leverage');
   const label = page.getByTestId('leverage-panel').locator('[data-heuristic]');
   await expect(label).toHaveText('Heuristic — hints for discussion');
@@ -87,7 +88,7 @@ test('D3 and D12: the menu names the tier basis once, and an empty section says 
 test.describe('D10 on a phone', () => {
   test.use({ viewport: { width: 375, height: 812 }, hasTouch: true, isMobile: true });
 
-  test('the empty canvas says to tap New circumstance, and the secondary tools sit behind More', async ({ page }) => {
+  test('the empty canvas says to tap New circumstance, and the secondary tools sit behind ＋ and the menus', async ({ page }) => {
     await start(page, 'D10');
     await expect(page.getByTestId('canvas-empty')).toHaveText('Tap New circumstance to add the first circumstance.');
     const bar = page.getByTestId('toolbar');
@@ -95,19 +96,21 @@ test.describe('D10 on a phone', () => {
     expect(tall).toBeLessThan(812 / 4);
     await expect(page.getByTestId('arrange')).toBeHidden();
     await expect(page.getByTestId('add-node')).toBeVisible();
-    await page.getByTestId('toolbar-more').tap();
-    await expect(page.getByTestId('toolbar-more')).toHaveAttribute('aria-expanded', 'true');
+    await page.getByTestId('do-menu').tap();
+    await expect(page.getByTestId('add-note')).toBeVisible();
+    await page.getByTestId('do-menu').tap();
+    await expect(page.getByTestId('add-note')).toBeHidden();
+    await page.getByTestId('arrange-menu').tap();
     await expect(page.getByTestId('arrange')).toBeVisible();
-    await page.getByTestId('toolbar-more').tap();
-    await expect(page.getByTestId('arrange')).toBeHidden();
   });
 });
 
-test('D10: on a desktop the hint keeps the double-click and N, and every tool is on the toolbar', async ({ page }) => {
+test('D10: on a desktop the hint keeps the double-click and N, and every tool is on the toolbar or its menus', async ({ page }) => {
   await start(page, 'D10 desk');
   await expect(page.getByTestId('canvas-empty')).toHaveText('Double-click the canvas or press N to add the first circumstance.');
-  await expect(page.getByTestId('arrange')).toBeVisible();
-  await expect(page.getByTestId('toolbar-more')).toBeHidden();
+  await expect(page.getByTestId('arrange-menu')).toBeVisible();
+  await expect(page.getByTestId('view-menu')).toBeVisible();
+  await expect(page.getByTestId('add-note')).toBeVisible();
 });
 
 // K6 D1 changed this: below the 44 px floor the buttons now stay at 44 px instead of hiding
@@ -118,13 +121,11 @@ test('D10: the ⋯ and link handles scale with zoom, and stay at the 44 px floor
   const more = page.getByTestId('node-more');
   const handle = page.getByTestId('connect-handle');
   await expect(more).toBeVisible();
-  const zoomIn = page.getByRole('button', { name: 'Zoom in' });
-  const zoomOut = page.getByRole('button', { name: 'Zoom out' });
   const w0 = (await more.boundingBox())!.width;
   expect(w0).toBeGreaterThanOrEqual(44);
-  await zoomIn.click();
+  await tool(page, 'zoom-in');
   await expect.poll(async () => (await more.boundingBox())?.width ?? 0).toBeGreaterThan(w0);
-  for (let i = 0; i < 6; i++) await zoomOut.click();
+  for (let i = 0; i < 6; i++) await tool(page, 'zoom-out');
   await expect(more).toBeVisible();
   await expect(handle).toBeVisible();
   for (const b of [more, handle]) expect(Math.round((await b.boundingBox())!.width)).toBe(44);

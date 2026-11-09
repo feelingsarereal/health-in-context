@@ -7,7 +7,7 @@ import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { offOrigin, recordRequests, menuItem } from '../helpers';
+import { openTool, tool, offOrigin, recordRequests, menuItem } from '../helpers';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const DIST = path.join(ROOT, 'packages/sdoh-loops-core/fixtures/consumer/dist');
@@ -67,7 +67,8 @@ test('K13 consumer: no runtime fetches, no off-origin requests, no telemetry API
   await page.goto('/');
   await expect(page.getByTestId('map-name')).toHaveText(EXAMPLE.name);
   for (const p of ['loops', 'links', 'paths', 'leverage', 'pulse', 'clusters', 'legend', 'about']) await panel(page, p); // Needs a code is greyed out at zero (SL23)
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
+  await openTool(page, 'switch-view');
   await expect(page.getByTestId('switch-view')).toHaveText(/canvas/i);
   await page.getByTestId('switch-view').click();
   await page.waitForTimeout(500);

@@ -6,7 +6,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import { makePdf } from '../fixtures/import-files';
-import { addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName, typeRich, menuItem } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, offOrigin, panel, recordRequests, selectNodeByName, typeRich, menuItem } from '../helpers';
 
 const SENTINEL = 'ZQX-SENTINEL-7731';
 
@@ -33,7 +33,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await panel(page, 'map');
   await typeRich(page, page.getByTestId('about-map'), 'Map notes', `MN ${SENTINEL}`);
   // SL26: the notebook — a free note (title, tags, body) and a structured note's field
-  await page.getByTestId('notebook-toggle').click();
+  await tool(page, 'notebook-toggle');
   await page.getByTestId('nb-new').click();
   await page.getByTestId('nb-title').fill(`NT ${SENTINEL}`);
   await page.getByTestId('nb-tags').fill(`tag-${SENTINEL}`);
@@ -63,7 +63,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('nb-import-done').click();
   await page.getByTestId('nb-search').fill(SENTINEL);
   await expect(page.getByTestId('nb-note')).toHaveCount(4);
-  await page.getByTestId('notebook-toggle').click();
+  await tool(page, 'notebook-toggle');
   // SL30 point 4: the notebook's first opening at 1400 px folded the dock; unfold it for the panels
   if (await page.getByTestId('dock-unfold').count()) await page.getByTestId('dock-unfold').click();
   await panel(page, 'loops');
@@ -79,9 +79,9 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByRole('button', { name: 'Run pulse' }).click();
   await panel(page, 'clusters');
   await page.getByLabel('Show clusters on the canvas').check();
-  await page.getByTestId('arrange').click();
-  await page.getByRole('combobox', { name: 'Layout' }).selectOption('elk-stress');
-  await page.getByTestId('arrange').click();
+  await tool(page, 'arrange');
+  await tool(page, 'layout-elk-stress');
+  await tool(page, 'arrange');
   await page.waitForTimeout(800);
   await selectNodeByName(page, `L ${SENTINEL}`);
   await page.keyboard.press('1');
@@ -120,7 +120,7 @@ test('G2/H2: a typed sentinel never appears in any request; no off-origin reques
   await page.getByTestId('report-format-print').check();
   await page.getByTestId('report-go').click();
   await expect(page.locator('iframe[data-testid="report-print-frame"]')).toHaveCount(1);
-  await page.getByTestId('switch-view').click();
+  await tool(page, 'switch-view');
   await expect(page.getByTestId('list-view')).toBeVisible();
   await page.reload();
 

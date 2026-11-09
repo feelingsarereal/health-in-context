@@ -1,7 +1,7 @@
 /** K8: on a short override link the +/− label used to be drawn over the mid-edge ⚑ and hide it (UI-18). */
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
-import { addEdge, addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
+import { tool, addEdge, addNode, dismissFirstRun, newMap, panel, menuItem } from '../helpers';
 
 const LOWINC = 'Low income';
 const STRESS = 'Stress, not elsewhere classified';
@@ -35,11 +35,11 @@ const edgeLi = (page: Page, from: string) =>
 
 async function zoomTo(page: Page, target: number) {
   const wrap = page.getByTestId('canvas-wrap');
-  await page.getByRole('button', { name: 'Fit', exact: true }).click();
+  await tool(page, 'fit');
   for (let i = 0; i < 8; i++) {
     const z = Number(await wrap.getAttribute('data-zoom'));
     if (Math.abs(z - target) < 0.12) return z;
-    await page.getByRole('button', { name: z > target ? 'Zoom out' : 'Zoom in' }).click();
+    await tool(page, z > target ? 'zoom-out' : 'zoom-in');
     await page.waitForTimeout(150);
   }
   throw new Error(`could not reach zoom ${target}`);
