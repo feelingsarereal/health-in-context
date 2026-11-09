@@ -66,15 +66,16 @@ pack version (`packages/sdoh-loops-pack/README.md`); `npm test` says so when it 
 
 `main` deploys to https://feelingsarereal.github.io/sdoh-loops/ through `.github/workflows/pages.yml`. The workflow
 runs `npm ci`, then `npm test`, then `npm run build:pages`, then `npm run check:xwalk`, then deploys, then runs the
-crosswalk test again against the live site. The Pages build differs from a local build in three ways:
+dist test again against the live site.
 
-- **No ICD-10-CM crosswalk** (`VITE_SDOH_XWALK=off`). Mapping ICD-11 to another classification needs WHO's separate
-  written agreement (§1.2.4, todo T-LIC-01, request 202611431). The core's `sdohCrosswalk` plugin leaves the pack's
-  ICD-10-CM data and its marked text out of the bundle, and `<SdohMap crosswalk={false}>` hides the lines. The
-  Healthy People 2030 domains stay, as "Builder topic, not from WHO".
-- **The crosswalk dist test** (`scripts/check-xwalk-dist.ts`). No text in `dist-pages/` may match
-  `/ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/` outside `xwalk-allowlist.txt`. That file lists general mentions that map
-  no code, each with its reason. Cowork reviews it before publishing.
+Codes are shown as WHO publishes them, with no mapping to other code sets, in every build. WHO's reply to request
+202611431 (2026-11-09) says to proceed under the existing ICD-11 licence and to postpone any mapping until WHO
+publishes its mapping agreement (SL33, todo T-LIC-01).
+
+- **The dist test** (`scripts/check-xwalk-dist.ts`) ends every `npm run build` and `npm run build:pages`. No text in
+  the output may match `/ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/` outside `xwalk-allowlist.txt`, which lists general
+  mentions that map no code, each with its reason. A `crosswalk` key, a Healthy People 2030 domain id as a value and
+  the label "Builder topic" fail it outright. Cowork reviews the allowlist before publishing.
 - **The prototype banner** (`VITE_SDOH_PAGES=on`) above the header on every page. Hiding it lasts for the visit;
   a reload brings it back.
 
@@ -86,8 +87,7 @@ SDOH_LIVE_URL=https://feelingsarereal.github.io/sdoh-loops/ npx playwright test 
 npx tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/sdoh-loops/
 ```
 
-When WHO agrees, set `VITE_SDOH_XWALK` to on in the workflow (or drop it), and drop the banner's crosswalk sentence
-in the pack.
+When WHO publishes its mapping agreement, a new item can bring the mapping back under that agreement's terms.
 
 ## Publishing history
 

@@ -29,7 +29,7 @@
    "date": "2026-10-23"
   },
   "permissions": {
-   "text": "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases, Healthy People 2030 topic tags) are marked as not from WHO; the crosswalk to another classification is left out of the public build until WHO's written agreement (§1.2.4, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
+   "text": "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases) are marked as not from WHO; the pack carries no mapping between ICD-11 and any other classification; abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer",
    "figures": "none reproduced"
   },
   "concept_self_checks": false,
@@ -324,6 +324,22 @@
  },
  "changes": [
   {
+   "date": "2026-11-09",
+   "what": "SL33: the block-level crosswalks are removed from the pack on WHO's reply: situations.items[].crosswalk is no longer emitted for any code and the proposed table is held outside the pack (T-XWALK-02); the two pairing sentences of the icd11-chapter24 primer deleted; codes.builder_topic dropped; prototype banner reworded; T-LIC-01 status brought up to date; permissions.text says the pack carries no mapping between ICD-11 and any other classification",
+   "why": "WHO (request 202611431): proceed under the existing ICD-11 licence and postpone mapping to other terminologies until WHO publishes its mapping agreement",
+   "records": [
+    "situations.items[].crosswalk",
+    "concepts/icd11-chapter24",
+    "ui-strings/codes",
+    "ui-strings/prototype_banner",
+    "todo/T-LIC-01",
+    "todo/T-XWALK-02",
+    "manifest"
+   ],
+   "source": "SL33, WHO reply 2026-11-09",
+   "by": "claude-code"
+  },
+  {
    "date": "2026-11-03",
    "what": "Glossary, reading-clds primer and app-methods §2 reworded: link polarity uses Richardson's 'higher than it would otherwise have been' wording; reinforcing and balancing loops 'come back pushing the same way / against itself' instead of 'amplified / opposed', and the sign gives direction, not strength; the Homer & Hirsch sentence now says what the paper says (system dynamics suits the dynamic complexity of public-health problems)",
    "why": "Independent check of the eviction tutorial against its sources; keeps the app's wording consistent with the tutorial",
@@ -440,20 +456,6 @@
     "references/lawes2022"
    ],
    "source": "Paul & Moser 2009 (publisher PDF via UAH library); independent reviewer",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "ICD-11 text now WHO's own: titles, definitions, inclusions, exclusions, coded-elsewhere notes, index terms and URIs for all 126 codes, 16 groups and the residuals come verbatim from the WHO ICD-API (local container, release 2026-01) via tools/pull_icd11_api.py v0.1.3; the findacode mirror is retired. QD85 and QE11.6 definitions corrected; QE51.1 and QD71.Z index terms completed; residuals and QD71.Z gain URIs; scheme.text_source and scheme.licence (the CC BY-ND 3.0 IGO citation, licence §1.3) replace scheme.interim_source",
-   "why": "T-ICD-01; ICD-11 licence §1.2.3 (code, title and URI) and §1.3 (citation)",
-   "records": [
-    "situations.items",
-    "situations.groups",
-    "situations.residuals",
-    "situations.scheme",
-    "situations.known_gaps"
-   ],
-   "source": "WHO ICD-API container, ICD-11 MMS 2026-01, pulled 2026-11-02",
    "by": "cowork"
   }
  ],
@@ -604,7 +606,7 @@
   {
    "id": "T-LIC-01",
    "what": "Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before any delivery other than local.",
-   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3) — not yet shown in the app. No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted 2026-11-02 (request ID 202611431). Plan: wait for WHO's written agreement; if none by about 2026-11-16, ship with the ICD-10-CM line removed and the HP2030 domains kept as a builder topic tag. Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO, and the app ships a proposed ICD-10-CM / HP2030 crosswalk (114 codes). Not legal advice."
+   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3). No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted 2026-11-02 (request ID 202611431). Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO. WHO replied 2026-11-09 (request 202611431): proceed under the existing ICD-11 licence; postpone any mapping to other terminologies until WHO publishes its mapping agreement. SL33 removed the block-level crosswalks (ICD-10-CM and HP2030) from the pack; the proposed table is held in T-XWALK-02. Not legal advice."
   },
   {
    "id": "T-BIB-02",
@@ -613,6 +615,11 @@
   {
    "id": "T-XWALK-01",
    "what": "Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside Z55–Z65.",
+   "xwalk": true
+  },
+  {
+   "id": "T-XWALK-02",
+   "what": "A block-level crosswalk to ICD-10-CM Z55–Z65 and to the Healthy People 2030 domains was built and is held pending WHO's mapping agreement.",
    "xwalk": true
   },
   {

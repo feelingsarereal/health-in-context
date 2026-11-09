@@ -131,13 +131,12 @@ items:
     inclusions: []
     exclusions: []
     index_terms: []
-    crosswalk: { icd10cm: [Z59], hp2030: [econ, nbe] }
     uri: "http://id.who.int/icd/entity/1325772378"
     source_url: "…"
     verified_on: 2026-10-23
 ```
 
-Rules: codes are unique. `definition`, `title`, `inclusions` and `exclusions` are verbatim from the scheme or null, and the app shows null as "no definition in ICD-11" plus the link, never as a builder paraphrase. Every item names a `group` that exists. A crosswalk marked `proposed: true` renders with a "proposed mapping" chip.
+Rules: codes are unique. `definition`, `title`, `inclusions` and `exclusions` are verbatim from the scheme or null, and the app shows null as "no definition in ICD-11" plus the link, never as a builder paraphrase. Every item names a `group` that exists. Codes are shown as WHO publishes them; an item carries no mapping to other code sets.
 
 ### 3.3 links.yaml — module `links`
 

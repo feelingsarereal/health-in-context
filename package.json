@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build:content": "tsx scripts/build-content.ts",
-    "build": "npm run build:content && tsc -b && vite build && npm run build:consumer",
-    "build:pages": "npm run build:content && tsc -b && BASE_PATH=/sdoh-loops/ VITE_SDOH_XWALK=off VITE_SDOH_PAGES=on vite build --outDir dist-pages --emptyOutDir",
+    "build": "npm run build:content && tsc -b && vite build && npm run build:consumer && tsx scripts/check-xwalk-dist.ts dist",
+    "build:pages": "npm run build:content && tsc -b && BASE_PATH=/sdoh-loops/ VITE_SDOH_PAGES=on vite build --outDir dist-pages --emptyOutDir && tsx scripts/check-xwalk-dist.ts dist-pages",
     "check:xwalk": "tsx scripts/check-xwalk-dist.ts dist-pages",
     "preview": "vite preview",
     "test": "vitest run",
@@ -22,8 +22,8 @@
     "release:dry": "npm pack --dry-run -w @feelingsarereal/sdoh-loops-pack -w @feelingsarereal/sdoh-loops-core"
   },
   "dependencies": {
-    "@feelingsarereal/sdoh-loops-core": "0.10.0",
-    "@feelingsarereal/sdoh-loops-pack": "0.3.0",
+    "@feelingsarereal/sdoh-loops-core": "0.11.0",
+    "@feelingsarereal/sdoh-loops-pack": "0.4.0",
     "idb-keyval": "6.2.1",
     "js-yaml": "4.1.0",
     "katex": "0.16.11",

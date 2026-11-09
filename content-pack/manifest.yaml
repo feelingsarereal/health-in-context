@@ -19,7 +19,7 @@ storage: device
 github_account: feelingsarereal
 builder: { name: "Actualizer", version: "0.1", date: "2026-10-23" }
 permissions:
-  text: "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases, Healthy People 2030 topic tags) are marked as not from WHO; the crosswalk to another classification is left out of the public build until WHO's written agreement (§1.2.4, todo T-LIC-01); abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer"
+  text: "builder-authored; ICD-11 codes, titles and definitions reproduced verbatim from the WHO ICD-API with code, title and URI. International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO. Builder fields (tiers, links, search aliases) are marked as not from WHO; the pack carries no mapping between ICD-11 and any other classification; abstracts verbatim with source; no other third-party text beyond quotations of 25 words or fewer"
   figures: "none reproduced"
 concept_self_checks: false
 notes_storage: browser

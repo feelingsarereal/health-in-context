@@ -9,6 +9,24 @@ version's entry — so any change to the pack's data needs a new version here fi
 - **Minor:** codes, links, references, terms or strings are added; nothing a consumer reads is taken away.
 - **Patch:** wording, corrections, re-verification dates.
 
+## [0.4.0] — 2026-11-09
+
+Minor by Daniel's decision, 2026-11-09: the `crosswalk` field is removed; hosts at core 0.10.0 or earlier that still read it get `undefined`, which the code card already tolerates.
+
+SL33 (T-LIC-01, WHO's reply to request 202611431): WHO says to proceed under the existing ICD-11 licence and to
+postpone any mapping to other terminologies until it publishes its mapping agreement, so the pack carries none.
+Logged in `content-pack/changes.yaml`.
+
+- sha256: `cd47f8b8e4f72a937fb2dd4f2e88355bbf9e77bd47abc0203d9c8f3e3c9e231c`
+- **Removed:** `situations.items[].crosswalk` on all 114 codes that had it (both halves, their titles, sources and
+  `proposed`). The proposed table is held outside the pack, for the record, under to-do `T-XWALK-02`.
+- **Text:** the two pairing sentences of the `icd11-chapter24` primer are deleted, with their markers. The Z codes
+  glossary entry and references [62] and [63] stay; [63] is no longer used by that primer.
+- **Strings:** `codes.builder_topic` is dropped; `prototype_banner` now says codes are shown as WHO publishes them.
+  `codes.who_citation` is unchanged.
+- **To-dos:** `T-LIC-01` records WHO's reply; `T-XWALK-02` is new and, like `T-XWALK-01`, carries `xwalk: true`.
+- **Manifest:** `permissions.text` says the pack carries no mapping between ICD-11 and any other classification.
+
 ## [0.3.0] — 2026-11-04
 
 Minor (SL32, T-LIC-01): the pack marks what pairs ICD-11 with ICD-10-CM, so a build with the crosswalk off can leave it

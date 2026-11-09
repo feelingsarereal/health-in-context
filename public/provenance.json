@@ -6,7 +6,7 @@
  "scheme": {
   "name": "ICD-11 MMS",
   "release": "2026-01",
-  "text_source": "Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder additions — tiers, links, crosswalk, search aliases — are marked as not from WHO.",
+  "text_source": "Titles, definitions, inclusions, exclusions, coded-elsewhere notes and index terms are WHO's own text, pulled verbatim from the ICD-11 MMS 2026-01 (WHO ICD-API container) on 2026-11-02 by tools/pull_icd11_api.py (126 codes). Builder additions — tiers, links, search aliases — are marked as not from WHO.",
   "interim_source": null,
   "licence": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under Creative Commons Attribution-NoDerivatives 3.0 IGO licence (CC BY-ND 3.0 IGO)."
  },
@@ -22,8 +22,7 @@
    "definition_check": {
     "none": 89,
     "who_api": 37
-   },
-   "crosswalk_proposed": 114
+   }
   },
   "links": {
    "offered": 23,
@@ -52,7 +51,7 @@
  },
  "glossary": 21,
  "concepts": 5,
- "todo": 6,
+ "todo": 7,
  "heuristics": [
   {
    "id": "A4",

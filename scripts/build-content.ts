@@ -67,7 +67,6 @@ const codes = s
         who_browser: i.who_browser,
         source_url: i.source_url,
         verified_on: i.verified_on,
-        crosswalk: i.crosswalk ?? null,
         // K5: a residual promoted to an item (QD71.Z) keeps its kind, so it sorts after the block's specific codes
         residual: (i.residual ? (i.code.endsWith('Y') ? 'other' : 'unspecified') : null) as null | string,
       })),
@@ -91,7 +90,6 @@ const codes = s
           who_browser: r.source_url.startsWith('https://icd.who.int/') ? r.source_url : null,
           source_url: r.source_url,
           verified_on: s.scheme.verified_on,
-          crosswalk: null,
           residual: r.kind,
           parent_title: r.parent_title,
         };
@@ -262,7 +260,6 @@ const provenance = {
           definitions_present: s.items.filter((i) => i.definition).length,
           definitions_null: s.items.filter((i) => !i.definition).length,
           definition_check: count(s.items, (i) => String(i.definition_check ?? 'none')),
-          crosswalk_proposed: s.items.filter((i) => i.crosswalk?.proposed).length,
         }
       : null,
     links: L

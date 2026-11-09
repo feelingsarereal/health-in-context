@@ -8,7 +8,8 @@ export interface Code {
   definition: string | null; definition_check: string | null;
   inclusions: (string | XRef)[]; exclusions: (string | XRef)[]; coded_elsewhere: (string | XRef)[];
   index_terms: string[]; uri: string | null; who_browser: string | null; source_url: string; verified_on: string;
-  crosswalk: { icd10cm: string[]; hp2030: string[]; proposed?: boolean; hp2030_titles?: (string | null)[]; icd10cm_titles?: (string | null)[]; sources?: number[]; hp2030_sources?: number[]; icd10cm_sources?: number[] } | null;
+  /** @deprecated SL33 (pack 0.4.0): the pack no longer carries this field; always undefined. */
+  crosswalk?: { icd10cm: string[]; hp2030: string[]; proposed?: boolean; hp2030_titles?: (string | null)[]; icd10cm_titles?: (string | null)[]; sources?: number[]; hp2030_sources?: number[]; icd10cm_sources?: number[] } | null;
   residual: null | 'other' | 'unspecified'; parent_title?: string | null;
 }
 export interface Group { id: string; title: string; tier: string; uri?: string; source_url?: string; functioning?: boolean; subgroup_of?: string; note?: string }

@@ -235,3 +235,20 @@
   - app-methods
   source: Richardson 1986; Homer & Hirsch 2006
   by: cowork
+- date: '2026-11-09'
+  what: 'SL33: the block-level crosswalks are removed from the pack on WHO''s reply: situations.items[].crosswalk is no longer
+    emitted for any code and the proposed table is held outside the pack (T-XWALK-02); the two pairing sentences of the icd11-chapter24
+    primer deleted; codes.builder_topic dropped; prototype banner reworded; T-LIC-01 status brought up to date; permissions.text
+    says the pack carries no mapping between ICD-11 and any other classification'
+  why: 'WHO (request 202611431): proceed under the existing ICD-11 licence and postpone mapping to other terminologies until
+    WHO publishes its mapping agreement'
+  records:
+  - situations.items[].crosswalk
+  - concepts/icd11-chapter24
+  - ui-strings/codes
+  - ui-strings/prototype_banner
+  - todo/T-LIC-01
+  - todo/T-XWALK-02
+  - manifest
+  source: SL33, WHO reply 2026-11-09
+  by: claude-code

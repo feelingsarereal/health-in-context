@@ -18,7 +18,6 @@
   "citation_from": "situations.scheme.licence",
   "proposed_xwalk": "Proposed mapping — builder's reading, not from WHO",
   "who_citation": "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO.",
-  "builder_topic": "Builder topic, not from WHO",
   "builder_alias": "Builder alias — not an ICD-11 index term",
   "status": {
    "sdoh": "SDOH code",
@@ -358,7 +357,7 @@
   "lead": "Prototype for testing.",
   "body_1": "Commissioned research, not peer reviewed. It does not diagnose anyone.",
   "strong": "Don't enter real client information",
-  "body_2": ": anything you type stays in this browser, but this is a test site. The ICD-10-CM crosswalk is hidden until WHO's permission arrives.",
+  "body_2": ": anything you type stays in this browser, but this is a test site. Codes are shown as WHO publishes them; no mapping to other code sets is included.",
   "report": "Report a problem",
   "dismiss": "Hide this notice for this visit"
  },

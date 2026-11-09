@@ -10,6 +10,22 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.11.0] — 2026-11-09
+
+Minor (SL33, T-LIC-01, WHO's reply to request 202611431): the code card no longer shows a crosswalk or a **Topic**
+section, in the selection card, the peek, the code picker's detail and the notebook's code view. Codes are shown as WHO
+publishes them, with no mapping to other code sets. Pack: `0.4.0`.
+
+- **Removed from the card:** the Crosswalk section and the Topic section with its "Builder topic, not from WHO" chip.
+- **Deprecated:** `<SdohMap crosswalk>` is accepted and ignored. `sdohCrosswalk` from `/vite` is a no-op that logs one
+  deprecation line; `xwalkOn` still answers but nothing reads it.
+- **Removed exports:** `XWALK_BUILD`, `CrosswalkContext`, `useCrosswalk` and `unmarkXwalk`, and the `xwalk.js` file. No
+  host used them. `VITE_SDOH_XWALK` is no longer read.
+- **Type:** a code's `crosswalk` field is optional and deprecated; it is always undefined with pack 0.4.0.
+
+**For hosts:** bump the core and the pack together, drop the `crosswalk` prop and the `sdohCrosswalk` plugin when
+convenient, and re-run your drift test.
+
 ## [0.10.0] — 2026-11-04
 
 Minor (SL32, T-LIC-01): the ICD-10-CM crosswalk can be switched off, for the public prototype while WHO's written

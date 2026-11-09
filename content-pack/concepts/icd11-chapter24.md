@@ -14,13 +14,9 @@ further_reading:
 
 ICD-11 for Mortality and Morbidity Statistics is the World Health Organization's classification. Its Chapter 24 includes a section called 'Factors influencing health status', whose blocks QD50–QE9Z classify problems associated with finances, drinking water or nutrition, the environment (which holds housing, including homelessness), employment, education, the social or cultural environment, health behaviours, social insurance or welfare, the justice system, relationships, the absence or loss of others, the primary support group, harmful or traumatic events, and upbringing [64].
 
-<!-- xwalk -->
-In the United States, health records currently use the older ICD-10-CM, where categories Z55–Z65 play the same role [63].
-<!-- /xwalk -->
-
 ## How this app uses it
 
 <!-- framing -->
-The code picker offers every code in those blocks. Titles and definitions are shown exactly as ICD-11 gives them; many codes have no written definition, and the pop-out says so rather than inventing one. Each code links to its entry in the WHO browser.<!-- xwalk --> The crosswalk to Healthy People 2030 domains and to ICD-10-CM categories is marked as a proposed mapping until it is replaced by WHO's official mapping tables.<!-- /xwalk -->
+The code picker offers every code in those blocks. Titles and definitions are shown exactly as ICD-11 gives them; many codes have no written definition, and the pop-out says so rather than inventing one. Each code links to its entry in the WHO browser.
 
 Codes describe circumstances. Coding a circumstance in this app is a way of naming it consistently; it is not a clinical record and not a diagnosis.

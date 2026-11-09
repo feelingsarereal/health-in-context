@@ -60,8 +60,6 @@ export default function MapPage({ view }: { view: MapView }) {
       onLoad={(m) => m && setPref('last-map', m.id)}
       onOpenMap={(id) => nav(`/map?id=${id}`)}
       notebook
-      // SL32: the ICD-10-CM crosswalk follows the build switch (VITE_SDOH_XWALK; off on the public Pages build)
-      crosswalk={import.meta.env.VITE_SDOH_XWALK !== 'off'}
       passage={sp.get('passage') ?? undefined}
       missing={
         <div className="mx-auto max-w-3xl">

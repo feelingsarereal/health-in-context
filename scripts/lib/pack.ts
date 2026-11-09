@@ -108,19 +108,6 @@ const SituationItemSchema = z
     residual: z.boolean().optional(),
     source_url: z.string().min(1, 'source_url required'),
     verified_on: dateLike,
-    crosswalk: z
-      .object({
-        icd10cm: z.array(z.string()),
-        hp2030: z.array(z.string()),
-        proposed: z.boolean().optional(),
-        hp2030_titles: z.array(z.string().nullable()).optional(),
-        icd10cm_titles: z.array(z.string().nullable()).optional(),
-        sources: z.array(z.number().int()).optional(),
-        /** SL32: the sources behind each half, so a build with the ICD-10-CM crosswalk off keeps only the HP2030 one */
-        hp2030_sources: z.array(z.number().int()).optional(),
-        icd10cm_sources: z.array(z.number().int()).optional(),
-      })
-      .optional(),
   })
   .passthrough();
 const GroupSchema = z

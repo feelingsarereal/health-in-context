@@ -39,7 +39,7 @@ test('no "Interim copy" link anywhere; the text source names WHO, not the mirror
   expect(await foot.evaluate((el) => el.nextElementSibling === null && el.parentElement!.nextElementSibling === null)).toBe(true);
 });
 
-test('the pop-out: WHO as the source, the citation in small print, no check note for WHO text, the builder crosswalk labelled', async ({ page }) => {
+test('the pop-out: WHO as the source, the citation in small print, no check note for WHO text, no crosswalk', async ({ page }) => {
   await page.goto('/');
   await dismissFirstRun(page);
   await newMap(page, 'K9');
@@ -53,7 +53,9 @@ test('the pop-out: WHO as the source, the citation in small print, no check note
   await expect(pop.getByTestId('icd-citation')).toHaveText(CITATION);
   await expect(pop).not.toContainText('Interim copy');
   await addNode(page, { code: 'QD51', search: 'low income' });
-  await expect(pop.getByTestId('proposed-chip')).toHaveText("Proposed mapping — builder's reading, not from WHO");
+  await expect(pop.getByTestId('code-title')).toBeVisible();
+  // SL33: no mapping to another code set, and no Topic section, on any code card
+  for (const id of ['crosswalk', 'proposed-chip', 'xwalk-icd10cm', 'xwalk-hp2030', 'builder-topic', 'builder-topic-chip', 'topic-hp2030']) await expect(pop.getByTestId(id), id).toHaveCount(0);
 });
 
 test('every export carries the citation: JSON meta, a CSV comment line, a Markdown footer', async ({ page }) => {

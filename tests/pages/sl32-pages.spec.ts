@@ -1,7 +1,7 @@
 /**
  * SL32: the public Pages build (npm run build:pages → dist-pages, base /sdoh-loops/), locally or live
  * (playwright.pages.config.ts). The prototype banner on every page, WHO's citation in every footer and on About, and
- * no ICD-10-CM crosswalk on a code card.
+ * no crosswalk or Topic on a code card (SL33).
  */
 import { test, expect } from '@playwright/test';
 import { addNode, dismissFirstRun, newMap } from '../helpers';
@@ -9,7 +9,7 @@ import { addNode, dismissFirstRun, newMap } from '../helpers';
 const CITATION =
   'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO.';
 const BANNER =
-  "Prototype for testing. Commissioned research, not peer reviewed. It does not diagnose anyone. Don't enter real client information: anything you type stays in this browser, but this is a test site. The ICD-10-CM crosswalk is hidden until WHO's permission arrives. Report a problem";
+  "Prototype for testing. Commissioned research, not peer reviewed. It does not diagnose anyone. Don't enter real client information: anything you type stays in this browser, but this is a test site. Codes are shown as WHO publishes them; no mapping to other code sets is included. Report a problem";
 const ROUTES = ['./', './map', './maps', './evidence', './references', './glossary', './concepts', './concepts/icd11-chapter24', './help', './methods', './about', './nope'];
 
 test('the banner (above the header) and WHO\'s citation (in the footer) are on every page', async ({ page }) => {
@@ -57,7 +57,7 @@ test('Report a problem is a plain link to the repo\'s Issues page; hiding the ba
   await expect(page.getByTestId('prototype-banner')).toBeVisible();
 });
 
-test('a code card shows the HP2030 domain as the builder\'s topic, and no ICD-10-CM line anywhere', async ({ page }) => {
+test('a code card shows no crosswalk and no Topic, and the records say what is held', async ({ page }) => {
   await page.goto('./');
   await dismissFirstRun(page);
   await newMap(page, 'Crosswalk check');
@@ -66,14 +66,16 @@ test('a code card shows the HP2030 domain as the builder\'s topic, and no ICD-10
   await expect(pop.getByTestId('code-title')).toBeVisible();
   await expect(pop.getByTestId('crosswalk')).toHaveCount(0);
   await expect(pop.getByTestId('xwalk-icd10cm')).toHaveCount(0);
-  await expect(pop.getByTestId('builder-topic-chip')).toHaveText('Builder topic, not from WHO');
-  await expect(pop.getByTestId('topic-hp2030').first()).toContainText('Healthy People 2030:');
+  await expect(pop.getByTestId('xwalk-hp2030')).toHaveCount(0);
+  await expect(pop.getByTestId('builder-topic')).toHaveCount(0);
+  await expect(pop).not.toContainText('Healthy People 2030');
   await expect(page.locator('main')).not.toContainText(/ICD-10-CM|\bZ[0-9]{2}\b/);
   // the primer and /methods carry the hidden text no more
   await page.goto('./concepts/icd11-chapter24');
   await expect(page.locator('main')).not.toContainText('play the same role');
   await expect(page.locator('main')).not.toContainText('xwalk');
   await page.goto('./methods');
-  await expect(page.getByTestId('todo-list')).not.toContainText('T-XWALK-01');
-  await expect(page.getByTestId('topic-count')).toContainText('Builder topic, not from WHO');
+  await expect(page.getByTestId('todo-list')).toContainText('T-XWALK-02');
+  await expect(page.getByTestId('topic-count')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('Builder topic');
 });

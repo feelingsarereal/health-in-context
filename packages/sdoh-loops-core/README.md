@@ -175,26 +175,14 @@ The consumer fixture is built this way, and `tests/consumer/sl20-sl23.spec.ts` c
 `<Notice>` (H5) takes an optional `text` (plain text or a short node): pass your app's own `safety.yaml → notice` and
 drop the local copy of its markup. Without it, it shows the pinned pack's notice, the standalone app's wording.
 
-### The crosswalk switch (0.10.0, SL32)
+### No mapping to other code sets (0.11.0, SL33)
 
-WHO's ICD-11 licence covers codes, titles and definitions. A mapping between ICD-11 and another classification, such
-as the proposed ICD-10-CM crosswalk, needs WHO's separate written agreement (§1.2.4). A public build leaves it out:
+Codes are shown as WHO publishes them; no mapping to other code sets is included. WHO's reply to request 202611431
+says to proceed under the existing ICD-11 licence and to postpone any mapping until WHO publishes its mapping
+agreement, so pack 0.4.0 carries none and the code card shows none.
 
-```ts
-// vite.config.ts
-import { sdohCoreAlias, sdohCrosswalk, xwalkOn } from '@feelingsarereal/sdoh-loops-core/vite';
-const crosswalk = xwalkOn(process.env.VITE_SDOH_XWALK); // on unless 'off'
-export default defineConfig({ plugins: [sdohCrosswalk({ crosswalk }), react()], resolve: { alias: { ...sdohCoreAlias } } });
-```
-
-```tsx
-<SdohMap … crosswalk={import.meta.env.VITE_SDOH_XWALK !== 'off'} />
-```
-
-With the crosswalk off, these come out of the bundle: the pack's ICD-10-CM data, its marked text
-(`<!-- xwalk -->…<!-- /xwalk -->`), its marked records (`xwalk: true`), and the core's ICD-10-CM lines. The Healthy
-People 2030 domains stay as "Builder topic, not from WHO". Guard a host's own ICD-10-CM text with the same
-`import.meta.env.VITE_SDOH_XWALK !== 'off'` check, written inline so the minifier folds it, and test the output.
+**Deprecated, and safe to remove from a host:** the `crosswalk` prop on `<SdohMap>` is accepted and ignored.
+`sdohCrosswalk` from `/vite` is a no-op that logs one deprecation line, and `xwalkOn` still answers but nothing reads it.
 
 ### Build settings a consumer needs
 

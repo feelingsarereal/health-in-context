@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 export declare const sdohCoreAlias: Record<string, string>;
 export declare const sdohCoreContent: string[];
-/** SL32: whether an env value (e.g. process.env.VITE_SDOH_XWALK) leaves the crosswalk on — off for 'off', 'false', '0' */
+/** @deprecated SL33 (0.11.0): nothing reads the switch any more */
 export declare function xwalkOn(env: string | undefined): boolean;
-/** SL32: the crosswalk switch for the pack's data and the core's code; pass the same value as `<SdohMap crosswalk>` */
+/** @deprecated SL33 (0.11.0): a no-op that logs one deprecation line; pack 0.4.0 carries no crosswalk to switch off */
 export declare function sdohCrosswalk(opts?: { crosswalk?: boolean }): Plugin;

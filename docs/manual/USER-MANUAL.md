@@ -363,13 +363,12 @@ At the foot of the card is WHO's own text for the code:
   specified" or "unspecified" codes;
 - the **definition**, verbatim, or *No definition in ICD-11 for this code.* (many Chapter 24 codes have none);
 - **Inclusions**, **Exclusions**, **Coded elsewhere** and **Index terms**, where WHO gives them;
-- **Topic: Builder topic, not from WHO**, with the Healthy People 2030 domains the builder tagged this code with,
-  and their source [62]. On this public prototype the proposed ICD-10-CM crosswalk is hidden until WHO's permission
-  arrives; local builds show it, marked *Proposed mapping — builder's reading, not from WHO*;
 - **Open in the WHO ICD-11 browser** (a link to the code's entry) and the line *WHO's own text, ICD-11 MMS release
   2026-01*;
 - **Cited in your notebook (n)** when notebook passages cite this code (section 16.7);
 - the ICD-11 licence citation.
+
+Codes are shown as WHO publishes them; no mapping to other code sets is included.
 
 ---
 
@@ -1274,9 +1273,8 @@ instead; **Esc** leaves either way.
 **Where do the code definitions come from?** From WHO's ICD-11 (MMS release 2026-01), verbatim, under its CC BY-ND 3.0
 IGO licence. Many Chapter 24 codes have no written definition, and the app says so rather than inventing one.
 
-**Why can't I see the ICD-10-CM crosswalk?** Mapping ICD-11 to another classification needs WHO's separate written
-agreement, which is pending. The public prototype leaves the crosswalk out until it arrives. The Healthy People 2030
-topic tags stay, marked *Builder topic, not from WHO*.
+**Does the app map ICD-11 codes to other code sets?** No. Codes are shown as WHO publishes them, with no mapping to
+other code sets.
 
 **Does anything leave my device?** No. There are no accounts, no analytics and no server storage. Only files you
 export leave the browser. *Report a problem* is a plain link to GitHub, and it sends nothing from the app.

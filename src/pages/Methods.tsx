@@ -21,15 +21,6 @@ export default function Methods() {
   const scope = bundle.scope;
   /** K6: references that back no link but are recorded against one (role_note names it), e.g. Lawes 2022 on L22 */
   const recordedOn = (id: string) => references.filter((r) => !r.used_by.length && r.role_note && new RegExp(`\\b${id}\\b`).test(r.role_note));
-  const missingXwalk = [
-    ...new Set(
-      codes.flatMap((c) => [
-        // SL32: a build with the crosswalk off carries no ICD-10-CM half (VITE_SDOH_XWALK=off compiles this out)
-        ...(import.meta.env.VITE_SDOH_XWALK !== 'off' ? (c.crosswalk?.icd10cm ?? []).filter((_, i) => !c.crosswalk?.icd10cm_titles?.[i]).map((z) => `ICD-10-CM ${z}`) : []),
-        ...(c.crosswalk?.hp2030 ?? []).filter((_, i) => !c.crosswalk?.hp2030_titles?.[i]).map((h) => `HP2030 ${h}`),
-      ]),
-    ),
-  ].sort();
   const recordedShipped = links.filter((l) => recordedOn(l.id).length > 0);
   return (
     <div className="[overflow-wrap:anywhere]">
@@ -41,11 +32,6 @@ export default function Methods() {
         <ul className="list-disc pl-5" data-testid="provenance-counts">
           <li>{sit.codes} ICD-11 codes ({sit.sdoh_codes} SDOH, {sit.functioning_codes} functioning) in {sit.groups} groups, plus {sit.residuals} "other specified / unspecified" residual codes.</li>
           <li>Definitions: {sit.definitions_present} present (verbatim), {sit.definitions_null} with no definition in ICD-11. Definition checks: {Object.entries(sit.definition_check).map(([k, v]) => `${k} ${v}`).join(' · ')}.</li>
-          {import.meta.env.VITE_SDOH_XWALK !== 'off' ? (
-            <li>Crosswalks (ICD-10-CM, HP2030): {sit.crosswalk_proposed} marked proposed.</li>
-          ) : (
-            <li data-testid="topic-count">Healthy People 2030 topic tags ({S.codes.builder_topic}): {codes.filter((c) => c.crosswalk?.hp2030.length).length} codes. The proposed crosswalk to another classification is left out of this build until WHO's written agreement (T-LIC-01).</li>
-          )}
           <li>Links offered: {p.modules.links.offered} (by grade: {Object.entries(p.modules.links.by_grade).map(([k, v]) => `${k} ${v}`).join(' · ')}). Withheld: {p.modules.links.withheld}.</li>
           <li>References: {p.references.total} ({Object.entries(p.references.by_tier).map(([k, v]) => `${k} ${v}`).join(' · ')}); {p.references.verified} verified, {p.references.unverified} not verified; {p.references.abstracts_present} with verbatim abstracts.</li>
           <li>Glossary terms: {p.glossary}. Primers: {p.concepts}. Open research items (todo): {p.todo}. Stale facts: {p.stale}. Build errors: {p.build_errors}.</li>
@@ -87,9 +73,6 @@ export default function Methods() {
           )}
           {noSummary.length > 0 && (
             <li><Todo>summaries</Todo> {noSummary.length === 1 ? '1 reference has' : `${noSummary.length} references have`} no summary: {noSummary.map((r) => `[${r.n}]`).join(' ')}.</li>
-          )}
-          {missingXwalk.length > 0 && (
-            <li><Todo>crosswalk titles</Todo> The pack gives no title for: {missingXwalk.join(', ')} (shown in amber in the pop-out).</li>
           )}
           <li><Todo>interface copy</Todo> Labels and instructions not yet in ui-strings.yaml live in src/lib/copy.ts for review.</li>
         </ul>

@@ -32,8 +32,6 @@ export * from './lib/model/summary';
 export type { CaseReport, ReportOptions } from './lib/model/report';
 export { CitedInNotebook, NotebookCitations, CitationsContext, citationsIn, type Citation, type CitationsValue } from './components/notebook/Citations';
 export { CORE_VERSION } from './lib/version';
-// SL32: the ICD-10-CM crosswalk switch (the `crosswalk` prop, VITE_SDOH_XWALK and the sdohCrosswalk Vite plugin)
-export { XWALK_BUILD, CrosswalkContext, useCrosswalk, unmarkXwalk } from './lib/xwalk';
 
 // the pinned pack's data, the interface copy and the shared UI pieces the standalone app's pages use too
 export * from './lib/data/core';

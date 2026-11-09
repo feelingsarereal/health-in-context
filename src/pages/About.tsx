@@ -24,7 +24,7 @@ export default function About() {
         <dt className="font-semibold">Codes</dt>
         <dd>
           {scheme.name} release {scheme.release}, {scheme.source}.{' '}
-          <a className="underline" href={scheme.official_browser} target="_blank" rel="noreferrer">WHO ICD-11 browser</a>
+          <a className="underline" href={scheme.official_browser} target="_blank" rel="noreferrer">WHO ICD-11 browser</a>. Codes are shown as WHO publishes them; no mapping to other code sets is included.
         </dd>
         <dt className="font-semibold">ICD-11 text</dt>
         <dd data-testid="text-source">{scheme.text_source}</dd>

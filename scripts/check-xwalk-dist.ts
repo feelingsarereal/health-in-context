@@ -1,9 +1,12 @@
 /**
- * SL32 (T-LIC-01): the crosswalk dist test for the public Pages build. Nothing in the build may pair an ICD-11 code
- * with an ICD-10-CM one, so no text in it may match /ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/ outside the general
- * mentions listed, each with its reason, in xwalk-allowlist.txt.
+ * SL32, SL33 (T-LIC-01): the crosswalk dist test, run at the end of every build. Nothing in a build may pair an ICD-11
+ * code with an ICD-10-CM category or a Healthy People 2030 domain, so no text in it may match
+ * /ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/ outside the general mentions listed, each with its reason, in
+ * xwalk-allowlist.txt. The STRICT patterns have no allowlist: a `crosswalk` key, an HP2030 domain id as a value, or
+ * the withdrawn "Builder topic" label fails the build wherever it appears.
  *
- *   tsx scripts/check-xwalk-dist.ts dist-pages                                   # a local build
+ *   tsx scripts/check-xwalk-dist.ts dist                                         # the standalone build
+ *   tsx scripts/check-xwalk-dist.ts dist-pages                                   # the Pages build
  *   tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/sdoh-loops/  # the live site (crawls its files)
  *
  * Every text file is read (HTML, JS, CSS, JSON, …). A match passes only inside an occurrence of an allowlisted
@@ -14,6 +17,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const XWALK_PATTERN = /ICD-10-CM|\bZ[0-9]{2}(\.[0-9A-Z]+)?\b/g;
+/** SL33: never allowed. The optional backslashes are for pack data bundled as an escaped JSON.parse string. */
+export const STRICT: { what: string; re: RegExp }[] = [
+  { what: 'a crosswalk key', re: /\bcrosswalk\\?["']?\s*:/g },
+  { what: 'an HP2030 domain id', re: /\\?["'`](?:econ|edu|hca|nbe)\\?["'`]/g },
+  // "scc" is also the glossary term for a strongly connected component: its own id, and its place in the reading-clds term list, pass
+  { what: 'an HP2030 domain id', re: /(?<!\bid\\?["']?\s*:\s*\\?)(?<!elementary-circuit\\?["'`],\s*\\?)\\?["'`]scc\\?["'`]/g },
+  { what: 'the Builder topic label', re: /builder topic/gi },
+];
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TEXT = /\.(html?|js|mjs|css|json|txt|svg|map|xml|webmanifest|md)$/i;
 
@@ -49,6 +60,12 @@ export function scan(file: string, text: string, allow: AllowEntry[], used: Set<
     const s = m.index!, e = s + m[0].length;
     if (covered.some(([a, b]) => s >= a && e <= b)) continue;
     out.push({ file, match: m[0], context: text.slice(Math.max(0, s - 70), e + 50).replace(/\s+/g, ' ') });
+  }
+  for (const { what, re } of STRICT) {
+    for (const m of text.matchAll(re)) {
+      const s = m.index!, e = s + m[0].length;
+      out.push({ file, match: `${what}: ${m[0]}`, context: text.slice(Math.max(0, s - 70), e + 50).replace(/\s+/g, ' ') });
+    }
   }
   return out;
 }
@@ -104,6 +121,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
       console.log(`FAIL: ${findings.length} unallowed match(es), ${unused.length} stale allowlist entr(ies)`);
       process.exit(1);
     }
-    console.log('PASS: no ICD-10-CM pairing outside the allowlist');
+    console.log('PASS: no crosswalk data, and no ICD-10-CM mention outside the allowlist');
   });
 }
