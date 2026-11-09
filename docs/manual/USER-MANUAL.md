@@ -212,34 +212,48 @@ the canvas and the dock.
 |---|---|---|---|
 | 1 | **Map name** | The current map. "(imported)" means it came from a file. | §4 |
 | 2 | **Map ▾** | Open a map file, save a copy, every export, print / grayscale, import into the notebook. | §14 |
-| 3 | **Link count** | For example "15 links: 4 evidence · 11 override". | §9 |
-| 4 | **New circumstance** (N) | Add a box. | §6 |
-| 5 | **Link to…** (K) | Draw a link from the selected circumstance. | §9 |
-| 6 | **Associations** (A) | What the research links to the selected circumstance. Greyed out until a coded circumstance is selected. | §8 |
-| 7 | **Add a canvas note** | A free-text sticky note on the canvas. | §13 |
-| 8 | **Layout** | *Clustered* or *Evenly spaced*. | §13 |
-| 9 | **Auto-arrange** (R) | Lay the map out again, leaving pinned boxes where they are. | §13 |
-| 10 | **Re-arrange all (ignore pins)** | Lay out everything, pinned or not. | §13 |
-| 11 | **Arrange selection** | Lay out only the selected boxes (two or more). | §13 |
-| 12 | **Undo** (⌘Z) | Undo the last change. | §13 |
-| 13 | **Redo** (⌘⇧Z) | Redo it. | §13 |
-| 14 | **1st-degree** (1) | Highlight the selection and its direct neighbors. | §13 |
-| 15 | **2nd-degree** (2) | …and their neighbors. | §13 |
-| 16 | **Fit** | Zoom to show the whole map. | §13 |
-| 17 | **+** (*Zoom in*) | Zoom in. | §13 |
-| 18 | **−** (*Zoom out*) | Zoom out. | §13 |
-| 19 | **Full screen** (F) | The workspace fills the screen; Esc leaves. | §15 |
-| 20 | **List view / Canvas view** | Everything as tables, or back to the drawing. | §15 |
-| 21 | **Notebook** | Show or hide the case notebook beside the map. | §16 |
-| 22 | **Keyboard ?** (?) | The keyboard shortcuts. | §22 |
-| 23 | **Canvas** | The drawing itself. | §6, §10 |
-| 24 | **Read / Edit** (E) | How the Selected card shows the selection. | §7 |
-| 25 | **»** | Fold the side dock to a thin rail (]). | §15 |
-| 26 | **Evidence-backed links only** | Analyses use only evidence-backed links. | §12 |
-| 27 | **Whole map tabs** | Loops, Links, Paths, Leverage, What-if, Clusters, Legend, Needs a code, About this map. | §12 |
+| 3 | **New circumstance** (N) | Add a box. | §6 |
+| 4 | **Link to…** (K) | Draw a link from the selected circumstance. | §9 |
+| 5 | **Associations** (A) | What the research links to the selected circumstance. Greyed out until a coded circumstance is selected. | §8 |
+| 6 | **Add a canvas note** | A free-text sticky note on the canvas. | §13 |
+| 7 | **Arrange ▾** | The layout, the arranging commands and the neighborhood highlights, listed below. | §13 |
+| 8 | **View ▾** | Fit, zoom, full screen, the list view, the notebook, grayscale and the keyboard shortcuts, listed below. | §13, §15, §16, §22 |
+| 9 | **Undo** (⌘Z) | Undo the last change. | §13 |
+| 10 | **Redo** (⌘⇧Z) | Redo it. | §13 |
+| 11 | **Canvas** | The drawing itself. | §6, §10 |
+| 12 | **Read / Edit** (E) | How the Selected card shows the selection. | §7 |
+| 13 | **»** | Fold the side dock to a thin rail (]). | §15 |
+| 14 | **Evidence-backed links only** | Analyses use only evidence-backed links. | §12 |
+| 15 | **Link count** | For example "15 links: 4 evidence · 11 override". | §9 |
+| 16 | **Whole map tabs** | Loops, Links, Paths, Leverage, What-if, Clusters, Legend, Needs a code, About this map. | §12 |
 
-When the notebook is open, a **Trace** button appears beside **Notebook** (§16.8). At widths below about 1600 px,
-the toolbar wraps onto two or three rows.
+![The Arrange menu](img/22b-arrange-menu.webp) ![The View menu](img/22c-view-menu.webp)
+
+**Arrange ▾**
+
+| Control | In short | Details |
+|---|---|---|
+| **Layout** | *Clustered* or *Evenly spaced*. | §13 |
+| **Auto-arrange** (R) | Lay the map out again, leaving pinned boxes where they are. | §13 |
+| **Re-arrange all (ignore pins)** | Lay out everything, pinned or not. | §13 |
+| **Arrange selection** | Lay out only the selected boxes (two or more). | §13 |
+| **1st-degree** (1) | Highlight the selection and its direct neighbors. | §13 |
+| **2nd-degree** (2) | …and their neighbors. | §13 |
+
+**View ▾**
+
+| Control | In short | Details |
+|---|---|---|
+| **Fit** | Zoom to show the whole map. | §13 |
+| **Zoom in**, **Zoom out** | Zoom in or out. | §13 |
+| **Full screen** (F) | The workspace fills the screen; Esc leaves. | §15 |
+| **List view / Canvas view** | Everything as tables, or back to the drawing. | §15 |
+| **Notebook** | Show or hide the case notebook beside the map. | §16 |
+| **Grayscale** | Gray boxes and patterned links, for printing in black and white. | §15 |
+| **Keyboard shortcuts** (?) | The keyboard shortcuts. | §22 |
+
+The link count sits at the top of the Whole map card. When the notebook is open, **Trace** appears in the View menu
+below **Notebook** (§16.8). On a phone, **Link to…**, **Associations** and **Add a canvas note** are under **＋**.
 
 ---
 
@@ -1057,7 +1071,7 @@ An address that doesn't exist shows **Page not found** and **Back to the start**
 
 ### Phones and narrow screens
 
-![The map on a phone](img/81-phone-map.webp) ![More ▴ opens the full toolbar](img/82-phone-more.webp) ![The Menu](img/83-phone-menu.webp)
+![The map on a phone](img/81-phone-map.webp) ![＋ opens Link to…, Associations and Add a canvas note](img/82-phone-more.webp) ![The Menu](img/83-phone-menu.webp)
 
 *390 px wide.*
 

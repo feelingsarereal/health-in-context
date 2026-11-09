@@ -2,7 +2,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
-import { go, shot, typeRich, editMode, menuItem, HERE } from './lib';
+import { tool, go, shot, typeRich, editMode, menuItem, HERE } from './lib';
 import { NODES, EDGES, type N, type E } from './example';
 
 const label = (k: string) => NODES.find((n) => n.key === k)!.label;
@@ -70,18 +70,18 @@ test('part 1: start, build Household F, save it', async ({ page }) => {
   await page.getByTestId('create-map').click();
   await expect(page.getByTestId('map-name')).toHaveText('Household F, after the fire');
   await shot(page, '06-empty-map');
-  await editMode(page);
 
   // the first circumstance, with the add dialog shown at each stage
   const d = await openAdd(page);
   await shot(page, '07-add-dialog', d);
   await fillNode(page, NODES[0], { search: '08-code-search', filled: '09-add-filled' });
+  await editMode(page); // SL35: an empty map's dock has no Read / Edit toggle
   await shot(page, '10-first-node');
   for (const n of NODES.slice(1)) {
     await openAdd(page);
     await fillNode(page, n, n.key === 'facilities' ? { filled: '12-add-other' } : undefined);
   }
-  await page.getByTestId('arrange').click();
+  await tool(page, 'arrange');
   await page.waitForTimeout(1200);
   await shot(page, '13-all-circumstances');
 
@@ -91,9 +91,9 @@ test('part 1: start, build Household F, save it', async ({ page }) => {
     const shots = e.from === 'work' && e.to === 'income' ? { check: '14-link-backed' } : e.from === 'work' && e.to === 'home' ? { check: '15-link-not-backed', override: '16-link-override' } : undefined;
     await fillEdge(page, e, shots);
   }
-  await page.getByTestId('arrange').click();
+  await tool(page, 'arrange');
   await page.waitForTimeout(1500);
-  await page.getByRole('button', { name: 'Fit' }).click();
+  await tool(page, 'fit');
   await page.waitForTimeout(600);
   await page.mouse.move(5, 895);
   await shot(page, '17-full-map');

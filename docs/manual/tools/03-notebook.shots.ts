@@ -1,6 +1,6 @@
 /** Part 3: the notebook with Household F — notes, the identifier check, passages, links, mentions, trace, report. */
 import { test, expect, type Page } from '@playwright/test';
-import { shot, openExample, tall, clickNode, readMode, menuItem } from './lib';
+import { tool, shot, openExample, tall, clickNode, readMode, menuItem } from './lib';
 
 /** select `text` inside a note field (a mouse-style selection) */
 async function selectText(page: Page, text: string, field = 'nb-body') {
@@ -35,7 +35,7 @@ const NOTE =
 test('part 3: the notebook', async ({ page }) => {
   await openExample(page);
   await page.keyboard.press('Escape');
-  await page.getByTestId('notebook-toggle').click();
+  await tool(page, 'notebook-toggle');
   await expect(page.getByTestId('notebook')).toBeVisible();
   await shot(page, '50-notebook');
 
@@ -123,12 +123,12 @@ test('part 3: the notebook', async ({ page }) => {
   });
 
   await test.step('passages on the map, trace', async () => {
-    await page.getByTestId('trace-toggle').click();
+    await tool(page, 'trace-toggle');
     await selectText(page, 'she missed two job interviews');
     await page.keyboard.press('ArrowLeft');
     await page.waitForTimeout(600);
     await shot(page, '63-trace');
-    await page.getByTestId('trace-toggle').click();
+    await tool(page, 'trace-toggle');
     await clickNode(page, 'No shower, laundry or kitchen');
     await readMode(page);
     await tall(page, () => shot(page, '64-read-passages', page.getByTestId('side-dock')));

@@ -33,10 +33,10 @@ test('part 4: pages, phone, dark', async ({ page }) => {
     await go(page, './map');
     await page.waitForTimeout(800);
     await shot(page, '81-phone-map');
-    await page.getByTestId('toolbar-more').click();
+    await page.getByTestId('do-menu').click();
     await page.waitForTimeout(300);
     await shot(page, '82-phone-more');
-    await page.getByTestId('toolbar-more').click();
+    await page.getByTestId('do-menu').click();
     await page.getByRole('button', { name: 'Menu' }).click();
     await shot(page, '83-phone-menu');
   });

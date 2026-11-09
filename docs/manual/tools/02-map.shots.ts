@@ -1,8 +1,6 @@
 /** Part 2: the map screen with Household F — overview, Map menu, selection card, peek, associations, the tabs. */
 import { test, expect, type Page } from '@playwright/test';
-import { shot, openExample, badges, clearBadges, editMode, readMode, clickNode, clickEdge, tall } from './lib';
-
-const tb = (page: Page, name: string) => page.getByTestId('toolbar').getByRole('button', { name, exact: true });
+import { tool, shot, openExample, badges, clearBadges, editMode, readMode, clickNode, clickEdge, tall } from './lib';
 
 test('part 2: the map screen', async ({ page }) => {
   await openExample(page);
@@ -10,17 +8,26 @@ test('part 2: the map screen', async ({ page }) => {
   await shot(page, '20-map');
 
   await test.step('annotated overview', async () => {
+    // SL35: the Selected card is collapsed until something is selected, so the callout on Read / Edit needs a selection
+    await clickNode(page, 'Work lost after the fire');
     await badges(page, [
-      [page.getByTestId('map-name'), 1], [page.getByTestId('map-menu'), 2], [page.getByTestId('link-counts'), 3], [page.getByTestId('add-node'), 4],
-      [page.getByTestId('add-edge'), 5], [page.getByTestId('open-assoc'), 6], [tb(page, 'Add a canvas note'), 7], [page.getByTestId('layout-engine'), 8],
-      [page.getByTestId('arrange'), 9], [tb(page, 'Re-arrange all (ignore pins)'), 10], [tb(page, 'Arrange selection'), 11], [page.getByTestId('undo'), 12],
-      [tb(page, 'Redo'), 13], [tb(page, '1st-degree'), 14], [tb(page, '2nd-degree'), 15], [tb(page, 'Fit'), 16], [tb(page, 'Zoom in'), 17], [tb(page, 'Zoom out'), 18],
-      [page.getByTestId('fullscreen'), 19], [page.getByTestId('switch-view'), 20], [page.getByTestId('notebook-toggle'), 21], [page.getByRole('button', { name: /^Keyboard/ }), 22],
-      [page.getByTestId('canvas'), 23], [page.getByTestId('mode-read'), 24], [page.getByTestId('dock-fold'), 25], [page.getByTestId('evidence-toggle'), 26],
-      [page.getByTestId('panel-loops'), 27],
+      [page.getByTestId('map-name'), 1], [page.getByTestId('map-menu'), 2], [page.getByTestId('add-node'), 3], [page.getByTestId('add-edge'), 4],
+      [page.getByTestId('open-assoc'), 5], [page.getByTestId('add-note'), 6], [page.getByTestId('arrange-menu'), 7], [page.getByTestId('view-menu'), 8],
+      [page.getByTestId('undo'), 9], [page.getByTestId('redo'), 10], [page.getByTestId('canvas'), 11], [page.getByTestId('mode-read'), 12],
+      [page.getByTestId('dock-fold'), 13], [page.getByTestId('evidence-toggle'), 14], [page.getByTestId('link-counts'), 15], [page.getByTestId('panel-loops'), 16],
     ]);
     await shot(page, '21-map-annotated');
     await clearBadges(page);
+    await page.keyboard.press('Escape');
+  });
+
+  await test.step('the Arrange and View menus', async () => {
+    await page.getByTestId('arrange-menu').click();
+    await shot(page, '22b-arrange-menu', { around: page.getByTestId('arrange-menu-list'), pad: 6 });
+    await page.keyboard.press('Escape');
+    await page.getByTestId('view-menu').click();
+    await shot(page, '22c-view-menu', { around: page.getByTestId('view-menu-list'), pad: 6 });
+    await page.keyboard.press('Escape');
   });
 
   await test.step('Map menu', async () => {
@@ -82,10 +89,10 @@ test('part 2: the map screen', async ({ page }) => {
 
   await test.step('neighbourhood', async () => {
     await clickNode(page, 'Without a home');
-    await tb(page, '1st-degree').click();
+    await tool(page, 'hood-1');
     await page.waitForTimeout(400);
     await shot(page, '33-first-degree');
-    await tb(page, '1st-degree').click();
+    await tool(page, 'hood-1');
     await page.keyboard.press('Escape');
   });
 
@@ -97,7 +104,7 @@ test('part 2: the map screen', async ({ page }) => {
     await page.waitForTimeout(400);
     await shot(page, '34-loops');
     await page.getByRole('button', { name: 'Clear highlight' }).click();
-    await tb(page, 'Fit').click();
+    await tool(page, 'fit');
     await page.waitForTimeout(500);
     for (const [id, name] of [['links', '35-links'], ['leverage', '37-leverage'], ['legend', '40-legend'], ['about', '41-about-map']] as const) {
       await page.getByTestId(`panel-${id}`).click();
@@ -144,21 +151,21 @@ test('part 2: the map screen', async ({ page }) => {
   });
 
   await test.step('list view, keys, canvas note', async () => {
-    await page.getByTestId('switch-view').click();
+    await tool(page, 'switch-view');
     await expect(page.getByTestId('list-view')).toBeVisible();
     await shot(page, '44-list-view');
-    await page.getByTestId('switch-view').click();
-    await page.getByRole('button', { name: /^Keyboard/ }).click();
+    await tool(page, 'switch-view');
+    await tool(page, 'keys-open');
     const kd = page.getByRole('dialog');
     await shot(page, '45-keys', kd);
     await page.keyboard.press('Escape');
-    await tb(page, 'Add a canvas note').click();
+    await page.getByTestId('add-note').click();
     await shot(page, '46-canvas-note', page.getByTestId('node-dialog'));
     await page.keyboard.press('Escape');
   });
 
   await test.step('full screen, folded dock, grayscale, node text', async () => {
-    await page.getByTestId('fullscreen').click();
+    await tool(page, 'fullscreen');
     await page.waitForTimeout(1200);
     await shot(page, '47-full-screen');
     await page.keyboard.press('Escape');

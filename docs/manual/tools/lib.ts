@@ -74,6 +74,14 @@ export async function readMode(page: Page) {
   if ((await b.getAttribute('aria-pressed')) !== 'true') await b.click();
 }
 
+/** A control in the toolbar's View or Arrange menu (SL35): open the menu, then pick it */
+const IN_ARRANGE = new Set(['arrange', 'arrange-all', 'arrange-selection', 'layout-fcose', 'layout-elk-stress', 'hood-1', 'hood-2']);
+export async function tool(page: Page, testId: string) {
+  const m = page.getByTestId(IN_ARRANGE.has(testId) ? 'arrange-menu' : 'view-menu');
+  if ((await m.getAttribute('aria-expanded')) !== 'true') await m.click();
+  await page.getByTestId(testId).click();
+}
+
 export async function menuItem(page: Page, testId: string) {
   const btn = page.getByTestId('map-menu');
   if ((await btn.getAttribute('aria-expanded')) !== 'true') await btn.click();
