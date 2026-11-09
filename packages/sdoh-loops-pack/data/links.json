@@ -81,9 +81,11 @@
    "to": "QD60-QD6Z",
    "polarity": "+",
    "grade": "M",
-   "mechanism": "Food insecurity — the inability to afford enough food — is associated with hypertension and hyperlipidaemia among low-income adults. [24]",
+   "mechanism": "Higher household income goes with less food insecurity: food insufficiency in US households with children fell by about a quarter after the first monthly Child Tax Credit payment in July 2021; among low-income Toronto families, a year's gain in income or in full-time work went with less severe food insecurity; and low-income Canadians old enough for public pensions have half the food insecurity of those just younger (associations; the first is the strongest design). [24] [70] [71]",
    "refs": [
-    24
+    24,
+    70,
+    71
    ],
    "suggest": [
     "QD61"
@@ -97,7 +99,7 @@
      "QD61"
     ]
    },
-   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from the abstracts, 2026-10-24."
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-09 (SL36)."
   },
   {
    "id": "L10",
@@ -565,6 +567,54 @@
     ]
    },
    "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-04 (SL19, T-EVID-01)."
+  },
+  {
+   "id": "L34",
+   "from": "QE80-QE8Z",
+   "to": "QD71",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Across US states from 2019 to 2024, more homes lost to climate-related disasters was associated with a larger rise in homelessness (an association, not shown to be causal). [72]",
+   "refs": [
+    72
+   ],
+   "suggest": [
+    "QD71.0"
+   ],
+   "codes": {
+    "from": [
+     "QE81"
+    ],
+    "to": [
+     "QD71.0"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-09 (SL36)."
+  },
+  {
+   "id": "L35",
+   "from": "QD71",
+   "to": "QE80-QE8Z",
+   "polarity": "+",
+   "grade": "M",
+   "mechanism": "Homelessness, especially sleeping unsheltered, is associated with more violent and sexual victimisation (an association, not shown to be causal). [73] [74] [75]",
+   "refs": [
+    73,
+    74,
+    75
+   ],
+   "suggest": [
+    "QE80"
+   ],
+   "codes": {
+    "from": [
+     "QD71.0"
+    ],
+    "to": [
+     "QE80"
+    ]
+   },
+   "codes_note": "Codes the cited evidence names; a code also backs its descendants. Builder mapping from verified abstracts, 2026-11-09 (SL36)."
   }
  ],
  "can_cycle": true,
@@ -710,6 +760,35 @@
    ],
    "reason": [
     "Withheld 2026-10-23 after independent check: the opportunity to move to a low-poverty neighbourhood was associated with lower extreme obesity and diabetes, which are conditions, not the health-behaviour block this link targets."
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L36",
+   "from": "QD71",
+   "to": "QD80-QD8Z",
+   "polarity": "+",
+   "grade": "M",
+   "refs": [
+    76
+   ],
+   "reason": [
+    "Withheld 2026-11-09 (SL15 #1): in a randomised trial of 2,148 homeless adults, Housing First did not raise the odds of employment or income, so rehousing alone is not shown to change employment. [76]"
+   ],
+   "kind": "withheld"
+  },
+  {
+   "id": "L37",
+   "from": "QD80-QD8Z",
+   "to": "QD71",
+   "polarity": "+",
+   "grade": "M",
+   "refs": [
+    77,
+    72
+   ],
+   "reason": [
+    "Withheld 2026-11-09 (SL15 #1): unemployment raises the risk of entering homelessness only as weak area labour markets, for some groups [77], and was not one of the consistently associated state-level factors [72]. L26 (job loss → eviction, QD71.Z) is unchanged."
    ],
    "kind": "withheld"
   },

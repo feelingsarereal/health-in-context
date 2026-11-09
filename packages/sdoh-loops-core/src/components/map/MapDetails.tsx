@@ -126,7 +126,7 @@ export const MapMenu = forwardRef<MapMenuHandle, {
   const focusAt = useRef<'first' | 'last'>('first');
   const base = slug(map.name);
   const report = (map: SdohMap) =>
-    loopReportMD(map, titleOf, { strengthLabel: S.loops.strength_label, reinforcing: S.loops.reinforcing, balancing: S.loops.balancing, truncated: S.loops.truncated, none: S.loops.none, notice: safety.notice, citation: S.codes.citation });
+    loopReportMD(map, titleOf, { madeWith: C.reportMadeWith, strengthLabel: S.loops.strength_label, reinforcing: S.loops.reinforcing, balancing: S.loops.balancing, truncated: S.loops.truncated, none: S.loops.none, notice: safety.notice, citation: S.codes.citation });
   const exportVia = (run: (m: SdohMap) => void) => (guard ? guard(run) : run(map));
   const saveJSON = (m: SdohMap) => {
     download(`${base}.sdohmap.json`, exportJSON(m, S.codes.citation), 'application/json');

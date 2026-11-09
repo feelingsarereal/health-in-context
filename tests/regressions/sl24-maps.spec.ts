@@ -35,7 +35,7 @@ test('with 10 saved maps at 1440×900, "Open a map file" sits beside Create map,
   await expect(card.getByRole('heading', { level: 3 })).toHaveText(['Create a blank map', 'Open a map file']);
   const open = page.getByTestId('open-map-file');
   await expect(open).toBeInViewport();
-  await expect(open).toHaveAccessibleDescription(/A map exported from SDOH Loops or an SDOH Interrogator app/);
+  await expect(open).toHaveAccessibleDescription(/A map exported from Health in Context or an SDOH Interrogator app/);
   // side by side
   const cb = (await page.getByTestId('create-map').boundingBox())!;
   const ob = (await open.boundingBox())!;
@@ -109,5 +109,5 @@ test('the map’s Map menu opens files with the same wording', async ({ page }) 
   await page.getByTestId('create-map').click();
   await page.getByTestId('map-menu').click();
   await expect(page.getByRole('menuitem').first()).toHaveText(/^Open a map file…/);
-  await expect(page.getByRole('menuitem').first()).toHaveAccessibleDescription('A map exported from SDOH Loops or an SDOH Interrogator app');
+  await expect(page.getByRole('menuitem').first()).toHaveAccessibleDescription('A map exported from Health in Context or an SDOH Interrogator app');
 });

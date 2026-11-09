@@ -84,7 +84,7 @@ describe('SL23 copy', () => {
   });
   it('SL24: My maps and the Map menu share their wording; maps.import is gone', async () => {
     const { C } = await import('../../packages/sdoh-loops-core/src/lib/copy');
-    expect(C.maps).toMatchObject({ start: 'Start a map', openFile: 'Open a map file', openFileHint: 'A map exported from SDOH Loops or an SDOH Interrogator app' });
+    expect(C.maps).toMatchObject({ start: 'Start a map', openFile: 'Open a map file', openFileHint: 'A map exported from Health in Context or an SDOH Interrogator app' });
     expect(C.maps.dropHere).toMatch(/drop/i);
     expect('import' in C.maps).toBe(false);
   });

@@ -74,9 +74,9 @@ test('D8: the Leverage panel shows one heuristic label', async ({ page }) => {
 
 test('D3 and D12: the menu names the tier basis once, and an empty section says which way', async ({ page }) => {
   await start(page, 'D12');
-  // QD71.0 has evidence links arriving (L15, L28) and none leaving (K5: QD80 now leads to L01 and L26)
-  await addNode(page, { code: 'QD71.0', search: 'homeless' });
-  await selectNodeByName(page, 'Homelessness');
+  // QD61 has an evidence link arriving (L04) and none leaving (SL36: QD71.0, used here before, now leads to L35)
+  await addNode(page, { code: 'QD61', search: 'food' });
+  await selectNodeByName(page, 'Inadequate food');
   await page.getByTestId('open-assoc').click();
   const menu = page.getByTestId('assoc-menu');
   await expect(menu.getByTestId('comes-from').getByTestId('assoc-entry').first()).toBeVisible();

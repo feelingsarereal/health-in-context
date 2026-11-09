@@ -7,7 +7,7 @@
  *
  *   tsx scripts/check-xwalk-dist.ts dist                                         # the standalone build
  *   tsx scripts/check-xwalk-dist.ts dist-pages                                   # the Pages build
- *   tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/sdoh-loops/  # the live site (crawls its files)
+ *   tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/health-in-context/  # the live site (crawls its files)
  *
  * Every text file is read (HTML, JS, CSS, JSON, …). A match passes only inside an occurrence of an allowlisted
  * snippet; an allowlist entry that matches nothing is reported too, so the list cannot go stale.

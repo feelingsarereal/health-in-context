@@ -1,4 +1,4 @@
-# SL32: the public prototype on GitHub Pages — https://feelingsarereal.github.io/sdoh-loops/ — deployed from main.
+# SL32: the public prototype on GitHub Pages — https://feelingsarereal.github.io/health-in-context/ — deployed from main.
 # The Pages build has the prototype banner on. It must pass the crosswalk dist test before it deploys, and again once
 # it is live: no build carries a mapping between ICD-11 and another code set (SL33, T-LIC-01).
 # The core and the pack are this repo's own workspaces, so `npm ci` links them; the token is only there in case a
@@ -34,11 +34,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.GITHUB_TOKEN }}
       - run: npm test
-      # BASE_PATH=/sdoh-loops/, VITE_SDOH_PAGES=on → dist-pages/ (with 404.html for deep links)
+      # BASE_PATH=/health-in-context/, VITE_SDOH_PAGES=on → dist-pages/ (with 404.html for deep links)
       - run: npm run build:pages
       - run: test -f dist-pages/404.html
       - name: Crosswalk dist test
         run: npm run check:xwalk
+      - name: Old-name dist test
+        run: npm run check:name
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist-pages

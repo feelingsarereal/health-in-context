@@ -13,7 +13,7 @@ import { lintText } from '../../scripts/lib/lint';
 // SL32: SDOH_DIST=dist-pages checks the Pages build (playwright.pages.config.ts)
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..', process.env.SDOH_DIST ?? 'dist');
 const concepts = JSON.parse(fs.readFileSync(path.resolve(DIST, '../packages/sdoh-loops-pack/data/concepts.json'), 'utf8')) as { id: string }[];
-// SL32: relative paths, so the run also works under the Pages base path (/sdoh-loops/)
+// SL32: relative paths, so the run also works under the Pages base path (/health-in-context/)
 const ROUTES = ['./', './maps', './evidence', './references', './glossary', './concepts', ...concepts.map((c) => `./concepts/${c.id}`), './help', './methods', './about', './nope'];
 
 test('H1: rendered text of every route', async ({ page }) => {

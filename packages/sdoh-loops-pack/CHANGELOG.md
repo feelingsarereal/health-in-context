@@ -9,6 +9,17 @@ version's entry — so any change to the pack's data needs a new version here fi
 - **Minor:** codes, links, references, terms or strings are added; nothing a consumer reads is taken away.
 - **Patch:** wording, corrections, re-verification dates.
 
+## [0.6.0] — 2026-11-09
+
+Minor (SL36, with SL18, SL15, SL38, SL39; SL36's examples module moved to SL12 and pack 0.7.0): new links and references, the product's new name and its brand. Logged in `content-pack/changes.yaml`.
+
+- sha256: `31aa4ca0d93393b863275b4c716f756c5ee909993d7a0a2ab7eb912503bb2315`
+- **L04 re-sourced (SL18, Daniel: keep grade M).** Now rests on Shafer 2022, Loopstra & Tarasuk 2013 and McIntyre 2016. Seligman 2010 tested something else and leaves the pack; Shafer 2022 takes its number, **[24]**, so no other reference renumbers (a saved map's edges store reference numbers).
+- **SL15's proposals.** Added at grade M: L34 (QE81 → QD71.0) and L35 (QD71.0 → QE80). Withheld with reasons on `/methods`: L36 and L37. New to-dos: T-SL15-03, T-SL15-05. References 70–77 are new; 25 links offered, 14 withheld.
+- **Name (SL38).** `manifest.short_title` and `title`, the `footer` string. `manifest.yaml` keeps the one "formerly" line as `pack_name`; `npm run build:content` leaves it out of what an app serves.
+- **Brand (SL39).** `manifest.brand`, `content-pack/brand/`, and the new `brand` and `about` strings.
+- **Taken away, unused by any consumer:** `codes.proposed_xwalk` (unused since SL33). T-LIC-01 and T-XWALK-01 are reworded.
+
 ## [0.5.0] — 2026-11-09
 
 Minor (SL34): an optional `short_title` on `situations` codes and groups, for canvas labels. Nothing a consumer reads

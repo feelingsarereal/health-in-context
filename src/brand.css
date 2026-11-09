@@ -1,0 +1,27 @@
+/*
+ * SL39: the Little Orange Fish kit on the Alabama app's --bx-* mechanism. Loaded after the core's styles, so these win; the core
+ * itself carries no brand. Polarity colours (--ax-*), evidence badges and grayscale mode are left alone: they carry meaning.
+ * Measured contrast (WCAG 2.1, from content-pack/brand/brand.yaml; tests/unit/brand.test.ts recomputes them):
+ *   light: ink #333333 on white 12.63:1 · muted #636363 6.01:1 · accent/head #b34d0f 5.27:1, white on it 5.27:1
+ *   LOF Orange #ff7d2f is 2.55:1 on white: rules and the mark only, always beside a non-colour cue.
+ *   dark:  ink #e8e6e3 on #1b1d1f 13.6:1 · accent/head #ff7d2f 6.62:1
+ */
+:root {
+  color-scheme: light;
+  --bx-bg: #ffffff; --bx-bg-2: #f3f3f3; --bx-ink: #333333; --bx-muted: #636363; --bx-line: #bbbbbb; --bx-line-soft: #e2e2e2;
+  --bx-accent: #b34d0f; --bx-head: #b34d0f; --bx-rule: #ff7d2f; --bx-mark: #ff7d2f; --bx-fill: #fbe5d6;
+  --font-subhead: "Roboto Slab", Georgia, serif;
+  --font-accent: Poppins, Roboto, system-ui, sans-serif;
+}
+.dark {
+  color-scheme: dark;
+  --bx-bg: #1b1d1f; --bx-bg-2: #25282b; --bx-ink: #e8e6e3; --bx-muted: #b8b4ae; --bx-line: #4a4f54; --bx-line-soft: #33373b;
+  --bx-accent: #ff7d2f; --bx-head: #ff7d2f; --bx-rule: #ff7d2f; --bx-mark: #ff7d2f; --bx-fill: #3a2a1f;
+}
+/* h1: the kit's headline stack (font-display). Everything below it is Roboto Slab; no paragraph uses either. */
+h2, h3, h4 { font-family: var(--font-subhead); }
+h1, h2 { color: var(--bx-head); }
+h3, h4 { color: var(--bx-ink); }
+a { color: var(--bx-accent); }
+.bx-btn { color: var(--bx-ink); }
+.bx-btn, .bx-btn-primary, .bx-chip { font-family: var(--font-accent); }

@@ -1,14 +1,14 @@
-# SDOH Loops — User Manual
+# Health in Context — User Manual
 
-**For the public prototype at <https://feelingsarereal.github.io/sdoh-loops/>**
+**For the public prototype at <https://feelingsarereal.github.io/health-in-context/>**
 App build: `sdoh-loops-core` 0.10.0 with content pack 0.3.0 · research current as of 2026-10-23 · manual written 2026-11-05.
 Every screenshot was taken from that build, at 1440 × 900 unless the caption says otherwise.
 
-SDOH Loops lets you draw how a person's or a group's social circumstances connect, such as money, housing, work,
+Health in Context lets you draw how a person's or a group's social circumstances connect, such as money, housing, work,
 food, family and safety. Each circumstance is named with a WHO ICD-11 code. Every link you draw is checked against
 the research the app carries. The app then finds the **feedback loops** that can hold a situation in place.
 
-> **Read this first.** SDOH Loops is a thinking tool. It describes circumstances; it does not diagnose anyone, and it
+> **Read this first.** Health in Context is a thinking tool. It describes circumstances; it does not diagnose anyone, and it
 > does not give medical, legal or financial advice. It is commissioned research, not peer reviewed. On the public
 > prototype, **don't enter real client information**: what you type stays in your browser, but this is a test site.
 
@@ -46,7 +46,7 @@ the research the app carries. The app then finds the **feedback loops** that can
 
 ### What the app is for
 
-A **map** in SDOH Loops is a causal loop diagram of one person's, household's or group's circumstances:
+A **map** in Health in Context is a causal loop diagram of one person's, household's or group's circumstances:
 
 - **Circumstances** are boxes. Each one is something that can be more or less present, such as "Low income" or
   "Without a home". Most carry an ICD-11 code from Chapter 24, the codes WHO uses for social and economic problems
@@ -130,7 +130,7 @@ Prefer to explore first? Download the worked example,
 
 | Control | What it does |
 |---|---|
-| **SDOH Loops** (logo) | Goes to the home page. |
+| **Health in Context** (logo) | Goes to the home page. |
 | **Map** | Opens the map you used last, or My maps if there is none. |
 | **My maps** | Your saved maps, a new blank map, or a map file (section 4). |
 | **Evidence · References · Glossary · Primers · Help · Methods · About** | The research and reference pages (section 17). |
@@ -140,7 +140,7 @@ Prefer to explore first? Download the worked example,
 
 ### The footer (every page)
 
-- The line *"SDOH Loops is a thinking tool. Maps stay in this browser. Saved in this browser on this device only —
+- The line *"Health in Context is a thinking tool. Maps stay in this browser. Saved in this browser on this device only —
   export to keep a copy."*
 - **Methods · About · Help**: shortcuts to those pages.
 - **Clear my data** opens a dialog: *"Delete every map stored in this browser? This cannot be undone."* Confirm to
@@ -177,7 +177,7 @@ stay on the home page and the About page.
 | **Map name** | For you, for example "Household F, after the fire". |
 | **Subject (initials or a label)** | Who or what the map is about. Use a label, never a name. |
 | **Create map** | Creates the map and opens it on the canvas. |
-| **Open a map file…** (⌘O / Ctrl+O on the map screen) | Opens a `.sdohmap.json` or `.sdohcase.json` file exported from SDOH Loops or an SDOH Interrogator app. The file becomes a **new** map named "… (imported)", and every link is checked again against this app's evidence. You can also **drop** a file onto the card. |
+| **Open a map file…** (⌘O / Ctrl+O on the map screen) | Opens a `.sdohmap.json` or `.sdohcase.json` file exported from Health in Context or an SDOH Interrogator app. The file becomes a **new** map named "… (imported)", and every link is checked again against this app's evidence. You can also **drop** a file onto the card. |
 
 ![Creating a map](img/05-new-map.webp)
 
@@ -1477,7 +1477,7 @@ details.
 
 ---
 
-*SDOH Loops is commissioned research, not peer reviewed. This manual describes the public prototype built from
+*Health in Context is commissioned research, not peer reviewed. This manual describes the public prototype built from
 `sdoh-loops-core` 0.10.0 and content pack 0.3.0; research current as of 2026-10-23.*
 
 *International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019

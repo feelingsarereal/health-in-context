@@ -263,3 +263,35 @@
   - manifest
   source: SL34, source/pack-src/short_titles.yaml (cowork, 2026-11-09)
   by: claude-code
+- date: '2026-11-09'
+  what: 'SL18: L04 (income to food insecurity, grade M kept) re-sourced to Shafer 2022, Loopstra & Tarasuk 2013 and McIntyre
+    2016. Seligman 2010 leaves the pack, its number [24] taken by Shafer 2022 so no other reference renumbers'
+  why: 'Finding F01: Seligman 2010 tests food insecurity and hypertension, not income and food insecurity'
+  records:
+  - links/L04
+  - references/24
+  source: SL18, source/research/sl36_pack_additions.yaml (Daniel, 2026-11-09)
+  by: claude-code
+- date: '2026-11-09'
+  what: 'SL15: L34 (disaster to homelessness) and L35 (homelessness to victimisation) added at grade M; L36 and L37 withheld
+    with reasons; T-SL15-03 and T-SL15-05 added'
+  why: Link proposals from the displacement transcript, each verified against its abstract
+  records:
+  - links/L34
+  - links/L35
+  - withheld_links/L36
+  - withheld_links/L37
+  - todo
+  source: SL15, source/research/sl36_pack_additions.yaml (Daniel, 2026-11-09)
+  by: claude-code
+- date: '2026-11-09'
+  what: 'SL38/SL39: renamed Health in Context; manifest.brand and the brand images; about and brand strings; codes.proposed_xwalk
+    removed; T-LIC-01 and T-XWALK-01 reworded'
+  why: 'Daniel, 2026-11-09: the v1 name, as a Here for You resource from Little Orange Fish'
+  records:
+  - manifest
+  - manifest.brand
+  - ui-strings
+  - todo
+  source: SL38, SL39, source/pack-src (cowork, 2026-11-09)
+  by: claude-code

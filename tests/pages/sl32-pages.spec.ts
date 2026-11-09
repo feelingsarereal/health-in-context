@@ -1,5 +1,5 @@
 /**
- * SL32: the public Pages build (npm run build:pages → dist-pages, base /sdoh-loops/), locally or live
+ * SL32: the public Pages build (npm run build:pages → dist-pages, base /health-in-context/), locally or live
  * (playwright.pages.config.ts). The prototype banner on every page, WHO's citation in every footer and on About, and
  * no crosswalk or Topic on a code card (SL33).
  */
@@ -42,7 +42,7 @@ test('Report a problem is a plain link to the repo\'s Issues page; hiding the ba
   await dismissFirstRun(page);
   await page.goto('./glossary');
   const link = page.getByTestId('report-problem');
-  await expect(link).toHaveAttribute('href', 'https://github.com/feelingsarereal/sdoh-loops/issues');
+  await expect(link).toHaveAttribute('href', 'https://github.com/feelingsarereal/health-in-context/issues');
   await expect(link).toHaveAttribute('rel', 'noreferrer');
   const before = await page.evaluate(() => [Object.keys(localStorage).sort(), Object.keys(sessionStorage).sort()]);
   await page.getByTestId('prototype-banner-dismiss').click();

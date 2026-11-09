@@ -179,6 +179,8 @@ export interface ReportLabels {
   notice: string;
   /** the ICD-11 licence citation, for the footer (K9) */
   citation?: string;
+  /** SL39: one line under the header */
+  madeWith?: string;
 }
 export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, result?: LoopResult): string {
   const r = result ?? findLoops(toGraph(m));
@@ -192,7 +194,8 @@ export function loopReportMD(m: SdohMap, titleOf: TitleOf, L: ReportLabels, resu
   const out = [
     `# Loop report — ${m.name}`,
     '',
-    `Subject: ${m.subject || '—'} · ${m.icd11_release} · exported ${today()} from SDOH Loops (schema ${m.schema_version}).`,
+    `Subject: ${m.subject || '—'} · ${m.icd11_release} · exported ${today()} from Health in Context (schema ${m.schema_version}).`,
+    ...(L.madeWith ? [L.madeWith] : []),
     '',
     `> ${L.notice}`,
     '',

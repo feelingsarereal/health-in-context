@@ -4,7 +4,7 @@ import { S } from '@feelingsarereal/sdoh-loops-core';
 /** SL32: the public (GitHub Pages) build only — set by `npm run build:pages` (VITE_SDOH_PAGES=on) */
 export const PAGES_BUILD = import.meta.env.VITE_SDOH_PAGES === 'on';
 /** a plain link to the repo's Issues page: nothing prefilled, nothing sent */
-export const ISSUES_URL = 'https://github.com/feelingsarereal/sdoh-loops/issues';
+export const ISSUES_URL = 'https://github.com/feelingsarereal/health-in-context/issues';
 
 /**
  * SL32: the prototype banner on every page of the public build, above the site header. Hiding it lasts for this visit

@@ -2,7 +2,7 @@
 
 `../USER-MANUAL.md` uses the screenshots in `../img/` and the example map `../household-f.sdohmap.json`. All three
 come from these scripts, run against the public Pages build (prototype banner on), served under
-`/sdoh-loops/` as on GitHub Pages. Run them from the app folder:
+`/health-in-context/` as on GitHub Pages. Run them from the app folder:
 
 ```bash
 npm run build:pages

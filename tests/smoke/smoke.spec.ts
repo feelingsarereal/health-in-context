@@ -14,6 +14,7 @@ test('every route renders its h1, and every shell route is in the nav', async ({
   }
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Main' });
+  await page.getByTestId('more-menu').click(); // SL39: About is under More
   for (const n of NAV) await expect(nav.getByRole('link', { name: n, exact: true })).toBeVisible();
 });
 

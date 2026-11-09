@@ -8,7 +8,8 @@ import { S } from './data/core';
 
 const FALLBACK = {
   nav: { map: 'Map', maps: 'My maps', evidence: 'Evidence', references: 'References', glossary: 'Glossary', concepts: 'Primers', help: 'Help', methods: 'Methods', about: 'About' },
-  footer: 'SDOH Loops is a thinking tool. Maps stay in this browser.',
+  reportMadeWith: 'Made with Health in Context (Little Orange Fish)',
+  footer: 'Health in Context is a thinking tool. Maps stay in this browser.',
   skip: 'Skip to main content',
   theme: { dark: 'Dark mode', light: 'Light mode' },
   /** K14: /about keeps the notice's words (SAFETY H5) as a plain section, so the dismissed first-run banner never comes back there */
@@ -30,7 +31,7 @@ const FALLBACK = {
     deleteConfirm: 'Delete this map from this browser? This cannot be undone.',
     /** SL24 + SL23: the same wording on My maps and in the map's Map menu ("Open a map file…") */
     openFile: 'Open a map file',
-    openFileHint: 'A map exported from SDOH Loops or an SDOH Interrogator app',
+    openFileHint: 'A map exported from Health in Context or an SDOH Interrogator app',
     dropHere: 'Drop a map file here to open it',
   },
   node: {

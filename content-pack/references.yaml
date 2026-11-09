@@ -1,4 +1,4 @@
-# references.yaml — 69 references · built 2026-10-23. Abstracts verbatim (abstract_source); summaries builder-written from them.
+# references.yaml — 77 references · built 2026-10-23. Abstracts verbatim (abstract_source); summaries builder-written from them.
 - n: 1
   key: csdh2008
   tier: seminal
@@ -703,38 +703,48 @@
   - glossary/eviction
   - links/L03
 - n: 24
-  key: seligman2010
+  key: shafer2022
   tier: current
-  citation: Seligman HK, Laraia BA, Kushel MB. Food insecurity is associated with chronic disease among low-income NHANES
-    participants. Journal of Nutrition. 2010.
-  doi: 10.3945/jn.109.112573
-  pmid: '20032485'
-  year: 2010
-  openalex: https://openalex.org/W2110106130
-  title_checked: Food Insecurity Is Associated with Chronic Disease among Low-Income NHANES Participants
-  abstract: Food insecurity refers to the inability to afford enough food for an active, healthy life. Numerous studies have
-    shown associations between food insecurity and adverse health outcomes among children. Studies of the health effects of
-    food insecurity among adults are more limited and generally focus on the association between food insecurity and self-reported
-    disease. We therefore examined the association between food insecurity and clinical evidence of diet-sensitive chronic
-    disease, including hypertension, hyperlipidemia, and diabetes. Our population-based sample included 5094 poor adults aged
-    18-65 y participating in the NHANES (1999-2004 waves). We estimated the association between food insecurity (assessed
-    by the Food Security Survey Module) and self-reported or laboratory/examination evidence of diet-sensitive chronic disease
-    using Poisson regression. We adjusted the models to account for differences in age, gender, race, educational attainment,
-    and income. Food insecurity was associated with self-reported hypertension [adjusted relative risk (ARR) 1.20; 95% CI,
-    1.04-1.38] and hyperlipidemia (ARR 1.30; 95% CI, 1.09-1.55), but not diabetes (ARR 1.19; 95% CI, 0.89-1.58). Food insecurity
-    was associated with laboratory or examination evidence of hypertension (ARR 1.21; 95% CI, 1.04-1.41) and diabetes (ARR
-    1.48; 95% CI, 0.94-2.32). The association with laboratory evidence of diabetes did not reach significance in the fully
-    adjusted model unless we used a stricter definition of food insecurity (ARR 2.42; 95% CI, 1.44-4.08). These data show
-    that food insecurity is associated with cardiovascular risk factors. Health policy discussions should focus increased
-    attention on ability to afford high-quality foods for adults with or at risk for chronic disease.
-  abstract_source: europepmc
-  harvested_on: '2026-10-23'
-  summary: Among 5,094 low-income adults in NHANES 1999–2004, food insecurity was associated with self-reported hypertension
-    and hyperlipidaemia and with laboratory or examination evidence of hypertension, after adjusting for age, gender, race,
-    education and income; associations with diabetes reached significance only under a stricter definition of food insecurity.
+  citation: Shafer PR, Gutiérrez KM, Ettinger de Cuba S, Bovell-Ammon A, Raifman J. Association of the implementation of child
+    tax credit advance payments with food insufficiency in US households. JAMA Network Open. 2022;5(1):e2143296.
+  doi: 10.1001/jamanetworkopen.2021.43296
+  pmid: '35024837'
+  year: 2022
+  openalex: https://openalex.org/W4205537602
+  title_checked: Association of the Implementation of Child Tax Credit Advance Payments With Food Insufficiency in US Households
+  abstract: 'Importance: A key component of the American Rescue Plan Act of 2021 included an expansion of the Child Tax Credit
+    with advance payments beginning in July 2021, a "child allowance" that was projected to dramatically reduce child poverty.
+    Food insufficiency has increased markedly during the economic crisis spurred by the COVID-19 pandemic, with disparities
+    among marginalized populations, and may be associated with substantial health care and social costs. Objective: To assess
+    whether the introduction of advance payments for the Child Tax Credit in mid-July 2021 was associated with changes in
+    food insufficiency in US households with children. Design, Setting, and Participants: This cross-sectional study used
+    data from several phases of the Household Pulse Survey, conducted by the US Census Bureau from January 6 to August 2,
+    2021. The survey had 585 170 responses, representing a weighted population size of 77 165 153 households. Exposure: The
+    first advance Child Tax Credit payment, received on July 15, 2021. Main Outcomes and Measures: Household food insufficiency.
+    Results: The weighted sample of 585 170 respondents was mostly female (51.5%) and non-Hispanic White (62.5%), with a plurality
+    aged 25 to 44 years (48.1%), having a 4-year degree or more (34.7%) and a 2019 household income of $75 000 to $149 999
+    (23.1%). In the weeks after the first advance payment of the Child Tax Credit was made (July 21 to August 2, 2021), 62.4%
+    of households with children reported receiving it compared with 1.1% of households without children present (P < .001).
+    There was a 3.7-percentage point reduction (95% CI, -0.055 to -0.019 percentage points; P < .001) in household food insufficiency
+    for households with children present in the survey wave after the first advance payment of the Child Tax Credit, corresponding
+    to a 25.9% reduction, using an event study specification. Difference-in-differences (-16.4%) and modified Poisson (-20.8%)
+    models also yielded large estimates for reductions in household food insufficiency associated with the first advance payment
+    of the expanded Child Tax Credit. Conclusions and Relevance: This study suggests that the Child Tax Credit advance payment
+    increased household income and may have acted as a buffer against food insufficiency. However, its expansion and advance
+    payment are only a temporary measure for 2021. Congress must consider whether to extend these changes or make them permanent
+    and improve implementation to reduce barriers to receipt for low-income families.'
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: Using the US Census Household Pulse Survey (January–August 2021; 585,170 responses), the authors find that after
+    the first advance payment of the expanded Child Tax Credit on 15 July 2021, food insufficiency in households with children
+    fell by 3.7 percentage points (a 25.9% reduction) in an event-study model; difference-in-differences (−16.4%) and modified
+    Poisson (−20.8%) models gave similar reductions. The authors read this as the payment raising income and buffering against
+    food insufficiency.
   role_here: support
+  role_note: 'The most direct test of the direction: an income transfer arrives and food insufficiency falls, with a comparison
+    group of households without children.'
   verified: true
-  verified_on: '2026-10-23'
+  verified_on: '2026-11-09'
   used_by:
   - links/L04
 - n: 25
@@ -2151,3 +2161,278 @@
   verified_on: '2026-11-04'
   used_by:
   - links/L14
+- n: 70
+  key: loopstra_tarasuk2013
+  tier: current
+  citation: Loopstra R, Tarasuk V. Severity of household food insecurity is sensitive to change in household income and employment
+    status among low-income families. Journal of Nutrition. 2013;143(8):1316-1323.
+  doi: 10.3945/jn.113.175414
+  pmid: '23761648'
+  year: 2013
+  openalex: https://openalex.org/W2018849653
+  title_checked: Severity of Household Food Insecurity Is Sensitive to Change in Household Income and Employment Status among
+    Low-Income Families1–3
+  abstract: Cross-sectional studies have established a relationship between poverty and food insecurity, but little is known
+    about the acute changes within households that lead to changes in food insecurity. This study examined how changes in
+    income, employment status, and receipt of welfare related to change in severity of food insecurity during 1 y among low-income
+    families. In 2005-2007, 501 families living in market and subsidized rental housing were recruited through door-to-door
+    sampling in high-poverty neighborhoods in Toronto. One year later, families were re-interviewed. The final longitudinal
+    analytic sample included 331 families. Within-household change in income, employment, and welfare receipt were examined
+    in relation to change in severity of food insecurity. Severity was denoted by the aggregate raw score on the Household
+    Food Security Survey Module (HFSSM). Analyses were stratified by housing subsidy status owing to differences in characteristics
+    between households. Food insecurity was a persistent problem among families; 68% were food insecure at both interviews.
+    Severity was dynamic, however, as 73.4% answered more or fewer questions affirmatively on the HFFSM between baseline and
+    follow-up. Among market-rent families, a $2000 gain in income during the year and gain of full-time employment were associated
+    with a 0.29 and 1.33 decrease in raw score, respectively (P < 0.01). This study suggests that improvements in income and
+    employment are related to improvements in families' experiences of food insecurity, highlighting the potential for income-
+    and employment-based policy interventions to affect the severity of household food insecurity for low-income families.
+  abstract_source: pubmed
+  harvested_on: '2026-11-09'
+  summary: A one-year longitudinal study of 331 low-income families in high-poverty Toronto neighbourhoods. Food insecurity
+    was persistent (68% food insecure at both interviews) but its severity moved. Among families in market-rent housing, a
+    $2,000 gain in annual income and gaining full-time work were associated with 0.29- and 1.33-point decreases in the Household
+    Food Security Survey Module raw score.
+  role_here: support
+  role_note: 'Shows the direction within the same households over time: as income rises, food insecurity eases.'
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L04
+- n: 71
+  key: mcintyre2016
+  tier: current
+  citation: McIntyre L, Dutton DJ, Kwok C, Emery JCH. Reduction of food insecurity among low-income Canadian seniors as a
+    likely impact of a guaranteed annual income. Canadian Public Policy. 2016;42(3):274-286.
+  doi: 10.3138/cpp.2015-069
+  year: 2016
+  openalex: https://openalex.org/W2513183086
+  title_checked: Reduction of Food Insecurity among Low-Income Canadian Seniors as a Likely Impact of a Guaranteed Annual
+    Income
+  abstract: Canada has episodically discussed guaranteed annual income (GAI) as a poverty reduction strategy, and the idea
+    has garnered renewed attention. We investigate the potential effectiveness of such a strategy by examining food insecurity
+    as an indicator of poverty in unattached low-income adults age 55 to 74 years before and after they become age-eligible
+    for publicly financed pensions at age 65. Results from the Canadian Community Health Survey (2007–2013) showed that Canadians
+    over age 65 have half the prevalence of food insecurity of low-income Canadians under 65. Seniors' public pensions, as
+    an example of GAI, are an effective poverty reduction strategy.
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: Using the Canadian Community Health Survey (2007–2013), the authors compare unattached low-income adults aged 55–74
+    before and after they become eligible for public pensions at 65. Those over 65 have half the prevalence of food insecurity
+    of low-income Canadians under 65; the authors read seniors' pensions as an example of a guaranteed annual income that
+    reduces poverty.
+  role_here: support
+  role_note: An income floor arriving at a fixed age goes with half the food insecurity; it supports the direction, though
+    it compares age groups rather than following people.
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L04
+- n: 72
+  key: leifheit2026
+  tier: current
+  citation: Leifheit KM, Robinson L, Nkansah M, Szilagyi PG, Pollack CE. Factors associated with rising homelessness within
+    US states, 2019 to 2024. JAMA Network Open. 2026;9(4):e265187.
+  doi: 10.1001/jamanetworkopen.2026.5187
+  year: 2026
+  abstract: 'Importance: Homelessness has risen sharply in the US in recent years, posing a major threat to population health.
+    Although researchers have identified factors contributing to differences in homelessness prevalence between jurisdictions,
+    factors contributing to year-over-year change in homelessness are poorly understood. Objective: To examine competing explanations
+    for rising levels of homelessness within US states between 2019 and 2024. Design, Setting, and Participants: This longitudinal
+    cohort study was conducted to measure the association between changing state-level factors and relative change in counts
+    of people experiencing homelessness from 2019 to 2024. The sample comprised adults (aged ≥18 years) and children (aged
+    <18 years) experiencing homelessness in all 50 states and Washington, DC, as measured in the US Department of Housing
+    and Urban Development point-in-time (PIT) homeless count data. Due to PIT count limitations owing to the pandemic, outcome
+    data for 2021 were excluded. Exposures: State-year average rents, unemployment, pandemic-era housing supports (including
+    emergency rental assistance and eviction moratoria), substance use (proxied by overdoses), immigration, and climate-related
+    property damage were measured via a variety of publicly available datasets. Main Outcomes and Measures: The primary outcome
+    was year-over-year change in homelessness within states overall, by homelessness type (sheltered or unsheltered), and
+    by age (children or adults). Results: From 2019 to 2024 (excluding 2021; N = 255 state-years), eviction moratoria and
+    climate-related damages were consistently associated with change in homelessness within the 50 states and Washington,
+    DC. The mean (SD) year-over-year increase in homelessness was 7.0% (22.5%), and there were mean (SD) changes of 6.1% (29.1%)
+    for sheltered homelessness, 16.0% (36.5%) for unsheltered homelessness, 7.2% (20.6%) for adult homelessness, and 8.4%
+    (44.0%) for child homelessness. Each additional 1.0% of person-time covered by a moratorium was associated with a 0.36-percentage
+    point (pp) lower increase in homelessness (95% CI, 0.10-0.61 pp; P = .01). Each home-equivalent lost to climate-related
+    events per 10 000 population was associated with a 1.00-pp greater increase in overall homelessness (95% CI, 0.78-1.22
+    pp; P < .001). Results were largely consistent by homelessness type and age. Whereas the mean (SD) year-over-year increase
+    in homelessness was 11.0% (36.4%) for a typical state in 2022, homelessness would have risen by an estimated 19.9% (95%
+    CI, 13.5%-26.3%) absent eviction moratoria, while counts would have risen by only 7.8% (95% CI, 7.1%-8.5%) absent property
+    loss due to climate-related disasters. Conclusions and Relevance: In this cohort study of 50 states and Washington, DC,
+    measured over 5 years, eviction moratoria and climate-related damages were associated with within-state, relative change
+    in homelessness. These findings suggest that to attenuate surges in homelessness, policymakers should take action to prevent
+    evictions and address climate change.'
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: A state-year panel (255 state-years, HUD point-in-time counts 2019–2024, 2021 excluded) tested rents, unemployment,
+    eviction moratoria and rental assistance, overdoses, immigration and climate-related property damage against within-state
+    change in homelessness. Each home lost to climate events per 10,000 population was associated with a 1.00-percentage-point
+    larger rise in homelessness (95% CI 0.78–1.22), and moratoria with smaller rises; these two were the consistently associated
+    factors, so unemployment was not among them.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L34
+  - links/L37
+- n: 73
+  key: kushel2003
+  tier: seminal
+  citation: 'Kushel MB, Evans JL, Perry S, Robertson MJ, Moss AR. No door to lock: victimization among homeless and marginally
+    housed persons. Arch Intern Med. 2003;163(20):2492-2499.'
+  doi: 10.1001/archinte.163.20.2492
+  year: 2003
+  abstract: 'BACKGROUND: Homeless persons experience high rates of sexual and physical assault; homeless women are thought
+    to be at highest risk. To determine the prevalence, distribution, and factors associated with sexual and physical assault,
+    we surveyed homeless and marginally housed adults in San Francisco, Calif. METHODS: We interviewed 2577 respondents about
+    their history of recent sexual and physical assault, housing history, sexual practices, substance use, health status,
+    and criminal justice history. The main outcome measures were self-reported sexual and physical assault in the previous
+    12 months. RESULTS: Overall, 32.3% of women, 27.1% of men, and 38.1% of transgendered persons reported a history of either
+    sexual or physical assault in the previous year; 9.4% of women, 1.4% of men, and 11.9% of transgendered persons reported
+    sexual assault, and 30.6% of women, 26.6% of men, and 33.3% of transgendered persons reported physical assault. In multivariate
+    models, being homeless (as opposed to marginally housed) was associated with sexual assault for women, but not for men
+    (adjusted odds ratio for homeless women, 3.4 [1.2-9.7]). Housing status was not associated with physical assault for women
+    or men. Mental illness and sex work were both common and associated with high rates of assault in multivariate analyses.
+    CONCLUSIONS: Sexual and physical assault are common experiences for homeless and marginally housed persons. Housing is
+    associated with lower rates of sexual assault among women. Strategies to decrease sexual and physical assault and its
+    consequences are needed in this population.'
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: 'A survey of 2,577 homeless and marginally housed adults in San Francisco asked about sexual and physical assault
+    in the previous 12 months. About a third reported assault in the past year: 32.3% of women, 27.1% of men and 38.1% of
+    transgender respondents. Physical assault was reported by 30.6% of women and 26.6% of men; sexual assault by 9.4% of women
+    and 1.4% of men. Being homeless rather than marginally housed was associated with sexual assault for women (adjusted OR
+    3.4, 95% CI 1.2-9.7) but not for men, and housing status was not associated with physical assault. The authors conclude
+    that assault is a common experience in this population and that housing is associated with lower rates of sexual assault
+    among women.'
+  why_it_mattered: It established, with a large community sample, how common victimisation is among people without secure
+    housing and tied lack of housing specifically to sexual assault of women, which is the empirical basis for treating 'no
+    door to lock' as a circumstance in its own right.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L35
+- n: 74
+  key: lee_schreck2005
+  tier: seminal
+  citation: 'Lee BA, Schreck CJ. Danger on the streets: marginality and victimization among homeless people. Am Behav Sci.
+    2005;48(8):1055-1081.'
+  doi: 10.1177/0002764204274200
+  year: 2005
+  abstract: Data from a national survey are used to examine the relationship between marginality and criminal victimization
+    among the homeless. The results show that homeless people are victimized disproportionately often both in absolute and
+    relative terms (i.e., compared to members of the domiciled population)and that the modal pattern entails multiple forms
+    of victimization. Conventional demographic antecedents of victimization receive little support in the analysis. However,
+    measures representing different dimensions of marginality—disaffiliation, health problems, traumatic events, and lifestyle-exposure—all
+    significantly increase the odds of being victimized, as hypothesized. The failure of the lifestyle-exposure variables
+    to mediate the effects of the other predictors suggests that distal factors should be considered along with proximate
+    ones if the vulnerability of disadvantaged groups to crime is to be adequately understood. Implications of the present
+    research for the victim-offender relationship and the meaning of victimization are also discussed.
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: Using a national US survey of homeless people, the authors examine why they are victimised more often than housed
+    people, and often in several ways at once. Conventional demographic predictors explained little. Markers of marginality
+    (social disaffiliation, traumatic experiences, health problems and lifestyle exposure, such as time spent on the street)
+    each raised the odds of victimisation. Exposure did not absorb the effect of the other factors, so both distant and immediate
+    circumstances matter.
+  why_it_mattered: It moved the explanation of victimisation from who people are to the circumstances they live in, including
+    exposure on the street and being cut off from others, which frames victimisation as a consequence of conditions a service
+    system can change.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L35
+- n: 75
+  key: padwa2024
+  tier: current
+  citation: Padwa H, Chien J, Henwood BF, Cousins SJ, Zakher E, Kuhn R. Homelessness, discrimination, and violent victimization
+    in Los Angeles County. Am J Prev Med. 2024;67(5):666-675.
+  doi: 10.1016/j.amepre.2024.06.016
+  year: 2024
+  abstract: 'INTRODUCTION: People experiencing homelessness (PEH) are highly vulnerable to discrimination and violence, which
+    impact physical and mental health. The study examines past-month discrimination and violence against PEH in Los Angeles
+    County (LAC). METHODS: A total of 332 PEH in LAC were surveyed about their past-month experiences with discrimination,
+    physical violence, and sexual violence from April-July 2023. Analyses were conducted in 2023. RESULTS: 31.8% of respondents
+    reported experiencing discrimination daily and 53.9% reported it weekly, whereas rates of lifetime discrimination in studies
+    of general populations of minoritized groups range between 13-60%. Nearly half of respondents who reported experiencing
+    discrimination (49.6%) believed that their housing situation was the reason they were targeted. Victimization was also
+    common, with 16.0% of participants experiencing physical violence and 7.5% experiencing sexual violence in the past 30
+    days. These rates of past-month victimization are high when compared to past-year physical violence (3.0%) and sexual
+    violence (0.24%) among general populations in major U.S. cities. In multivariate regression analyses, discrimination was
+    associated with being unsheltered in a vehicle (p<0.05) or outdoors (p<0.001), weekly illicit drug use (p<0.01), and psychological
+    distress (p<0.001); violent victimization was associated with being sheltered (p<0.05) or unsheltered outdoors (p<0.001),
+    physical health conditions (p<0.05), and psychological distress (p<0.01); and sexual victimization was associated with
+    non-male gender (p<0.05) and being unsheltered outdoors (p<0.05). Discrimination and victimization outcomes were not associated
+    with any race/ethnicity, sexual orientation, or time homeless characteristics. CONCLUSIONS: Study findings highlight the
+    dangers of homelessness in the U.S., particularly for those who are unsheltered outdoors.'
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: In a 2023 survey of 332 people experiencing homelessness in Los Angeles County, 16.0% reported physical violence
+    and 7.5% sexual violence in the past 30 days, and 31.8% reported discrimination daily. Violent victimisation was associated
+    with being sheltered (p<0.05) or unsheltered outdoors (p<0.001); sexual victimisation with non-male gender and being unsheltered
+    outdoors; discrimination with being unsheltered in a vehicle or outdoors. Outcomes were not associated with time homeless.
+    (Corrected 2026-11-03 after the fact-check.)
+  role_here: support
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L35
+- n: 76
+  key: poremski2016
+  tier: classic
+  citation: 'Poremski D, Stergiopoulos V, Braithwaite E, Distasio J, Nisenbaum R, Latimer E. Effects of Housing First on employment
+    and income of homeless individuals: results of a randomized trial. Psychiatric Services. 2016;67(6):603-609.'
+  doi: 10.1176/appi.ps.201500002
+  year: 2016
+  abstract: 'OBJECTIVE: Housing First is emerging as an evidence-based practice for housing and supporting people who are
+    homeless and have a mental illness. The objective of this study was to determine whether Housing First increases the odds
+    of obtaining competitive employment in this population and affects income, including income from informal and illegal
+    sources. METHODS: A total of 2,148 people with a mental illness were recruited from five Canadian cities while they were
+    homeless, classified as having moderate or high needs, and randomly assigned to Housing First or usual care. Housing First
+    participants with high needs received assertive community treatment (ACT), and those with moderate needs received intensive
+    case management (ICM). Every three months, participants were interviewed about employment and earnings in the previous
+    months (median follow-up=745 days). Regression models were estimated via generalized estimating equations. RESULTS: ICM
+    recipients had lower odds of obtaining employment compared with the control group with moderate needs. The odds of obtaining
+    employment among ICM recipients increased but their employment rate never exceeded that of the control group. For ACT
+    recipients, the odds of obtaining employment were not significantly different from those of the control group. Among Housing
+    First participants, persons employed at baseline, men, and younger participants had greater odds of employment compared
+    with control participants. Housing First did not appear to significantly increase income. CONCLUSIONS: This was the first
+    large-scale randomized controlled study of Housing First''s effects on employment. Further research is needed to determine
+    how Housing First may be enhanced to increase odds of obtaining employment.'
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: 'Within the At Home/Chez Soi trial, 2,148 homeless participants in five Canadian cities were randomised to Housing
+    First or usual care and reported employment and earnings every three months (median follow-up 745 days). Housing First
+    did not raise the odds of competitive employment: moderate-needs participants had lower odds than controls (rising over
+    time but never overtaking them), and high-needs participants did not differ. Housing First did not significantly increase
+    income. Being employed at baseline, male and younger predicted employment.'
+  role_here: contrast
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L36
+- n: 77
+  key: johnson2019
+  tier: background
+  citation: Johnson G, Scutella R, Tseng Y-P, Wood G. How do housing and labour markets affect individual homelessness? Housing
+    Studies. 2019;34(7):1089-1116.
+  doi: 10.1080/02673037.2018.1520819
+  year: 2019
+  abstract: We examine the impact of housing and labour market conditions on individual risks of homelessness. Our innovation
+    is a focus on homelessness entries, although findings from jointly estimated homelessness entry and exit probit equations
+    are reported. Risky behaviours and life experiences such as regular use of drugs, the experience of violence and biographies
+    of acute disadvantage lead to a higher risk of becoming homeless. Public housing is a strong protective factor. We find
+    clear evidence that for certain subgroups it is being the ‘wrong person in the wrong place’ that matters most when considering
+    risks of entering homelessness. Indigenous Australians, for example, are no more likely to become homeless than other
+    vulnerable groups holding housing and labour market conditions constant. However, tighter housing markets and weaker labour
+    markets expose Indigenous Australians to significantly higher risks of entering homelessness.
+  abstract_source: openalex
+  harvested_on: '2026-11-09'
+  summary: Using Australian panel data, the study models entry into (and jointly exit from) homelessness. Tighter housing
+    markets and weaker labour markets significantly raise the risk of entering homelessness for some groups; public housing
+    is strongly protective; personal histories of hardship also raise risk. No numerical estimates in the abstract.
+  role_here: support
+  verified: true
+  verified_on: '2026-11-09'
+  used_by:
+  - links/L37

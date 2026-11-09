@@ -1,7 +1,8 @@
-# manifest.yaml — SDOH Loop Mapper · ACTION-PACK 0.1 · written 2026-10-23
+# manifest.yaml — Health in Context (formerly SDOH Loops / SDOH Loop Mapper) · ACTION-PACK 0.1 · written 2026-10-23 · renamed 2026-11-09 (SL38)
 slug: sdoh-loops
-title: "SDOH Loop Mapper: map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place"
-short_title: "SDOH Loops"
+title: "Health in Context: map the circumstances around a person's or group's health with ICD-11 codes, and find the loops that hold them in place"
+short_title: "Health in Context"
+pack_name: "Health in Context content pack (formerly SDOH Loops)"
 kind: workbench
 modules: [situations, links, planner]
 safety_profile: health
@@ -23,3 +24,40 @@ permissions:
   figures: "none reproduced"
 concept_self_checks: false
 notes_storage: browser
+brand:
+  product: Health in Context
+  lockup: a Here for You resource from Little Orange Fish
+  about_lead: Health in Context maps the circumstances around a person's health, not their health itself.
+  program: Here for You
+  organisation: Little Orange Fish
+  org_descriptor: A registered 501(c)(3) nonprofit
+  address: 101 Quality Circle, Suite 140 · Huntsville, AL 35806
+  email: info@littleorangefish.org
+  website: https://www.littleorangefish.org
+  website_label: LittleOrangeFish.org
+  tagline: Good health starts with a healthy mind.
+  mark: brand/health-in-context-mark.png
+  mark_fill: '#ff7d2f'
+  org_logo: brand/lof-logo.svg
+  org_logo_dark: brand/lof-logo-white.png
+  org_icon: brand/lof-fish.png
+  logo_source: '🧡 LOF Advisor/08 Media Library/Brand & Logos/LOF Official Logos/ (canonical master set; README there). Print/vector
+    masters: LOF Logo Sheet.ai, LOF Logo.eps'
+  logo_rules: Keep clear space; don't stretch, distort, recolour or rotate (brand guide §5). Swap light/dark files by theme;
+    never invert or filter one into the other.
+  colors:
+    lof_orange: '#ff7d2f'
+    orange_text: '#b34d0f'
+    black: '#000000'
+    dark_gray: '#333333'
+    medium_gray: '#636363'
+    white: '#ffffff'
+    slate_blue: '#b3c3ce'
+    dark_bg: '#1b1d1f'
+  type:
+    headline: '"American Typewriter", "Roboto Slab", serif'
+    subhead: Roboto Slab
+    body: Roboto
+    accent: Poppins
+    note: Latin subset, weights 400/700 (Poppins 500/600), font-display swap; preload only Roboto 400. Canvas node text keeps
+      the core's settings.

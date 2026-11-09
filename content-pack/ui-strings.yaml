@@ -13,7 +13,6 @@ codes:
   open_who: "Open in the WHO ICD-11 browser"
   source: "WHO's own text, ICD-11 MMS release 2026-01."
   citation_from: situations.scheme.licence
-  proposed_xwalk: "Proposed mapping — builder's reading, not from WHO"
   # SL32 (T-LIC-01): WHO's required citation, verbatim (§1.3), in every page's footer and on About
   who_citation: "International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO."
   builder_alias: "Builder alias — not an ICD-11 index term"
@@ -69,7 +68,7 @@ app:
     help: Help
     methods: Methods
     about: About
-  footer: SDOH Loops is a thinking tool. Maps stay in this browser.
+  footer: Health in Context is a thinking tool. Maps stay in this browser.
   skip: Skip to main content
   theme:
     dark: Dark mode
@@ -305,3 +304,18 @@ prototype_banner:
   body_2: ": anything you type stays in this browser, but this is a test site. Codes are shown as WHO publishes them; no mapping to other code sets is included."
   report: "Report a problem"
   dismiss: "Hide this notice for this visit"
+
+# SL38/SL39 (2026-11-09): name, brand lockup and About lead. Brand values themselves live in brand/brand.yaml.
+brand:
+  name: "Health in Context"
+  lockup: "a Here for You resource from Little Orange Fish"
+  header_line_2: "Here for You · Little Orange Fish"
+  footer_lockup: "Health in Context is a Here for You resource from Little Orange Fish."
+  org_descriptor: "A registered 501(c)(3) nonprofit"
+  tagline: "Good health starts with a healthy mind."
+  home_label: "Health in Context — home"
+  logo_alt: "Little Orange Fish"
+about:
+  lead: "Health in Context maps the circumstances around a person's health, not their health itself."   # Daniel, 2026-11-09, verbatim
+  program: "Health in Context is part of Here for You, Little Orange Fish's resource-navigation program."
+  short_titles_note: "Short titles on the canvas are the builder's plain labels, not WHO's text; WHO's full title is shown on every code line and in every export."

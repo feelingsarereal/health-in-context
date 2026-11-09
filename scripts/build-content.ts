@@ -191,7 +191,7 @@ emit('strings.json', PACK_OUT, strings);
 
 // ───────────────────────── manifest bundle (identity, audience, safety, scope, upkeep, ledger, todo)
 emit('manifest.json', PACK_OUT, {
-  manifest: d.manifest,
+  manifest: (({ pack_name: _packName, ...m }) => m)(d.manifest ?? {}), // SL38: "formerly SDOH Loops" stays in content-pack/manifest.yaml, out of what the app serves
   audience: d.audience,
   safety: d.safety ? { ...d.safety } : null,
   scope: d.scope ?? null,

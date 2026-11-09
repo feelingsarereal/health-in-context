@@ -170,7 +170,7 @@ test.describe('SL23', () => {
     const items = menu.getByRole('menuitem');
     await expect(items.first()).toHaveText(/^Open a map file…/);
     await expect(items.first()).toBeFocused();
-    await expect(items.first()).toHaveAccessibleDescription('A map exported from SDOH Loops or an SDOH Interrogator app');
+    await expect(items.first()).toHaveAccessibleDescription('A map exported from Health in Context or an SDOH Interrogator app');
     await expect(menu.getByRole('menuitemcheckbox', { name: /Print \/ grayscale/ })).toHaveAttribute('aria-checked', 'false');
     await expect(menu.getByTestId('menu-host-fixture-reset')).toHaveText(/Fixture: log a host action/);
     expect(await axe(page, 'map menu open')).toEqual([]);

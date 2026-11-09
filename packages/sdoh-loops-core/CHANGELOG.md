@@ -10,6 +10,13 @@ tested with; that version is the exact `peerDependency`, so a consumer pins both
 
 While the version is 0.x, a minor bump may break; consumers should pin an exact version.
 
+## [0.12.1] — 2026-11-09
+
+Patch (SL38, SL39): wording only. The product is now Health in Context. Props, exports and the `.sdohmap.json` format are unchanged. Pack: `0.6.0`.
+
+- `footer`, `openFileHint`, the import errors and the loop report's header name Health in Context. The report gains one line, "Made with Health in Context (Little Orange Fish)".
+- A host's own "Open in …" Map menu label is the host's to change.
+
 ## [0.12.0] — 2026-11-09
 
 Minor (SL34, SL35, SL25; the v1 first-run and canvas work): a lighter Add circumstance dialog, one grouped toolbar, a

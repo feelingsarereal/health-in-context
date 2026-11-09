@@ -1,8 +1,8 @@
 {
  "manifest": {
   "slug": "sdoh-loops",
-  "title": "SDOH Loop Mapper: map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place",
-  "short_title": "SDOH Loops",
+  "title": "Health in Context: map the circumstances around a person's or group's health with ICD-11 codes, and find the loops that hold them in place",
+  "short_title": "Health in Context",
   "kind": "workbench",
   "modules": [
    "situations",
@@ -33,7 +33,44 @@
    "figures": "none reproduced"
   },
   "concept_self_checks": false,
-  "notes_storage": "browser"
+  "notes_storage": "browser",
+  "brand": {
+   "product": "Health in Context",
+   "lockup": "a Here for You resource from Little Orange Fish",
+   "about_lead": "Health in Context maps the circumstances around a person's health, not their health itself.",
+   "program": "Here for You",
+   "organisation": "Little Orange Fish",
+   "org_descriptor": "A registered 501(c)(3) nonprofit",
+   "address": "101 Quality Circle, Suite 140 · Huntsville, AL 35806",
+   "email": "info@littleorangefish.org",
+   "website": "https://www.littleorangefish.org",
+   "website_label": "LittleOrangeFish.org",
+   "tagline": "Good health starts with a healthy mind.",
+   "mark": "brand/health-in-context-mark.png",
+   "mark_fill": "#ff7d2f",
+   "org_logo": "brand/lof-logo.svg",
+   "org_logo_dark": "brand/lof-logo-white.png",
+   "org_icon": "brand/lof-fish.png",
+   "logo_source": "🧡 LOF Advisor/08 Media Library/Brand & Logos/LOF Official Logos/ (canonical master set; README there). Print/vector masters: LOF Logo Sheet.ai, LOF Logo.eps",
+   "logo_rules": "Keep clear space; don't stretch, distort, recolour or rotate (brand guide §5). Swap light/dark files by theme; never invert or filter one into the other.",
+   "colors": {
+    "lof_orange": "#ff7d2f",
+    "orange_text": "#b34d0f",
+    "black": "#000000",
+    "dark_gray": "#333333",
+    "medium_gray": "#636363",
+    "white": "#ffffff",
+    "slate_blue": "#b3c3ce",
+    "dark_bg": "#1b1d1f"
+   },
+   "type": {
+    "headline": "\"American Typewriter\", \"Roboto Slab\", serif",
+    "subhead": "Roboto Slab",
+    "body": "Roboto",
+    "accent": "Poppins",
+    "note": "Latin subset, weights 400/700 (Poppins 500/600), font-display swap; preload only Roboto 400. Canvas node text keeps the core's settings."
+   }
+  }
  },
  "audience": {
   "personas": [
@@ -325,6 +362,44 @@
  "changes": [
   {
    "date": "2026-11-09",
+   "what": "SL38/SL39: renamed Health in Context; manifest.brand and the brand images; about and brand strings; codes.proposed_xwalk removed; T-LIC-01 and T-XWALK-01 reworded",
+   "why": "Daniel, 2026-11-09: the v1 name, as a Here for You resource from Little Orange Fish",
+   "records": [
+    "manifest",
+    "manifest.brand",
+    "ui-strings",
+    "todo"
+   ],
+   "source": "SL38, SL39, source/pack-src (cowork, 2026-11-09)",
+   "by": "claude-code"
+  },
+  {
+   "date": "2026-11-09",
+   "what": "SL15: L34 (disaster to homelessness) and L35 (homelessness to victimisation) added at grade M; L36 and L37 withheld with reasons; T-SL15-03 and T-SL15-05 added",
+   "why": "Link proposals from the displacement transcript, each verified against its abstract",
+   "records": [
+    "links/L34",
+    "links/L35",
+    "withheld_links/L36",
+    "withheld_links/L37",
+    "todo"
+   ],
+   "source": "SL15, source/research/sl36_pack_additions.yaml (Daniel, 2026-11-09)",
+   "by": "claude-code"
+  },
+  {
+   "date": "2026-11-09",
+   "what": "SL18: L04 (income to food insecurity, grade M kept) re-sourced to Shafer 2022, Loopstra & Tarasuk 2013 and McIntyre 2016. Seligman 2010 leaves the pack, its number [24] taken by Shafer 2022 so no other reference renumbers",
+   "why": "Finding F01: Seligman 2010 tests food insecurity and hypertension, not income and food insecurity",
+   "records": [
+    "links/L04",
+    "references/24"
+   ],
+   "source": "SL18, source/research/sl36_pack_additions.yaml (Daniel, 2026-11-09)",
+   "by": "claude-code"
+  },
+  {
+   "date": "2026-11-09",
    "what": "SL34: a builder short title (short_title) on situations items, groups and residuals, for canvas labels; WHO's full title stays on the card, the peek and the exports",
    "why": "First-run walk of the prototype: a box with no label showed WHO's title cut off",
    "records": [
@@ -421,42 +496,6 @@
     "todo/T-LINKS"
    ],
    "source": "Claude Code scrum 261102",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "Richardson 1986 summarised from the MIT System Dynamics Group memo copy (D-3312-2) supplied by Daniel; its role note corrected (the paper does not discuss event-labelled diagrams); all 64 references verified",
-   "why": "T-BIB-04; independent check passed with wording fixes",
-   "records": [
-    "references/richardson1986"
-   ],
-   "source": "MIT SD Group memo D-3312-2; independent reviewer",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "Mirror leftovers retired: the ICD-11 MMS reference (citation and verified_by) now names the WHO ICD-API pull; scope.search_strategy records the mirror as superseded; unused ui-strings codes.interim removed",
-   "why": "Claude Code's K9/K10 notes",
-   "records": [
-    "references/icd11_mms",
-    "scope.search_strategy",
-    "ui-strings.codes"
-   ],
-   "source": "Claude Code scrum 261102",
-   "by": "cowork"
-  },
-  {
-   "date": "2026-11-02",
-   "what": "Library references verified: Link & Phelan 1995, Richardson 1995 (editor's introduction as abstract), Kosko 1986, Özesmi & Özesmi 2004 and Hovmand 2014 (chapter 1 abstract) summarised from Daniel's UAH library copies; abstracts verbatim; 63 of 64 references verified (Richardson 1986 remains). Abstracts read from the paper itself are kept even where OpenAlex's text was rejected. Done todo items (status starting 'done') now leave the pack; the scheme upkeep step now says to re-run the WHO ICD-API pull",
-   "why": "T-BIB-03/04; independent check passed with wording fixes",
-   "records": [
-    "references/link_phelan1995",
-    "references/richardson1995",
-    "references/kosko1986",
-    "references/ozesmi2004",
-    "references/hovmand2014"
-   ],
-   "source": "publisher PDFs and pages via UAH library; independent reviewer",
    "by": "cowork"
   }
  ],
@@ -607,7 +646,7 @@
   {
    "id": "T-LIC-01",
    "what": "Confirm the licence terms for reproducing ICD-11 titles and definitions in a public app (WHO ICD-11 licence) before any delivery other than local.",
-   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3). No WHO name or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted 2026-11-02 (request ID 202611431). Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO. WHO replied 2026-11-09 (request 202611431): proceed under the existing ICD-11 licence; postpone any mapping to other terminologies until WHO publishes its mapping agreement. SL33 removed the block-level crosswalks (ICD-10-CM and HP2030) from the pack; the proposed table is held in T-XWALK-02. Not legal advice."
+   "status": "checked 2026-11-02 against WHO's ICD-11 Terms of Use and License Agreement (icd.who.int/en/docs/ICD11-license.pdf): CC BY-ND 3.0 IGO. Software may incorporate ICD-11 and carry code, title and URI (§1.2.2–1.2.3; 125/126 codes have a URI, QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder's tiers and links are labelled). Required: the citation 'International Classification of Diseases, Eleventh Revision (ICD-11), World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO' (§1.3). No WHO name or emblem as endorsement (§4.1). WHO permissions request submitted 2026-11-02 (request ID 202611431). Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO. WHO replied 2026-11-09 (request 202611431): proceed under the existing ICD-11 licence; postpone any mapping to other terminologies until WHO publishes its mapping agreement. SL33 removed the block-level crosswalks (ICD-10-CM and HP2030) from the pack; the proposed table is held in T-XWALK-02. Not legal advice."
   },
   {
    "id": "T-BIB-02",
@@ -615,7 +654,7 @@
   },
   {
    "id": "T-XWALK-01",
-   "what": "Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside Z55–Z65.",
+   "what": "When WHO publishes its agreement for mapping ICD-11 to other terminologies, revisit T-XWALK-02 under its terms, starting from WHO's own ICD-10 to ICD-11 mapping tables.",
    "xwalk": true
   },
   {
@@ -629,8 +668,16 @@
    "status": "partly done 2026-11-01 — L01 and L02 shipped, L26–L28 added; loops now close on evidence. Still open below."
   },
   {
+   "id": "T-SL15-03",
+   "what": "Housing shortage → homelessness and disaster → local housing shortage (SL15 #3) are well supported (Quigley 2001; Glynn 2021; Hennighausen 2024) but a community housing shortage has no ICD-11 code, and links run code to code. Candidate for primer prose, or a later 'community condition' node type."
+  },
+  {
+   "id": "T-SL15-05",
+   "what": "Vulnerability-ranked coordinated entry (SL15 #5) is a policy rule, not a link between circumstances; its federal basis (HUD CPD-16-11) was withdrawn by CPD-25-06 on 2025-11-21. Not added."
+  },
+  {
    "id": "T-LINKS",
-   "what": "Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01, C02"
+   "what": "Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, L36, L37, C01, C02"
   }
  ],
  "scenarios": [

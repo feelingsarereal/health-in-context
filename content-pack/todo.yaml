@@ -11,19 +11,18 @@ items:
     QD71.Z links to the browser root). Added data fields are allowed if clearly marked as not from WHO (§1.2.5; the builder''s
     tiers and links are labelled). Required: the citation ''International Classification of Diseases, Eleventh Revision (ICD-11),
     World Health Organization (WHO) 2019 https://icd.who.int/browse11. Licensed under CC BY-ND 3.0 IGO'' (§1.3). No WHO name
-    or emblem as endorsement (§4.1). DECIDED 2026-11-02 (Daniel): keep the crosswalk while the app stays local; Daniel wants
-    the app public within 2–3 weeks (by about 2026-11-20). WHO permissions request submitted 2026-11-02 (request ID 202611431).
-    Background: §1.2.4 says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement
-    from WHO. WHO replied 2026-11-09 (request 202611431): proceed under the existing ICD-11 licence; postpone any mapping
-    to other terminologies until WHO publishes its mapping agreement. SL33 removed the block-level crosswalks (ICD-10-CM and
-    HP2030) from the pack; the proposed table is held in T-XWALK-02. Not legal advice.'
+    or emblem as endorsement (§4.1). WHO permissions request submitted 2026-11-02 (request ID 202611431). Background: §1.2.4
+    says mapping or crosswalks between ICD-11 and other classifications need a separate written agreement from WHO. WHO replied
+    2026-11-09 (request 202611431): proceed under the existing ICD-11 licence; postpone any mapping to other terminologies
+    until WHO publishes its mapping agreement. SL33 removed the block-level crosswalks (ICD-10-CM and HP2030) from the pack;
+    the proposed table is held in T-XWALK-02. Not legal advice.'
 - id: T-BIB-02
   what: Verify the remaining non-DOI works (CSDH 2008 full report, Wilkinson & Marmot 2003, Sterman 2000). Solar & Irwin 2010
     verified 2026-10-23 against the WHO PDF.
 - id: T-XWALK-01
   xwalk: true
-  what: Replace the proposed block crosswalk with the WHO ICD-10→ICD-11 mapping tables; note that Z72 (lifestyle) sits outside
-    Z55–Z65.
+  what: When WHO publishes its agreement for mapping ICD-11 to other terminologies, revisit T-XWALK-02 under its terms, starting
+    from WHO's own ICD-10 to ICD-11 mapping tables.
 - id: T-XWALK-02
   xwalk: true
   what: A block-level crosswalk to ICD-10-CM Z55–Z65 and to the Healthy People 2030 domains was built and is held pending
@@ -35,6 +34,13 @@ items:
   what: Find direct evidence for the withheld links (L01 job loss → income; L02 low income → eviction; L07 coverage gaps →
     financial strain; L08 education → unemployment; L23 income → neighbourhood; C01 social protection → poverty) and re-test
     L05, L14, L16, L24 against better-fitting target codes. Independent check, 2026-10-23.
+- id: T-SL15-03
+  what: 'Housing shortage → homelessness and disaster → local housing shortage (SL15 #3) are well supported (Quigley 2001;
+    Glynn 2021; Hennighausen 2024) but a community housing shortage has no ICD-11 code, and links run code to code. Candidate
+    for primer prose, or a later ''community condition'' node type.'
+- id: T-SL15-05
+  what: 'Vulnerability-ranked coordinated entry (SL15 #5) is a policy rule, not a link between circumstances; its federal
+    basis (HUD CPD-16-11) was withdrawn by CPD-25-06 on 2025-11-21. Not added.'
 - id: T-LINKS
-  what: 'Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, C01,
-    C02'
+  what: 'Links withheld after evidence review (reasons on /methods): L05, L06, L07, L08, L09, L14, L16, L21, L23, L24, L36,
+    L37, C01, C02'

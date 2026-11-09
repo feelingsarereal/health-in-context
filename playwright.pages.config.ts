@@ -1,14 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * SL32: the public Pages build. Locally it serves dist-pages/ (npm run build:pages) under /sdoh-loops/, as GitHub
+ * SL32: the public Pages build. Locally it serves dist-pages/ (npm run build:pages) under /health-in-context/, as GitHub
  * Pages does; with SDOH_LIVE_URL set it runs against the live site instead, with no server. The safety specs run
  * unchanged: G2/H2 (no request carries typed text, nothing off-origin), H3–H6 (Clear my data, the notice, /help) and,
  * locally, the dist-file checks G5 and H1 over dist-pages/.
  */
 const PORT = Number(process.env.SDOH_PW_PAGES_PORT ?? 4183);
 const LIVE = process.env.SDOH_LIVE_URL;
-const BASE = LIVE ? (LIVE.endsWith('/') ? LIVE : LIVE + '/') : `http://localhost:${PORT}/sdoh-loops/`;
+const BASE = LIVE ? (LIVE.endsWith('/') ? LIVE : LIVE + '/') : `http://localhost:${PORT}/health-in-context/`;
 process.env.SDOH_DIST = 'dist-pages';
 
 export default defineConfig({
@@ -26,7 +26,7 @@ export default defineConfig({
   webServer: LIVE
     ? undefined
     : {
-        command: `BASE_PATH=/sdoh-loops/ npx vite preview --outDir dist-pages --port ${PORT} --strictPort`,
+        command: `BASE_PATH=/health-in-context/ npx vite preview --outDir dist-pages --port ${PORT} --strictPort`,
         url: BASE,
         reuseExistingServer: false,
         timeout: 120_000,

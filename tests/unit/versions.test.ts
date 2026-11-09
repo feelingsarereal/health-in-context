@@ -33,7 +33,7 @@ describe('versions', () => {
     for (const p of [core, pack]) {
       expect(p.name.startsWith('@feelingsarereal/')).toBe(true);
       expect(p.publishConfig).toEqual({ registry: 'https://npm.pkg.github.com' });
-      expect(p.repository.url).toBe('git+https://github.com/feelingsarereal/sdoh-loops.git');
+      expect(p.repository.url).toBe('git+https://github.com/feelingsarereal/health-in-context.git');
     }
     expect(app.private).toBe(true);
   });

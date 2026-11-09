@@ -16,15 +16,15 @@ const About = lazy(() => import('./pages/About'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const TITLES: Record<string, string> = {
-  '/': 'SDOH Loops', '/maps': 'My maps', '/map': 'Map', '/map/list': 'Map — list view', '/evidence': 'Evidence', '/references': 'References',
+  '/': 'Health in Context', '/maps': 'My maps', '/map': 'Map', '/map/list': 'Map — list view', '/evidence': 'Evidence', '/references': 'References',
   '/glossary': 'Glossary', '/concepts': 'Primers', '/help': 'Help', '/methods': 'Methods', '/about': 'About',
 };
 
 export default function App() {
   const loc = useLocation();
   useEffect(() => {
-    const t = TITLES[loc.pathname] ?? (loc.pathname.startsWith('/concepts/') ? 'Primer' : 'SDOH Loops');
-    document.title = t === 'SDOH Loops' ? t : `${t} · SDOH Loops`;
+    const t = TITLES[loc.pathname] ?? (loc.pathname.startsWith('/concepts/') ? 'Primer' : 'Health in Context');
+    document.title = t === 'Health in Context' ? t : `${t} · Health in Context`;
   }, [loc.pathname]);
   return (
     <Layout>

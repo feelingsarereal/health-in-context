@@ -1,8 +1,8 @@
-# SDOH Loops
+# Health in Context
 
 Map a person's or group's social circumstances with ICD-11 codes and find the loops that hold them in place.
 A static, on-device workbench built from the Actualizer action pack in `content-pack/` (workbench · safety profile
-`health` · delivery `pages`: a public prototype at https://feelingsarereal.github.io/sdoh-loops/, SL32). Everything a person types stays in this browser (IndexedDB) and leaves only through an
+`health` · delivery `pages`: a public prototype at https://feelingsarereal.github.io/health-in-context/, SL32). Everything a person types stays in this browser (IndexedDB) and leaves only through an
 export they start.
 
 ## Quick start (local)
@@ -64,7 +64,7 @@ pack version (`packages/sdoh-loops-pack/README.md`); `npm test` says so when it 
 
 ## The public prototype (GitHub Pages, SL32)
 
-`main` deploys to https://feelingsarereal.github.io/sdoh-loops/ through `.github/workflows/pages.yml`. The workflow
+`main` deploys to https://feelingsarereal.github.io/health-in-context/ through `.github/workflows/pages.yml`. The workflow
 runs `npm ci`, then `npm test`, then `npm run build:pages`, then `npm run check:xwalk`, then deploys, then runs the
 dist test again against the live site.
 
@@ -82,9 +82,9 @@ publishes its mapping agreement (SL33, todo T-LIC-01).
 WHO's §1.3 citation is in every page's footer and on About, in both builds.
 
 ```bash
-npm run build:pages && npm run check:xwalk && npm run test:pages   # locally, under /sdoh-loops/
-SDOH_LIVE_URL=https://feelingsarereal.github.io/sdoh-loops/ npx playwright test --config playwright.pages.config.ts
-npx tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/sdoh-loops/
+npm run build:pages && npm run check:xwalk && npm run test:pages   # locally, under /health-in-context/
+SDOH_LIVE_URL=https://feelingsarereal.github.io/health-in-context/ npx playwright test --config playwright.pages.config.ts
+npx tsx scripts/check-xwalk-dist.ts https://feelingsarereal.github.io/health-in-context/
 ```
 
 When WHO publishes its mapping agreement, a new item can bring the mapping back under that agreement's terms.
@@ -95,5 +95,5 @@ Before SL32, delivery was `local`. These were the original steps for publishing 
 
 1. Confirm `gh auth status` shows the `feelingsarereal` account.
 2. `gh repo create feelingsarereal/sdoh-loops --private --source . --push`.
-3. Add a Pages workflow: `npm ci → npm run validate:pack → npm test → BASE_PATH=/sdoh-loops/ npm run build → upload dist/` (the build already writes `dist/404.html` for deep links).
+3. Add a Pages workflow: `npm ci → npm run validate:pack → npm test → BASE_PATH=/health-in-context/ npm run build → upload dist/` (the build already writes `dist/404.html` for deep links).
 4. Change `manifest.delivery` to `pages` in the pack and re-run the H2 request recorder against the published URL.

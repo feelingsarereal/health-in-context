@@ -294,12 +294,12 @@ export class ImportError extends Error {}
  * rich text is sanitised; a newer schema_version is refused with a clear message.
  */
 export function migrate(input: unknown): SdohMap {
-  if (!input || typeof input !== 'object') throw new ImportError('This file is not an SDOH Loops map.');
+  if (!input || typeof input !== 'object') throw new ImportError('This file is not a Health in Context map.');
   const raw = input as Record<string, unknown>;
   const v = raw.schema_version;
-  if (typeof v !== 'number') throw new ImportError('This file has no schema_version, so it was not made by SDOH Loops. Nothing was imported.');
-  if (v > SCHEMA_VERSION) throw new ImportError(`This map was made by a newer version of SDOH Loops (schema ${v}; this app reads up to ${SCHEMA_VERSION}). Nothing was imported.`);
-  if (v < 1) throw new ImportError(`Schema ${v} is older than any released SDOH Loops map, and no migration exists for it. Nothing was imported.`);
+  if (typeof v !== 'number') throw new ImportError('This file has no schema_version, so it was not made by Health in Context. Nothing was imported.');
+  if (v > SCHEMA_VERSION) throw new ImportError(`This map was made by a newer version of Health in Context (schema ${v}; this app reads up to ${SCHEMA_VERSION}). Nothing was imported.`);
+  if (v < 1) throw new ImportError(`Schema ${v} is older than any released Health in Context map, and no migration exists for it. Nothing was imported.`);
   if (!Array.isArray(raw.nodes) || !Array.isArray(raw.edges)) throw new ImportError('This map file is missing its nodes or edges. Nothing was imported.');
   const statuses = new Set(CODE_STATUSES);
   const nodes: MapNode[] = (raw.nodes as Record<string, unknown>[]).map((n, i) => {

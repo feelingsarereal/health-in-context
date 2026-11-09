@@ -51,7 +51,7 @@ content-pack/
 ```yaml
 slug: sdoh-loops                    # kebab-case; repo name and storage key
 title: "…"
-short_title: "SDOH Loops"           # ≤ 3 words, header wordmark
+short_title: "Health in Context"           # ≤ 3 words, header wordmark
 kind: workbench                     # navigator | planner | workbench   (§2.1)
 modules: [situations, links, planner]   # action-layer modules switched on (§3)
 safety_profile: health              # general | health | crisis-adjacent   (SAFETY.md)

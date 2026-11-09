@@ -2,13 +2,17 @@ import { Link } from 'react-router-dom';
 import { manifest, S, scheme, AsOf, Notice, PageHead } from '@feelingsarereal/sdoh-loops-core';
 import { provenance } from '@/lib/build-info';
 import { PAGES_BUILD, ISSUES_URL } from '@/components/ui/PrototypeBanner';
+import { BS } from '@/lib/brand';
+
+const program = BS.about.program.split('Here for You');
 
 export default function About() {
   return (
     <div>
-      <PageHead title="About SDOH Loops" lead={manifest.title}>
+      <PageHead title="About Health in Context" lead={BS.about.lead}>
         <div className="mt-3"><AsOf /></div>
       </PageHead>
+      <p className="mb-4 text-[15px]" data-testid="about-program">{program[0]}<strong>Here for You</strong>{program[1]}</p>
       <Notice plain />
       <dl className="mt-6 grid grid-cols-1 sm:grid-cols-[12rem_1fr] gap-x-4 gap-y-3 text-[15px]">
         <dt className="font-semibold">Built by</dt>
@@ -27,7 +31,7 @@ export default function About() {
           <a className="underline" href={scheme.official_browser} target="_blank" rel="noreferrer">WHO ICD-11 browser</a>. Codes are shown as WHO publishes them; no mapping to other code sets is included.
         </dd>
         <dt className="font-semibold">ICD-11 text</dt>
-        <dd data-testid="text-source">{scheme.text_source}</dd>
+        <dd data-testid="text-source">{scheme.text_source} {BS.about.short_titles_note}</dd>
         <dt className="font-semibold">ICD-11 citation</dt>
         <dd data-testid="who-citation">{S.codes.who_citation}</dd>
         <dt className="font-semibold">Licence line in the WHO ICD-API</dt>

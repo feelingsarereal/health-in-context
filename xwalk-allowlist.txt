@@ -7,5 +7,4 @@ The ICD-10-CM categories Z55–Z65 used in the US to record social determinants 
 In ICD-10-CM, categories Z55–Z65 record problems related to education	glossary z-codes definition: ICD-10-CM's own categories; no ICD-11 code
 CMS — Using Z codes (ICD-10-CM)	icd11-chapter24 primer further-reading title (CMS's own document title); a link, maps no code
 SL33 removed the block-level crosswalks (ICD-10-CM and HP2030) from the pack	todo T-LIC-01 status (licence record on /methods), wording set by SL33: says what was removed; maps no code
-note that Z72 (lifestyle) sits outside Z55–Z65	todo T-XWALK-01 what (on /methods since sdohCrosswalk became a no-op): says how a Z category relates to the Z55–Z65 range; names no ICD-11 code
 A block-level crosswalk to ICD-10-CM Z55–Z65 and to the Healthy People 2030 domains was built	todo T-XWALK-02 what, wording allowed by SL33 item 2: says a crosswalk is held; names no ICD-11 code against another code

@@ -25,33 +25,33 @@
    }
   },
   "links": {
-   "offered": 23,
+   "offered": 25,
    "by_grade": {
     "F": 4,
-    "M": 13,
+    "M": 15,
     "S": 6
    },
-   "withheld": 12
+   "withheld": 14
   },
   "actions": 0,
   "gates": 0,
   "resources": null
  },
  "references": {
-  "total": 69,
+  "total": 77,
   "by_tier": {
-   "seminal": 9,
-   "current": 34,
-   "classic": 13,
-   "background": 13
+   "seminal": 11,
+   "current": 38,
+   "classic": 14,
+   "background": 14
   },
-  "verified": 69,
+  "verified": 77,
   "unverified": 0,
-  "abstracts_present": 63
+  "abstracts_present": 71
  },
  "glossary": 21,
  "concepts": 5,
- "todo": 7,
+ "todo": 9,
  "heuristics": [
   {
    "id": "A4",
